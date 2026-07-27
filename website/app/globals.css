@@ -1,15 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-color: #0d1117;
-  --glass-bg: rgba(22, 27, 34, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --text-primary: #e6edf3;
-  --text-secondary: #848d97;
+  --bg-color: #f0f4f8;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
   --primary-color: #2f81f7;
   --primary-hover: #1f6feb;
   --danger-color: #f85149;
   --danger-hover: #da3633;
+
+  --overlay-bg: rgba(255, 255, 255, 0.8);
+  --border-light: rgba(0, 0, 0, 0.05);
+  --nav-bg: rgba(255, 255, 255, 0.8);
+  --text-muted: #6b7280;
+  --code-bg: rgba(0, 0, 0, 0.05);
+  --hero-gradient: linear-gradient(90deg, #1f2937, #6b7280);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #0d1117;
+    --glass-bg: rgba(22, 27, 34, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #e6edf3;
+    --text-secondary: #848d97;
+    --primary-color: #2f81f7;
+    --primary-hover: #1f6feb;
+    --danger-color: #f85149;
+    --danger-hover: #da3633;
+
+    --overlay-bg: rgba(0, 0, 0, 0.3);
+    --border-light: rgba(255, 255, 255, 0.05);
+    --nav-bg: rgba(10, 10, 12, 0.8);
+    --text-muted: #888;
+    --code-bg: rgba(0, 0, 0, 0.5);
+    --hero-gradient: linear-gradient(90deg, #fff, #888);
+  }
 }
 
 * {
@@ -70,7 +98,7 @@ body {
 .btn-primary {
   background: var(--primary-color);
   border-color: var(--primary-color);
-  color: #fff;
+  color: #ffffff;
 }
 
 .btn-primary:hover {
@@ -149,7 +177,7 @@ a {
 }
 
 .nav-link:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .glow-blob {
@@ -174,3 +202,38 @@ a {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border-light) 25%,
+    var(--glass-bg) 50%,
+    var(--border-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem !important;
+  }
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  h3 {
+    font-size: 1.2rem !important;
+  }
+  .responsive-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+  }
+}
