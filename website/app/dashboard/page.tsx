@@ -17,7 +17,7 @@ const AuthenticatedImage = ({ url, user }: { url: string, user: User }) => {
     });
   }, [url, user]);
 
-  if (!src) return <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading secure image...</div>;
+  if (!src) return <div className="skeleton" style={{ width: '100%', height: '300px' }}></div>;
   return (
     <a href={src} target="_blank" rel="noreferrer" title="Click to open in new tab" style={{ display: 'block' }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -298,12 +298,12 @@ export default function Home() {
       
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ width: '100%', height: '350px', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+          <div style={{ width: '100%', height: '350px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
             <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={googleEmbedUrl} style={{ border: 'none' }}></iframe>
           </div>
           <div style={{ 
             fontSize: '0.9rem', 
-            backgroundColor: 'rgba(255,255,255,0.05)', 
+            backgroundColor: 'var(--border-light)',
             padding: '1rem', 
             borderRadius: '8px',
             fontFamily: 'monospace',
@@ -324,7 +324,7 @@ export default function Home() {
       const kvLines = lines.filter(line => line.includes(':'));
       if (kvLines.length > 1) {
         return (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
             {lines.map((line, i) => {
               const parts = line.split(':');
               if (parts.length < 2) return <div key={i} style={{ gridColumn: '1 / -1' }}>{line}</div>;
@@ -338,10 +338,10 @@ export default function Home() {
 
               return (
                 <div key={i} style={{ 
-                  backgroundColor: 'rgba(255,255,255,0.05)', 
+                  backgroundColor: 'var(--border-light)',
                   padding: '1rem', 
                   borderRadius: '8px',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  border: '1px solid var(--glass-border)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
@@ -370,7 +370,7 @@ export default function Home() {
                     <div style={{ 
                       fontSize: '1rem', 
                       fontWeight: '500', 
-                      color: '#fff',
+                      color: 'var(--text-primary)',
                       wordBreak: 'break-word',
                       whiteSpace: 'pre-wrap'
                     }}>
@@ -396,13 +396,31 @@ export default function Home() {
     const phtoTime = phto?.timestamp ? new Date(phto.timestamp).getTime() : 0;
     const timestamp = Math.max(resTime, phtoTime);
     return (
-      <button onClick={() => setSelectedOutput(baseCmd)} className="btn" style={{ marginTop: '1rem', width: '100%', fontSize: '0.9rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>
+      <button onClick={() => setSelectedOutput(baseCmd)} className="btn" style={{ marginTop: '1rem', width: '100%', fontSize: '0.9rem', backgroundColor: 'var(--border-light)' }}>
         View Output ({new Date(timestamp).toLocaleTimeString()})
       </button>
     );
   };
 
-  if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading Veto...</div>;
+  if (loading) return (
+    <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+      <header style={{ marginBottom: '3rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <div className="skeleton" style={{ width: '250px', height: '40px', marginBottom: '0.5rem' }}></div>
+          <div className="skeleton" style={{ width: '200px', height: '24px' }}></div>
+        </div>
+        <div className="skeleton" style={{ width: '200px', height: '60px', borderRadius: '12px' }}></div>
+      </header>
+
+      <div className="skeleton" style={{ width: '200px', height: '28px', marginBottom: '1.5rem' }}></div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+        <div className="glass-panel skeleton" style={{ height: '200px' }}></div>
+        <div className="glass-panel skeleton" style={{ height: '200px' }}></div>
+        <div className="glass-panel skeleton" style={{ height: '200px' }}></div>
+        <div className="glass-panel skeleton" style={{ gridColumn: '1 / -1', height: '150px' }}></div>
+      </div>
+    </main>
+  );
   if (!user) return null;
 
   return (
@@ -423,7 +441,7 @@ export default function Home() {
           
           <div className="glass-panel" style={{ padding: '8px 16px', display: 'flex', flexDirection: 'column', gap: '4px', borderRadius: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '0.9rem', fontWeight: '600', color: '#fff' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-primary)' }}>
                 {user.email}
               </span>
             </div>
@@ -445,7 +463,7 @@ export default function Home() {
 
 
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Core Commands</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📍</div>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Locate Device</h3>
@@ -484,7 +502,7 @@ export default function Home() {
       </div>
 
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Device Toggles</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔦</div>
@@ -528,7 +546,7 @@ export default function Home() {
       </div>
 
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>Experimental</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📸</div>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Camera Capture</h3>
@@ -550,7 +568,7 @@ export default function Home() {
       </div>
       
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--danger-color)' }}>Danger Zone</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
         <div className="glass-panel" style={{ padding: '1.5rem', border: '1px solid rgba(248, 81, 73, 0.3)' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⚠️</div>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Factory Reset</h3>
@@ -589,16 +607,16 @@ export default function Home() {
       {selectedOutput && (results[selectedOutput] || photos[selectedOutput]) && (
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 1000,
+          backgroundColor: 'var(--overlay-bg)', zIndex: 1000,
           display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem'
         }} onClick={() => setSelectedOutput(null)}>
           <div className="glass-panel" style={{
             width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto',
-            padding: '2.5rem', position: 'relative', border: '1px solid rgba(255,255,255,0.2)'
+            padding: '2.5rem', position: 'relative', border: '1px solid var(--glass-border)'
           }} onClick={e => e.stopPropagation()}>
             <button onClick={() => setSelectedOutput(null)} style={{
               position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none',
-              color: '#fff', fontSize: '1.5rem', cursor: 'pointer'
+              color: 'var(--text-primary)', fontSize: '1.5rem', cursor: 'pointer'
             }}>×</button>
             <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', textTransform: 'capitalize', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span>{selectedOutput} Output</span>
@@ -614,15 +632,15 @@ export default function Home() {
             </div>
             
             {photos[selectedOutput] && (
-              <div style={{ marginBottom: '1.5rem', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ marginBottom: '1.5rem', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
                 <AuthenticatedImage url={photos[selectedOutput].url} user={user} />
               </div>
             )}
 
             {results[selectedOutput] && (
               <div style={{ 
-                backgroundColor: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '12px', 
-                border: '1px solid rgba(255,255,255,0.05)', color: '#e6edf3'
+                backgroundColor: 'var(--code-bg)', padding: '1.5rem', borderRadius: '12px',
+                border: '1px solid var(--border-light)', color: 'var(--text-primary)'
               }}>
                 {renderTelemetryContent(results[selectedOutput].result)}
               </div>
