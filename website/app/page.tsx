@@ -59,7 +59,11 @@ export default function LandingPage() {
       >
         <div className="glow-blob" style={{ background: 'rgba(47, 129, 247, 0.15)', width: '600px', height: '600px', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: -1 }}></div>
         
-        <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 5.5rem)', fontWeight: '800', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-2px' }}>
+        <div style={{ fontSize: 'clamp(5rem, 15vw, 12rem)', fontWeight: '900', lineHeight: 1, marginBottom: '1rem', letterSpacing: '-5px', background: 'var(--hero-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          VETO
+        </div>
+
+        <h1 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: '800', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-1.5px' }}>
           Absolute Control.<br/>
           <span style={{ background: 'linear-gradient(90deg, #2f81f7, #a482d8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Zero Compromise.</span>
         </h1>
