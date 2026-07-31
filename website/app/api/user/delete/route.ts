@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { adminDb, adminAuth } from '@/lib/firebaseAdmin';
-import { del } from '@vercel/blob';
 
 export async function POST(req: Request) {
   try {
@@ -30,18 +29,10 @@ export async function POST(req: Request) {
       batch.delete(doc.ref);
     });
 
-    // Clear photos and blobs
-    const deletePromises = [];
+    // Clear photos
     for (const doc of photosSnap.docs) {
-      const data = doc.data();
-      if (data?.url) {
-        deletePromises.push(
-          del(data.url).catch(e => console.error('Failed to delete blob', data.url, e))
-        );
-      }
       batch.delete(doc.ref);
     }
-    await Promise.all(deletePromises);
 
     // Delete the user document
     batch.delete(userRef);

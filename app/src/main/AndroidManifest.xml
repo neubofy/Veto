@@ -102,8 +102,7 @@
             android:name=".ui.settings.AllowlistActivity"
             android:label="@string/Settings_WhiteList" />
         <activity
-            android:name=".ui.CrashedActivity"
-            android:process=":bug_report" />
+            android:name=".ui.CrashedActivity" />
         <activity
             android:name=".ui.settings.LogViewActivity"
             android:label="@string/log_view_title" />

@@ -408,6 +408,39 @@ export default function Home() {
       );
     }
 
+    const driveLinkMatch = text.match(/(https?:\/\/drive\.google\.com[^\s]+)/);
+    if (driveLinkMatch) {
+       const url = driveLinkMatch[1];
+       return (
+          <div style={{ 
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
+            padding: '3rem 1rem', textAlign: 'center', backgroundColor: 'rgba(15, 157, 88, 0.1)', 
+            borderRadius: '12px', border: '1px solid rgba(15, 157, 88, 0.4)' 
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📁</div>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: '#0f9d58' }}>Media Uploaded Successfully</h3>
+            <a href={url} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', maxWidth: '300px', margin: '0 auto', textDecoration: 'none', backgroundColor: '#0f9d58', color: '#fff', border: 'none' }}>
+              <span>↗️</span> Open in Google Drive
+            </a>
+          </div>
+       );
+    }
+
+    const isError = text.toLowerCase().includes('failed');
+    if (isError) {
+      return (
+          <div style={{ 
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
+            padding: '3rem 1rem', textAlign: 'center', backgroundColor: 'rgba(248, 81, 73, 0.1)', 
+            borderRadius: '12px', border: '1px solid rgba(248, 81, 73, 0.4)' 
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>❌</div>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Task Failed</h3>
+            <p style={{ color: 'var(--text-secondary)' }}>{text}</p>
+          </div>
+      );
+    }
+
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     if (urlRegex.test(text)) {
       const parts = text.split(urlRegex);

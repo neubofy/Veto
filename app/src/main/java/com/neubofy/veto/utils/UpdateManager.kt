@@ -61,7 +61,7 @@ object UpdateManager {
 
                         if (isPrerelease == isBeta) {
                             val assetsArray = release.getJSONArray("assets")
-                            val version = release.getString("tag_name").replace("v", "")
+                            val version = release.optString("tag_name", "Unknown").replace("v", "")
 
                             for (i in 0 until assetsArray.length()) {
                                 val asset = assetsArray.getJSONObject(i)
@@ -75,7 +75,7 @@ object UpdateManager {
                                             bestApkUrl = asset.getString("browser_download_url")
                                             bestRelease = release
                                             bestVersion = version
-                                            bestNotes = release.getString("body")
+                                            bestNotes = release.optString("body", "No release notes provided")
                                         }
                                     } else {
                                         // Fallback: if no timestamp but it's the first matching release we see (which is newest by date)
@@ -83,7 +83,7 @@ object UpdateManager {
                                             bestApkUrl = asset.getString("browser_download_url")
                                             bestRelease = release
                                             bestVersion = version
-                                            bestNotes = release.getString("body")
+                                            bestNotes = release.optString("body", "No release notes provided")
                                         }
                                     }
                                 }
@@ -160,7 +160,7 @@ object UpdateManager {
                 // azhon AppUpdate manager handles the professional UI and installation prompt
                 val manager = DownloadManager.Builder(context).apply {
                     apkUrl(url)
-                    apkName("Veto-v\$version.apk")
+                    apkName("Veto-v$version.apk")
                     smallIcon(R.mipmap.ic_launcher)
                     apkVersionName(version)
                     apkDescription(notes)

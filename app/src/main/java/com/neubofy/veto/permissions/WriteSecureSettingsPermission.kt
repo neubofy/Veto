@@ -22,6 +22,8 @@ class WriteSecureSettingsPermission : Permission() {
     @get:StringRes
     override val name = R.string.perm_write_secure_settings_name
 
+    override val description = R.string.perm_write_secure_settings_desc
+
     override fun isGranted(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context, Manifest.permission.WRITE_SECURE_SETTINGS
