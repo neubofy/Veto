@@ -28,42 +28,21 @@ object GoogleDriveUploader {
     }
 
     /**
-     * Obtains a fresh token just-in-time using silentSignIn.
+     * Obtains a fresh token just-in-time synchronously.
+     * Must be called from a background thread.
      */
-    private fun getValidToken(context: Context, onToken: (String) -> Unit, onError: (String) -> Unit) {
-        val client = GoogleSignIn.getClient(context, getGso())
-        client.silentSignIn().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val account = task.result
-                if (account?.serverAuthCode != null || account?.idToken != null) {
-                    Thread {
-                        try {
-                            val accountObj = account.account
-                            if (accountObj != null) {
-                                val scope = "oauth2:https://www.googleapis.com/auth/drive.file"
-                                val token = com.google.android.gms.auth.GoogleAuthUtil.getToken(context, accountObj, scope)
-                                onToken(token)
-                            } else {
-                                onError("Google account is null")
-                            }
-                        } catch (e: Exception) {
-                            onError("Failed to get GoogleAuthUtil token: ${e.message}")
-                        }
-                    }.start()
-                } else {
-                    onError("Failed to obtain token from silent sign in")
-                }
-            } else {
-                onError("Silent sign in failed. User may need to sign in again.")
-            }
-        }
+    private fun getValidToken(context: Context): String {
+        val account = GoogleSignIn.getLastSignedInAccount(context)
+        val accountObj = account?.account ?: throw Exception("No Google account found. Please sign in.")
+        val scope = "oauth2:https://www.googleapis.com/auth/drive.file"
+        return com.google.android.gms.auth.GoogleAuthUtil.getToken(context, accountObj, scope)
     }
 
     fun setupDrive(context: Context, onSuccess: () -> Unit, onError: (String) -> Unit) {
-        getValidToken(context, { token ->
-            Thread {
-                try {
-                    val settings = SettingsRepository.getInstance(context)
+        Thread {
+            try {
+                val token = getValidToken(context)
+                val settings = SettingsRepository.getInstance(context)
                     
                     // 1. Find or create root 'Veto' folder
                     var rootId = findFolder(token, "Veto", "root")
@@ -90,20 +69,19 @@ object GoogleDriveUploader {
                     }
 
                     context.log().i(TAG, "Google Drive setup complete")
-                    onSuccess()
-                } catch (e: Exception) {
-                    context.log().e(TAG, "Setup failed: ${e.message}")
-                    onError(e.message ?: "Unknown error during setup")
-                }
-            }.start()
-        }, onError)
+                onSuccess()
+            } catch (e: Exception) {
+                context.log().e(TAG, "Setup failed: ${e.message}")
+                onError(e.message ?: "Unknown error during setup")
+            }
+        }.start()
     }
 
     fun uploadFile(context: Context, file: File, mimeType: String, type: String, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
-        getValidToken(context, { token ->
-            Thread {
-                try {
-                    val prefs = context.getSharedPreferences("veto_drive_prefs", Context.MODE_PRIVATE)
+        Thread {
+            try {
+                val token = getValidToken(context)
+                val prefs = context.getSharedPreferences("veto_drive_prefs", Context.MODE_PRIVATE)
                     val folderId = when (type) {
                         "video" -> prefs.getString("drive_folder_video", null)
                         "audio" -> prefs.getString("drive_folder_audio", null)
@@ -166,11 +144,10 @@ object GoogleDriveUploader {
                         val errorStream = connection.errorStream?.bufferedReader()?.use { it.readText() }
                         onError("Upload failed: ${connection.responseCode} $errorStream")
                     }
-                } catch (e: Exception) {
-                    onError("Upload exception: ${e.message}")
-                }
-            }.start()
-        }, onError)
+            } catch (e: Exception) {
+                onError("Upload exception: ${e.message}")
+            }
+        }.start()
     }
 
     private fun findFolder(token: String, name: String, parentId: String): String? {
