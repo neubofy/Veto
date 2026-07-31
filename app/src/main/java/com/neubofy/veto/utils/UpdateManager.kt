@@ -155,7 +155,7 @@ object UpdateManager {
         
         AlertDialog.Builder(context)
             .setTitle("Update Available")
-            .setMessage("Version \$version is available.\n\nRelease Notes:\n\$notes\n\nDo you want to update now?")
+            .setMessage("Version $version is available.\n\nRelease Notes:\n$notes\n\nDo you want to update now?")
             .setPositiveButton("Update") { _, _ ->
                 // azhon AppUpdate manager handles the professional UI and installation prompt
                 val manager = DownloadManager.Builder(context).apply {

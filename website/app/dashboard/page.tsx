@@ -336,12 +336,13 @@ export default function Home() {
                 alert(`Copied ${key.trim()} to clipboard!`);
               };
 
+              const isDriveLink = val.includes('drive.google.com');
               return (
                 <div key={i} style={{ 
-                  backgroundColor: 'var(--border-light)',
+                  backgroundColor: isDriveLink ? 'rgba(15, 157, 88, 0.1)' : 'var(--border-light)',
                   padding: '1rem', 
                   borderRadius: '8px',
-                  border: '1px solid var(--glass-border)',
+                  border: isDriveLink ? '1px solid rgba(15, 157, 88, 0.4)' : '1px solid var(--glass-border)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
@@ -354,7 +355,7 @@ export default function Home() {
                       alignItems: 'center',
                       marginBottom: '0.5rem'
                     }}>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      <div style={{ fontSize: '0.8rem', color: isDriveLink ? '#0f9d58' : 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: isDriveLink ? 'bold' : 'normal' }}>
                         {key.trim()}
                       </div>
                       <button 
@@ -372,9 +373,16 @@ export default function Home() {
                       fontWeight: '500', 
                       color: 'var(--text-primary)',
                       wordBreak: 'break-word',
-                      whiteSpace: 'pre-wrap'
+                      whiteSpace: 'pre-wrap',
+                      marginTop: isDriveLink ? '0.5rem' : '0'
                     }}>
-                      {val.startsWith('http') ? <a href={val} target="_blank" rel="noreferrer" style={{color: '#58a6ff', textDecoration: 'underline'}}>{val}</a> : val}
+                      {isDriveLink ? (
+                        <a href={val} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', textDecoration: 'none', backgroundColor: '#0f9d58', color: '#fff', border: 'none' }}>
+                          <span>📁</span> Open in Google Drive
+                        </a>
+                      ) : val.startsWith('http') ? (
+                        <a href={val} target="_blank" rel="noreferrer" style={{color: '#58a6ff', textDecoration: 'underline'}}>{val}</a>
+                      ) : val}
                     </div>
                   </div>
                 </div>
@@ -383,6 +391,31 @@ export default function Home() {
           </div>
         );
       }
+    }
+    
+    const isPendingMedia = text.toLowerCase().includes('recording') || text.toLowerCase().includes('uploading') || text.toLowerCase().includes('taking');
+    if (isPendingMedia) {
+      return (
+        <div style={{ 
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
+          padding: '3rem 1rem', textAlign: 'center', backgroundColor: 'var(--border-light)', 
+          borderRadius: '12px', border: '1px solid var(--glass-border)' 
+        }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem', animation: 'pulseGlow 2s infinite' }}>☁️</div>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Data is uploading to your Google Drive</h3>
+          <p style={{ color: 'var(--text-secondary)' }}>A secure link will be available here shortly.</p>
+        </div>
+      );
+    }
+
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    if (urlRegex.test(text)) {
+      const parts = text.split(urlRegex);
+      return (
+          <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
+              {parts.map((part, i) => urlRegex.test(part) ? <a key={i} href={part} target="_blank" rel="noreferrer" style={{color: '#58a6ff', textDecoration: 'underline'}}>{part}</a> : part)}
+          </div>
+      );
     }
     
     return <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>{text}</div>;

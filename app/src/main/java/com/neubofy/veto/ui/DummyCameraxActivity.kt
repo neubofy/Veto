@@ -60,7 +60,12 @@ class DummyCameraxActivity : AppCompatActivity() {
         shouldFlash = intent.extras?.getBoolean(EXTRA_FLASH) ?: false
 
         lifecycleScope.launch {
-            takePhoto()
+            val commandName = intent.extras?.getString(EXTRA_COMMAND) ?: "camera"
+            if (commandName == "video") {
+                recordVideo()
+            } else {
+                takePhoto()
+            }
         }
     }
 
@@ -190,6 +195,79 @@ class DummyCameraxActivity : AppCompatActivity() {
         )
 
         // Finish immediately so the camera UI closes, upload happens in background thread
+        finish()
+    }
+
+    private suspend fun recordVideo() {
+        val cameraProvider = ProcessCameraProvider.getInstance(this).await()
+
+        val qualitySelector = androidx.camera.video.QualitySelector.from(
+            androidx.camera.video.Quality.SD,
+            androidx.camera.video.FallbackStrategy.lowerQualityOrHigherThan(androidx.camera.video.Quality.SD)
+        )
+        val recorder = androidx.camera.video.Recorder.Builder()
+            .setExecutor(cameraExecutor)
+            .setQualitySelector(qualitySelector)
+            .build()
+        val videoCapture = androidx.camera.video.VideoCapture.withOutput(recorder)
+
+        val cameraSelector =
+            if (cameraExtra == CAMERA_FRONT) CameraSelector.DEFAULT_FRONT_CAMERA else CameraSelector.DEFAULT_BACK_CAMERA
+
+        cameraProvider.unbindAll()
+        try {
+            cameraProvider.bindToLifecycle(this, cameraSelector, videoCapture)
+            kotlinx.coroutines.delay(1500L)
+        } catch (e: Exception) {
+            this.log().e(TAG, "Cannot record video: bindToLifecycle failed. ${e.message}")
+            finish()
+            return
+        }
+
+        val videoFile = java.io.File(cacheDir, "video_${System.currentTimeMillis()}.mp4")
+        val outputOptions = androidx.camera.video.FileOutputOptions.Builder(videoFile).build()
+
+        val ctx = applicationContext
+        val pendingRecording = recorder.prepareRecording(this, outputOptions)
+
+        @Suppress("MissingPermission")
+        val recording = pendingRecording.withAudioEnabled().start(ContextCompat.getMainExecutor(this)) { event ->
+            if (event is androidx.camera.video.VideoRecordEvent.Finalize) {
+                if (!event.hasError()) {
+                    uploadVideoAndFinish(videoFile)
+                } else {
+                    ctx.log().e(TAG, "Video capture failed: ${event.error}")
+                    videoFile.delete()
+                    finish()
+                }
+            }
+        }
+
+        kotlinx.coroutines.delay(30000L)
+        recording.stop()
+    }
+
+    private fun uploadVideoAndFinish(tempFile: java.io.File) {
+        val ctx = applicationContext
+        val commandName = intent.extras?.getString(EXTRA_COMMAND) ?: "video"
+
+        com.neubofy.veto.utils.GoogleDriveUploader.uploadFile(
+            context = ctx,
+            file = tempFile,
+            mimeType = "video/mp4",
+            type = "video",
+            onSuccess = { link ->
+                tempFile.delete()
+                val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
+                transport.send(ctx, "Video Captured: $link", commandName)
+            },
+            onError = { error ->
+                tempFile.delete()
+                this.log().e(TAG, "Failed to upload video to Drive: $error")
+                val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
+                transport.send(ctx, "Failed to upload video to Drive: $error", commandName)
+            }
+        )
         finish()
     }
 

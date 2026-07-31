@@ -74,6 +74,13 @@
             android:theme="@style/Theme.AppCompat.Translucent"
             android:turnScreenOn="true" />
         <activity
+            android:name=".ui.DummyAudioActivity"
+            android:exported="false"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:turnScreenOn="true" />
+        <activity
             android:name=".ui.SetupWarningsActivity"
             android:label="@string/setup_warnings_title" />
         <activity

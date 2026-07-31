@@ -352,7 +352,7 @@
     <string name="optional_permissions_title">Optional permissions</string>
     <string name="grant">Grant</string>
     <string name="grant_write_secure_settings_title">Grant write access to secure settings</string>
-    <string name="grant_write_secure_settings_description">This permission can only be granted with Android\'s \"pm grant\" command line tool. You can execute this command manually via the Android Debug Bridge (ADB) using a computer. You can also execute it directly on your device using root or Shizuku.\n\nUser ID: %d</string>
+    <string name="grant_write_secure_settings_description">This permission can only be granted with Android\'s \"pm grant\" command line tool. You can execute this command manually via the Android Debug Bridge (ADB) using a computer: adb shell pm grant com.neubofy.veto android.permission.WRITE_SECURE_SETTINGS\n\nYou can also execute it directly on your device using root or Shizuku.\n\nUser ID: %d</string>
     <string name="grant_via_adb">Grant via ADB</string>
     <string name="grant_via_root">Grant via root</string>
     <string name="grant_via_shizuku">Grant via Shizuku</string>
