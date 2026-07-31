@@ -35,6 +35,7 @@ class DummyCameraxActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
     private var cameraExtra: Int = CAMERA_BACK
     private var shouldFlash: Boolean = false
+    private var hasStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +68,8 @@ class DummyCameraxActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (hasStarted) return
+        hasStarted = true
         cameraExtra = intent.extras?.getInt(EXTRA_CAMERA) ?: CAMERA_BACK
         shouldFlash = intent.extras?.getBoolean(EXTRA_FLASH) ?: false
 
@@ -191,33 +194,26 @@ class DummyCameraxActivity : AppCompatActivity() {
 
         val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "camera"
 
+        // Finish immediately — camera hardware released, upload continues in background thread
+        finish()
+
         com.neubofy.veto.utils.GoogleDriveUploader.uploadFile(
-            context = this,
+            context = ctx,
             file = tempFile,
             mimeType = "image/jpeg",
             type = "photo",
             onSuccess = { link ->
-                // Delete temp file
                 tempFile.delete()
-                
-                // Send link to dashboard via NextJsServerTransport
                 val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
                 transport.send(ctx, "Photo Captured: $link", commandName)
-                
-                android.os.Handler(android.os.Looper.getMainLooper()).post {
-                    android.widget.Toast.makeText(ctx, "Photo uploaded to Drive successfully!", android.widget.Toast.LENGTH_SHORT).show()
-                }
             },
             onError = { error ->
                 tempFile.delete()
-                this.log().e(TAG, "Failed to upload photo to Drive: $error")
+                ctx.log().e(TAG, "Failed to upload photo to Drive: $error")
                 val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
                 transport.send(ctx, "Failed to upload photo to Drive: $error", commandName)
             }
         )
-
-        // Finish immediately so the camera UI closes, upload happens in background thread
-        finish()
     }
 
     private suspend fun recordVideo() {
@@ -275,6 +271,9 @@ class DummyCameraxActivity : AppCompatActivity() {
         val ctx = applicationContext
         val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "video"
 
+        // Finish immediately — camera released, upload continues in background thread
+        finish()
+
         com.neubofy.veto.utils.GoogleDriveUploader.uploadFile(
             context = ctx,
             file = tempFile,
@@ -287,12 +286,11 @@ class DummyCameraxActivity : AppCompatActivity() {
             },
             onError = { error ->
                 tempFile.delete()
-                this.log().e(TAG, "Failed to upload video to Drive: $error")
+                ctx.log().e(TAG, "Failed to upload video to Drive: $error")
                 val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
                 transport.send(ctx, "Failed to upload video to Drive: $error", commandName)
             }
         )
-        finish()
     }
 
     companion object {

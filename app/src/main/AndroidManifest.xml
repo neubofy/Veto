@@ -70,7 +70,7 @@
             android:name=".ui.DummyCameraxActivity"
             android:excludeFromRecents="true"
             android:exported="false"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:taskAffinity=""
@@ -80,7 +80,7 @@
             android:name=".ui.DummyAudioActivity"
             android:excludeFromRecents="true"
             android:exported="false"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:taskAffinity=""
@@ -192,7 +192,7 @@
 
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
-            android:foregroundServiceType="location|camera"
+            android:foregroundServiceType="location|camera|microphone"
             tools:node="merge" />
 
         <!-- https://developer.android.com/guide/topics/resources/app-languages#android12-impl -->
