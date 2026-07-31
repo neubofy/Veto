@@ -82,8 +82,7 @@
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:taskAffinity=""
-            android:theme="@style/Theme.AppCompat.Translucent"
-            android:turnScreenOn="true" />
+            android:theme="@style/Theme.Veto.Invisible" />
         <activity
             android:name=".ui.DummyAudioActivity"
             android:excludeFromRecents="true"
@@ -92,8 +91,7 @@
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:taskAffinity=""
-            android:theme="@style/Theme.AppCompat.Translucent"
-            android:turnScreenOn="true" />
+            android:theme="@style/Theme.Veto.Invisible" />
         <activity
             android:name=".ui.SetupWarningsActivity"
             android:label="@string/setup_warnings_title" />
