@@ -444,4 +444,9 @@
     <string name="perm_sms_desc">Required to receive incoming SMS commands, and to send SMS replies back to your allowed contacts.</string>
     <string name="permission_microphone">Microphone</string>
     <string name="permission_microphone_desc">Required to record audio remotely.</string>
+    <string name="perm_storage_name">Storage Access</string>
+    <string name="perm_storage_desc">Required to save captured photos, videos, and audio locally on device storage.</string>
+    <string name="setting_media_title">Media &amp; Storage</string>
+    <string name="setting_hide_gallery_title">Hide Veto media in device gallery</string>
+    <string name="setting_hide_gallery_desc">Creates a .nomedia file in the Veto directory so captured photos, videos, and audio do not appear in Photos/Gallery apps.</string>
 </resources>

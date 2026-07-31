@@ -115,6 +115,14 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
         
         btnEditCommand.setOnClickListener(this::onEditCommandClicked);
 
+        // Media Settings
+        com.google.android.material.materialswitch.MaterialSwitch switchHideMedia = findViewById(R.id.switchHideMediaGallery);
+        switchHideMedia.setChecked((Boolean) settings.get(Settings.SET_HIDE_MEDIA_IN_GALLERY));
+        switchHideMedia.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settings.set(Settings.SET_HIDE_MEDIA_IN_GALLERY, isChecked);
+            com.neubofy.veto.utils.MediaStorageManager.INSTANCE.updateNoMediaStatus(this, com.neubofy.veto.utils.MediaStorageManager.INSTANCE.getRootMediaDir(this));
+        });
+
         // Device Control
         buttonSelectRingtone = findViewById(R.id.buttonSelectRingTone);
         buttonSelectRingtone.setOnClickListener(this::onSelectRingtoneClicked);

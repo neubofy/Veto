@@ -12,6 +12,8 @@ import com.neubofy.veto.utils.log
 import java.io.File
 import java.io.IOException
 
+import com.neubofy.veto.permissions.StoragePermission
+
 class AudioCommand(context: Context) : Command(context) {
     companion object {
         private val TAG = AudioCommand::class.simpleName
@@ -28,7 +30,7 @@ class AudioCommand(context: Context) : Command(context) {
 
     override val longDescription = R.string.cmd_audio_description_long
 
-    override val requiredPermissions = listOf(RecordAudioPermission())
+    override val requiredPermissions = listOf(RecordAudioPermission(), StoragePermission())
 
     override suspend fun <T> executeInternal(args: List<String>, transport: Transport<T>) {
         if (!settings.serverAccountExists()) {
@@ -40,6 +42,6 @@ class AudioCommand(context: Context) : Command(context) {
         dummyAudioActivity.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(dummyAudioActivity)
 
-        transport.send(context, "The device is recording 30s of stealth audio. You will receive a link shortly.", keyword)
+        transport.send(context, "Capturing 30s audio...", keyword)
     }
 }

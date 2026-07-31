@@ -12,6 +12,8 @@ import com.neubofy.veto.ui.DummyCameraxActivity
 import com.neubofy.veto.utils.log
 
 
+import com.neubofy.veto.permissions.StoragePermission
+
 class CameraCommand(context: Context) : Command(context) {
     companion object {
         private val TAG = CameraCommand::class.simpleName
@@ -28,7 +30,7 @@ class CameraCommand(context: Context) : Command(context) {
 
     override val longDescription = R.string.cmd_camera_description_long
 
-    override val requiredPermissions = listOf(CameraPermission())
+    override val requiredPermissions = listOf(CameraPermission(), StoragePermission())
 
     override suspend fun <T> executeInternal(
         args: List<String>,
@@ -61,7 +63,6 @@ class CameraCommand(context: Context) : Command(context) {
         context.log().d(TAG, "Starting camera activity")
         context.startActivity(dummyCameraActivity)
 
-        val serverUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
-        transport.send(context, context.getString(R.string.cmd_camera_response_success, serverUrl), keyword)
+        transport.send(context, "Capturing photo...", keyword)
     }
 }

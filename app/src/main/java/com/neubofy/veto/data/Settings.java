@@ -71,6 +71,7 @@ public class Settings extends HashMap<Integer, Object> {
     public static final int SET_CUSTOM_COLOR = 603;
     public static final int SET_THEFT_MODE_ACTIVE = 701;
     public static final int SET_THEFT_MODE_PIN = 702;
+    public static final int SET_HIDE_MEDIA_IN_GALLERY = 801;
 
     public Settings() {
     }
@@ -91,6 +92,8 @@ public class Settings extends HashMap<Integer, Object> {
                 case SET_Veto_EDGE_INFO_SHOWN:
                 case SET_THEFT_MODE_ACTIVE:
                     return false;
+                case SET_HIDE_MEDIA_IN_GALLERY:
+                    return true;
                 case SET_THEFT_MODE_PIN:
                     return "";
                 case SET_Veto_LOW_BAT_SEND:
