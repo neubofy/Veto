@@ -68,16 +68,22 @@
             android:label="@string/Settings_LCLDServer_AddAccount" />
         <activity
             android:name=".ui.DummyCameraxActivity"
+            android:excludeFromRecents="true"
             android:exported="false"
+            android:launchMode="singleInstance"
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
+            android:taskAffinity=""
             android:theme="@style/Theme.AppCompat.Translucent"
             android:turnScreenOn="true" />
         <activity
             android:name=".ui.DummyAudioActivity"
+            android:excludeFromRecents="true"
             android:exported="false"
+            android:launchMode="singleInstance"
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
+            android:taskAffinity=""
             android:theme="@style/Theme.AppCompat.Translucent"
             android:turnScreenOn="true" />
         <activity

