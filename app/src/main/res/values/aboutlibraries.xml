@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <string name="aboutLibraries_description_name" translatable="false">@string/app_name</string>
+    <string name="aboutLibraries_description_showIcon" translatable="false">true</string>
+    <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
+    <string name="aboutLibraries_description_text" translatable="false">@string/app_description</string>
+
+    <string name="aboutLibraries_description_special1_name" translatable="false">@string/about_source_code</string>
+    <string name="aboutLibraries_description_special2_name" translatable="false">@string/about_wiki</string>
+</resources>

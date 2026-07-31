@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Generic -->
+    <string name="loading">Laden…</string>
+    <string name="help">Hilfe</string>
+    <string name="copied">Kopiert</string>
+    <string name="accept">Akzeptieren</string>
+    <string name="Edit">Bearbeiten</string>
+    <string name="GPS">GPS</string>
+    <string name="Cell">Mobilfunkzelle</string>
+    <!-- Settings (main screen, with the list) -->
+    <string name="Settings_Settings">Einstellungen</string>
+    <string name="Settings_VetoConfig">Allgemein</string>
+    <string name="Settings_WhiteList">Erlaubte Kontakte</string>
+    <string name="Settings_Import">Einstellungen importieren</string>
+    <string name="Settings_Export">Einstellungen exportieren</string>
+    <string name="Settings_Logs">Protokoll</string>
+    <string name="Settings_About">Über</string>
+    <!-- Settings: General -->
+    <string name="Settings_Veto_via_Pin_Description">Hiermit kannst du mit Veto über eine PIN kommunizieren. So kannst du Befehle von einer Telefonnummer schicken, welche nicht in deinen Erlaubten Kontakten ist.</string>
+    <string name="Settings_Enter_Pin">PIN eingeben</string>
+    <string name="pin">PIN</string>
+    <string name="Settings_VetoCommand_Description">Der für die Kommunikation mit Veto verwendete Befehl.</string>
+    <string name="Settings_Ringer_Tone_Description">Wähle einen Klingelton für den\"ring\"-Befehl aus.</string>
+    <string name="Settings_Select_Ringtone">Klingelton auswählen</string>
+    <string name="Settings_Lockscreenmessage_Description">Sperrbildschirmnachricht: \nEine Nachricht, welche auf dem Sperrbildschirm angezeigt wird, wenn das Gerät gesperrt wird.</string>
+    <!-- Settings: Veto Server -->
+    <string name="Settings_Veto_Server_General">Allgemein</string>
+    <string name="Settings_Veto_Server_Server_URL">Server URL:</string>
+    <string name="Settings_Veto_Server_User_ID">User ID:</string>
+    <string name="Settings_Veto_Server_ID_Desc">Du benötigst deine User ID, um dein Gerät mit Veto Server zu finden. Notiere sie dir und bewahre sie sicher auf.</string>
+    <string name="Settings_VetoServer_Change_Password_Button">Password ändern</string>
+    <string name="Settings_VetoServer_Logout_Button">Ausloggen</string>
+    <string name="Settings_VetoServer_Alert_DeleteData_Desc">Dadurch werden alle Daten auf dem Server gelöscht. Bist du sicher?</string>
+    <string name="Settings_VetoServer_Update_Interval_Description">Veto lädt den Gerätestandort alle X Minuten hoch.</string>
+    <string name="Settings_VetoServer_Location_Type_Title">Standort-Quelle</string>
+    <string name="Settings_VetoServer_Location_Type_Description">Die Quelle(n), deren Standort regelmäßig im Hintergrund hochgeladen werden soll. \nFalls keine ausgewählt ist, werden keine Standorte regelmäßig hochgeladen. (Du kannst das Standort-Hochladen weiterhin über das Webinterface erzwingen. Dies benötigt Push.)</string>
+    <string name="Settings_VetoServer_LOW_BAT_Upload_Title">Bei niedrigem Akkustand hochladen</string>
+    <string name="Settings_VetoServer_LOW_BAT_Upload_Description">Standort hochladen, wenn der Akkustand niedrig wird.</string>
+    <string name="password_old">Altes Passwort</string>
+    <string name="password_new">Neues Passwort</string>
+    <string name="password_new_repeat">Neues Passwort wiederholen</string>
+    <!-- Veto Server Registration/Login -->
+    <string name="server_version">Server-Version</string>
+    <string name="server_version_error">Laden der Server-Version fehlgeschlagen</string>
+    <string name="server_version_error_low_version">Es wird mindestens die Server-Version {MIN} benötigt, aber der ausgewählte Server hat Version {CURRENT}. Fortsetzen auf eigene Gefahr.</string>
+    <string name="Settings_VetoServer_AddAccount">Veto Server: Einloggen/Registrieren</string>
+    <string name="Settings_VetoServer_Info">Mit Veto Server kannst du Befehle über das Internet vom Server an die App schicken. Außerdem kannst du den Gerätestandort auf der Karte verfolgen oder Bilder, die das Gerät aufgenommen hat, ansehen. Für eine Anleitung zum Selbsthosten, siehe Webseite.</string>
+    <string name="Settings_VetoServer_open_website">Veto Server Webseite öffnen</string>
+    <string name="Settings_VetoServer_use_default_server">Öffentlichen Server benutzen</string>
+    <string name="Settings_VetoServer_Login">Einloggen</string>
+    <string name="Settings_VetoServer_Register">Registrieren</string>
+    <string name="Settings_VetoServer_Alert_PrivacyPolicy_Title">Datenschutzbestimmungen</string>
+    <string name="password">Passwort</string>
+    <string name="registration_token">Registrierungstoken</string>
+    <string name="registration_token_hint">Private Instanzen können ein geheimes Token erfordern. Lass dieses Feld leer, wenn die Instanz öffentlich ist.</string>
+    <!-- Settings: Allowed Contacts -->
+    <string name="Whitelist_help">Die Kontakte in dieser Liste dürfen dir Veto Befehle via SMS schicken. Befehle von allen anderen werden ignoriert.</string>
+    <string name="Whitelist_empty">Keine erlaubten Kontakte. Klicke den Button, um Kontakte hinzuzufügen!</string>
+    <string name="WhiteList_Add_Contact">Kontakt hinzufügen</string>
+    <!-- Settings: OpenCelliD -->
+    <string name="OpenCellId_help">Veto kann den Dienst OpenCelliD benutzen, um den ungefähren Standort zu bestimmen, basierend auf der Mobilfunkzelle mit der das Gerät verbunden ist. Eine Internetverbindung wird für jede Standortanfrage benötigt. Außerdem musst du ein OpenCelliD-Konto anlegen, um ein eigenes API Access Token zu bekommen.</string>
+    <string name="OpenCellId_privacy">Privatsphäre: Bedenke, dass OpenCelliD mit jeder API-Anfrage deine aktuelle Mobilfunkzelle und somit auch deinen Standort erfährt.</string>
+    <string name="OpenCellId_open_website">OpenCelliD Webseite öffnen</string>
+    <string name="OpenCellId_test_opencellid">OpenCelliD-Verbindung testen</string>
+    <string name="OpenCellId_test_no_connection">Keine Mobilfunkverbindung</string>
+    <!-- Settings: Logs -->
+
+    <!-- Settings: About -->
+    <string name="about">Über</string>
+    <string name="about_source_code">Quellcode</string>
+    <string name="about_wiki">Wiki</string>
+    <!-- Crypto Update Boarding -->
+    <string name="server_unregister_failed_title">Deregistrierung fehlgeschlagen</string>
+    <string name="server_unregister_failed_body">Die Deregistrierung ist mit folgendem Fehler fehlgeschlagen: {ERROR} \n \nDu kannst trotzdem fortsetzen, aber es könnte sein, dass dein Account nicht vom Server gelöscht wurde. Falls du fortsetzt, wird dein Account lokal von diesem Gerät gelöscht.</string>
+    <string name="server_unregister_continue_anyway">Trotzdem fortsetzen</string>
+    <string name="server_unregister_dont_continue">Nicht fortsetzen</string>
+    <!-- Permissions -->
+
+    <!-- Notification Channels -->
+    <string name="Notification_Usage">Nutzung</string>
+    <string name="Notification_Usage_Description">Benachrichtigungen, wenn Veto Befehle erhält</string>
+    <string name="Pin_Usage">PIN Nutzung</string>
+    <string name="Notification_Pin_Usage_Description">Benachrichtigungen, wenn mit der PIN auf Veto zugegriffen wird</string>
+    <!-- Varia -->
+
+    <!-- Not yet sorted -->
+    <string name="Permission_IGNORE_BATTERY_OPTIMIZATION">Diese Anwendung soll im Hintergrund laufen. Um sicherzustellen, dass sie auch im Standby funktioniert, muss die Akku-Optimierung für diese App deaktiviert werden.</string>
+    <string name="Delete">Löschen</string>
+    <string name="Enable">Aktivieren</string>
+    <string name="Locked_Lock_Screen">Veto
+\nDieses Gerät wurde gesperrt!
+\nNachricht vom Besitzer:</string>
+    <string name="Permission_POST_NOTIFICATIONS">Veto sendet gelegentlich Benachrichtigungen, z.B. um zu warnen, wenn jemand das Gerät ortet.</string>
+    <string name="cmd_help_message_start">Veto Kommandos:</string>
+    <string name="cmd_locate_response_gps_will_follow">GPS-Koordinaten werden demnächst versendet.</string>
+    <string name="Toast_Duplicate_contact">Dieser Kontakt existiert bereits.</string>
+    <string name="MH_Pin_Accepted">Pin akzeptiert!</string>
+    <string name="ringer_stop_ringing">KLINGELN STOPPEN</string>
+    <string name="cmd_locate_response_location_off">Ortung fehlgeschlagen: der Standort ist ausgeschaltet.</string>
+    <string name="LockScreen_Usage_detectd">Sperrbildschirmnachricht: Verwendung erkannt.</string>
+    <string name="LockScreen_Backbutton_pressed">Sperrbildschirmnachricht: Zurück-Taste wurde gedrückt.</string>
+    <string name="Toast_Empty_VetoCommand">Leerer Befehl nicht erlaubt, Default wird verwendet.</string>
+    <string name="Notification_Security">Sicherheit</string>
+    <string name="Notification_FAIL">Fehler</string>
+    <string name="Notification_Fail_Description">Benachrichtigungen wenn etwas fehlschlägt (z.B. die Verbindung zu Veto Server)</string>
+    <string name="app_description">Mit Veto (Veto) kannst du dein Gerät aus der Ferne orten. Du kannst mit Veto über SMS, Instant Messengers, oder über Veto Server kommunizieren. Orte dein Gerät, lass es klingeln, sperre es, oder setze es auf Werkseinstellungen zurück - alles aus der Ferne.</string>
+    <string name="Notification_Security_Description">Benachrichtigungen bzgl. Sicherheitsupdates</string>
+    <string name="notify_crypto_update_title">Aktion erforderlich</string>
+    <string name="notify_crypto_update_text">Du musst einige Einstellungen ändern, um weiterhin Veto benutzen zu können. Bitte hier klicken.</string>
+    <string name="request_failed_response_body">Antwort Body</string>
+    <string name="request_failed_exception">Ausnahne</string>
+    <string name="request_failed_title">Netzwerkanfrage fehlgeschlagen</string>
+    <string name="request_failed_status_code">Statuscode</string>
+    <string name="Notification_Server_Description">Benachrichtigungen bzgl. Veto Server</string>
+    <string name="Settings_VetoServer_Server_Url">Server URL</string>
+    <string name="cmd_camera_description_short">Bild aufnehmen</string>
+    <string name="cmd_delete_description_short">Gerät auf Werkseinstellungen zurücksetzen</string>
+    <string name="cmd_delete_description_long">Alle Daten werden gelöscht. Danach kannst Du nicht mehr mit dem Gerät kommunizieren. Um versehentliche und böswillige Nutzung zu verhindern, erfordert dieser Befehl ein Kennwort und er muss in den Einstellungen ausdrücklich aktiviert werden.</string>
+    <string name="cmd_delete_response_disabled">Löschen nicht möglich: Der delete-Befehl ist nicht in den Einstellungen aktiviert.</string>
+    <string name="cmd_delete_response_pwd_missing">Löschen nicht möglich: Passwort fehlt. Syntax: %s.</string>
+    <string name="cmd_delete_response_success">Das Gerät sollte nun gelöscht werden. Auf Wiedersehen!</string>
+    <string name="cmd_gps_response_on">Die Standortdienste wurden eingeschaltet.</string>
+    <string name="cmd_gps_response_off">Die Standortdienste wurden ausgeschaltet.</string>
+    <string name="cmd_help_description_short">Hilfe anzeigen</string>
+    <string name="cmd_ring_description_short">Gerät klingeln lassen</string>
+    <string name="perm_camera_name">Kamera</string>
+    <string name="perm_device_admin_name">Geräteverwaltung</string>
+    <string name="perm_do_not_disturb_access_name">\"Bitte Nicht Stören\"-Zugriff</string>
+    <string name="perm_location_name">Standort</string>
+    <string name="perm_notification_access_name">Benachrichtigungszugriff</string>
+    <string name="perm_overlay_name">Über anderen Apps einblenden</string>
+    <string name="perm_post_notification_name">Benachrichtigungen senden</string>
+    <string name="perm_sms_name">SMS</string>
+    <string name="perm_write_secure_settings_name">In Secure Einstellungen schreiben</string>
+    <string name="required_permissions_title">Erforderliche Berechtigungen</string>
+    <string name="optional_permissions_title">Optionale Berechtigungen</string>
+    <string name="grant">Zulassen</string>
+    <string name="grant_write_secure_settings_title">Verwalten der Secure Settings zulassen</string>
+    <string name="grant_write_secure_settings_description">Diese Berechtigung kann nur mit Androids Kommandozeilenbefehl \"pm grant\" erteilt werden. Du kannst diesen Befehl manuell über die Android Debug Bridge (ADB) von einem Computer aus ausführen. Du kannst ihn auch direkt auf deinem Gerät mit Root oder Shizuku ausführen.\n\nNutzer-ID: %d</string>
+    <string name="grant_via_adb">Via ADB erlauben</string>
+    <string name="grant_via_root">Via Root erlauben</string>
+    <string name="grant_via_shizuku">Via Shizuku erlauben</string>
+    <string name="perm_root_denied">Root-Zugriff abgelehnt</string>
+    <string name="perm_shizuku_failed">Zulassen via Shizuku fehlgeschlagen</string>
+    <string name="usage_notification_title">Befehl ausgeführt</string>
+    <string name="cmd_stats_description_short">Netzwerkstatistiken abrufen</string>
+    <string name="cmd_missing_permissions">Befehl %1$s kann nicht ausgeführt werden: folgende Berechtigung(en) fehlen: %2$s.</string>
+    <string name="cmd_camera_description_long">Nimmt ein Bild mit der Front-/Rückkamera auf und lädt es zu Veto Server hoch. Derzeit wird nur Hochladen zu Veto Server unterstützt. Du kannst diesen Befehl auch über andere Transportkanäle senden, und das Bild wird dann zu Veto Server hochgeladen (sofern ein Konto existiert).</string>
+    <string name="cmd_camera_response_no_veto_server">Bild kann nicht aufgenommen werden: ein Veto Server-Konto fehlt.</string>
+    <string name="cmd_camera_response_success">Das Gerät nimmt gerade ein Bild auf und wird es zum Veto Server hochladen. Du kannst es gleich hier anschauen: %s</string>
+    <string name="cmd_delete_response_pwd_wrong">Löschen nicht möglich: falsches Passwort.</string>
+    <string name="cmd_locate_description_short">Gerät orten</string>
+    <string name="cmd_gps_description_short">Standortdienste ein- und ausschalten</string>
+    <string name="cmd_ring_response">Das Gerät sollte nun klingeln.</string>
+    <string name="cmd_lock_response">Das Gerät sollte nun gesperrt sein.</string>
+    <string name="cmd_locate_description_long">Orte das Gerät mithilfe eines oder mehrerer Standortanbieter. GPS hat die höchste Genauigkeit, aber funktioniert nicht immer. Der \"fused\"-Anbieter wird von Android definiert, und benutzt eine Kombination aus mehreren Quellen (oft WLAN oder Mobilfunkmasten). Der \"cell\"-Anbieter fragt die öffentlichen OpenCelliD- und BeaconDB-Dienste nach den umliegenden Mobilfunkmaststandorten.</string>
+    <string name="cmd_lock_description_short">Gerät sperren</string>
+    <string name="cmd_nodisturb_description_short">\"Bitte Nicht Stören\"-Modus ein- und ausschalten</string>
+    <string name="cmd_stats_description_long">Rufe die Netzwerkstatistiken des Geräts ab. Zum Beispiel seine IP-Adresse und eine Liste der umliegenden WLAN-Netzwerke.</string>
+    <string name="cmd_stats_response">Netzwerk-Statistiken:
+\n
+\nGeräte-IPs:
+\n%1$s
+\n
+\nWLAN-Netzwerke:
+\n%2$s</string>
+    <string name="perm_battery_optimizations_name">Akku-Optimierungen ignorieren</string>
+    <string name="cmd_nodisturb_response_on">Der \"Bitte Nicht Stören\"-Modus ist nun eingeschaltet.</string>
+    <string name="cmd_nodisturb_response_off">Der \"Bitte Nicht Stören\"-Modus ist nun ausgeschaltet.</string>
+    <string name="usage_notification_text">Der Befehl \"%s\" wurde ausgeführt.</string>
+    <string name="Settings_Import_Failed">Import fehlgeschlagen</string>
+    <string name="cmd_locate_response_opencellid_failed">Fehler beim Abrufen des Standorts aus OpenCelliD. Dies kann passieren, wenn der Mobilfunkmast nicht in der Datenbank enthalten ist.
+\n
+\nBitte versuchen Sie den folgenden Link: %1$s
+\n
+\n%2$s</string>
+    <string name="cmd_locate_last_known_location_not_available">Kein letzter bekannter Standort. Frage den aktuellen Standort an, um ein Standort-Update zu erzwingen.</string>
+    <string name="transport_sms_description_note">SMS kann Kosten verursachen, sowohl für dich als auch für die Personen, die dir SMS schicken. Für SMS muss deine SIM-Karte entsperrt sein (z. B. nach einem Neustart).</string>
+    <string name="transport_notification_reply_title">Antworten auf Benachrichtigungen</string>
+    <string name="transport_notification_reply_description_auth">Um Veto per Antworten auf Benachrichtigungen zu steuern, muss die Veto-PIN gesetzt sein. Jede Nachricht muss die korrekte PIN enthalten.</string>
+    <string name="transport_veto_server_description">Veto Server bietet eine Webschnittstelle, über die du dein Gerät steuern, seinen Standort abfragen und die von ihm gesendeten Bilder ansehen kannst. Du kannst Veto Server selbst hosten oder die bereitgestellte Instanz nutzen. Die Daten werden verschlüsselt auf dem Server gespeichert und sind durch dein Passwort geschützt.</string>
+    <string name="transport_veto_server_description_auth">Jeder der deinen Benutzernamen und dein Passwort kennt kann sich bei Veto Server anmelden und dein Gerät steuern.</string>
+    <string name="transport_veto_server_description_note">Veto Server benötigt eine Internetverbindung. Dies kann Mobilfunk sein (dann muss die SIM-Karte entsperrt sein) oder WLAN.</string>
+    <string name="missing_permissions_description">Veto benötigt die folgenden Berechtigungen.</string>
+    <string name="bottom_nav_transports">Transportkanäle</string>
+    <string name="bottom_nav_commands">Befehle</string>
+    <string name="cmd_locate_last_known_location_text">Letzter bekannter Standort</string>
+    <string name="Settings_Import_Success">Import erfolgreich</string>
+    <string name="WhiteList_no_contact_picker">Keine Kontakt-Auswahl-App gefunden!</string>
+    <string name="transport_notification_reply_description">Du kannst Veto erlauben deine Benachrichtigungen zu lesen, um auf Befehle zu warten. Veto kann dann über die in Android integrierte Benachrichtigungsfunktion antworten. So kannst du Veto über eine Messaging-App deiner Wahl steuern, solange diese App Benachrichtigungen sendet, auf die man antworten kann. Du kannst z.B. eine Signal-Nachricht „%s mypin help“ an dein Gerät senden.</string>
+    <string name="bottom_nav_settings">Einstellungen</string>
+    <string name="missing_permissions_title">Fehlende Berechtigungen</string>
+    <string name="transport_sms_title">SMS</string>
+    <string name="cmd_lock_description_long">Sperre das Gerät und zeige optional eine Nachricht auf dem Sperrbildschirm an. Danach ist die biometrische Sperre nicht verfügbar und dein Gerät kann nur mit dem Gerätepasswort entsperrt werden.</string>
+    <string name="setup_warnings_title">Warnungen einrichten</string>
+    <string name="transport_sms_description">Schicke Befehle per SMS an dein Gerät. Schicke z.B. eine SMS mit \"%s help\" an dein Gerät. Veto wird per SMS antworten.</string>
+    <string name="transport_sms_description_auth">Nur Telefonnummern, die in der Liste erlaubter Nummern sind, können Befehle senden. Um Befehle von einer Telefonnummer zu senden, die nicht in dieser Liste ist, muss die Nachricht die PIN enthalten: „%s mypin help“. Damit du die PIN nicht jedes Mal neu eingeben musst, wird diese neue Telefonnummer für die nächsten 10 Minuten in eine temporäre Erlaubnisliste aufgenommen.</string>
+    <string name="add">Hinzufügen</string>
+    <string name="crashed_text">Veto ist abgestürzt! Hier ist der Log:</string>
+    <string name="crashed_continue_without">Ohne Meldung fortfahren</string>
+    <string name="allowlist_phone_number">Telefonnummer</string>
+    <string name="allowlist_add_phone_number">Telefonnummer hinzufügen</string>
+    <string name="allowlist_phone_number_name">Name</string>
+    <string name="perm_unused_app_name">Einschränkungen für nicht benutzte Apps</string>
+    <string name="perm_unused_app_description">Android pausiert Apps, die einige Monate lang nicht geöffnet werden und entfernt ihre Berechtigungen. Allerdings soll Veto im Hintergrund arbeiten. Nach der initialen Einrichtung öffnet man Veto nur selten. Daher musst du Veto von dieser Pausierung ausnehmen, sonst kann es passieren, dass Veto in ein paar Monaten nicht mehr funktioniert.</string>
+    <string name="crashed_send_log">Log senden</string>
+    <string name="crashed_copy_log">Log kopieren</string>
+    <string name="OpenCellId_tower_collector_download">Tower Collector herunterladen</string>
+    <string name="OpenCellId_tower_collector_info">Du kannst zu OpenCelliD beitragen, indem du Mobilfunkmast-Daten sammelst und hochlädst. Dazu benötigst du eine extra App. Eine solche App ist Tower Collector.</string>
+    <string name="crashed_open_issuetracker">Issue Tracker Öffnen</string>
+    <string name="transport_inapp_title">In-App</string>
+    <string name="transport_inapp_send_command_title">In-App Befehl senden</string>
+    <string name="transport_inapp_send_command_command_placeholder">Befehl</string>
+    <string name="transport_inapp_send_command_button_send">Senden</string>
+    <string name="Notification_InApp">In-App-Transportkanal</string>
+    <string name="Notification_InApp_Description">Benachrichtigungen vom In-App-Transportkanal</string>
+    <string name="transport_inapp_description">Sende Befehle lokal von Veto an dein Gerät. Das ist nützlich zum Testen. Veto antwortet mit einer Benachrichtigung.</string>
+    <string name="usage_notification_text_source">Der Befehl \"%1$s\" wurde von \"%2$s\" ausgeführt.</string>
+    <string name="Settings_Veto_Server_Connection_Status">Verbindungsstatus:</string>
+    <string name="Settings_Veto_Server_Connection_Status_Success">Erfolg</string>
+    <string name="server_registration_token_error">Die Netzwerkanfrage ist mit HTTP 401 fehlgeschlagen. Dies kann passieren, wenn der Server ein Registrierungs-Token benötigt und das von dir angegebene Token falsch war.</string>
+    <string name="server_login_attempts_title">Fehlgeschlagene Anmeldeversuche am Veto Server</string>
+    <string name="server_login_attempts_text">Jemand hat versucht sich in deinen Veto Server-Account \"%s\" einzuloggen. Wegen mehrerer falscher Passwortversuche ist der Account nun für 10 Minuten gesperrt.</string>
+    <string name="cmd_locate_response_gps_fail">Das Finden einer neuen GPS-Position ist fehlgeschlagen. Vielleicht wegen einer Zeitüberschreitung.</string>
+    <string name="Settings_no_ringtone_picker">Keine Klingelton-Auswahl-App gefunden!</string>
+    <string name="Settings_VetoServer_Delete_Account">Account löschen</string>
+    <string name="pw_change_success">Passwort geändert</string>
+    <string name="pw_change_empty">Das Passwort darf nicht leer sein.</string>
+    <string name="pw_change_wrong_password">Falsches Passwort</string>
+    <string name="Settings_VetoServer_Error_id_or_pw_empty">Die Veto ID und das Passwort dürfen nicht leer sein.</string>
+    <string name="cmd_bluetooth_response_on">Bluetooth eingeschaltet.</string>
+    <string name="cmd_bluetooth_response_off">Bluetooth ausgeschaltet.</string>
+    <string name="perm_bluetooth_connect_name">Bluetooth verbinden</string>
+    <string name="export_success">Export erfolgreich</string>
+    <string name="export_failed">Export fehlgeschlagen</string>
+    <string name="log_view_title">Protokoll</string>
+    <string name="log_view_export">Protokoll exportieren</string>
+    <string name="temporary_allowlist_expired">Dein temporärer Veto-Zugang ist abgelaufen. Sende den PIN erneut um Veto weiter zu nutzen.</string>
+    <string name="Settings_VetoServer_Unregister_Success">Erfolgreich de-registriert und Daten gelöscht!</string>
+    <string name="pw_change_network_failed">Passwortänderung aufgrund eines Netzwerkfehlers fehlgeschlagen.</string>
+    <string name="pw_change_mismatch">Die Passwörter stimmen nicht überein.</string>
+    <string name="cmd_bluetooth_description_short">Bluetooth ein- und ausschalten</string>
+    <string name="cmd_bluetooth_response_no_bluetooth">Dieses Gerät scheint kein Bluetooth zu haben.</string>
+    <string name="appearance_language_system_default">Systemsprache</string>
+    <string name="Settings_Appearance">Erscheinungsbild</string>
+    <string name="appearance_language">Sprache</string>
+    <string name="appearance_language_choose">Sprache auswählen</string>
+    <string name="cmd_delete_response_failed">Das Löschen des Geräts ist fehlgeschlagen aufgrund eines Ausnahmefehlers.</string>
+    <string name="appearance_theme_follow_system">Systemstandard</string>
+    <string name="appearance_theme_dark">Dunkel</string>
+    <string name="appearance_theme">Designstil</string>
+    <string name="appearance_theme_choose">Designstil auswählen</string>
+    <string name="appearance_theme_light">Hell</string>
+    <string name="appearance_dynamic_colors">Dynamische Farben</string>
+    <string name="Settings_VetoServer_Logout_Text">Möchtest du dich wirklich aus deinem Veto Server-Account ausloggen?</string>
+    <string name="crashed_title">Absturzbericht</string>
+    <string name="server_version_upgrade_required_title">Veto Server muss geupdated werden</string>
+    <string name="server_version_upgrade_required_text">Der genutzte Veto Server ist Version {CURRENT}, aber diese App benötigt mindestens {MIN}. Die Steuerung dieses Geräts mit diesem Server könnte beeinträchtigt sein. Bitte den Server updaten.</string>
+    <string name="log_view_clear_confirm">Möchtest du wirklich alle Protokolleinträge löschen?</string>
+    <string name="log_view_clear">Protokoll löschen</string>
+    <string name="pin_match_command_keyword">Die PIN darf nicht mit einem der Befehle übereinstimmen!</string>
+    <string name="Settings_VetoServer_Check_Interval_Title">Verbindungsprüfung-Intervall</string>
+    <string name="Settings_VetoServer_Check_Interval_Description">Veto prüft die Verbindung zum Veto-Server alle X Stunden. Setze den Wert auf 0, um die Verbindungsprüfung zu deaktivieren.</string>
+    <string name="Settings_VetoServer_Check_Notify_After_Title">Maximal zulässige Zeit ohne Verbindung</string>
+    <string name="Settings_VetoServer_Check_Notify_After_Description">Veto wird dich benachrichtigen, wenn die letzte erfolgreiche Verbindung zum Veto-Server mehr als X Stunden zurückliegt. Dies hat keine Auswirkungen, wenn die Verbindungsprüfung deaktiviert ist.</string>
+    <string name="server_connectivity_lost_title">Veto-Server-Verbindung verloren</string>
+    <string name="server_connectivity_lost_text">Der Veto-Server bei %1$s kann nicht mehr erreicht werden. Die letzte erfolgreiche Verbindung war am %2$s.</string>
+    <string name="cmd_delete_response_dry_run">Testlauf erfolgreich, die eigentliche Gerätelöschung wird übersprungen.</string>
+    <string name="Settings_VetoServer_Update_Interval_Title">Intervall des Standortuploads im Hintergrund</string>
+    <string name="usage_notification_pin_title">Veto PIN benutzt</string>
+    <string name="usage_notification_pin_text">Der PIN wurde von dieser Nummer verwendet: \"%s\". Wir empfehlen, den PIN zu ändern.</string>
+    <string name="server_veto_id_hint">Die Veto ID identifiziert deinen Account auf dem Veto Server. Wenn du dieses Feld leer lässt generiert der Server eine ID für dich. Der Server Administrator kann die Veto ID sehen.</string>
+    <string name="Settings_VetoServer_Push_Url">Push URL: %s</string>
+    <string name="Settings_VetoServer_Push_Register_Again">Erneut registrieren</string>
+    <string name="Settings_VetoServer_Push_Register">Registrieren</string>
+    <string name="Settings_VetoServer_Push_Distributor">Verteiler: %s</string>
+    <string name="Settings_VetoServer_Push_Description">Um Befehle von Veto Server an dein Gerät zu senden, wird eine UnifiedPush-Verteiler-App benötigt.</string>
+    <string name="Settings_Pin_Not_Backed_Up">Achtung: Der PIN ist nicht im App-Backup enthalten.</string>
+    <string name="allowlist_reset_text">Aufgrund eines Absturzes wurden die Erlaubten Kontakte zurückgesetzt. Bitte konfiguriere sie erneut.</string>
+    <string name="allowlist_reset_title">Erlaubte Kontakte zurücksetzen</string>
+    <string name="update_pin_hash_change_text">Die Veto-PIN wurde während eines App-Updates zurückgesetzt. Konfiguriere die PIN erneut, um Veto weiterhin mit einer PIN zu benutzen.</string>
+    <string name="cmd_ringermode_description_short">Klingelmodus ändern</string>
+    <string name="cmd_ringermode_response_empty">Der aktuelle Klingelmodus ist \"%s\".</string>
+    <string name="cmd_ringermode_response">Der Klingelmodus wurde geändert von \"%1$s\" (alt) zu \"%2$s\" (neu).</string>
+    <string name="cmd_ringermode_description_long">Beachte, dass „stumm“ auch den Modus „Nicht stören“ aktiviert. Dies ist erwartetes Verhalten und wird von Android definiert.</string>
+    <string name="cmd_locate_response_beacondb_failed">Fehler beim Abrufen des Standorts von BeaconDB. Dies kann passieren, wenn der Mobilfunkmast nicht in der Datenbank vorhanden ist.\n\n%s</string>
+    <string name="Settings_Set_Pin">PIN setzen</string>
+    <string name="Settings_Change_Pin">PIN ändern</string>
+    <string name="server_connectivity_check_not_enabled_title">Server-Erreichbarkeits-Prüfung aktivieren</string>
+    <string name="server_connectivity_check_not_enabled_text">Veto kann regelmäßig prüfen, ob der Veto-Server noch erreichbar ist. Aus Privatsphäre-Gründen ist dies standardmäßig deaktiviert. Um die Verfügbarkeit zu verbessern empfehlen wir jedoch, dies zu aktivieren.</string>
+    <string name="setup_recommendations_title">Empfehlungen</string>
+    <string name="Settings_VetoServer_Push_Open_Help">Mehr Informationen zu Push</string>
+    <string name="server_password_hint">Wähle ein Passwort das nicht erraten werden kann, aber dass du wiederherstellen kannst wenn du dein Gerät verlierst. Das Passwort gewährt Zugriff darauf, aus der Ferne Befehle auf deinem Gerät ausführen zu dürfen. Der Server Administrator kann das Passwort nicht sehen oder es zurücksetzen.</string>
+    <string name="allowlist_invalid_number">Diese Telefonnummer ist ungültig!</string>
+    <string name="pin_min_length">Die PIN muss mindestens 8 Zeichen lang sein. Es werden 16 oder mehr Zeichen empfohlen.</string>
+    <string name="password_min_length">Das Passwort muss mindestens 8 Zeichen lang sein. Es werden 16 oder mehr Zeichen empfohlen.</string>
+    <string name="Settings_VetoServer_Push_Install_Sunup">Sunup installieren</string>
+    <string name="Settings_VetoServer_Push_Info_Sunup">Die empfohlene UnifiedPush-Verteiler-App ist Sunup. Sunup ist einfach einzurichten und benutzt Push Server von Mozilla.</string>
+    <string name="Settings_VetoServer_Update_Interval_Description_Constraint">Werte unter 15 Minuten werden nicht empfohlen.</string>
+    <string name="missing_push_title">UnifiedPush fehlt</string>
+    <string name="missing_push_description">Ohne eine UnifiedPush-Verteiler-App kannst du keine Befehle von Veto Server empfangen.</string>
+    <string name="Notification_ExecutionService">Befehlsausführung</string>
+    <string name="Notification_ExecutionService_Description">Benachrichtigungen für Befehle, die aktuell ausgeführt werden</string>
+    <string name="executing_title">Befehl wird ausgeführt</string>
+    <string name="executing_text">Der Befehl \"%1$s\" wird gerade von \"%2$s\" ausgeführt.</string>
+    <string name="cmd_locate_provider_disabled">Der angefragte Standort-Anbieter \"%s\" ist deaktiviert.</string>
+    <string name="cmd_flash_description_short">Kamerablitz blitzen lassen</string>
+    <string name="dont_show_again">Nicht mehr anzeigen</string>
+    <string name="delete_pw_warning_no_backup">Achtung: Das Passwort ist nicht im App-Backup enthalten.</string>
+    <string name="delete_pw_warning_empty">Achtung: Löschen wird nicht funktionieren, da das Lösch-Passwort leer ist. Du musst sowohl die Funktion aktivieren als auch ein Passwort setzen.</string>
+    <string name="password_set">Passwort setzen</string>
+    <string name="password_change">Passwort ändern</string>
+    <string name="password_enter">Passwort eingeben</string>
+    <string name="password_match_command_keyword">Das Passwort darf nicht mit einem der Befehle übereinstimmen!</string>
+    <string name="veto_edge_info_message">Dies ist die Edge-Variante von Veto. Hier lautet das Standard-Befehlswort „vetoe“ (anstelle von „veto“). Um beispielsweise den „locate“-Befehl zu senden, verwende „vetoe locate“. Auf diese Weise können sowohl Edge als auch Prod auf demselben Gerät installiert sein und Befehle an eines der beiden gerichtet werden.</string>
+    <string name="Fused">Zusammengefasst</string>
+    <string name="tip_first_contact_added">Glückwunsch, du hast deinen ersten Kontakt hinzugefügt! Du kannst nun mit Veto kommunizieren, indem du von einer erlaubten Telefonnummer aus eine SMS schickst, die mit \"%1$s\" anfängt. Schick zum Beispiel \"%2$s help\" oder \"%3$s flash\". Falls alles klappt, wird die App antworten.</string>
+    <string name="cmd_bluetooth_response_is_on">Bluetooth ist an.</string>
+    <string name="cmd_bluetooth_response_is_off">Bluetooth ist aus.</string>
+    <string name="cmd_gps_response_is_on">Die Standortdienste sind an.</string>
+    <string name="cmd_gps_response_is_off">Die Standortdienste sind aus.</string>
+</resources>

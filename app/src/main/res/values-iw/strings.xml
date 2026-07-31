@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accept">אשר</string>
+    <string name="add">הוסף</string>
+    <string name="Edit">ערוך</string>
+    <string name="Enable">אפשר</string>
+    <string name="Delete">מחק</string>
+    <string name="GPS">GPS</string>
+    <string name="export_success">ייצוא הצליח</string>
+    <string name="export_failed">ייצוא נכשל</string>
+    <string name="Settings_Import_Success">ייבוא הצליח</string>
+    <string name="Settings_Import_Failed">ייבוא נכשל</string>
+    <string name="request_failed_title">בקשת רשת נכשלה</string>
+    <string name="request_failed_status_code">קוד מצב</string>
+    <string name="request_failed_exception">חריג</string>
+    <string name="bottom_nav_commands">פקודות</string>
+    <string name="bottom_nav_transports">ערוצי מעבר</string>
+    <string name="bottom_nav_settings">הגדרות</string>
+    <string name="Settings_WhiteList">אנשי קשר מורשים</string>
+    <string name="Settings_Export">ייצא הגדרות</string>
+    <string name="Settings_Logs">רישומים</string>
+    <string name="Settings_About">אודות</string>
+    <string name="Settings_Veto_via_Pin_Description">מאפשר לך לתקשר עם Veto בעזרת קוד סודי. זה מאפשר לך לשלוח פקודות ממספר טלפון שלא נמצא באנשי הקשר המורשים.</string>
+    <string name="Settings_Enter_Pin">הכנס קוד סודי</string>
+    <string name="Toast_Empty_VetoCommand">פקודה ריקה איננה אפשרית, משתמש בברירת מחדל.</string>
+    <string name="copied">הועתק</string>
+    <string name="loading">טוען…</string>
+    <string name="help">עזרה</string>
+    <string name="Settings_Settings">הגדרות</string>
+    <string name="Settings_VetoConfig">Veto - תצורה</string>
+    <string name="Settings_Appearance">מראה</string>
+    <string name="Settings_Import">ייבא הגדרות</string>
+    <string name="pin">קוד סודי</string>
+    <string name="Settings_VetoCommand_Description">הפקודה מאפשרת לתקשר עם Veto.</string>
+    <string name="Settings_Ringer_Tone_Description">בחר צלצול שיושמע כאשר פקודת veto ring נשלחת.</string>
+    <string name="Settings_Select_Ringtone">בחר צלצול</string>
+</resources>

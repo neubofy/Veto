@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Veto Premium Gray Glassmorphism -->
+    <color name="colorPrimary">#607D8B</color>
+    <color name="colorPrimaryDark">#121212</color>
+    <color name="colorAccent">#90A4AE</color>
+    <color name="colorEnabled">#78909C</color>
+    <color name="colorDisabled">#37474F</color>
+    <color name="colorIcon">#CFD8DC</color>
+
+    <!-- Glassmorphism Essentials -->
+    <color name="glass_white">#1AFFFFFF</color>
+    <color name="glass_stroke">#33FFFFFF</color>
+
+    <!-- Generated MD3 Theme (Gray Scale) -->
+    <color name="md_theme_primary">#90A4AE</color>
+    <color name="md_theme_onPrimary">#000000</color>
+    <color name="md_theme_primaryContainer">#37474F</color>
+    <color name="md_theme_onPrimaryContainer">#CFD8DC</color>
+    <color name="md_theme_secondary">#B0BEC5</color>
+    <color name="md_theme_onSecondary">#000000</color>
+    <color name="md_theme_secondaryContainer">#455A64</color>
+    <color name="md_theme_onSecondaryContainer">#ECEFF1</color>
+    <color name="md_theme_tertiary">#78909C</color>
+    <color name="md_theme_onTertiary">#000000</color>
+    <color name="md_theme_tertiaryContainer">#263238</color>
+    <color name="md_theme_onTertiaryContainer">#CFD8DC</color>
+    <color name="md_theme_error">#FFB4AB</color>
+    <color name="md_theme_onError">#690005</color>
+    <color name="md_theme_errorContainer">#93000A</color>
+    <color name="md_theme_onErrorContainer">#FFDAD6</color>
+    <color name="md_theme_background">#121212</color>
+    <color name="md_theme_onBackground">#E6E1E5</color>
+    <color name="md_theme_surface">#1A1A1A</color>
+    <color name="md_theme_onSurface">#E6E1E5</color>
+    <color name="md_theme_surfaceVariant">#2C2C2C</color>
+    <color name="md_theme_onSurfaceVariant">#CAC4D0</color>
+    <color name="md_theme_outline">#808080</color>
+    <color name="md_theme_outlineVariant">#494949</color>
+    <color name="md_theme_scrim">#000000</color>
+    <color name="md_theme_inverseSurface">#E6E1E5</color>
+    <color name="md_theme_inverseOnSurface">#313033</color>
+    <color name="md_theme_inversePrimary">#37474F</color>
+</resources>

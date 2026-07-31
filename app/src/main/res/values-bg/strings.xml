@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Enable">Активирай</string>
+    <string name="Delete">Изтрий</string>
+    <string name="GPS">GPS</string>
+    <string name="Cell">Клетка</string>
+    <string name="Settings_Import_Success">Внасянето е успешно</string>
+    <string name="export_success">Изнасянето е успешно</string>
+    <string name="Settings_Import_Failed">Внасянето е неуспешно</string>
+    <string name="request_failed_title">Мрежовата заявка е неуспешна</string>
+    <string name="request_failed_status_code">Състояние на кода</string>
+    <string name="request_failed_response_body">Орган за реагиране</string>
+    <string name="request_failed_exception">Изключение</string>
+    <string name="bottom_nav_commands">Команди</string>
+    <string name="bottom_nav_transports">Транспортни канали</string>
+    <string name="Settings_VetoConfig">Veto-Конфигурация</string>
+    <string name="Settings_WhiteList">Разрешени контакти</string>
+    <string name="Settings_Appearance">Външен вид</string>
+    <string name="Settings_Import">Настройки за внасяне</string>
+    <string name="Settings_Export">Настройки за изнасяне</string>
+    <string name="Settings_Logs">Дневници</string>
+    <string name="Settings_About">Относно</string>
+    <string name="Settings_Veto_via_Pin_Description">Позволява ви да комуникирате с Veto чрез PIN. Това ви позволява да изпращате команди от телефонен номер, който не е в списъка с разрешени контакти.</string>
+    <string name="Settings_Enter_Pin">Въведете PIN</string>
+    <string name="pin">PIN</string>
+    <string name="Settings_VetoCommand_Description">Командата, използвана за комуникация с Veto.</string>
+    <string name="loading">Зареждане…</string>
+    <string name="help">Помощ</string>
+    <string name="copied">Копирано</string>
+    <string name="accept">Приеми</string>
+    <string name="add">Добави</string>
+    <string name="Edit">Редактиране</string>
+    <string name="export_failed">Изнасянето е неуспешно</string>
+    <string name="bottom_nav_settings">Настройки</string>
+    <string name="Settings_Settings">Настройки</string>
+</resources>

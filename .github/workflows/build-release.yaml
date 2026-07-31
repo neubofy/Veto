@@ -1,0 +1,122 @@
+name: Build & Release APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      make_latest:
+        description: 'Make this build the LATEST release (instead of Pre-Release)'
+        required: false
+        type: boolean
+        default: false
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'app/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: gradle
+
+      - name: Decode Keystore and Google Services
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ ! -z "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
+          fi
+          if [ ! -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
+          fi
+
+      - name: Configure local.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          touch local.properties
+          echo "keystore.file=../keystore.jks" >> local.properties
+          echo "keystore.password=$KEYSTORE_PASSWORD" >> local.properties
+          echo "key.alias=$KEY_ALIAS" >> local.properties
+          echo "key.password=$KEY_PASSWORD" >> local.properties
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Extract Version Name
+        id: version
+        run: |
+          VERSION_NAME=$(grep -E 'versionName\s*.*".*"' app/build.gradle | sed -E 's/.*versionName\s*"([^"]+)".*/\1/')
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "Extracted version: $VERSION_NAME"
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+
+      - name: Upload APK to Artifacts (Output)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Veto-APK
+          path: app/build/outputs/apk/release/*.apk
+
+      - name: Create Release & Upload APK
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAKE_LATEST: ${{ github.event.inputs.make_latest || 'false' }}
+        run: |
+          APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          echo "Found APK at $APK_PATH"
+          
+          if [ "$MAKE_LATEST" = "true" ]; then
+            TARGET_TAG="v${VERSION_NAME}"
+          else
+            TARGET_TAG="v${VERSION_NAME}-beta"
+          fi
+          echo "Target tag: $TARGET_TAG"
+          
+          if gh release view "$TARGET_TAG" >/dev/null 2>&1; then
+            echo "Checking existing APK assets in release/pre-release $TARGET_TAG..."
+            gh release view "$TARGET_TAG" --json assets --jq '.assets[] | select(.name | endswith(".apk")) | "\(.name) \(.downloadCount)"' | while read -r name count; do
+              if [ -n "$name" ]; then
+                echo "Found existing APK asset: $name with download count: $count"
+                if [ "$count" -lt 5 ]; then
+                  echo "Download count is less than 5. Deleting $name..."
+                  gh release delete-asset "$TARGET_TAG" "$name" -y
+                else
+                  echo "Download count is $count (5 or more). Keeping $name."
+                fi
+              fi
+            done
+            echo "Uploading new APK to $TARGET_TAG..."
+            gh release upload "$TARGET_TAG" "$APK_PATH" --clobber
+          else
+            echo "Release $TARGET_TAG does not exist. Creating..."
+            if [ "$MAKE_LATEST" = "true" ]; then
+              gh release create "$TARGET_TAG" "$APK_PATH" \
+                --title "Release $TARGET_TAG" \
+                --notes "Automated production release via GitHub Actions."
+            else
+              gh release create "$TARGET_TAG" "$APK_PATH" \
+                --title "Pre-Release $TARGET_TAG" \
+                --notes "Automated early access build via GitHub Actions." \
+                --prerelease
+            fi
+          fi

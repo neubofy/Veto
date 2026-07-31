@@ -1,0 +1,42 @@
+<resources>
+
+    <style name="Theme.Veto" parent="AppTheme" />
+
+    <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="LCLD.Text.SectionTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/md_theme_primary</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">textStart</item>
+    </style>
+
+    <style name="LCLD.Text.Log.Title" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">monospace</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LCLD.Text.Log.Message" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">monospace</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="LCLD.Text.Log.Date" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">monospace</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="CustomAboutLibrariesStyle" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+</resources>

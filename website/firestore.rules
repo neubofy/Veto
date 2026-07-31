@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to check if the user is authenticated and is accessing their own data
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // Match all documents under a specific user ID
+    match /users/{userId} {
+      // The user can read and write their own top-level document
+      allow read, write: if isOwner(userId);
+
+      // Match any subcollections (e.g., photos, results) under the user's document
+      match /{subcollection}/{document=**} {
+        // The user can read and write all their subcollections
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Default deny for everything else (highly secure)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

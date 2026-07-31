@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- https://developer.android.com/privacy-and-security/security-config -->
+<!-- WARNING: This is the main config! For dev builds, see the dev config!-->
+
+<network-security-config>
+    <!-- People can self-host Veto Server, therefore the config needs to be general. -->
+    <!-- Since Veto Server uses the WebCrypto API, people MUST use TLS anyway, -->
+    <!-- thus we can disallow cleartext traffic. -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+
+            <!-- Many people use private CAs-->
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Lock down the domains that the maintainers control. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">veto-foss.org</domain>
+        <domain includeSubdomains="true">neubofy.de</domain>
+        <trust-anchors>
+            <!-- Only allow certs from Let's Encrypt. -->
+            <!-- This should prevent other CAs in the system trust store -->
+            <!-- from mis-issuing a certificate for our domains. -->
+            <!-- https://letsencrypt.org/certificates/ -->
+            <certificates src="@raw/isrg_root_x1" />
+            <certificates src="@raw/isrg_root_x2" />
+        </trust-anchors>
+        <certificateTransparency enabled="true" />
+    </domain-config>
+
+</network-security-config>

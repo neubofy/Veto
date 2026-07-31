@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Android 12 and higher -->
+<!-- https://developer.android.com/about/versions/12/behavior-changes-12#backup-restore -->
+<data-extraction-rules>
+    <cloud-backup disableIfNoEncryptionCapabilities="true">
+        <include domain="sharedpref" />
+        <include domain="database" />
+        <include domain="file" />
+
+        <exclude
+            domain="sharedpref"
+            path="veto_encrypted_settings.xml" />
+    </cloud-backup>
+
+    <device-transfer>
+        <include domain="sharedpref" />
+        <include domain="database" />
+        <include domain="file" />
+
+        <exclude
+            domain="sharedpref"
+            path="veto_encrypted_settings.xml" />
+    </device-transfer>
+</data-extraction-rules>

@@ -1,0 +1,21 @@
+# Secrets and local configurations
+google-services.json
+local.properties
+
+# Standard Android exclusions
+*.iml
+.gradle
+/local.properties
+/.idea/caches/build_file_checksums.ser
+/.idea/caches/resolve.modules.xml
+/.idea/workspace.xml
+/.idea/libraries
+/.idea/modules.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+/app/build
+/website/node_modules
