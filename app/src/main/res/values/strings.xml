@@ -445,4 +445,6 @@
     <string name="perm_notification_access_desc">Required to intercept incoming notifications and reply to them for Notification-based commands.</string>
     <string name="perm_overlay_desc">Required to display a custom lock screen or alarm UI over other apps.</string>
     <string name="perm_sms_desc">Required to receive incoming SMS commands, and to send SMS replies back to your allowed contacts.</string>
+    <string name="permission_microphone">Microphone</string>
+    <string name="permission_microphone_desc">Required to record audio remotely.</string>
 </resources>
