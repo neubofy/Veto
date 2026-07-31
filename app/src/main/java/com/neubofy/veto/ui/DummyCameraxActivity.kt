@@ -84,10 +84,12 @@ class DummyCameraxActivity : AppCompatActivity() {
             val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "camera"
             // Ensure any overall hardware lockup times out after a hard limit
             val result = withTimeoutOrNull(45000L) {
-                if (commandName == "video") {
-                    recordVideo()
-                } else {
-                    takePhoto()
+                com.neubofy.veto.utils.CommandQueueManager.runMediaCommandInQueue {
+                    if (commandName == "video") {
+                        recordVideo()
+                    } else {
+                        takePhoto()
+                    }
                 }
             }
             if (result == null) {
@@ -158,7 +160,6 @@ class DummyCameraxActivity : AppCompatActivity() {
             // Bind Dummy Preview alongside ImageCapture to satisfy hardware camera HAL requirements
             val preview = Preview.Builder().build()
             cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
-            kotlinx.coroutines.delay(1000L)
         } catch (e: Exception) {
             this.log().e(TAG, "Cannot take picture: bindToLifecycle failed. ${e.message}")
             val transport = NextJsServerTransport(ctx)

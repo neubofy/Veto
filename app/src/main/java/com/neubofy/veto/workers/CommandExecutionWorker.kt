@@ -72,7 +72,26 @@ class CommandExecutionWorker(
             // Continue executing, and try work in background
         }
 
-        commandHandler.execute(applicationContext, command)
+        try {
+            commandHandler.execute(applicationContext, command)
+        } catch (e: Exception) {
+            if (e is kotlinx.coroutines.CancellationException) {
+                applicationContext.log().w(TAG, "Worker $id was cancelled/interrupted")
+                val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
+                transport.send(applicationContext, "Command execution interrupted or cancelled by user.", command)
+                throw e
+            } else {
+                applicationContext.log().e(TAG, "Worker $id failed with exception: ${e.message}")
+                val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
+                transport.send(applicationContext, "Command execution failed: ${e.message}", command)
+            }
+        } finally {
+            if (isStopped) {
+                applicationContext.log().w(TAG, "Worker $id isStopped for command=$command")
+                val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
+                transport.send(applicationContext, "Command execution interrupted or cancelled by user.", command)
+            }
+        }
 
         applicationContext.log().i(TAG, "Finishing worker $id")
         return Result.success()
