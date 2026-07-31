@@ -11,6 +11,8 @@ import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.ui.DummyCameraxActivity
 import com.neubofy.veto.utils.log
 
+import com.neubofy.veto.permissions.StoragePermission
+
 class VideoCommand(context: Context) : Command(context) {
     override val keyword = "video"
     override val usage = "video [front | back]"
@@ -23,7 +25,7 @@ class VideoCommand(context: Context) : Command(context) {
 
     override val longDescription = R.string.cmd_video_description_long
 
-    override val requiredPermissions = listOf(CameraPermission(), RecordAudioPermission())
+    override val requiredPermissions = listOf(CameraPermission(), RecordAudioPermission(), StoragePermission())
 
     override suspend fun <T> executeInternal(
         args: List<String>,
@@ -45,6 +47,6 @@ class VideoCommand(context: Context) : Command(context) {
         }
         
         context.startActivity(dummyCameraActivity)
-        transport.send(context, "The device is recording a 30s video. You will receive a link shortly.", keyword)
+        transport.send(context, "Capturing 30s video...", keyword)
     }
 }
