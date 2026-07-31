@@ -138,7 +138,6 @@
     <string name="Settings_Import_Failed">Uvoz ni uspel</string>
     <string name="cmd_missing_permissions">Ne morem pognati ukaza %1$s: manjkajoča dovoljenja %2$s.</string>
     <string name="required_permissions_title">Zahtevana dovoljenja</string>
-    <string name="grant_via_adb">Dovoli preko ADB</string>
     <string name="perm_post_notification_name">Objavi obvestila</string>
     <string name="cmd_locate_last_known_location_not_available">Ni zadnje znane lokacije. Zahtevajte posodobitev lokacije, da jo pridobite.</string>
     <string name="cmd_lock_description_long">Zaklene napravo in po želji prikaže sporočilo na zaklenjenem zaslonu. Naprave po tem ni mogoče biometrično odkleniti, za odklepanje naprave je potrebno vnesti PIN kodo ali geslo.</string>
@@ -166,10 +165,6 @@
     <string name="perm_unused_app_name">Omejitve neuporabljenih aplikacij</string>
     <string name="perm_unused_app_description">Aplikacije, ki niso odprte nekaj mesecev, Android začasno ustavi in odstrani njihova dovoljenja. Vendar pa mora Veto delovati v ozadju. Ko aplikacijo enkrat nastavite, jo boste verjetno zelo redko odprli. Zato morate Veto izvzeti iz začasne zaustavitve, sicer aplikacija čez nekaj mesecev morda ne bo več delovala.</string>
     <string name="grant_write_secure_settings_title">Dovoli dostop za pisanje v varne nastavitve</string>
-    <string name="grant_via_shizuku">Dovoli preko Shizuku</string>
-    <string name="grant_via_root">Dovoli preko korenskega dostopa (tim. root)</string>
-    <string name="perm_root_denied">Korenski dostop zavrnjen</string>
-    <string name="perm_shizuku_failed">Dodeljevanje preko Shizuku ni uspelo</string>
     <string name="transport_notification_reply_title">Odgovor na obvestilo</string>
     <string name="transport_sms_title">SMS</string>
     <string name="usage_notification_title">Ukaz izveden</string>

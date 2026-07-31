@@ -39,11 +39,7 @@
     <string name="Permission_POST_NOTIFICATIONS">Veto sẽ thỉnh thoảng gửi cho bạn thông báo, ví dụ như để cảnh báo bạn rằng ai đó đang định vị thiết bị của bạn.</string>
     <string name="optional_permissions_title">Quyền Tùy Chọn</string>
     <string name="grant">Cấp Quyền</string>
-    <string name="grant_via_adb">Cấp Quyền Qua ADB</string>
-    <string name="grant_via_root">Cấp Quyền Qua Root</string>
     <string name="grant_write_secure_settings_description">Quyền này chỉ có thể được cấp với công cụ dòng lệnh \"pm grant\" của Android. Bạn có thể thực hiện lệnh này thủ công qua Android Debug Bridge (ADB) bằng cách sử dụng máy tính. Bạn cũng có thể thực hiện trực tiếp trên thiết bị của mình bằng cách sử dụng root hoặc Shizuku.\n\nUser ID: %d</string>
-    <string name="perm_root_denied">Truy cập root bị từ chối</string>
-    <string name="perm_shizuku_failed">Cấp quyền qua Shizuku thất bại</string>
     <string name="transport_sms_title">SMS</string>
     <string name="transport_sms_description">Gửi lệnh đến thiết bị của bạn qua SMS. Ví dụ, nhắn tin \"%s help\" đến thiết bị của bạn. Veto sẽ trả lời bằng một tin nhắn SMS.</string>
     <string name="transport_sms_description_note">SMS có thể phát sinh chi phí cho cả bạn và người nhắn tin cho bạn. SMS yêu cầu thẻ SIM của bạn phải được mở khóa (ví dụ, sau khi khởi động lại).</string>
@@ -173,7 +169,6 @@
     <string name="cmd_locate_description_long">Xác định vị trí thiết bị bằng một hoặc nhiều nhà cung cấp vị trí. Nhà cung cấp hệ điều hành thường là GPS, đôi khi kết hợp với các nguồn khác. Một nhà cung cấp thứ hai là OpenCelliD, sử dụng cơ sở dữ liệu về vị trí của các trạm phát sóng di động.</string>
     <string name="perm_write_secure_settings_name">Ghi Cài Đặt Bảo Mật</string>
     <string name="Permission_IGNORE_BATTERY_OPTIMIZATION">Ứng dụng này được thiết kế để hoạt động trong nền. Để đảm bảo nó hoạt động ngay cả khi thiết bị của bạn ở chế độ chờ, bạn cần tắt tối ưu hóa pin cho ứng dụng này.</string>
-    <string name="grant_via_shizuku">Cấp Quyền Qua Shizuku</string>
     <string name="Notification_Usage_Description">Thông báo khi Veto đang nhận lệnh</string>
     <string name="usage_notification_pin_title">Mã PIN Veto đã được sử dụng</string>
     <string name="missing_permissions_description">Các quyền sau đây là cần thiết để Veto hoạt động.</string>

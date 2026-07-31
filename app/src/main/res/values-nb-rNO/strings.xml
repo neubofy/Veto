@@ -85,7 +85,6 @@
     <string name="perm_overlay_name">Visning over andre programmer</string>
     <string name="perm_post_notification_name">Posting av merknader</string>
     <string name="perm_sms_name">SMS</string>
-    <string name="perm_root_denied">Rot-tilgang nektet</string>
     <string name="cmd_stats_description_long">Henter nettverksstatistikk fra enheten. For eksempel dens eksterne IP-adresse og en liste over Wi-Fi-nettverk i nærheten.</string>
     <string name="server_version_error_low_version">Tjeneren har versjon {CURRENT} og trenger ihvertfall å være {MIN} eller nyere. Fortsett på egen risiko.</string>
     <string name="OpenCellId_privacy">Personvern: Husk at OpenCelliD tar rede på hvilken mobilmast du er tilkoblet, og dermed din plassering ved hver API-spørring.</string>
@@ -123,10 +122,6 @@
     <string name="required_permissions_title">Påkrevde tilganger</string>
     <string name="optional_permissions_title">Valgfrie tilganger</string>
     <string name="grant">Innvilg</string>
-    <string name="grant_via_adb">Innvilg via ADB</string>
-    <string name="grant_via_root">Innvilg via rot-tilgang</string>
-    <string name="grant_via_shizuku">Innvilg via Shizuku</string>
-    <string name="perm_shizuku_failed">Kunne ikke innvilge via Shizuku</string>
     <string name="cmd_stats_description_short">Hent nettverksstatistikk</string>
     <string name="cmd_stats_response">Nettverksstatistikk:
 \n

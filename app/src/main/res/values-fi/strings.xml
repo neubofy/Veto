@@ -169,9 +169,6 @@
     <string name="server_unregister_failed_body">Rekisteröinnin poisto epäonnistui seuraavalla virheellä: {ERROR}\n\nVoit kuitenkin jatkaa, mutta tiliäsi ei välttämättä ole poistettu palvelimelta. Jos jatkat, tili poistetaan paikallisesti tältä laitteelta.</string>
     <string name="cmd_locate_response_gps_fail">GPS:n sijainnin päivitys epäonnistui, mahdollisesti aikakatkaisun vuoksi.</string>
     <string name="perm_battery_optimizations_name">Ohita akun optimointi</string>
-    <string name="grant_via_adb">Myönnä ADB:n kautta</string>
-    <string name="grant_via_shizuku">Myönnä Shizukun kautta</string>
-    <string name="perm_shizuku_failed">Käyttöoikeuden myöntäminen Shizukun kautta epäonnistui</string>
     <string name="transport_sms_title">SMS</string>
     <string name="cmd_camera_response_no_veto_server">Kuvaa ei voitu ottaa: ei tiliä Veto-palvelimella.</string>
     <string name="app_description">Veto (Veto) sallii sinun etäpaikantaa laitteesi. Voit kommunikoida Veto:n kanssa tekstiviestillä, pikaviestimillä tai Veto-palvelimen kautta. Paikanna laitteesi, laita se soimaan tai tyhjennä se - kaikki etänä.</string>
@@ -190,7 +187,6 @@
     <string name="cmd_missing_permissions">Komentoa %1$s ei voitu suorittaa: Käyttöoikeus puuttuu %2$s.</string>
     <string name="grant">Myönnä</string>
     <string name="grant_write_secure_settings_title">Myönnä suojattujen asetusten kirjoitusoikeus</string>
-    <string name="perm_root_denied">Root-oikeus evätty</string>
     <string name="cmd_delete_description_short">Palauta laitteen tehdasasetukset</string>
     <string name="cmd_stats_description_long">Hae verkon tilastot laitteelta (esimerkiksi IP-osoite, lista ympäröivistä Wifi-verkoista).</string>
     <string name="cmd_locate_description_long">Paikanna laite käyttäen yhtä tai useampaa sijainnin tarjoajaa. Käyttöjärjestelmä tarjoaa usein GPS:n, joskus yhdistelmänä muiden lähteiden kanssa. Toinen tarjoaja on OpenCelliD, joka käyttää puhelintornien sijaintien tietokantaa.</string>
@@ -212,7 +208,6 @@
     <string name="cmd_nodisturb_response_on">Älä häiritse-tila kytketty päälle.</string>
     <string name="cmd_nodisturb_response_off">Älä häiritse-tila kytketty pois päältä.</string>
     <string name="grant_write_secure_settings_description">Tämä käyttöoikeus voidaan myöntäö vain Androidin \"pm grant\"-komentorivityökalulla. Voit suorittaa komennon manuaalisesti Android Debug Bridgen (ADB):n kautta tietokonetta käyttäen. Voit suorittaa komennon myös rootatulla tai Shizukua käyttävällä laitteella.\n\nUser ID: %d</string>
-    <string name="grant_via_root">Myönnä root-oikeuksin</string>
     <string name="transport_sms_description_note">Tekstiviestit veloitetaan liittymän hinnaston mukaisesti. Jotta tekstiviestejä voidaan käyttää, tulee SIM-kortin lukituksen olla avattu (esim. laitteen uudelleenkäynnistyksen jälkeen).</string>
     <string name="Notification_Server_Description">Veto-palvelimeen liittyvät ilmoitukset</string>
     <string name="crashed_text">Veto on kaatunut! Tässä loki:</string>

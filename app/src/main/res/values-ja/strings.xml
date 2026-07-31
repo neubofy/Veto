@@ -10,7 +10,6 @@
     <string name="server_version_error">サーバーのバージョンを取得できませんでした</string>
     <string name="Settings_Logs">ログ</string>
     <string name="registration_token_hint">非公開サーバーの場合はトークンが必要となる場合があります。公開サーバーの場合は空欄のままにしてください。</string>
-    <string name="grant_via_shizuku">Shizukuで付与</string>
     <string name="password">パスワード</string>
     <string name="allowlist_phone_number">電話番号</string>
     <string name="pw_change_success">パスワードを変更しました</string>
@@ -30,7 +29,6 @@
     <string name="log_view_clear_confirm">すべてのログを消去してよろしいですか？</string>
     <string name="Notification_Security">セキュリティー</string>
     <string name="bottom_nav_settings">設定</string>
-    <string name="perm_shizuku_failed">Shizukuで付与できませんでした</string>
     <string name="password_new">新しいパスワード</string>
     <string name="help">ヘルプ</string>
     <string name="Settings_VetoServer_Logout_Button">ログアウト</string>
@@ -69,7 +67,6 @@
     <string name="cmd_camera_description_short">画像を撮影</string>
     <string name="cmd_help_description_short">ヘルプを表示</string>
     <string name="perm_notification_access_name">通知へのアクセス</string>
-    <string name="perm_root_denied">Rootによるアクセスが拒否されました</string>
     <string name="transport_sms_title">SMS物理学の</string>
     <string name="Settings_Import_Success">インポートしました</string>
     <string name="optional_permissions_title">オプションの権限</string>
@@ -77,7 +74,6 @@
     <string name="Settings_Import">設定をインポート</string>
     <string name="bottom_nav_commands">コマンド</string>
     <string name="Settings_Veto_Server_General">全般</string>
-    <string name="grant_via_adb">ADBで付与</string>
     <string name="Settings_Veto_Server_Connection_Status_Success">成功しました</string>
     <string name="Settings_VetoServer_Push_Register">登録</string>
     <string name="appearance_language_system_default">システムの既定値</string>
@@ -93,7 +89,6 @@
     <string name="perm_camera_name">カメラ</string>
     <string name="perm_location_name">位置情報</string>
     <string name="required_permissions_title">必須の権限</string>
-    <string name="grant_via_root">Rootで付与</string>
     <string name="Notification_Usage">使用状況</string>
     <string name="crashed_title">クラッシュレポート</string>
     <string name="crashed_send_log">ログを送信</string>

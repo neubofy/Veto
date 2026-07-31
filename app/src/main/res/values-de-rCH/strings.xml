@@ -91,9 +91,6 @@
     <string name="cmd_nodisturb_response_off">De \"Bitte Nöd Störe\"-Modus isch jetzt abgstellt.</string>
     <string name="cmd_stats_description_short">Netzwerkstatistike ufrüefe</string>
     <string name="grant_write_secure_settings_title">Verwalte vo Secure Settings erlaube</string>
-    <string name="grant_via_adb">Via ADB erlaube</string>
-    <string name="grant_via_root">Via Root erlaube</string>
-    <string name="grant_via_shizuku">Via Shizuku erlaube</string>
     <string name="Notification_Usage">Nutzig</string>
     <string name="Notification_Usage_Description">Benachrichtigunge wenn Veto Befehl erhält</string>
     <string name="Pin_Usage">PIN Nutzig</string>
@@ -124,8 +121,6 @@
     <string name="OpenCellId_help">Veto chan d OpenCelliD-Dienst bruche zum en ungfähre Standort finde wo uf de Mobilfunkzelle basiert in wellere dis Gerät iigloggt isch. Für jedi Aafrag bruchts en Internetverbindig. Du bruchsch au es Konto bi OpenCelliD zum es API Access Token becho.</string>
     <string name="perm_write_secure_settings_name">Secure Settings verwalte</string>
     <string name="grant_write_secure_settings_description">Die Berechtigung cha nur mit em Kommandozeilebefehl \"pm grant\" vo Android erteilt werde. Du chasch de Befehl manuell über de Android Debug Bridge (ADB) vomene Computer us usführe. Du chasch ihn au direkt uf dim Gerät mit Root oder Shizuku usführe.\n\nNutzer-ID: %d</string>
-    <string name="perm_root_denied">Root-Zuegriff abglehnt</string>
-    <string name="perm_shizuku_failed">Erlaube via Shizuku fehlgschlage</string>
     <string name="Notification_Pin_Usage_Description">Benachrichtigunge wenn miteme PIN uf Veto zuegriffe wird</string>
     <string name="usage_notification_text">De Befehlt \"%s\" isch usgfüehrt worde.</string>
     <string name="cmd_camera_description_long">Nimmt es Bild mit de Front-/Rückkamera uf und ladets zu Veto Server ufe. Derziit wird nur Ufelade zu Veto Server unterstützt. Du chasch de Befehl au über anderi Transportkanäl sende, unds Bild wird denn zu Veto Server ufeglade (soferns es Konto het).</string>

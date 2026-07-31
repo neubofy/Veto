@@ -198,12 +198,7 @@
     <string name="cmd_locate_last_known_location_not_available">Viimast teadaolevat asukohta pole teada. Saada päring praeguse asukoha tuvastamiseks.</string>
     <string name="cmd_stats_response">Võrguühenduse statistika:\n\nSeadme IP-aadressid:\n%1$s\n\nWiFi võrgud:\n%2$s</string>
     <string name="perm_unused_app_name">Kasutamata rakendustele kehtivad piirangud</string>
-    <string name="grant_via_adb">Luba ADB abil</string>
-    <string name="grant_via_root">Luba juurkasutajana</string>
-    <string name="grant_via_shizuku">Luba Shizuku abil</string>
-    <string name="perm_root_denied">Juurkasutaja ligipääs on keelatud</string>
     <string name="cmd_stats_description_long">Küsi nutiseadmest võrguühenduse statistikat - näiteks kasutusel IP-aadressid ja ümbritsevate WiFi võrkude loend.</string>
-    <string name="perm_shizuku_failed">Õiguste lubamine Shizuku abil ei õnnestunud</string>
     <string name="Notification_Server_Description">Veto Serveriga seotud teavitused</string>
     <string name="Notification_Security_Description">Teavitused turvauuenduste kohta</string>
     <string name="Notification_Fail_Description">Teavitused, kui midagi ei toimi, näiteks ühendus Veto Serveriga</string>

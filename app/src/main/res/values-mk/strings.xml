@@ -159,12 +159,7 @@
     <string name="perm_unused_app_description">Андроид ги паузира апликациите кои не се отворени по неколку месеци и им ги брише дозволите. Veto, од друга страна, е предвиден да работи во позадина. Одкога ќе го наместиш ова, веќе редко е потребно да ја отвориш апликацијата. Затоа, треба да ја изземеш Veto од тоа да биде паузирана, во спротивно може да не работи после неколку месеци.</string>
     <string name="optional_permissions_title">Изборни дозволи</string>
     <string name="grant_write_secure_settings_title">Додели запис на сигурни нагодувања</string>
-    <string name="grant_via_adb">Додели преку ADB</string>
     <string name="grant_write_secure_settings_description">Оваа дозвола може да се додели само со Андроидовото „pm grant“ преку конзола. Можеш рачно да ја извршиш оваа наредба преку ADB (Android Debug Bridge) и компјутер. Исто така можеш и непосредно да ја извршиш истата наредба преку коренски пристап (root) или Shizuku.\n\nUser ID: %d</string>
-    <string name="grant_via_root">Додели преку коренски пристап (root)</string>
-    <string name="grant_via_shizuku">Додели преку Shizuku</string>
-    <string name="perm_root_denied">Коренскиот пристап е одбиен</string>
-    <string name="perm_shizuku_failed">Доделувањето преку Shizuku е неуспешно</string>
     <string name="transport_sms_description_auth">Само телефонски броеви кои се во дозволениот список можат да праќаат наредби. За да праќај наредби од телефонски број кој не се наоѓа во дозволениот список, треба да внесеш ЛИБ (PIN): „%s ЛИБ help“. Заради полесна работа, и за да не мора цело време да го внесуваш ЛИБ-от, овој нов број е автоматски внесен во привремениот дозволен список во следните 10 минути.</string>
     <string name="transport_sms_description_note">СМС може да причини трошоци и за тебе и за другото лице. СМС бара твојата СМС картичка да е одклучена (на пр., после рестартирање на уредот).</string>
     <string name="transport_notification_reply_description_auth">Контролирање на Veto преку Одговор при известувања бара да се намести Veto ЛИБ (PIN). Секоја порака мора да го содржи вистинскиот ЛИБ.</string>

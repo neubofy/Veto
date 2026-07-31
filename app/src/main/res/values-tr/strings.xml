@@ -192,13 +192,10 @@
     <string name="perm_overlay_name">Diğer Uygulamaların Üstünde Göster</string>
     <string name="cmd_stats_response">Ağ istatistikleri:\n\nCihaz IPleri:\n%1$s\n\nWifi ağları:\n%2$s</string>
     <string name="perm_sms_name">SMS</string>
-    <string name="grant_via_adb">ADB aracılığıyla izin ver</string>
     <string name="Permission_POST_NOTIFICATIONS">Veto arada sırada size bildirimler gönderecektir, örneğin birinin cihazınızı konumlandırdığını uyarmak için.</string>
     <string name="required_permissions_title">Gerekli İzinler</string>
     <string name="optional_permissions_title">Tercihî İzinler</string>
     <string name="grant_write_secure_settings_title">Güvenli Ayarlar Yazma İzni Ver</string>
-    <string name="grant_via_root">Root aracılığıyla izin ver</string>
-    <string name="grant_via_shizuku">Shizuku aracılığıyla izin ver</string>
     <string name="transport_sms_title">SMS</string>
     <string name="transport_sms_description_note">SMS hem siz hem de size mesaj atan kişi için ücret çıkarabilir. SMS, SIM kartınızın kilidinin açılmış olmasını gerektirir (örn. yeniden başlatma sonrası).</string>
     <string name="transport_notification_reply_title">Bildirim Cevabı</string>
@@ -218,8 +215,6 @@
     <string name="perm_unused_app_description">Android birkaç ay boyunca açılmamış olan uygulamaları durdurur ve izinlerini kaldırır. Ancak Veto\'nin arkaplanda çalışması lazım. Kurduktan sonra nadiren uygulamayı açmanız gerekli. Yani Veto\'yi durdurulmaktan muaf tutmanız gerekli, aksi takdirde birkaç ay içinde çalışmayabilir.</string>
     <string name="grant">İzin ver</string>
     <string name="grant_write_secure_settings_description">Bu izin yalnızca Android\'in \"pm grant\" komut dizini aracıyla verilebilir. Bu komudu elle, bilgisayar üzerinden , Android Debug Bridge (ADB) aracılığıyla çalıştırabilirsiniz. Cihazınızda ayrıca root ya da Shizuku kullanarak çalıştırabilirsiniz.\n\nKullanıcı ID: %d</string>
-    <string name="perm_root_denied">Root erişimi reddedildi</string>
-    <string name="perm_shizuku_failed">Shizuku ile izin verme başarısız</string>
     <string name="transport_inapp_title">Uygulama İçi</string>
     <string name="transport_inapp_description">Veto uygulamasının içinden yerel olarak cihazınıza komutlar gönderin. Bu deneme yapmak için kullanışlı. Veto bir bildirim ile cevap verecektir.</string>
     <string name="transport_inapp_send_command_title">Uygulama İçi Komut Gönder</string>

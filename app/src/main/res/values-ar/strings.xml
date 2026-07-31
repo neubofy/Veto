@@ -187,12 +187,10 @@
     <string name="cmd_ring_response">ينبغي أن يرن الجهاز الآن.</string>
     <string name="perm_overlay_name">العرض فوق التطبيقات الأخرى</string>
     <string name="cmd_locate_last_known_location_not_available">لا يوجد موقع معروف أخير. اطلب أحدث موقع لفرض تحديث الموقع.</string>
-    <string name="perm_root_denied">تم رفض الوصول إلى Root</string>
     <string name="Notification_InApp_Description">الإشعارات من قناة النقل داخل التطبيق</string>
     <string name="cmd_locate_response_gps_fail">فشل الحصول على موقع GPS جديد. ربما بسبب إنتهاء المهلة الزمنية.</string>
     <string name="transport_sms_description_note">قد تتسبب الرسائل النصية القصيرة في فرض تكاليف عليك وعلى الشخص الذي يرسل إليك الرسائل النصية. تتطلب الرسائل النصية القصيرة إلغاء قفل بطاقة SIM الخاصة بك (على سبيل المثال، بعد إعادة التشغيل).</string>
     <string name="cmd_locate_description_long">حدد موقع الجهاز باستخدام مزود أو أكثر من مزودي الموقع. عادةً ما يكون مزود نظام التشغيل هو نظام تحديد المواقع العالمي (GPS)، وفي بعض الأحيان مع مجموعة من المصادر الأخرى. المزود الثاني هو OpenCelliD، الذي يستخدم قاعدة بيانات لمواقع أبراج الهاتف الخلوي.</string>
-    <string name="perm_shizuku_failed">فشل المنح عبر Shizuku</string>
     <string name="cmd_locate_description_short">تحديد موقع الجهاز</string>
     <string name="perm_location_name">موقع</string>
     <string name="optional_permissions_title">الأذونات الاختيارية</string>
@@ -201,7 +199,6 @@
     <string name="Notification_Server_Description">الإشعارات المتعلقة بخادم Veto</string>
     <string name="missing_permissions_title">أذونات مفقودة</string>
     <string name="missing_permissions_description">يجب الحصول على الأذونات التالية لتشغيل Veto.</string>
-    <string name="grant_via_adb">منح عبر ADB</string>
     <string name="setup_warnings_title">تحذيرات الإعداد</string>
     <string name="Notification_InApp">قناة النقل داخل التطبيق</string>
     <string name="transport_inapp_send_command_title">إرسال أمر داخل التطبيق</string>
@@ -212,9 +209,7 @@
     <string name="transport_sms_description">أرسل الأوامر إلى جهازك عبر الرسائل القصيرة. على سبيل المثال، أرسل رسالة نصية تحتوي على \"%s help\" إلى جهازك. سيرد Veto برسالة نصية قصيرة.</string>
     <string name="perm_camera_name">كاميرا</string>
     <string name="grant">منح</string>
-    <string name="grant_via_root">منح عبر Root</string>
     <string name="perm_unused_app_name">قيود التطبيق غير المستخدمة</string>
-    <string name="grant_via_shizuku">منح عبر Shizuku</string>
     <string name="transport_notification_reply_description_auth">يتطلب التحكم في Veto عبر الرد على الإشعارات تعيين الرقم السري الخاص بـ Veto. يجب أن تحتوي كل رسالة على الرقم السري الصحيح.</string>
     <string name="transport_notification_reply_title">الرد على الإشعار</string>
     <string name="transport_sms_description_auth">لا يمكن إرسال الأوامر إلا لأرقام الهواتف الموجودة في القائمة المسموح بها. لإرسال أوامر من رقم هاتف غير موجود في القائمة المسموح بها، يجب عليك تضمين الرقم السري: \"%s mypin help\". لتسهيل الأمر، حتى لا تضطر إلى إعادة كتابة الرقم السري في كل مرة، سيتم إضافة رقم الهاتف الجديد هذا إلى القائمة المسموح بها مؤقتًا لمدة 10 دقائق.</string>

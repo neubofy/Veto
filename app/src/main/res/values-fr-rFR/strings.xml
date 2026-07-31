@@ -173,11 +173,6 @@
     <string name="grant">Autoriser</string>
     <string name="grant_write_secure_settings_title">Autoriser la modification des paramètres sécurisés</string>
     <string name="grant_write_secure_settings_description">Cette autorisation ne peut être accordée qu\'avec l\'outil de ligne de commande \"pm grant\" d\'Android. Vous pouvez exécuter cette commande manuellement via Android Debug Bridge (ADB) en utilisant un ordinateur. Vous pouvez également l\'exécuter directement sur votre appareil en utilisant root ou Shizuku.\n\nID de l\'utilisateur: %d</string>
-    <string name="grant_via_adb">Autoriser par ADB</string>
-    <string name="grant_via_root">Autoriser par root</string>
-    <string name="grant_via_shizuku">Autoriser par Shizuku</string>
-    <string name="perm_root_denied">Accès root refusé</string>
-    <string name="perm_shizuku_failed">L\'autorisation par Shizuku a échoué</string>
     <string name="transport_sms_description_note">Les SMS peuvent engager des frais pour vous et la personne vous l’envoi. La réception des SMS exige que votre carte SIM soit déverrouillée (par exemple, après un redémarrage).</string>
     <string name="transport_notification_reply_description">Vous pouvez autoriser Veto à lire vos notifications pour écouter les commandes. Veto peut ensuite répondre par la fonction de réponse intégrée d\'Android. Cela vous permet de contrôler Veto en utilisant une application de messagerie de votre choix, tant qu\'elle affiche des notifications qui peuvent être répondues. Par exemple, vous pouvez envoyer un message par Signal \"%s monpin help\" à votre téléphone.</string>
     <string name="transport_notification_reply_description_auth">Contrôler Veto par la réponse aux notifications exige que le code PIN de Veto soit défini. Chaque message doit contenir le bon code PIN.</string>

@@ -204,11 +204,6 @@
     <string name="grant">Permitir</string>
     <string name="grant_write_secure_settings_title">Permitir modificação das configurações seguras</string>
     <string name="grant_write_secure_settings_description">Esta permissão só pode ser concedida com a ferramenta \"pm grant\" de terminal do Android. Pode executar este comando manualmente atráves do Android Debug Bridge (ADB) usando um computador. Também pode executá-lo diretamente no seu dispositivo usando root ou o Shizuku.\n\nID do utilizador: %d</string>
-    <string name="grant_via_adb">Conceder via ADB</string>
-    <string name="grant_via_root">Conceder via root</string>
-    <string name="grant_via_shizuku">Conceder via Shizuku</string>
-    <string name="perm_root_denied">Acesso root negado</string>
-    <string name="perm_shizuku_failed">Falha ao conceder a permissão pelo Shizuku</string>
     <string name="transport_sms_title">SMS</string>
     <string name="transport_sms_description">Envie comandos para o seu dispositivo via SMS. Ex: envie uma mensagem contendo \"%s help\" para o seu dispositivo. O Veto responderá com um SMS.</string>
     <string name="transport_sms_description_auth">Somente números de telefone que estão na lista de permitidos podem enviar comandos. Para enviar comandos de um número de telefone que não está nela, você deve incluir o PIN: \"%s meuPIN help\". Para conveniência, para que não precise digitar o PIN toda hora, este novo número de telefone será adicionado à uma lista de permitidos temporária pelos próximos 10 minutos.</string>

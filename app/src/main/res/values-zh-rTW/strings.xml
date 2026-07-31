@@ -225,11 +225,6 @@
     <string name="perm_unused_app_description">Android 會暫停長時間未開啟的應用程式，並移除其權限。然而，Veto 需要在背景中持續運作。完成設定後，您很少需要開啟它，因此必須將 Veto 排除在暫停機制之外，否則幾個月後可能無法正常運作。</string>
     <string name="grant_write_secure_settings_title">授權寫入安全設定</string>
     <string name="grant_write_secure_settings_description">此權限只能透過 Android 的「pm grant」指令列工具授予。您可以使用電腦透過 Android Debug Bridge（ADB）手動執行該指令，也可以在裝置上使用 root 或 Shizuku 直接執行。\n\n使用者 ID：%d</string>
-    <string name="grant_via_adb">透過 ADB 授權</string>
-    <string name="grant_via_root">透過 root 授權</string>
-    <string name="grant_via_shizuku">透過 Shizuku 授權</string>
-    <string name="perm_root_denied">Root 存取被拒絕</string>
-    <string name="perm_shizuku_failed">透過 Shizuku 授權失敗</string>
     <string name="transport_sms_title">簡訊</string>
     <string name="transport_sms_description">透過簡訊向您的裝置傳送指令，例如向您的裝置傳送「%s help」。Veto 會以簡訊回覆。</string>
     <string name="transport_sms_description_auth">只有在允許清單中的電話號碼才能傳送指令。若要從未在允許清單中的號碼傳送指令，必須包含 PIN：「%s mypin help」。為了方便起見，該新號碼會被加入臨時允許清單 10 分鐘，讓您不必每次重新輸入 PIN。</string>

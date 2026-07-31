@@ -79,10 +79,6 @@
     <string name="perm_unused_app_name">Beperkingen voor ongebruikte apps</string>
     <string name="required_permissions_title">Vereiste machtigingen</string>
     <string name="optional_permissions_title">Optionele machtigingen</string>
-    <string name="grant_via_adb">Toestemming verlenen via ADB</string>
-    <string name="grant_via_root">Toestemming verlenen via root</string>
-    <string name="grant_via_shizuku">Toestemming verlenen via Shizuku</string>
-    <string name="perm_root_denied">Root-access geweigerd</string>
     <string name="transport_sms_description_note">SMS kan kosten met zich meebrengen voor zowel jou als de persoon die jou sms\'t. SMS vereist dat je simkaart is ontgrendeld (bv. na een herstart).</string>
     <string name="transport_notification_reply_title">Antwoorden op meldingen</string>
     <string name="transport_veto_server_description_auth">Iedereen die jouw gebruikersnaam en wachtwoord kent, kan inloggen op Veto Server en jouw apparaat bedienen.</string>
@@ -189,7 +185,6 @@
     <string name="log_view_export">Logboeken exporteren</string>
     <string name="about_wiki">Wiki</string>
     <string name="server_unregister_continue_anyway">Toch doorgaan</string>
-    <string name="perm_shizuku_failed">Toestemming via Shizuku mislukt</string>
     <string name="transport_sms_title">SMS</string>
     <string name="transport_sms_description">Stuur opdrachten naar je apparaat via sms. Sms bijvoorbeeld \"%s help\" naar je apparaat en Veto zal reageren met een SMS.</string>
     <string name="transport_sms_description_auth">Alleen telefoonnummers die op de toelatingslijst staan, kunnen opdrachten sturen. Als je opdrachten wilt sturen vanaf een telefoonnummer dat niet op de toelatingslijst staat, moet je de pincode \"%s mypin help\" opnemen. Voor het gemak, zodat je de pincode niet elke keer opnieuw hoeft in te voeren, wordt dit nieuwe telefoonnummer de komende 10 minuten toegevoegd aan een tijdelijke toelatingslijst.</string>

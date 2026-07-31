@@ -138,11 +138,6 @@
     <string name="grant">Zulassen</string>
     <string name="grant_write_secure_settings_title">Verwalten der Secure Settings zulassen</string>
     <string name="grant_write_secure_settings_description">Diese Berechtigung kann nur mit Androids Kommandozeilenbefehl \"pm grant\" erteilt werden. Du kannst diesen Befehl manuell über die Android Debug Bridge (ADB) von einem Computer aus ausführen. Du kannst ihn auch direkt auf deinem Gerät mit Root oder Shizuku ausführen.\n\nNutzer-ID: %d</string>
-    <string name="grant_via_adb">Via ADB erlauben</string>
-    <string name="grant_via_root">Via Root erlauben</string>
-    <string name="grant_via_shizuku">Via Shizuku erlauben</string>
-    <string name="perm_root_denied">Root-Zugriff abgelehnt</string>
-    <string name="perm_shizuku_failed">Zulassen via Shizuku fehlgeschlagen</string>
     <string name="usage_notification_title">Befehl ausgeführt</string>
     <string name="cmd_stats_description_short">Netzwerkstatistiken abrufen</string>
     <string name="cmd_missing_permissions">Befehl %1$s kann nicht ausgeführt werden: folgende Berechtigung(en) fehlen: %2$s.</string>

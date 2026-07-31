@@ -126,11 +126,6 @@
     <string name="perm_notification_access_name">अधिसूचना पहुंच</string>
     <string name="perm_overlay_name">अन्य ऐप्स पर प्रदर्शित करें</string>
     <string name="perm_post_notification_name">अधिसूचनाएं पोस्ट करें</string>
-    <string name="grant_via_adb">ADB के माध्यम से अनुदान</string>
-    <string name="grant_via_root">रूट के माध्यम से अनुदान</string>
-    <string name="grant_via_shizuku">Shizuku के माध्यम से अनुदान</string>
-    <string name="perm_root_denied">रूट पहुंच अस्वीकृत</string>
-    <string name="perm_shizuku_failed">Shizuku के माध्यम से अनुदान देना विफल रहा</string>
     <string name="usage_notification_title">कमांड निष्पादित</string>
     <string name="usage_notification_text">कमांड \"%s\" निष्पादित किया गया।</string>
     <string name="cmd_delete_response_pwd_missing">मिटा नहीं सकते: पासवर्ड गुम है। उपयोग: %s।</string>

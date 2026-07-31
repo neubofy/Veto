@@ -35,7 +35,7 @@ class WriteSecureSettingsPermission : Permission() {
         MaterialAlertDialogBuilder(activity).apply {
             setTitle(R.string.grant_write_secure_settings_title)
             setMessage(activity.getString(R.string.grant_write_secure_settings_description, userId))
-            setPositiveButton(R.string.grant_via_adb) { _, _ -> requestManually(activity) }
+            setPositiveButton(R.string.grant) { _, _ -> requestManually(activity) }
             setNegativeButton(R.string.cancel, null)
         }.show()
     }

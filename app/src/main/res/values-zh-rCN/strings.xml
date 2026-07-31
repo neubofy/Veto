@@ -168,8 +168,6 @@
     <string name="perm_do_not_disturb_access_name">免打扰访问</string>
     <string name="perm_notification_access_name">通知访问</string>
     <string name="transport_notification_reply_description_auth">通过通知回复控制 Veto 需要设置 Veto PIN，每条消息都必须包含正确的 PIN。</string>
-    <string name="grant_via_adb">通过ADB授予</string>
-    <string name="perm_root_denied">Root访问被拒绝</string>
     <string name="Notification_Server_Description">与 Veto 服务器相关的通知</string>
     <string name="crashed_send_log">发送日志</string>
     <string name="crashed_open_issuetracker">开启问题跟踪器</string>
@@ -209,7 +207,6 @@
     <string name="perm_unused_app_name">未使用的应用程序限制</string>
     <string name="perm_write_secure_settings_name">写入安全设置</string>
     <string name="grant">授予</string>
-    <string name="grant_via_shizuku">通过Shizuku授予</string>
     <string name="transport_sms_description_note">短信可能会给您和给您发短信的人带来费用，而且会要求解锁您的 SIM 卡（例如在重启后）。</string>
     <string name="transport_veto_server_description">Veto 服务器提供了一个 web 界面来控制您的设备、查看其位置、查看其发送的图片。您可以自行托管 Veto 服务器或使用提供的实例。数据以加密方式存储在服务器上，受您的密码保护。</string>
     <string name="transport_veto_server_description_auth">任何知道您的用户名和密码的人都可以登录 Veto 服务器并控制您的设备。</string>
@@ -223,11 +220,9 @@
     <string name="cmd_help_description_short">显示帮助</string>
     <string name="cmd_nodisturb_response_on">免打扰模式已打开。</string>
     <string name="cmd_nodisturb_description_short">打开和关闭免打扰模式</string>
-    <string name="grant_via_root">通过 Root 授予</string>
     <string name="log_view_title">日志</string>
     <string name="cmd_bluetooth_response_no_bluetooth">该设备似乎没有蓝牙。</string>
     <string name="cmd_lock_response">设备现在应该已锁定。</string>
-    <string name="perm_shizuku_failed">通过Shizuku授予失败</string>
     <string name="transport_inapp_send_command_command_placeholder">命令</string>
     <string name="cmd_gps_response_on">定位服务已打开。</string>
     <string name="OpenCellId_tower_collector_info">您可以通过收集和上传信号塔信息为 OpenCelliD 做出贡献。你需要一个专门的应用程序，Tower Collector 是其中之一。</string>

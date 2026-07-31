@@ -142,7 +142,6 @@
     <string name="crashed_open_issuetracker">Відкрити трекер проблем</string>
     <string name="optional_permissions_title">Додаткові дозволи</string>
     <string name="grant_write_secure_settings_title">Надати доступ для запису до захищених налаштувань</string>
-    <string name="perm_root_denied">Відмовлено в root доступі</string>
     <string name="transport_veto_server_description_auth">Будь-хто, хто знає ваше ім\'я користувача та пароль, може увійти до Veto Server і керувати вашим пристроєм.</string>
     <string name="transport_veto_server_description_note">Сервер Veto вимагає підключення до Інтернету. Це може бути мобільна мережа (при цьому SIM-карта повинна бути розблокована) або Wi-Fi.</string>
     <string name="Notification_Usage_Description">Сповіщення, коли Veto отримує команди</string>
@@ -165,10 +164,6 @@
     <string name="required_permissions_title">Необхідні дозволи</string>
     <string name="grant">Надати</string>
     <string name="grant_write_secure_settings_description">Цей дозвіл можна надати тільки за допомогою інструменту командного рядка Android «pm grant». Ви можете виконати цю команду вручну через Android Debug Bridge (ADB) за допомогою комп\'ютера, або виконати її безпосередньо на вашому пристрої від імені користувача root чи Shizuku.\n\nІдентифікатор користувача: %d</string>
-    <string name="perm_shizuku_failed">Не вдалось надати дозвіл через Shizuku</string>
-    <string name="grant_via_adb">Надати через ADB</string>
-    <string name="grant_via_root">Надання доступу через root</string>
-    <string name="grant_via_shizuku">Надати через Shizuku</string>
     <string name="transport_sms_description">Надсилайте команди на ваш пристрій за допомогою SMS. Наприклад, надішліть на ваш пристрій текст «%s help». Veto відповість вам SMS-повідомленням.</string>
     <string name="transport_sms_description_auth">Надсилати команди можуть лише номери телефонів, які є у списку дозволених. Щоб надсилати команди з номера телефону, якого немає у списку дозволених, потрібно вказати PIN-код: «%s mypin help». Для зручності, щоб вам не доводилося щоразу вводити PIN-код заново, цей новий номер телефону додається до тимчасового списку дозволених на наступні 10 хвилин.</string>
     <string name="transport_sms_description_note">SMS-повідомлення можуть спричинити витрати як для вас, так і для того, хто вам їх надсилає. Для отримання SMS потрібно, щоб ваша SIM-карта була розблокована (наприклад, після перезавантаження).</string>

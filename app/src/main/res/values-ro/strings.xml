@@ -210,11 +210,6 @@
     <string name="grant">Acordă</string>
     <string name="grant_write_secure_settings_title">Acordă acces de scriere la setările securizate</string>
     <string name="grant_write_secure_settings_description">Această permisiune poate fi acordată doar cu ajutorul liniei de comandă \"pm grant\" din Android. Puteți executa această comandă manual prin Android Debug Bridge (ADB) folosind un computer. De asemenea, o puteți executa direct pe dispozitivul dumneavoastră folosind root sau Shizuku.\n\nID utilizator: %d</string>
-    <string name="grant_via_adb">Acordă via ADB</string>
-    <string name="grant_via_root">Acordă via root</string>
-    <string name="grant_via_shizuku">Acordă via Shizuku</string>
-    <string name="perm_root_denied">Acces root refuzat</string>
-    <string name="perm_shizuku_failed">Acordarea permisiunii prin Shizuku a eșuat</string>
     <string name="transport_sms_title">SMS</string>
     <string name="transport_sms_description">Trimite comenzi către dispozitivul tău prin SMS. De exemplu, trimite mesajul \"%s help\" către dispozitivul tău. Veto va răspunde printr-un SMS.</string>
     <string name="transport_sms_description_auth">Doar numerele de telefon care se află în lista de permisiuni pot trimite comenzi. Pentru a trimite comenzi de la un număr de telefon care nu se află în lista de permisiuni, trebuie să incluzi codul PIN: \"%s mypin help\". Pentru comoditate, pentru a nu fi nevoit să reintroduci codul PIN de fiecare dată, acest nou număr de telefon este adăugat la o listă de permisiuni temporară pentru următoarele 10 minute.</string>

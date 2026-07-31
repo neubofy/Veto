@@ -204,11 +204,6 @@
     <string name="grant">மானியம்</string>
     <string name="grant_write_secure_settings_title">பாதுகாப்பான அமைப்புகளுக்கு எழுதும் அணுகலை வழங்கவும்</string>
     <string name="grant_write_secure_settings_description">இந்த அனுமதியை ஆண்ட்ராய்டு இன் \"PM மானியம்\" கட்டளை வரி கருவி மூலம் மட்டுமே வழங்க முடியும். கணினியைப் பயன்படுத்தி ஆண்ட்ராய்டு பிழைத்திருத்த பாலம் (ஏடிபி) வழியாக இந்த கட்டளையை கைமுறையாக இயக்கலாம். ரூட் அல்லது சிசுகுவைப் பயன்படுத்தி உங்கள் சாதனத்தில் அதை நேரடியாக இயக்கலாம். \n\nபயனர் ஐடி: %d</string>
-    <string name="grant_via_adb">ADB வழியாக மானியம்</string>
-    <string name="grant_via_root">ரூட் வழியாக வழங்கவும்</string>
-    <string name="grant_via_shizuku">டிராப் வழியாக ஐயா நெடுவரிசை டி</string>
-    <string name="perm_root_denied">ரூட் அணுகல் மறுக்கப்பட்டது</string>
-    <string name="perm_shizuku_failed">சிசுகு வழியாக வழங்குவது தோல்வியுற்றது</string>
     <string name="transport_sms_title">எச்.எம்.எச்</string>
     <string name="transport_sms_description">எச்எம்எச் மீது உங்கள் சாதனத்திற்கு கட்டளைகளை அனுப்பவும். எ.கா., உங்கள் சாதனத்திற்கு \"%s help\" உரை. எஃப்எம்டி ஒரு எச்எம்எச் உடன் பதிலளிக்கும்.</string>
     <string name="transport_sms_description_note">உங்களுக்கும் உங்களுக்கு குறுஞ்செய்தி அனுப்பும் நபருக்கும் எச்எம்எச் செலவுகள் ஏற்படலாம். எச்எம்எச் உங்கள் சிம் கார்டைத் திறக்க வேண்டும் (எ.கா., மறுதொடக்கத்திற்குப் பிறகு).</string>

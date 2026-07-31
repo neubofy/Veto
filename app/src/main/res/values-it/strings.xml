@@ -158,8 +158,6 @@
     <string name="optional_permissions_title">Autorizzazioni facoltative</string>
     <string name="grant">Concedi</string>
     <string name="grant_write_secure_settings_title">Concedi accesso alle impostazioni di sicurezza</string>
-    <string name="grant_via_adb">Concedi via ADB</string>
-    <string name="grant_via_root">Concedi via root</string>
     <string name="transport_sms_description">Invia comandi al dispositivo tramite SMS. Ad esempio, inviare il testo \"%s help\" al dispositivo. Veto risponderà con un SMS.</string>
     <string name="transport_sms_description_auth">Solo i numeri di telefono presenti nell\'elenco dei consentiti possono inviare comandi. Per inviare comandi da un numero di telefono non presente nell\'elenco, è necessario includere il PIN: \"%s mypin help\". Per comodità, in modo da non dover digitare nuovamente il PIN ogni volta, questo nuovo numero di telefono viene aggiunto a un elenco temporaneo di permessi per i prossimi 10 minuti.</string>
     <string name="transport_veto_server_description_auth">Chiunque conosca il nome utente e la password può accedere al Server Veto e controllare il dispositivo.</string>
@@ -182,9 +180,6 @@
     <string name="perm_write_secure_settings_name">Scrivi nelle impostazioni di sicurezza</string>
     <string name="grant_write_secure_settings_description">Questa autorizzazione può essere concessa solo con lo strumento da riga di comando \"pm grant\" di Android. È possibile eseguire questo comando manualmente tramite Android Debug Bridge (ADB) utilizzando un computer. È anche possibile eseguirlo direttamente sul dispositivo tramite root o Shizuku.\n\nID utente: %d</string>
     <string name="transport_sms_title">SMS</string>
-    <string name="grant_via_shizuku">Concedi via Shizuku</string>
-    <string name="perm_root_denied">Accesso Root negato</string>
-    <string name="perm_shizuku_failed">Concessione tramite Shizuku fallita</string>
     <string name="transport_sms_description_note">Gli SMS possono comportare costi sia per l\'utente che per la persona che invia il messaggio. Gli SMS richiedono che la carta SIM sia sbloccata (ad esempio, dopo un riavvio).</string>
     <string name="transport_notification_reply_title">Risposta alle notifiche</string>
     <string name="transport_notification_reply_description">È possibile consentire a Veto di leggere le notifiche per ascoltare i comandi. Veto può quindi rispondere tramite la funzione di risposta alle notifiche integrata in Android. In questo modo è possibile controllare Veto utilizzando un\'applicazione di messaggistica a scelta, purché invii notifiche a cui si possa rispondere. Ad esempio, è possibile inviare un messaggio di segnale \"%s mypin help\" al telefono.</string>

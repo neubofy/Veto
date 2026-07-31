@@ -127,7 +127,6 @@
     <string name="cmd_locate_description_short">Localizar o dispositivo</string>
     <string name="cmd_lock_description_short">Bloquear o dispositivo</string>
     <string name="cmd_nodisturb_description_short">Habilitar o \"Não Perturbe\"</string>
-    <string name="perm_root_denied">Acesso root negado</string>
     <string name="usage_notification_title">Comando executado</string>
     <string name="cmd_ring_response">O dispositivo deve estar tocando agora.</string>
     <string name="cmd_stats_description_long">Obter estatísticas de rede do dispositivo. Por exemplo, seu endereço de IP, e uma lista de redes Wi-Fi por perto.</string>
@@ -140,10 +139,6 @@
     <string name="perm_do_not_disturb_access_name">Acesso ao Não Perturbe</string>
     <string name="perm_notification_access_name">Acesso às notificações</string>
     <string name="required_permissions_title">Permissões necessárias</string>
-    <string name="grant_via_root">Conceder via root</string>
-    <string name="grant_via_shizuku">Conceder via Shizuku</string>
-    <string name="grant_via_adb">Conceder via ADB</string>
-    <string name="perm_shizuku_failed">Falha ao conceder a permissão pelo Shizuku</string>
     <string name="usage_notification_text">O comando \"%s\" foi executado.</string>
     <string name="bottom_nav_settings">Configurações</string>
     <string name="Settings_Import_Success">Importação bem-sucedida</string>

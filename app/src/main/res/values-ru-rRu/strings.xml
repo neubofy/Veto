@@ -127,7 +127,6 @@
     <string name="cmd_ring_response">Теперь устройство должно воспроизводить мелодию.</string>
     <string name="cmd_nodisturb_description_short">Включение и выключение режима \"Не беспокоить\"</string>
     <string name="cmd_nodisturb_response_on">Режим \"Не беспокоить\" включён.</string>
-    <string name="perm_shizuku_failed">Выдача через Shizuku не удалась</string>
     <string name="transport_sms_description">Отправляет команды на ваше устройство через SMS-сообщения. Например, отправьте \"%s help\" (без кавычек) на ваше устройство. Veto будет отвечать также через SMS-сообщения.</string>
     <string name="transport_sms_description_auth">Только мобильные номера, которые находятся в Списке разрешённых могут отправлять команды. Чтобы отправлять команды с мобильных номеров, которые не находятся в Списке разрешённых, вам необходимо добавлять ПИН-код в каждую команду, например так: \"%s mypin help\". Для удобства, чтобы вам не было необходимо каждый раз набирать ваш ПИН-код, этот новый мобильный номер будет добавлен во временный Список разрешённых на следующие 10 минут.</string>
     <string name="transport_sms_description_note">SMS-сообщения могут быть платными как для вас, так и для человека, который вам пишет. Для использования SMS-сообщений необходимо чтобы ваша SIM-карта была разблокирована (например, после перезагрузки устройства).</string>
@@ -175,10 +174,6 @@
     <string name="perm_unused_app_name">Неиспользованные ограничения приложения</string>
     <string name="optional_permissions_title">Необязательные разрешения</string>
     <string name="grant">Выдать</string>
-    <string name="grant_via_adb">Выдать через ADB</string>
-    <string name="grant_via_root">Выдать через Root</string>
-    <string name="grant_via_shizuku">Выдать через Shizuku</string>
-    <string name="perm_root_denied">Отказано в Root-доступе</string>
     <string name="transport_sms_title">SMS-сообщения</string>
     <string name="missing_permissions_title">Отсутствующие разрешения</string>
     <string name="missing_permissions_description">Следующие разрешения необходимы для того, чтобы запускать Veto.</string>
