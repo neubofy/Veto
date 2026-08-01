@@ -243,6 +243,7 @@ export default function Home() {
       if (all) {
         setResults({});
         setPhotos({});
+        setLocations([]);
         localStorage.removeItem('veto_results');
         localStorage.removeItem('veto_photos');
       } else if (commandName) {
@@ -258,6 +259,9 @@ export default function Home() {
           localStorage.setItem('veto_photos', JSON.stringify(next));
           return next;
         });
+        if (commandName === 'autoloc' || commandName === 'locate') {
+          setLocations(prev => prev.filter(l => l.command !== commandName && !(commandName === 'autoloc' && l.sourceType?.includes('autoloc'))));
+        }
         setSelectedOutput(null);
       }
     } catch (error: any) {
@@ -306,12 +310,33 @@ export default function Home() {
   };
 
   const renderTelemetryContent = (text: string) => {
-    const latMatch = text.match(/Lat:\s*([-\d.]+)/);
-    const lonMatch = text.match(/Lon:\s*([-\d.]+)/);
+    let lat: number | null = null;
+    let lon: number | null = null;
+
+    const mapsMatch = text.match(/https?:\/\/[^\s]*[\?&](?:q|ll)=(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (mapsMatch) {
+      lat = parseFloat(mapsMatch[1]);
+      lon = parseFloat(mapsMatch[2]);
+    }
+
+    if (!lat || !lon) {
+      const latMatch = text.match(/Lat(?:itude)?:\s*(-?\d+\.\d+)/i);
+      const lonMatch = text.match(/Lon(?:gitude)?:\s*(-?\d+\.\d+)/i);
+      if (latMatch && lonMatch) {
+        lat = parseFloat(latMatch[1]);
+        lon = parseFloat(lonMatch[2]);
+      }
+    }
+
+    if (!lat || !lon) {
+      const pairMatch = text.match(/(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);
+      if (pairMatch) {
+        lat = parseFloat(pairMatch[1]);
+        lon = parseFloat(pairMatch[2]);
+      }
+    }
     
-    if (latMatch && lonMatch) {
-      const lat = parseFloat(latMatch[1]);
-      const lon = parseFloat(lonMatch[1]);
+    if (lat && lon) {
       const googleEmbedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
       
       return (
@@ -725,6 +750,21 @@ export default function Home() {
             <button disabled={activeCmd === 'nodisturb off'} onClick={() => sendCommand('nodisturb off')} className="btn" style={{ flex: 1, ...getBtnStyle('nodisturb off') }}>Off</button>
           </div>
           {renderResult('nodisturb')}
+        </div>
+
+        <div className="glass-panel" style={{ padding: '1.5rem' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔄</div>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>AutoLoc Background Tracking</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '1rem' }}>
+            Periodic background GPS updates sent automatically to Location History.
+          </p>
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '0.75rem' }}>
+            <button disabled={activeCmd === 'autoloc on'} onClick={() => sendCommand('autoloc on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('autoloc on') }}>On</button>
+            <button disabled={activeCmd === 'autoloc off'} onClick={() => sendCommand('autoloc off')} className="btn" style={{ flex: 1, ...getBtnStyle('autoloc off') }}>Off</button>
+          </div>
+          <button onClick={() => deleteData('autoloc')} className="btn btn-danger" style={{ width: '100%', fontSize: '0.8rem', padding: '6px' }}>
+            Delete AutoLoc Data
+          </button>
         </div>
       </div>
 

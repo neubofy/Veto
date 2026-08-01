@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     }, { merge: true });
 
     // If result contains location info, save to locations subcollection and prune to 5 max
-    if (commandName === 'locate' || commandName === 'autoloc' || result.includes('http://maps.google.com/maps?q=') || result.includes('Lat:')) {
+    if (commandName === 'locate' || commandName === 'autoloc' || result.includes('maps.google.com') || result.includes('Lat:') || result.includes('lat:')) {
       let lat = 0;
       let lon = 0;
       let mapsUrl = '';
@@ -44,11 +44,31 @@ export async function POST(req: Request) {
       let provider = 'GPS';
       let battery = '';
 
-      const mapsMatch = result.match(/https?:\/\/maps\.google\.com\/maps\?q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+      // Pattern 1: Maps URL (maps.google.com/maps?q=lat,lon or maps.google.com/?q=lat,lon)
+      const mapsMatch = result.match(/https?:\/\/[^\s]*[\?&](?:q|ll)=(-?\d+\.\d+),(-?\d+\.\d+)/);
       if (mapsMatch) {
         lat = parseFloat(mapsMatch[1]);
         lon = parseFloat(mapsMatch[2]);
         mapsUrl = mapsMatch[0];
+      }
+
+      // Pattern 2: Lat: 12.345 and Lon: 67.890
+      if (!lat || !lon) {
+        const latMatch = result.match(/Lat(?:itude)?:\s*(-?\d+\.\d+)/i);
+        const lonMatch = result.match(/Lon(?:gitude)?:\s*(-?\d+\.\d+)/i);
+        if (latMatch && lonMatch) {
+          lat = parseFloat(latMatch[1]);
+          lon = parseFloat(lonMatch[2]);
+        }
+      }
+
+      // Pattern 3: Direct pair "12.345, 67.890"
+      if (!lat || !lon) {
+        const pairMatch = result.match(/(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);
+        if (pairMatch) {
+          lat = parseFloat(pairMatch[1]);
+          lon = parseFloat(pairMatch[2]);
+        }
       }
 
       const accMatch = result.match(/Accuracy:\s*([\d\.]+\s*m)/i);
