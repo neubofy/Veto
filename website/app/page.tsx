@@ -28,7 +28,7 @@ export default function LandingPage() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-dark, #0d1117)', color: 'var(--text-primary, #c9d1d9)' }}>
+    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-color)', color: 'var(--text-primary)' }}>
       {/* Navigation Bar */}
       <nav style={{ 
         padding: '1rem 2rem', 
@@ -36,7 +36,7 @@ export default function LandingPage() {
         justifyContent: 'space-between', 
         alignItems: 'center', 
         borderBottom: '1px solid var(--border-light, rgba(255,255,255,0.1))', 
-        background: 'rgba(13, 17, 23, 0.85)', 
+        background: 'var(--nav-bg)',
         backdropFilter: 'blur(12px)', 
         position: 'sticky', 
         top: 0, 
@@ -62,11 +62,11 @@ export default function LandingPage() {
             <div style={{ padding: '0.6rem 1.5rem', width: '80px' }}></div>
           ) : user ? (
             <>
-              <Link href="/dashboard" className="btn btn-primary" style={{ padding: '0.5rem 1.2rem', borderRadius: '30px', backgroundColor: '#2f81f7', color: '#fff', textDecoration: 'none', fontWeight: '600' }}>Dashboard</Link>
+              <Link href="/dashboard" className="btn btn-primary" style={{ padding: '0.5rem 1.2rem', borderRadius: '30px', backgroundColor: 'var(--primary-color)', color: '#fff', textDecoration: 'none', fontWeight: '600' }}>Dashboard</Link>
               <button onClick={handleLogout} className="btn btn-danger" style={{ padding: '0.5rem 1.2rem', borderRadius: '30px', backgroundColor: 'rgba(248,81,73,0.2)', color: '#f85149', border: '1px solid rgba(248,81,73,0.4)', cursor: 'pointer' }}>Logout</button>
             </>
           ) : (
-            <Link href="/login" className="btn btn-primary" style={{ padding: '0.5rem 1.2rem', borderRadius: '30px', backgroundColor: '#2f81f7', color: '#fff', textDecoration: 'none', fontWeight: '600' }}>Sign In</Link>
+            <Link href="/login" className="btn btn-primary" style={{ padding: '0.5rem 1.2rem', borderRadius: '30px', backgroundColor: 'var(--primary-color)', color: '#fff', textDecoration: 'none', fontWeight: '600' }}>Sign In</Link>
           )}
         </div>
       </nav>
@@ -81,7 +81,7 @@ export default function LandingPage() {
         <div style={{ background: 'radial-gradient(circle, rgba(47, 129, 247, 0.2) 0%, rgba(13, 17, 23, 0) 70%)', width: '700px', height: '700px', position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, pointerEvents: 'none' }}></div>
         
         <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '30px', backgroundColor: 'rgba(47, 129, 247, 0.1)', border: '1px solid rgba(47, 129, 247, 0.3)', marginBottom: '1.5rem', fontSize: '0.9rem', color: '#58a6ff' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '30px', backgroundColor: 'rgba(47, 129, 247, 0.1)', border: '1px solid var(--primary-color)', marginBottom: '1.5rem', fontSize: '0.9rem', color: '#58a6ff' }}>
             <span>🛡️</span> Self-Hosted Anti-Theft &amp; Remote Device Recovery
           </div>
 
@@ -90,7 +90,7 @@ export default function LandingPage() {
             <span style={{ background: 'linear-gradient(90deg, #2f81f7, #a482d8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Zero Third-Party Compromise.</span>
           </h1>
           
-          <p style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.35rem)', color: '#8b949e', maxWidth: '750px', margin: '0 auto 3rem auto', lineHeight: 1.6 }}>
+          <p style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.35rem)', color: 'var(--text-secondary)', maxWidth: '750px', margin: '0 auto 3rem auto', lineHeight: 1.6 }}>
             Veto provides the ultimate toolkit to track, lock, record, and recover your lost or stolen Android device across offline SMS, messenger auto-replies, and a secure Vercel-hosted Web Dashboard — without relying on commercial tracking servers.
           </p>
 
@@ -98,15 +98,15 @@ export default function LandingPage() {
             {loadingAuth ? (
               <div className="btn btn-primary" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', visibility: 'hidden' }}>Loading...</div>
             ) : user ? (
-              <Link href="/dashboard" className="btn btn-primary" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: '#2f81f7', color: '#fff', textDecoration: 'none', fontWeight: '700', boxShadow: '0 8px 24px rgba(47, 129, 247, 0.4)' }}>
+              <Link href="/dashboard" className="btn btn-primary" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: 'var(--primary-color)', color: '#fff', textDecoration: 'none', fontWeight: '700', boxShadow: '0 8px 24px rgba(47, 129, 247, 0.4)' }}>
                 Open Web Dashboard ➔
               </Link>
             ) : (
-              <Link href="/login" className="btn btn-primary" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: '#2f81f7', color: '#fff', textDecoration: 'none', fontWeight: '700', boxShadow: '0 8px 24px rgba(47, 129, 247, 0.4)' }}>
+              <Link href="/login" className="btn btn-primary" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: 'var(--primary-color)', color: '#fff', textDecoration: 'none', fontWeight: '700', boxShadow: '0 8px 24px rgba(47, 129, 247, 0.4)' }}>
                 Launch Dashboard ➔
               </Link>
             )}
-            <a href="https://github.com/neubofy/Veto/releases" target="_blank" rel="noreferrer" className="btn" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: 'rgba(255,255,255,0.05)', color: '#c9d1d9', border: '1px solid rgba(255,255,255,0.15)', textDecoration: 'none', fontWeight: '600' }}>
+            <a href="https://github.com/neubofy/Veto/releases" target="_blank" rel="noreferrer" className="btn" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: 'var(--glass-bg)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)', textDecoration: 'none', fontWeight: '600' }}>
               Download Android App
             </a>
           </div>
@@ -120,36 +120,36 @@ export default function LandingPage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        style={{ padding: '4rem 1.5rem', backgroundColor: 'rgba(22, 27, 34, 0.6)', borderTop: '1px solid rgba(255,255,255,0.08)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+        style={{ padding: '4rem 1.5rem', backgroundColor: 'var(--bg-color)', borderTop: '1px solid var(--border-light)', borderBottom: '1px solid var(--border-light)' }}
       >
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '800', marginBottom: '1rem' }}>Architected for Maximum Resilience</h2>
-            <p style={{ color: '#8b949e', fontSize: '1.1rem', maxWidth: '650px', margin: '0 auto' }}>Built with zero-trust cryptography and multi-transport redundancy so you never lose control of your device.</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '650px', margin: '0 auto' }}>Built with zero-trust cryptography and multi-transport redundancy so you never lose control of your device.</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
             
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '2rem', backdropFilter: 'blur(10px)' }}>
+            <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
               <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>🛡️</div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: '#f0f6fc' }}>100% Data Sovereignty</h3>
-              <p style={{ color: '#8b949e', lineHeight: 1.6, fontSize: '0.95rem' }}>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>100% Data Sovereignty</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 Retain complete control over your private data. Deploy your own Vercel Web Dashboard and Firebase instance with zero analytics, zero ad-tracking, and zero third-party telemetry harvesting.
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '2rem', backdropFilter: 'blur(10px)' }}>
+            <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
               <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>📡</div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: '#f0f6fc' }}>Multi-Transport Fallback</h3>
-              <p style={{ color: '#8b949e', lineHeight: 1.6, fontSize: '0.95rem' }}>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Multi-Transport Fallback</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 Control your phone via real-time FCM push notifications, offline SMS text messages (<code style={{ color: '#58a6ff' }}>VETO LOCATE &lt;PIN&gt;</code>), or notification auto-reply interception on WhatsApp, Telegram, and Signal.
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '2rem', backdropFilter: 'blur(10px)' }}>
+            <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
               <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>🔐</div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: '#f0f6fc' }}>Zero-Trust Cryptography</h3>
-              <p style={{ color: '#8b949e', lineHeight: 1.6, fontSize: '0.95rem' }}>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Zero-Trust Cryptography</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 Features Argon2id key derivation, AES-256-GCM symmetric payload encryption, RSA-3072 OAEP key wrapping, and constant-time password verification to defend against side-channel attacks.
               </p>
             </div>
@@ -165,45 +165,45 @@ export default function LandingPage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        style={{ padding: '5rem 1.5rem', backgroundColor: 'var(--bg-dark, #0d1117)' }}
+        style={{ padding: '5rem 1.5rem', backgroundColor: 'var(--bg-color)' }}
       >
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <div style={{ color: '#58a6ff', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Redundant Control Pipeline</div>
             <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: '800', marginBottom: '1rem' }}>4 Independent Communication Channels</h2>
-            <p style={{ color: '#8b949e', fontSize: '1.05rem', maxWidth: '650px', margin: '0 auto' }}>Whether your phone has a high-speed 5G connection or no cellular data at all, Veto remains accessible.</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', maxWidth: '650px', margin: '0 auto' }}>Whether your phone has a high-speed 5G connection or no cellular data at all, Veto remains accessible.</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
             
-            <div style={{ backgroundColor: 'rgba(22, 27, 34, 0.8)', border: '1px solid rgba(47, 129, 247, 0.3)', borderRadius: '12px', padding: '1.75rem' }}>
+            <div className="glass-panel" style={{ border: '1px solid var(--primary-color)', borderRadius: '12px', padding: '1.75rem' }}>
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🌐</div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#58a6ff' }}>1. Web Dashboard</h3>
-              <p style={{ color: '#8b949e', fontSize: '0.9rem', lineHeight: 1.5 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
                 Real-time command dispatch using Firebase FCM push messaging. Features interactive Google Maps location tracking, live telemetry, and media gallery.
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(22, 27, 34, 0.8)', border: '1px solid rgba(47, 129, 247, 0.3)', borderRadius: '12px', padding: '1.75rem' }}>
+            <div className="glass-panel" style={{ border: '1px solid var(--primary-color)', borderRadius: '12px', padding: '1.75rem' }}>
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>💬</div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#58a6ff' }}>2. Offline SMS Control</h3>
-              <p style={{ color: '#8b949e', fontSize: '0.9rem', lineHeight: 1.5 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
                 Execute commands remotely without an internet connection. Send SMS text commands (<code style={{ color: '#58a6ff' }}>VETO LOCATE &lt;PIN&gt;</code>) and receive immediate SMS replies.
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(22, 27, 34, 0.8)', border: '1px solid rgba(47, 129, 247, 0.3)', borderRadius: '12px', padding: '1.75rem' }}>
+            <div className="glass-panel" style={{ border: '1px solid var(--primary-color)', borderRadius: '12px', padding: '1.75rem' }}>
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔔</div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#58a6ff' }}>3. Notification Interception</h3>
-              <p style={{ color: '#8b949e', fontSize: '0.9rem', lineHeight: 1.5 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
                 Intercepts auto-reply notification intents from <strong>ANY installed messaging app</strong> (WhatsApp, Telegram, Signal, Matrix) and executes commands.
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(22, 27, 34, 0.8)', border: '1px solid rgba(47, 129, 247, 0.3)', borderRadius: '12px', padding: '1.75rem' }}>
+            <div className="glass-panel" style={{ border: '1px solid var(--primary-color)', borderRadius: '12px', padding: '1.75rem' }}>
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📱</div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#58a6ff' }}>4. In-App Test Sandbox</h3>
-              <p style={{ color: '#8b949e', fontSize: '0.9rem', lineHeight: 1.5 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
                 Integrated test environment directly inside the Android application interface to preview command behavior and verify system permissions.
               </p>
             </div>
@@ -218,77 +218,77 @@ export default function LandingPage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        style={{ padding: '5rem 1.5rem', backgroundColor: 'rgba(22, 27, 34, 0.6)', borderTop: '1px solid rgba(255,255,255,0.08)' }}
+        style={{ padding: '5rem 1.5rem', backgroundColor: 'var(--bg-color)', borderTop: '1px solid var(--border-light)' }}
       >
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: '800', marginBottom: '1rem' }}>Complete Remote Command Manual</h2>
-            <p style={{ color: '#8b949e', fontSize: '1.05rem', maxWidth: '650px', margin: '0 auto' }}>Full matrix of commands supported by Veto via Web Dashboard, SMS, or Notification Auto-Reply.</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', maxWidth: '650px', margin: '0 auto' }}>Full matrix of commands supported by Veto via Web Dashboard, SMS, or Notification Auto-Reply.</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
             
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📍 veto locate</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Location</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Powers on location hardware automatically and fetches accurate GPS/Network/Cell coordinates with Google Maps links. Usage: <code style={{ color: '#c9d1d9' }}>veto locate [last|gps]</code>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Powers on location hardware automatically and fetches accurate GPS/Network/Cell coordinates with Google Maps links. Usage: <code style={{ color: 'var(--text-primary)' }}>veto locate [last|gps]</code>
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#eba336' }}>🚨 veto theft</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(235, 163, 54, 0.15)', color: '#eba336', padding: '2px 8px', borderRadius: '4px' }}>Macro</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
                 Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth, turns off DND, and blares a 3-minute siren alarm.
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🔊 veto ring</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Alarm</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Bypasses DND &amp; silent mode, maxes out alarm stream volume, wakes the screen, and loops a high-decibel alert. Usage: <code style={{ color: '#c9d1d9' }}>veto ring [long|seconds]</code>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Bypasses DND &amp; silent mode, maxes out alarm stream volume, wakes the screen, and loops a high-decibel alert. Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [long|seconds]</code>
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🔒 veto lock</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Security</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Instantly locks screen using Device Admin API and optionally renders full-screen owner contact overlay message. Usage: <code style={{ color: '#c9d1d9' }}>veto lock [custom message]</code>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Instantly locks screen using Device Admin API and optionally renders full-screen owner contact overlay message. Usage: <code style={{ color: 'var(--text-primary)' }}>veto lock [custom message]</code>
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📸 veto camera</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Silently captures photo using front or rear camera over lock screens and backs up file to Google Drive. Usage: <code style={{ color: '#c9d1d9' }}>veto camera [front|back] [flash]</code>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Silently captures photo using front or rear camera over lock screens and backs up file to Google Drive. Usage: <code style={{ color: 'var(--text-primary)' }}>veto camera [front|back] [flash]</code>
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🎙️ veto audio</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
                 Records 30 seconds of high-quality AAC ambient audio from microphone in background and uploads to Google Drive.
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🎥 veto video</span>
@@ -296,38 +296,38 @@ export default function LandingPage() {
                 </div>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Records 30 seconds of background video from front or back camera and backs up to Google Drive. Usage: <code style={{ color: '#c9d1d9' }}>veto video [front|back]</code>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Records 30 seconds of background video from front or back camera and backs up to Google Drive. Usage: <code style={{ color: 'var(--text-primary)' }}>veto video [front|back]</code>
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>💡 veto flash</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Toggles camera flashlight hardware ON/OFF or blinks torch 10 times for visual location signaling. Usage: <code style={{ color: '#c9d1d9' }}>veto flash [on|off]</code>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Toggles camera flashlight hardware ON/OFF or blinks torch 10 times for visual location signaling. Usage: <code style={{ color: 'var(--text-primary)' }}>veto flash [on|off]</code>
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📊 veto stats</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Telemetry</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
                 Returns device model, Android release, battery %, SIM carrier, SIM phone number, IP addresses, and Wi-Fi SSID scan results.
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#f85149' }}>💥 veto delete</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(248, 81, 73, 0.15)', color: '#f85149', padding: '2px 8px', borderRadius: '4px' }}>Danger</span>
               </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Constant-time password-verified emergency factory reset with a 3-second transmission buffer to deliver confirmation. Usage: <code style={{ color: '#c9d1d9' }}>veto delete &lt;password&gt; [dryrun]</code>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Constant-time password-verified emergency factory reset with a 3-second transmission buffer to deliver confirmation. Usage: <code style={{ color: 'var(--text-primary)' }}>veto delete &lt;password&gt; [dryrun]</code>
               </p>
             </div>
 
@@ -342,34 +342,34 @@ export default function LandingPage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        style={{ padding: '5rem 1.5rem', backgroundColor: 'var(--bg-dark, #0d1117)' }}
+        style={{ padding: '5rem 1.5rem', backgroundColor: 'var(--bg-color)' }}
       >
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <div style={{ color: '#a482d8', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Security Specifications</div>
             <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: '800', marginBottom: '1rem' }}>Zero-Trust Privacy &amp; Cryptography</h2>
-            <p style={{ color: '#8b949e', fontSize: '1.05rem', lineHeight: 1.6 }}>How Veto protects your encryption keys and guarantees data privacy.</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6 }}>How Veto protects your encryption keys and guarantees data privacy.</p>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             
-            <div style={{ backgroundColor: 'rgba(22, 27, 34, 0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px', padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#f0f6fc', marginBottom: '0.75rem' }}>🔑 Argon2id Password &amp; PIN Hashing</h3>
-              <p style={{ color: '#8b949e', lineHeight: 1.6, fontSize: '0.95rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>🔑 Argon2id Password &amp; PIN Hashing</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 Veto never stores plaintext PINs or passwords. It uses <strong>Argon2id</strong> (iterations = 1, memory = 128MB, parallelism = 4) with context separation to hash security PINs and prevent GPU dictionary attacks.
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(22, 27, 34, 0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px', padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#f0f6fc', marginBottom: '0.75rem' }}>🔒 AES-256-GCM &amp; RSA-3072 Encryption</h3>
-              <p style={{ color: '#8b949e', lineHeight: 1.6, fontSize: '0.95rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>🔒 AES-256-GCM &amp; RSA-3072 Encryption</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 All media payloads and telemetry data are symmetrically encrypted using <strong>AES-256-GCM</strong> (96-bit random IV, 128-bit auth tag) and asymmetric key wrapping with <strong>RSA-3072 OAEP</strong> (SHA-256 MGF1).
               </p>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(22, 27, 34, 0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px', padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#f0f6fc', marginBottom: '0.75rem' }}>🚫 Zero Tracking &amp; Zero Ads</h3>
-              <p style={{ color: '#8b949e', lineHeight: 1.6, fontSize: '0.95rem' }}>
+            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>🚫 Zero Tracking &amp; Zero Ads</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 Veto contains zero proprietary analytics SDKs, zero crash-reporting telemetry services, and zero advertisement networks. All log entries remain stored strictly on your local device storage.
               </p>
             </div>
@@ -379,11 +379,11 @@ export default function LandingPage() {
       </motion.section>
 
       {/* Footer */}
-      <footer style={{ padding: '4rem 2rem', borderTop: '1px solid rgba(255,255,255,0.1)', color: '#8b949e', fontSize: '0.9rem', backgroundColor: '#090d11' }}>
+      <footer style={{ padding: '4rem 2rem', borderTop: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', fontSize: '0.9rem', backgroundColor: 'var(--bg-color)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: '3rem', justifyContent: 'space-between' }}>
 
           <div style={{ flex: '1 1 300px' }}>
-            <h4 style={{ color: '#f0f6fc', fontSize: '1.2rem', marginBottom: '1rem', fontWeight: '600' }}>Veto Security</h4>
+            <h4 style={{ color: 'var(--text-primary)', fontSize: '1.2rem', marginBottom: '1rem', fontWeight: '600' }}>Veto Security</h4>
             <p style={{ marginBottom: '1rem', lineHeight: 1.6 }}>Absolute control. Zero compromise. The ultimate Android security and remote management platform.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <a href="https://github.com/neubofy/Veto" target="_blank" rel="noreferrer" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>GitHub Repository</a>
@@ -393,7 +393,7 @@ export default function LandingPage() {
           </div>
 
           <div style={{ flex: '1 1 300px' }}>
-            <h4 style={{ color: '#f0f6fc', fontSize: '1.2rem', marginBottom: '1rem', fontWeight: '600' }}>Social &amp; Contact</h4>
+            <h4 style={{ color: 'var(--text-primary)', fontSize: '1.2rem', marginBottom: '1rem', fontWeight: '600' }}>Social &amp; Contact</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <a href="https://instagram.com/pawanwashudev" target="_blank" rel="noreferrer" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>Instagram @pawanwashudev</a>
               <a href="https://t.me/pawanwashudev" target="_blank" rel="noreferrer" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>Telegram @pawanwashudev</a>
@@ -403,7 +403,7 @@ export default function LandingPage() {
           </div>
 
           <div style={{ flex: '1 1 320px', display: 'flex', justifyContent: 'center' }}>
-            <div style={{ width: '320px', backgroundColor: 'rgba(22, 27, 34, 0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px', padding: '16px' }}>
+            <div className="glass-panel" style={{ width: '320px', borderRadius: '14px', padding: '16px' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://0.gravatar.com/avatar/f1b5ad3b6a5c5ff2617ea5477983f25a265036eee4f453f3c4806fb78c894494?s=256&d=initials"
@@ -412,13 +412,13 @@ export default function LandingPage() {
                 alt="Pawan Washudev"
                 style={{ marginBottom: '8px', borderRadius: '50%' }}
               />
-              <div style={{ color: '#f0f6fc', fontSize: '18px', fontWeight: '700' }}>
+              <div style={{ color: 'var(--text-primary)', fontSize: '18px', fontWeight: '700' }}>
                 Pawan Washudev
               </div>
-              <div style={{ color: '#8b949e', fontSize: '14px' }}>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                 Founder, Neubofy
               </div>
-              <div style={{ color: '#8b949e', fontSize: '14px' }}>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                 Patna, Bihar, India
               </div>
               <a
@@ -433,7 +433,7 @@ export default function LandingPage() {
           </div>
 
         </div>
-        <div style={{ textAlign: 'center', marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ textAlign: 'center', marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--border-light)' }}>
           <p>&copy; {new Date().getFullYear()} Veto Security. All rights reserved.</p>
           <p style={{ marginTop: '0.5rem', opacity: 0.6, fontSize: '0.8rem' }}>Proprietary software maintained by Neubofy</p>
         </div>
