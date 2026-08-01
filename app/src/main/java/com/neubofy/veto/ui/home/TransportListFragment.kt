@@ -31,5 +31,9 @@ class TransportListFragment : TaggedFragment() {
         recyclerView.adapter = transportListAdapter
 
         transportListAdapter.submitList(availableTransports(view.context))
+
+        view.findViewById<View>(R.id.btn_open_dashboard_account)?.setOnClickListener {
+            startActivity(android.content.Intent(requireContext(), com.neubofy.veto.ui.settings.AccountActivity::class.java))
+        }
     }
 }

@@ -36,9 +36,10 @@ class CameraCommand(context: Context) : Command(context) {
         args: List<String>,
         transport: Transport<T>,
     ) {
-        if (!settings.serverAccountExists()) {
-            context.log().w(TAG, "Cannot take picture: no Veto Server account")
-            transport.send(context, context.getString(R.string.cmd_camera_response_no_veto_server), keyword)
+        val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "photo")
+        if (error != null) {
+            context.log().w(TAG, error)
+            transport.send(context, error, keyword)
             return
         }
 

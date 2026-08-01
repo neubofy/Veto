@@ -39,8 +39,8 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
     private SettingsRepository settings;
     private EncryptedSettingsRepository encSettings;
 
-    private CheckBox checkBoxDeviceWipe;
-    private CheckBox checkBoxAccessViaPin;
+    private com.google.android.material.materialswitch.MaterialSwitch switchDeviceWipe;
+    private com.google.android.material.materialswitch.MaterialSwitch switchVetoviaPin;
     
     // Status text views
     private TextView textStatusWipe;
@@ -58,6 +58,8 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
     private Button buttonSelectRingtone;
     private com.google.android.material.materialswitch.MaterialSwitch switchAutoUpload;
     private Button buttonManualLocate;
+    private Button btnViewLogs;
+    private Button btnAboutVeto;
 
     private static final int REQUEST_CODE_RINGTONE = 5;
 
@@ -73,13 +75,13 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
         encSettings = EncryptedSettingsRepository.Companion.getInstance(this);
 
         // Security Section
-        checkBoxDeviceWipe = findViewById(R.id.checkBoxWipeData);
-        checkBoxDeviceWipe.setChecked((Boolean) settings.get(Settings.SET_WIPE_ENABLED));
-        checkBoxDeviceWipe.setOnCheckedChangeListener(this);
+        switchDeviceWipe = findViewById(R.id.switchDeviceWipe);
+        switchDeviceWipe.setChecked((Boolean) settings.get(Settings.SET_WIPE_ENABLED));
+        switchDeviceWipe.setOnCheckedChangeListener(this);
         
-        checkBoxAccessViaPin = findViewById(R.id.checkBoxVetoviaPin);
-        checkBoxAccessViaPin.setChecked((Boolean) settings.get(Settings.SET_ACCESS_VIA_PIN));
-        checkBoxAccessViaPin.setOnCheckedChangeListener(this);
+        switchVetoviaPin = findViewById(R.id.switchVetoviaPin);
+        switchVetoviaPin.setChecked((Boolean) settings.get(Settings.SET_ACCESS_VIA_PIN));
+        switchVetoviaPin.setOnCheckedChangeListener(this);
         
         // Status Views
         textStatusWipe = findViewById(R.id.textStatusWipe);
@@ -135,6 +137,13 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
         buttonManualLocate = findViewById(R.id.buttonManualLocate);
         buttonManualLocate.setOnClickListener(v -> manualUpdateLocation());
         
+        // System & Application
+        btnViewLogs = findViewById(R.id.btnViewLogs);
+        btnViewLogs.setOnClickListener(v -> startActivity(new Intent(this, LogViewActivity.class)));
+
+        btnAboutVeto = findViewById(R.id.btnAboutVeto);
+        btnAboutVeto.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
+
         updateUI();
     }
     
@@ -354,9 +363,9 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (buttonView == checkBoxDeviceWipe) {
+        if (buttonView == switchDeviceWipe) {
             settings.set(Settings.SET_WIPE_ENABLED, isChecked);
-        } else if (buttonView == checkBoxAccessViaPin) {
+        } else if (buttonView == switchVetoviaPin) {
             settings.set(Settings.SET_ACCESS_VIA_PIN, isChecked);
         }
     }

@@ -64,4 +64,15 @@ class PermissionView @JvmOverloads constructor(
             }
         }
     }
+
+    fun highlightCard() {
+        val anim = android.animation.ObjectAnimator.ofArgb(
+            this,
+            "backgroundColor",
+            0x33FF9800.toInt(),
+            0x00000000
+        )
+        anim.duration = 2000
+        anim.start()
+    }
 }

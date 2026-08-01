@@ -31,6 +31,31 @@ public class MainActivity extends VetoActivity {
 
     SettingsRepository settings;
 
+    public static final String EXTRA_OPEN_FRAGMENT = "EXTRA_OPEN_FRAGMENT";
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent != null && "PERMISSIONS".equals(intent.getStringExtra(EXTRA_OPEN_FRAGMENT))) {
+            int highlightName = intent.getIntExtra(com.neubofy.veto.ui.home.PermissionManagerFragment.ARG_HIGHLIGHT_PERMISSION_NAME, -1);
+            com.neubofy.veto.ui.home.PermissionManagerFragment fragment = new com.neubofy.veto.ui.home.PermissionManagerFragment();
+            if (highlightName != -1) {
+                Bundle args = new Bundle();
+                args.putInt(com.neubofy.veto.ui.home.PermissionManagerFragment.ARG_HIGHLIGHT_PERMISSION_NAME, highlightName);
+                fragment.setArguments(args);
+            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +63,6 @@ public class MainActivity extends VetoActivity {
         setContentView(R.layout.activity_main);
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
         setSupportActionBar(toolbar);
 
         setupEdgeToEdgeAppBar(findViewById(R.id.appBar));
@@ -67,6 +91,7 @@ public class MainActivity extends VetoActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new MainPageFragment())
                     .commit();
+            handleIntent(getIntent());
         }
 
         // Silently check for OTA updates
@@ -77,26 +102,5 @@ public class MainActivity extends VetoActivity {
     protected void onResume() {
         super.onResume();
         TempContactExpiredService.scheduleJob(this, 0);
-        invalidateOptionsMenu();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_log) {
-            startActivity(new Intent(this, com.neubofy.veto.ui.settings.LogViewActivity.class));
-            return true;
-        } else if (id == R.id.action_about) {
-            startActivity(new Intent(this, com.neubofy.veto.ui.settings.AboutActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }

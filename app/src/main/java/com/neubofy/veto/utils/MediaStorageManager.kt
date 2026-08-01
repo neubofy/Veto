@@ -76,4 +76,37 @@ object MediaStorageManager {
             context.log().e(TAG, "Error updating .nomedia status: ${e.message}")
         }
     }
+
+    fun verifyPreconditions(context: Context, type: String): String? {
+        val settings = SettingsRepository.getInstance(context)
+        if (!settings.serverAccountExists()) {
+            return "Command failed: Web Dashboard pairing required. Please link device in Dashboard."
+        }
+
+        try {
+            val rootDir = getRootMediaDir(context)
+            if (!rootDir.exists() || !rootDir.canWrite()) {
+                return "Command failed: Local storage folder setup incomplete or not writable."
+            }
+        } catch (e: Exception) {
+            return "Command failed: Local storage setup error (${e.message})."
+        }
+
+        if (type == "autoloc") {
+            return null
+        }
+
+        val prefs = context.getSharedPreferences("veto_drive_prefs", Context.MODE_PRIVATE)
+        val folderKey = when (type) {
+            "video" -> "drive_folder_video"
+            "audio" -> "drive_folder_audio"
+            else -> "drive_folder_photo"
+        }
+        val folderId = prefs.getString(folderKey, null)
+        if (folderId.isNullOrBlank()) {
+            return "Command failed: Google Drive $type folder not configured. Please complete setup in Dashboard settings."
+        }
+
+        return null
+    }
 }

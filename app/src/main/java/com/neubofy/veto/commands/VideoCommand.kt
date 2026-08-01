@@ -31,8 +31,9 @@ class VideoCommand(context: Context) : Command(context) {
         args: List<String>,
         transport: Transport<T>,
     ) {
-        if (!settings.serverAccountExists()) {
-            transport.send(context, "Cannot record video: no Veto Server account paired.", keyword)
+        val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "video")
+        if (error != null) {
+            transport.send(context, error, keyword)
             return
         }
 

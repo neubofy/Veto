@@ -12,6 +12,10 @@ import com.neubofy.veto.ui.TaggedFragment
 
 class PermissionManagerFragment : TaggedFragment() {
 
+    companion object {
+        const val ARG_HIGHLIGHT_PERMISSION_NAME = "ARG_HIGHLIGHT_PERMISSION_NAME"
+    }
+
     override fun getStaticTag() = "PermissionManagerFragment"
 
     override fun onCreateView(
@@ -25,14 +29,28 @@ class PermissionManagerFragment : TaggedFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val permissionListAdapter = PermissionListAdapter(activity as AppCompatActivity)
+        val highlightName = arguments?.getInt(ARG_HIGHLIGHT_PERMISSION_NAME, -1) ?: -1
+        val permissionListAdapter = PermissionListAdapter(activity as AppCompatActivity, highlightName)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_commands)
         recyclerView.adapter = permissionListAdapter
 
-        permissionListAdapter.submitList(com.neubofy.veto.permissions.globalAppPermissions())
+        val perms = com.neubofy.veto.permissions.globalAppPermissions()
+        permissionListAdapter.submitList(perms)
+
+        if (highlightName != -1) {
+            val targetIndex = perms.indexOfFirst { it.name == highlightName }
+            if (targetIndex != -1) {
+                recyclerView.post {
+                    recyclerView.smoothScrollToPosition(targetIndex)
+                }
+            }
+        }
     }
 
-    class PermissionListAdapter(private val activity: AppCompatActivity) : androidx.recyclerview.widget.ListAdapter<com.neubofy.veto.permissions.Permission, PermissionListAdapter.ViewHolder>(
+    class PermissionListAdapter(
+        private val activity: AppCompatActivity,
+        private val highlightName: Int = -1
+    ) : androidx.recyclerview.widget.ListAdapter<com.neubofy.veto.permissions.Permission, PermissionListAdapter.ViewHolder>(
         object : androidx.recyclerview.widget.DiffUtil.ItemCallback<com.neubofy.veto.permissions.Permission>() {
             override fun areItemsTheSame(oldItem: com.neubofy.veto.permissions.Permission, newItem: com.neubofy.veto.permissions.Permission): Boolean = oldItem.name == newItem.name
             override fun areContentsTheSame(oldItem: com.neubofy.veto.permissions.Permission, newItem: com.neubofy.veto.permissions.Permission): Boolean = oldItem.name == newItem.name
@@ -48,7 +66,11 @@ class PermissionManagerFragment : TaggedFragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.view.setPermission(getItem(position), activity)
+            val item = getItem(position)
+            holder.view.setPermission(item, activity)
+            if (highlightName != -1 && item.name == highlightName) {
+                holder.view.postDelayed({ holder.view.highlightCard() }, 300)
+            }
         }
     }
 }

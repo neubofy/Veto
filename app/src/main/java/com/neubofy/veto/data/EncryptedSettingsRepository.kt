@@ -25,6 +25,8 @@ class EncryptedSettingsRepository private constructor(context: Context) {
         private const val KEY_SERVER_CACHED_ACCESS_TOKEN = "KEY_SERVER_CACHED_ACCESS_TOKEN"
         private const val KEY_Veto_PIN = "KEY_Veto_PIN"
         private const val KEY_DELETE_PASSWORD = "KEY_DELETE_PASSWORD"
+        private const val KEY_ALLOWLIST_JSON = "KEY_ALLOWLIST_JSON"
+        private const val KEY_TEMP_ALLOWLIST_JSON = "KEY_TEMP_ALLOWLIST_JSON"
     }
 
     val sharedPrefs: SharedPreferences
@@ -71,7 +73,32 @@ class EncryptedSettingsRepository private constructor(context: Context) {
         if (new.isNullOrBlank()) {
             sharedPrefs.edit().remove(KEY_DELETE_PASSWORD).apply()
         } else {
-            sharedPrefs.edit().putString(KEY_DELETE_PASSWORD, new).apply()
+            val hash = if (new.startsWith("\$argon2id\$")) new else com.neubofy.veto.utils.CypherUtils.hashPasswordForDelete(new)
+            sharedPrefs.edit().putString(KEY_DELETE_PASSWORD, hash).apply()
+        }
+    }
+
+    fun getAllowlistJson(): String? {
+        return sharedPrefs.getString(KEY_ALLOWLIST_JSON, null)
+    }
+
+    fun setAllowlistJson(json: String?) {
+        if (json.isNullOrBlank()) {
+            sharedPrefs.edit().remove(KEY_ALLOWLIST_JSON).apply()
+        } else {
+            sharedPrefs.edit().putString(KEY_ALLOWLIST_JSON, json).apply()
+        }
+    }
+
+    fun getTempAllowlistJson(): String? {
+        return sharedPrefs.getString(KEY_TEMP_ALLOWLIST_JSON, null)
+    }
+
+    fun setTempAllowlistJson(json: String?) {
+        if (json.isNullOrBlank()) {
+            sharedPrefs.edit().remove(KEY_TEMP_ALLOWLIST_JSON).apply()
+        } else {
+            sharedPrefs.edit().putString(KEY_TEMP_ALLOWLIST_JSON, json).apply()
         }
     }
 }

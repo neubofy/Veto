@@ -42,29 +42,41 @@ class TemporaryAllowlistRepository private constructor(private val context: Cont
     }
 
     private val gson = Gson()
+    private val encRepo = EncryptedSettingsRepository.getInstance(context)
 
     private val list: TemporaryAllowlistModel
 
     init {
-        val file = File(context.filesDir, TEMP_ALLOWLIST_FILENAME)
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-        val reader = JsonReader(FileReader(file))
-        list = try {
-            gson.fromJson(reader, TemporaryAllowlistModel::class.java) ?: TemporaryAllowlistModel()
-        } catch (e: JsonSyntaxException) {
-            context.log().e(TAG, e.stackTraceToString())
-            // Reset the list
-            TemporaryAllowlistModel()
+        val encryptedJson = encRepo.getTempAllowlistJson()
+        if (encryptedJson != null) {
+            list = try {
+                gson.fromJson(encryptedJson, TemporaryAllowlistModel::class.java) ?: TemporaryAllowlistModel()
+            } catch (e: JsonSyntaxException) {
+                context.log().e(TAG, e.stackTraceToString())
+                TemporaryAllowlistModel()
+            }
+        } else {
+            val legacyFile = File(context.filesDir, TEMP_ALLOWLIST_FILENAME)
+            if (legacyFile.exists() && legacyFile.length() > 0) {
+                list = try {
+                    val reader = JsonReader(FileReader(legacyFile))
+                    gson.fromJson(reader, TemporaryAllowlistModel::class.java) ?: TemporaryAllowlistModel()
+                } catch (e: JsonSyntaxException) {
+                    context.log().e(TAG, e.stackTraceToString())
+                    TemporaryAllowlistModel()
+                }
+                saveList()
+                try { legacyFile.delete() } catch (_: Exception) {}
+            } else {
+                list = TemporaryAllowlistModel()
+            }
         }
     }
 
     private fun saveList() {
         val copiedList = list.clone()
         val raw = gson.toJson(copiedList)
-        val file = File(context.filesDir, TEMP_ALLOWLIST_FILENAME)
-        file.writeText(raw)
+        encRepo.setTempAllowlistJson(raw)
     }
 
     fun containsValidNumber(number: String): Boolean {
