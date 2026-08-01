@@ -117,53 +117,12 @@ class GpsLocationProvider<T>(
             Looper.getMainLooper(),
         )
 
-        if (commandName != "autoloc" && transport !is com.neubofy.veto.transports.NextJsServerTransport) {
+        if (transport !is com.neubofy.veto.transports.NextJsServerTransport) {
             transport.send(context, context.getString(R.string.cmd_locate_response_gps_will_follow), commandName)
         }
         return def
     }
 
-    @SuppressLint("MissingPermission")
-    fun getLastKnownLocation(asFallBackForCurrentLocation: Boolean = false) {
-        val lastLocationFromAndroid =
-            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-
-        val settings = SettingsRepository.getInstance(context)
-        val cachedLoc = settings.getLastKnownLocation()
-
-        if (lastLocationFromAndroid == null) {
-            if (asFallBackForCurrentLocation) {
-                // If current location was requested originally, don't fall back to cached location.
-                transport.send(context, context.getString(R.string.cmd_locate_response_gps_fail), commandName)
-            } else if (cachedLoc != null) {
-                // If last location was requested, fall back to cached location.
-                transport.sendNewLocation(context, cachedLoc, commandName)
-            } else {
-                // No location and nothing to fall back to.
-                if (commandName != "autoloc") {
-                    transport.send(
-                        context,
-                        context.getString(R.string.cmd_locate_last_known_location_not_available),
-                        commandName
-                    )
-                }
-            }
-        } else {
-            if (cachedLoc == null) {
-                // Update our cached location
-                onLocationChanged(lastLocationFromAndroid)
-            } else {
-                // If the last location from the LocationManager is newer than our cached location,
-                // update our cached location.
-                if (lastLocationFromAndroid.time > cachedLoc.timeMillis) {
-                    onLocationChanged(lastLocationFromAndroid)
-                } else {
-                    transport.sendNewLocation(context, cachedLoc, commandName)
-                }
-            }
-        }
-        cleanup()
-    }
 
     override fun onLocationChanged(location: Location) {
         val vetoLocation = VetoLocation.fromAndroidLocation(context, location)
@@ -192,8 +151,6 @@ class GpsLocationProvider<T>(
                 return
             }
             // Return this location and finish
-            val settings = SettingsRepository.getInstance(context)
-            settings.storeLastKnownLocation(vetoLocation)
             transport.sendNewLocation(context, vetoLocation, commandName)
             cleanup()
         }
@@ -221,8 +178,6 @@ class GpsLocationProvider<T>(
             || (newLocation.accuracy != null && newLocation.accuracy < currBest.accuracy)
         ) {
             currBestLocation = newLocation
-            val settings = SettingsRepository.getInstance(context)
-            settings.storeLastKnownLocation(newLocation)
         }
     }
 
@@ -231,11 +186,9 @@ class GpsLocationProvider<T>(
         if (currBest != null) {
             transport.sendNewLocation(context, currBest, commandName)
         } else {
-            if (commandName != "autoloc") {
-                val msg = context.getString(R.string.cmd_locate_response_gps_fail)
-                context.log().d(TAG, msg)
-                transport.send(context, msg, commandName)
-            }
+            val msg = context.getString(R.string.cmd_locate_response_gps_fail)
+            context.log().d(TAG, msg)
+            transport.send(context, msg, commandName)
         }
         cleanup()
     }

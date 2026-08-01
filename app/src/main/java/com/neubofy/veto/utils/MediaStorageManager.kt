@@ -62,9 +62,7 @@ object MediaStorageManager {
             return "Command failed: Local storage setup error (${e.message})."
         }
 
-        if (type == "autoloc") {
-            return null
-        }
+
 
         val prefs = context.getSharedPreferences("veto_drive_prefs", Context.MODE_PRIVATE)
         val folderKey = when (type) {

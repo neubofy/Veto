@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 export default function LandingPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
-  const [activeTab, setActiveTab] = useState<'commands' | 'transports' | 'security' | 'setup'>('commands');
+
 
   useEffect(() => {
     let unsubscribe: () => void = () => {};
@@ -318,16 +318,6 @@ export default function LandingPage() {
               </div>
               <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
                 Returns device model, Android release, battery %, SIM carrier, SIM phone number, IP addresses, and Wi-Fi SSID scan results.
-              </p>
-            </div>
-
-            <div style={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🔄 veto autoloc</span>
-                <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Background</span>
-              </div>
-              <p style={{ color: '#8b949e', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Schedules periodic background location tracking via WorkManager that syncs to Web Dashboard. Usage: <code style={{ color: '#c9d1d9' }}>veto autoloc [on|off]</code>
               </p>
             </div>
 

@@ -102,55 +102,14 @@ class NextJsServerTransport(
     }
 
     override fun sendNewLocation(context: Context, location: com.neubofy.veto.data.VetoLocation, commandName: String?) {
-        val settings = SettingsRepository.getInstance(context)
+        val json = JSONObject()
+        json.put("type", "location")
+        json.put("lat", location.lat)
+        json.put("lon", location.lon)
+        json.put("provider", location.provider)
+        json.put("accuracy", "${location.accuracy}m")
 
-        // Only store to autoloc recent cache when this IS autoloc — don't pollute with locate data
-        if (commandName == "autoloc") {
-            settings.storeRecentLocation(location)
-        }
-
-        val isAutoLoc = commandName == "autoloc"
-        var shouldUpload = false
-
-        if (!isAutoLoc) {
-            // Manual locate command: ALWAYS upload immediately!
-            shouldUpload = true
-        } else {
-            // Background autoloc tracking: upload if first time or movement > 100m
-            val lastUploaded = settings.getLastUploadedLocation()
-            if (lastUploaded == null) {
-                shouldUpload = true
-            } else {
-                val results = FloatArray(1)
-                android.location.Location.distanceBetween(
-                    lastUploaded.lat, lastUploaded.lon,
-                    location.lat, location.lon,
-                    results
-                )
-                val distanceMeters = results[0]
-                if (distanceMeters > 100f) {
-                    shouldUpload = true
-                    context.log().i("NextJsServerTransport", "AutoLoc distance $distanceMeters m > 100m. Uploading to Dashboard.")
-                } else {
-                    context.log().i("NextJsServerTransport", "AutoLoc distance $distanceMeters m <= 100m. Skipping periodic upload.")
-                }
-            }
-        }
-
-        if (shouldUpload) {
-            if (isAutoLoc) {
-                settings.setLastUploadedLocation(location)
-            }
-            
-            val json = JSONObject()
-            json.put("type", "location")
-            json.put("lat", location.lat)
-            json.put("lon", location.lon)
-            json.put("provider", location.provider)
-            json.put("accuracy", "${location.accuracy}m")
-
-            // Send structured JSON instead of string
-            send(context, json.toString(), commandName)
-        }
+        // Send structured JSON instead of string
+        send(context, json.toString(), commandName)
     }
 }

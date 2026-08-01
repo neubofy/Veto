@@ -43,7 +43,6 @@ class VetoApplication : Application() {
     fun restartServices() {
         val settings = SettingsRepository.getInstance(this)
         if (settings.serverAccountExists()) {
-            // Background location is strictly managed by AutoLocCommand via WorkManager now.
         }
     }
 }

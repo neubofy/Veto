@@ -56,8 +56,7 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
     private Button btnEditCommand;
     
     private Button buttonSelectRingtone;
-    private com.google.android.material.materialswitch.MaterialSwitch switchAutoUpload;
-    private Button buttonManualLocate;
+
     private Button btnViewLogs;
     private Button btnAboutVeto;
 
@@ -121,17 +120,7 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
         buttonSelectRingtone = findViewById(R.id.buttonSelectRingTone);
         buttonSelectRingtone.setOnClickListener(this::onSelectRingtoneClicked);
 
-        // Background Tracking
-        switchAutoUpload = findViewById(R.id.switchAutoUpload);
-        switchAutoUpload.setChecked(isAutoLocActive());
-        switchAutoUpload.setOnCheckedChangeListener(this::onAutoUploadCheckedChanged);
 
-        buttonManualLocate = findViewById(R.id.buttonManualLocate);
-        buttonManualLocate.setOnClickListener(v -> manualUpdateLocation());
-        Button buttonClearLocationHistory = findViewById(R.id.buttonClearLocationHistory);
-        if (buttonClearLocationHistory != null) {
-            buttonClearLocationHistory.setOnClickListener(v -> clearCachedLocationData());
-        }
         
         // System & Application
         btnViewLogs = findViewById(R.id.btnViewLogs);
@@ -260,107 +249,7 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
             .show();
     }
 
-    private void onAutoUploadCheckedChanged(android.widget.CompoundButton buttonView, boolean isChecked) {
-        if (isChecked) {
-            CharSequence[] options = new CharSequence[]{"15 Minutes", "30 Minutes", "1 Hour", "2 Hours", "6 Hours"};
-            int[] values = new int[]{15, 30, 60, 120, 360};
-            
-            int currentVal = (int) settings.get(Settings.SET_VetoSERVER_UPDATE_TIME);
-            int defaultSelection = 0;
-            for (int i = 0; i < values.length; i++) {
-                if (values[i] == currentVal) {
-                    defaultSelection = i;
-                    break;
-                }
-            }
 
-            new com.google.android.material.dialog.MaterialAlertDialogBuilder(SettingsActivity.this)
-                .setTitle("Select Update Interval")
-                .setCancelable(false)
-                .setSingleChoiceItems(options, defaultSelection, (dialog, which) -> {
-                    settings.set(Settings.SET_VetoSERVER_UPDATE_TIME, values[which]);
-                    startAutoLoc();
-                    dialog.dismiss();
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    switchAutoUpload.setOnCheckedChangeListener(null);
-                    switchAutoUpload.setChecked(false);
-                    switchAutoUpload.setOnCheckedChangeListener(this::onAutoUploadCheckedChanged);
-                })
-                .show();
-        } else {
-            stopAutoLoc();
-        }
-    }
-
-    private boolean isAutoLocActive() {
-        try {
-            return androidx.work.WorkManager.getInstance(this)
-                .getWorkInfosForUniqueWork(com.neubofy.veto.commands.AutoLocCommand.WORK_NAME)
-                .get()
-                .stream()
-                .anyMatch(info -> info.getState() == androidx.work.WorkInfo.State.ENQUEUED || info.getState() == androidx.work.WorkInfo.State.RUNNING);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private void startAutoLoc() {
-        try {
-            int intervalMinutes = (int) settings.get(Settings.SET_VetoSERVER_UPDATE_TIME);
-            String locateCommand = settings.get(Settings.SET_Veto_COMMAND).toString() + " locate gps autoloc_trigger";
-
-            androidx.work.Data inputData = new androidx.work.Data.Builder()
-                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_COMMAND, locateCommand)
-                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_TRANSPORT_TYPE, com.neubofy.veto.workers.CommandExecutionWorker.TRANS_NEXTJS_SERVER)
-                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_DESTINATION, "Background_Upload")
-                .build();
-
-            androidx.work.PeriodicWorkRequest periodicWork = new androidx.work.PeriodicWorkRequest.Builder(
-                com.neubofy.veto.workers.CommandExecutionWorker.class,
-                intervalMinutes,
-                java.util.concurrent.TimeUnit.MINUTES
-            ).setInputData(inputData).build();
-
-            androidx.work.WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                com.neubofy.veto.commands.AutoLocCommand.WORK_NAME,
-                androidx.work.ExistingPeriodicWorkPolicy.UPDATE,
-                periodicWork
-            );
-            Toast.makeText(this, "Background Location Upload Started", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(this, "Error starting: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            switchAutoUpload.setChecked(false);
-        }
-    }
-
-    private void stopAutoLoc() {
-        androidx.work.WorkManager.getInstance(this).cancelUniqueWork(com.neubofy.veto.commands.AutoLocCommand.WORK_NAME);
-        Toast.makeText(this, "Background Location Upload Stopped", Toast.LENGTH_SHORT).show();
-    }
-
-    private void manualUpdateLocation() {
-        Toast.makeText(this, "Triggering AutoLoc...", Toast.LENGTH_SHORT).show();
-        SettingsRepository settings = SettingsRepository.Companion.getInstance(this);
-        String locateCommand = (String) settings.get(com.neubofy.veto.data.Settings.SET_Veto_COMMAND) + " autoloc run";
-        
-        androidx.work.Data inputData = new androidx.work.Data.Builder()
-                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_COMMAND, locateCommand)
-                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_TRANSPORT_TYPE, com.neubofy.veto.workers.CommandExecutionWorker.TRANS_NEXTJS_SERVER)
-                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_DESTINATION, "Manual_AutoLoc_Upload")
-                .build();
-
-        androidx.work.WorkRequest workRequest = new androidx.work.OneTimeWorkRequest.Builder(com.neubofy.veto.workers.CommandExecutionWorker.class)
-                .setInputData(inputData)
-                .build();
-
-        androidx.work.WorkManager.getInstance(this).enqueue(workRequest);
-    }
-
-    private void clearCachedLocationData() {
-        SettingsRepository.Companion.getInstance(this).clearRecentLocations();
-        Toast.makeText(this, "Cached location history cleared!", Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

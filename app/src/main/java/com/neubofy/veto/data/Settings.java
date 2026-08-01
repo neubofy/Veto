@@ -54,16 +54,7 @@ public class Settings extends HashMap<Integer, Object> {
     public static final int SET_VetoSMS_COUNTER = 402;
 
     //public static final int SET_GPS_STATE = 501;         // 0=GPS is off 1=GPS is on 2=GPS is turned on by Veto
-    public static final int SET_LAST_KNOWN_LOCATION_LAT = 502;
-    public static final int SET_LAST_KNOWN_LOCATION_LON = 503;
-    public static final int SET_LAST_KNOWN_LOCATION_TIME = 504;
-    public static final int SET_LAST_LOW_BAT_UPLOAD = 505;
-    public static final int SET_LAST_KNOWN_LOCATION_ACCURACY = 506;
-    public static final int SET_LAST_KNOWN_LOCATION_ALTITUDE = 507;
-    public static final int SET_LAST_KNOWN_LOCATION_BEARING = 508;
-    public static final int SET_LAST_KNOWN_LOCATION_SPEED = 509;
-
-    public static final int SET_THEME = 601;
+    public static final int SET_LAST_LOW_BAT_UPLOAD = 505;    public static final int SET_THEME = 601;
     public static final String VAL_THEME_FOLLOW_SYSTEM = "follow_system";
     public static final String VAL_THEME_LIGHT = "light";
     public static final String VAL_THEME_DARK = "dark";
@@ -112,8 +103,6 @@ public class Settings extends HashMap<Integer, Object> {
                     return RingerUtils.getDefaultRingtoneAsString();
                 case SET_PIN:
                 case SET_VetoSERVER_ID:
-                case SET_LAST_KNOWN_LOCATION_LAT:
-                case SET_LAST_KNOWN_LOCATION_LON:
                 case SET_Veto_CRYPT_HPW:
                 case SET_Veto_CRYPT_PRIVKEY:
                 case SET_Veto_CRYPT_PUBKEY:
@@ -127,7 +116,6 @@ public class Settings extends HashMap<Integer, Object> {
                 //    return 1;
                 case SET_APP_CRASHED_LOG_ENTRY:
                     return 0;
-                case SET_LAST_KNOWN_LOCATION_TIME:
                 case SET_LAST_LOW_BAT_UPLOAD:
                 case SET_VetoSERVER_LAST_LOCATION_UPLOAD_TIME:
                     return -1L;
@@ -145,11 +133,7 @@ public class Settings extends HashMap<Integer, Object> {
                 case SET_Veto_SERVER_LAST_CONNECTIVITY_UNIX_TIME:
                     return 0L;
 
-                case SET_LAST_KNOWN_LOCATION_ACCURACY,
-                     SET_LAST_KNOWN_LOCATION_ALTITUDE,
-                     SET_LAST_KNOWN_LOCATION_BEARING,
-                     SET_LAST_KNOWN_LOCATION_SPEED:
-                    return Float.NaN;
+
             }
         }
         return "";

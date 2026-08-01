@@ -526,110 +526,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* AutoLoc Location History Google Maps Card */}
-      <section className="glass-panel" style={{ padding: '1.25rem', marginBottom: '3rem', borderRadius: '16px' }}>
-        {(() => {
-          const autoLocs = history.filter(loc => loc.command === 'autoloc' && (loc.payload?.type === 'location' || typeof loc.payload === 'string')).slice(0, 5);
 
-          return (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-                <div>
-                  <h2 style={{ fontSize: '1.35rem', margin: 0 }}>🔄 AutoLoc Background History (Last 5)</h2>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                    Automatic periodic background GPS tracking records sent by device.
-                  </p>
-                </div>
-                {autoLocs.length > 0 && (
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                    {autoLocs.map((loc, idx) => {
-                      const isSelected = selectedLocIndex === idx;
-                      return (
-                        <button
-                          key={loc.id || idx}
-                          onClick={() => setSelectedLocIndex(idx)}
-                          className="btn"
-                          style={{
-                            padding: '6px 10px',
-                            fontSize: '0.8rem',
-                            fontWeight: '600',
-                            backgroundColor: isSelected ? '#238636' : 'var(--border-light)',
-                            color: isSelected ? '#fff' : 'var(--text-primary)',
-                            border: isSelected ? '1px solid #2ea043' : '1px solid var(--glass-border)',
-                            borderRadius: '8px',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          Loc #{idx + 1} {idx === 0 ? '(Latest)' : ''}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {autoLocs.length === 0 ? (
-                <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'var(--text-secondary)', backgroundColor: 'var(--border-light)', borderRadius: '12px', fontSize: '0.9rem' }}>
-                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📍</div>
-                  No background <strong>autoloc</strong> location tracks recorded yet.<br />
-                  Enable <strong>AutoLoc Background Tracking</strong> in app settings or using the toggle below.
-                </div>
-              ) : (
-                (() => {
-                  const activeLoc = autoLocs[selectedLocIndex] || autoLocs[0];
-                  let lat = 0, lon = 0, accuracy = 'N/A';
-                  
-                  if (typeof activeLoc.payload === 'object' && activeLoc.payload.type === 'location') {
-                      lat = activeLoc.payload.lat;
-                      lon = activeLoc.payload.lon;
-                      accuracy = activeLoc.payload.accuracy || 'N/A';
-                  }
-
-                  const embedUrl = lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed` : '';
-                  const mapsUrl = lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}` : '';
-
-                  return (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
-                      <div style={{ width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 16px rgba(0,0,0,0.15)' }}>
-                        {lat && lon ? (
-                          <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={embedUrl} style={{ border: 'none' }}></iframe>
-                        ) : (
-                          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--border-light)', fontSize: '0.9rem' }}>
-                            Coordinates Unavailable (Legacy Format)
-                          </div>
-                        )}
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1rem' }}>
-                        <div style={{ backgroundColor: 'var(--border-light)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#a5d6ff', paddingBottom: '4px', borderBottom: '1px solid var(--glass-border)' }}>
-                            🔄 AutoLoc Background Track #{selectedLocIndex + 1}
-                          </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '0.85rem' }}>
-                            <div><strong>🕒 Timestamp:</strong><br />{activeLoc.timestamp ? new Date(activeLoc.timestamp).toLocaleString() : 'N/A'}</div>
-                            <div><strong>📡 Source:</strong><br />AutoLoc</div>
-                            <div><strong>📍 Coordinates:</strong><br />{lat && lon ? `${lat}, ${lon}` : 'N/A'}</div>
-                            {accuracy !== 'N/A' && <div><strong>🎯 Accuracy:</strong><br />{accuracy}</div>}
-                          </div>
-                        </div>
-
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                          {mapsUrl && <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', padding: '0.75rem', fontSize: '0.9rem', fontWeight: '600' }}>
-                            🗺️ Open in Google Maps
-                          </a>}
-                          <button onClick={() => deleteData('autoloc')} className="btn btn-danger" style={{ padding: '0.75rem 1rem', fontSize: '0.85rem' }}>
-                            🗑️ Delete History
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })()
-              )}
-            </>
-          );
-        })()}
-      </section>
 
       {/* Core Commands */}
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Core Commands</h2>
@@ -715,18 +612,7 @@ export default function Home() {
           {renderResult('nodisturb')}
         </div>
 
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔄</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>AutoLoc Tracking</h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '1rem' }}>
-            Periodic background GPS updates sent automatically.
-          </p>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'autoloc on'} onClick={() => sendCommand('autoloc on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('autoloc on') }}>On</button>
-            <button disabled={activeCmd === 'autoloc off'} onClick={() => sendCommand('autoloc off')} className="btn" style={{ flex: 1, ...getBtnStyle('autoloc off') }}>Off</button>
-          </div>
-          {renderResult('autoloc')}
-        </div>
+
       </div>
 
       {/* Experimental Commands */}

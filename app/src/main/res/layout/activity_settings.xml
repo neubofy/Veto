@@ -380,55 +380,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Background Tracking Section -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="12dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Background Tracking"
-                        android:textColor="?attr/colorPrimary"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="16dp" />
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switchAutoUpload"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Background Auto-Upload"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="16dp" />
-
-                    <Button
-                        android:id="@+id/buttonManualLocate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:text="Update Last Location Now"
-                        android:layout_marginBottom="8dp" />
-
-                    <Button
-                        android:id="@+id/buttonClearLocationHistory"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:text="Clear Cached Location History"
-                        android:textColor="?attr/colorError"
-                        app:strokeColor="?attr/colorError" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
             <!-- System & Application Section -->
             <com.google.android.material.card.MaterialCardView

@@ -28,7 +28,7 @@ fun availableCommands(context: Context): List<Command> {
         RingerModeCommand(context),
         StatsCommand(context),
         TheftCommand(context),
-        AutoLocCommand(context),
+
         AudioCommand(context),
         VideoCommand(context),
     )

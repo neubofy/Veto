@@ -21,6 +21,9 @@ class NotificationListenService : NotificationListenerService() {
         // Give other code in the Veto app access to this service via a static field,
         // but only while the service is connected to the NotificationManager.
         var instance: NotificationListenService? = null
+        
+        // Debounce to prevent duplicate executions from app notifications updating
+        private val recentCommands = mutableMapOf<String, Long>()
     }
 
     private lateinit var settings: SettingsRepository
@@ -66,6 +69,15 @@ class NotificationListenService : NotificationListenerService() {
         if (!message.startsWith(vetoTriggerWord, ignoreCase = true)) {
             return
         }
+
+        // Deduplicate: same package + same message within 5 seconds = drop
+        val now = System.currentTimeMillis()
+        val commandKey = "${sbn.packageName}_$message"
+        val lastSeen = recentCommands[commandKey]
+        if (lastSeen != null && (now - lastSeen) < 5000) {
+            return
+        }
+        recentCommands[commandKey] = now
 
         (applicationContext as VetoApplication).latestStatusBarNotification = sbn
 

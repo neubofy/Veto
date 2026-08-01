@@ -26,7 +26,7 @@ class LocateCommand(context: Context) : Command(context) {
 
     override val keyword = "locate"
 
-    override val usage = "locate [current | last]"
+    override val usage = "locate"
 
     @get:DrawableRes
     override val icon = R.drawable.ic_location
@@ -51,24 +51,6 @@ class LocateCommand(context: Context) : Command(context) {
         args: List<String>,
         transport: Transport<T>,
     ) {
-        // veto locate last -> returns all locally cached recent locations (up to 5)
-        if (args.contains("last")) {
-            withContext(Dispatchers.IO) {
-                val settings = com.neubofy.veto.data.SettingsRepository.getInstance(context)
-                val recents = settings.getRecentLocations()
-                if (recents.isNotEmpty()) {
-                    val sb = StringBuilder("📍 Locally Cached Location History (Last ${recents.size}):\n\n")
-                    recents.forEachIndexed { idx, loc ->
-                        sb.append("#${idx + 1}: ${loc.toCompactString()}\n\n")
-                    }
-                    transport.send(context, sb.toString().trim(), keyword)
-                } else {
-                    val provider = GpsLocationProvider(context, transport, GPS_PROVIDER, null, keyword)
-                    provider.getLastKnownLocation()
-                }
-            }
-            return
-        }
 
         addJobResult = locOnOffHandler.addJob()
 

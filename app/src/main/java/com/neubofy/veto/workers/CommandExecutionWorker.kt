@@ -13,7 +13,6 @@ import androidx.work.WorkerParameters
 import com.neubofy.veto.VetoApplication
 import com.neubofy.veto.R
 import com.neubofy.veto.commands.CommandHandler
-import com.neubofy.veto.services.ServerLocationUploadService.SOURCE_REGULAR_BACKGROUND_UPLOAD
 // import com.neubofy.veto.transports.VetoServerTransport
 import com.neubofy.veto.transports.InAppTransport
 import com.neubofy.veto.transports.NotificationReplyTransport
@@ -132,8 +131,6 @@ class CommandExecutionWorker(
             }
 
             TRANS_Veto_SERVER -> {
-                // val transport = VetoServerTransport(applicationContext, destination)
-                // CommandHandler<Unit>(transport, destination != SOURCE_REGULAR_BACKGROUND_UPLOAD)
                 return null
             }
 
