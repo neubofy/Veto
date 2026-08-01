@@ -644,15 +644,12 @@ export default function Home() {
                           <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#a5d6ff', paddingBottom: '4px', borderBottom: '1px solid var(--glass-border)' }}>
                             🔄 AutoLoc Background Track #{selectedLocIndex + 1}
                           </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', fontSize: '0.85rem' }}>
-                            <div><strong>🕒 Time:</strong><br />{activeLoc.timestamp ? new Date(activeLoc.timestamp).toLocaleTimeString() : 'N/A'}</div>
-                            <div><strong>📡 Provider:</strong><br />{activeLoc.provider || 'GPS'}</div>
-                            <div><strong>📍 Latitude:</strong><br />{lat || 'N/A'}</div>
-                            <div><strong>📍 Longitude:</strong><br />{lon || 'N/A'}</div>
-                            <div><strong>🎯 Accuracy:</strong><br />{activeLoc.accuracy || 'N/A'}</div>
-                            <div><strong>🔋 Battery:</strong><br />{activeLoc.battery || 'N/A'}</div>
-                            <div><strong>🏔️ Altitude:</strong><br />{activeLoc.altitude || 'N/A'}</div>
-                            <div><strong>🧭 Speed / Bearing:</strong><br />{activeLoc.speed || 'N/A'} {activeLoc.bearing || ''}</div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '0.85rem' }}>
+                            <div><strong>🕒 Timestamp:</strong><br />{activeLoc.timestamp ? new Date(activeLoc.timestamp).toLocaleString() : 'N/A'}</div>
+                            <div><strong>📡 Source:</strong><br />{activeLoc.provider || 'GPS'}</div>
+                            <div><strong>📍 Coordinates:</strong><br />{lat && lon ? `${lat}, ${lon}` : 'N/A'}</div>
+                            {activeLoc.accuracy && activeLoc.accuracy !== 'N/A' && <div><strong>🎯 Accuracy:</strong><br />{activeLoc.accuracy}</div>}
+                            {activeLoc.battery && activeLoc.battery !== 'N/A' && <div><strong>🔋 Battery:</strong><br />{activeLoc.battery}</div>}
                           </div>
                         </div>
 
@@ -674,15 +671,19 @@ export default function Home() {
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📍</div>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Locate Device</h3>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'locate'} onClick={() => sendCommand('locate current')} className="btn btn-primary" style={{ flex: 1, fontSize: '0.85rem', ...getBtnStyle('locate') }}>
-              {activeCmd === 'locate' ? 'Locating...' : 'Live GPS'}
-            </button>
-            <button disabled={activeCmd === 'locate last'} onClick={() => sendCommand('locate last')} className="btn" style={{ flex: 1, fontSize: '0.85rem', ...getBtnStyle('locate last') }}>
-              History
-            </button>
-          </div>
+          <button disabled={activeCmd === 'locate'} onClick={() => sendCommand('locate')} className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('locate') }}>
+            {activeCmd === 'locate' ? 'Locating...' : 'Locate'}
+          </button>
           {renderResult('locate')}
+        </div>
+
+        <div className="glass-panel" style={{ padding: '1.5rem' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔄</div>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>AutoLoc Tracker</h3>
+          <button disabled={activeCmd === 'autoloc'} onClick={() => sendCommand('autoloc on')} className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('autoloc') }}>
+            {activeCmd === 'autoloc' ? 'Triggering...' : 'Trigger AutoLoc'}
+          </button>
+          {renderResult('autoloc')}
         </div>
 
         <div className="glass-panel" style={{ padding: '1.5rem' }}>

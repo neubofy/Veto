@@ -26,19 +26,16 @@ export async function POST(req: Request) {
 
     const commandName = command || 'unknown';
 
-    // Save command results into results subcollection EXCEPT for background autoloc tracking
-    if (commandName !== 'autoloc') {
-      // Don't overwrite a complete location result with an intermediate "GPS location search initiated" progress message
-      const isProgressMessage = result.includes('GPS location search initiated') || result.includes('will follow');
-      const existingLocateDoc = await adminDb.collection('users').doc(userId).collection('results').doc(commandName).get();
-      const hasExistingResult = existingLocateDoc.exists && existingLocateDoc.data()?.result?.includes('maps.google.com');
+    // Save command results into results subcollection
+    const isProgressMessage = result.includes('GPS location search initiated') || result.includes('will follow');
+    const existingLocateDoc = await adminDb.collection('users').doc(userId).collection('results').doc(commandName).get();
+    const hasExistingResult = existingLocateDoc.exists && existingLocateDoc.data()?.result?.includes('maps.google.com');
 
-      if (!isProgressMessage || !hasExistingResult) {
-        await adminDb.collection('users').doc(userId).collection('results').doc(commandName).set({
-          result: result,
-          timestamp: new Date().toISOString()
-        }, { merge: true });
-      }
+    if (!isProgressMessage || !hasExistingResult) {
+      await adminDb.collection('users').doc(userId).collection('results').doc(commandName).set({
+        result: result,
+        timestamp: new Date().toISOString()
+      }, { merge: true });
     }
 
     // Save background autoloc tracking to locations subcollection (up to 5 items)

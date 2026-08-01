@@ -114,19 +114,45 @@ class MessagingAppPickerActivity : VetoActivity() {
 
     private fun isMessagingPackage(pkg: String): Boolean {
         val lower = pkg.lowercase()
-        return pkg == "com.whatsapp" || pkg == "com.whatsapp.w4b" || lower.contains("whatsapp") ||
-                pkg == "org.telegram.messenger" || lower.contains("telegram") ||
-                pkg == "org.thoughtcrime.securesms" || lower.contains("signal") ||
-                pkg == "com.facebook.orca" || lower.contains("messenger") ||
-                pkg == "com.instagram.android" || lower.contains("instagram") ||
-                pkg == "com.discord" || lower.contains("discord") ||
-                pkg == "com.viber.voip" || lower.contains("viber") ||
-                pkg == "com.skype.raider" || lower.contains("skype") ||
-                pkg == "com.tencent.mm" || lower.contains("wechat") ||
-                pkg == "jp.naver.line.android" || lower.contains("line") ||
-                pkg == "com.slack" || lower.contains("slack") ||
-                pkg == "com.microsoft.teams" || lower.contains("teams") ||
-                pkg == "com.snapchat.android" || lower.contains("snapchat")
+
+        // Exclude system overlays, framework, telephony providers, and vendor packages
+        if (lower.contains("overlay") ||
+            lower.startsWith("android") ||
+            lower.startsWith("com.android.internal") ||
+            lower.startsWith("com.android.providers") ||
+            lower.contains("vendor") ||
+            lower.contains("systemui")
+        ) {
+            return false
+        }
+
+        // Known messaging application package identifiers
+        val knownMessagingPackages = setOf(
+            "com.whatsapp", "com.whatsapp.w4b",
+            "org.telegram.messenger", "org.telegram.messenger.web", "org.telegram.plus",
+            "org.thoughtcrime.securesms",
+            "com.facebook.orca",
+            "com.instagram.android",
+            "com.discord",
+            "com.viber.voip",
+            "com.skype.raider",
+            "com.tencent.mm",
+            "jp.naver.line.android",
+            "com.slack",
+            "com.microsoft.teams",
+            "com.snapchat.android",
+            "chat.schildi.app",
+            "im.vector.app",
+            "org.session.session",
+            "ch.threema.app"
+        )
+
+        if (knownMessagingPackages.contains(lower)) return true
+
+        return lower.endsWith(".whatsapp") ||
+                lower.endsWith(".telegram") ||
+                lower.endsWith(".signal") ||
+                lower.endsWith(".messenger")
     }
 
     inner class MessagingAppAdapter(
@@ -150,10 +176,11 @@ class MessagingAppPickerActivity : VetoActivity() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = items[position]
             holder.tvName.text = item.appName
-            holder.tvPackage.text = item.packageName
             holder.imgIcon.setImageDrawable(item.icon)
-            holder.tvBadge.visibility = View.VISIBLE
-            holder.tvBadge.text = "💬 Messaging App"
+
+            // Hide unnecessary package name and badge clutter
+            holder.tvPackage.visibility = View.GONE
+            holder.tvBadge.visibility = View.GONE
 
             holder.cbSelected.setOnCheckedChangeListener(null)
             holder.cbSelected.isChecked = item.isSelected
