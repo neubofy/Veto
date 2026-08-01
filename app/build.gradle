@@ -34,7 +34,7 @@ android {
         // We should implement becoming a Device Owner, and then raise the targetSdk again.
         // https://gitlab.com/Neubofy/veto/-/issues/220
         // noinspection ExpiredTargetSdkVersion
-        targetSdkVersion 32
+        targetSdkVersion 36
         versionCode 1
         versionName "1.0.0"
         multiDexEnabled true

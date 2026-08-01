@@ -11,6 +11,7 @@ import com.neubofy.veto.R
 import com.neubofy.veto.permissions.BluetoothConnectPermission
 import com.neubofy.veto.permissions.Permission
 import com.neubofy.veto.transports.Transport
+import com.neubofy.veto.utils.log
 
 
 class BluetoothCommand(context: Context) : Command(context) {
@@ -56,19 +57,25 @@ class BluetoothCommand(context: Context) : Command(context) {
             }
             transport.send(context, msg, keyword)
         } else if (args.contains("on")) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                com.neubofy.veto.utils.SecureSettings.setBluetooth(context, true)
-                bluetoothAdapter.enable()
-            } else {
-                bluetoothAdapter.enable()
+            val secureSuccess = com.neubofy.veto.utils.SecureSettings.setBluetooth(context, true)
+            if (!secureSuccess) {
+                try {
+                    @Suppress("DEPRECATION")
+                    bluetoothAdapter.enable()
+                } catch (e: Exception) {
+                    context.log().e("BluetoothCommand", "Failed to enable bluetooth: ${e.message}")
+                }
             }
             transport.send(context, context.getString(R.string.cmd_bluetooth_response_on), keyword)
         } else if (args.contains("off")) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                com.neubofy.veto.utils.SecureSettings.setBluetooth(context, false)
-                bluetoothAdapter.disable()
-            } else {
-                bluetoothAdapter.disable()
+            val secureSuccess = com.neubofy.veto.utils.SecureSettings.setBluetooth(context, false)
+            if (!secureSuccess) {
+                try {
+                    @Suppress("DEPRECATION")
+                    bluetoothAdapter.disable()
+                } catch (e: Exception) {
+                    context.log().e("BluetoothCommand", "Failed to disable bluetooth: ${e.message}")
+                }
             }
             transport.send(context, context.getString(R.string.cmd_bluetooth_response_off), keyword)
         }

@@ -33,6 +33,8 @@ class DummyAudioActivity : AppCompatActivity() {
             return
         }
 
+        window.attributes.alpha = 0f
+        window.setDimAmount(0f)
         window.setGravity(android.view.Gravity.TOP or android.view.Gravity.START)
         window.setLayout(1, 1)
         window.setFlags(
@@ -47,6 +49,8 @@ class DummyAudioActivity : AppCompatActivity() {
         )
         @Suppress("DEPRECATION")
         overridePendingTransition(0, 0)
+
+        moveTaskToBack(true)
 
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

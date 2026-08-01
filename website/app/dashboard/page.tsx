@@ -218,7 +218,7 @@ export default function Home() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ commandName, all })
+        body: JSON.stringify({ token, commandName, all })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -265,7 +265,11 @@ export default function Home() {
       const token = await user.getIdToken();
       const res = await fetch('/api/user/delete', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ token })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
