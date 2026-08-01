@@ -41,6 +41,7 @@ class AudioCommand(context: Context) : Command(context) {
 
         val dummyAudioActivity = android.content.Intent(context, com.neubofy.veto.ui.DummyAudioActivity::class.java)
         dummyAudioActivity.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+        com.neubofy.veto.transports.TransportHelper.attachTransportToIntent(dummyAudioActivity, transport)
         context.startActivity(dummyAudioActivity)
 
         transport.send(context, "Capturing 30s audio...", keyword)

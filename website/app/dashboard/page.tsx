@@ -674,9 +674,14 @@ export default function Home() {
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📍</div>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Locate Device</h3>
-          <button disabled={activeCmd === 'locate'} onClick={() => sendCommand('locate')} className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('locate') }}>
-            {activeCmd === 'locate' ? 'Locating...' : 'Locate'}
-          </button>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}>
+            <button disabled={activeCmd === 'locate'} onClick={() => sendCommand('locate current')} className="btn btn-primary" style={{ flex: 1, fontSize: '0.85rem', ...getBtnStyle('locate') }}>
+              {activeCmd === 'locate' ? 'Locating...' : 'Live GPS'}
+            </button>
+            <button disabled={activeCmd === 'locate last'} onClick={() => sendCommand('locate last')} className="btn" style={{ flex: 1, fontSize: '0.85rem', ...getBtnStyle('locate last') }}>
+              History
+            </button>
+          </div>
           {renderResult('locate')}
         </div>
 

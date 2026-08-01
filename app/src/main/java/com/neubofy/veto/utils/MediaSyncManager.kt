@@ -15,7 +15,8 @@ object MediaSyncManager {
     fun syncRecentMedia(
         context: Context,
         maxAgeMillis: Long = 60_000L,
-        commandName: String? = null
+        commandName: String? = null,
+        originatingTransport: com.neubofy.veto.transports.Transport<*>? = null
     ) {
         syncScope.launch {
             try {
@@ -26,17 +27,17 @@ object MediaSyncManager {
 
                 // Photos
                 photosDir.listFiles()?.filter { now - it.lastModified() <= maxAgeMillis }?.forEach { file ->
-                    uploadMediaFile(context, file, "photo", "image/jpeg", commandName ?: "camera")
+                    uploadMediaFile(context, file, "photo", "image/jpeg", commandName ?: "camera", originatingTransport)
                 }
 
                 // Videos
                 videosDir.listFiles()?.filter { now - it.lastModified() <= maxAgeMillis }?.forEach { file ->
-                    uploadMediaFile(context, file, "video", "video/mp4", commandName ?: "video")
+                    uploadMediaFile(context, file, "video", "video/mp4", commandName ?: "video", originatingTransport)
                 }
 
                 // Audio
                 audioDir.listFiles()?.filter { now - it.lastModified() <= maxAgeMillis }?.forEach { file ->
-                    uploadMediaFile(context, file, "audio", "audio/mp4", commandName ?: "audio")
+                    uploadMediaFile(context, file, "audio", "audio/mp4", commandName ?: "audio", originatingTransport)
                 }
             } catch (e: Exception) {
                 context.log().e(TAG, "Error in syncRecentMedia: ${e.message}")
@@ -49,7 +50,8 @@ object MediaSyncManager {
         file: File,
         type: String,
         mimeType: String,
-        commandName: String
+        commandName: String,
+        originatingTransport: com.neubofy.veto.transports.Transport<*>?
     ) {
         val typeCapitalized = type.replaceFirstChar { it.uppercase() }
         Notifications.notify(
@@ -72,12 +74,12 @@ object MediaSyncManager {
                     "$typeCapitalized uploaded to Google Drive. Tap link to open: $link",
                     Notifications.CHANNEL_SERVER
                 )
-                val transport = NextJsServerTransport(context)
-                transport.send(
-                    context,
-                    "$typeCapitalized uploaded to Google Drive: $link",
-                    commandName
-                )
+                val serverTransport = NextJsServerTransport(context)
+                val msg = "$typeCapitalized uploaded to Google Drive: $link"
+                serverTransport.send(context, msg, commandName)
+                if (originatingTransport != null && originatingTransport !is NextJsServerTransport) {
+                    originatingTransport.send(context, msg, commandName)
+                }
             },
             onError = { error ->
                 context.log().e(TAG, "Failed to upload $type to Drive: $error")
@@ -87,12 +89,12 @@ object MediaSyncManager {
                     "Saved locally in ${file.name}. Upload error: $error",
                     Notifications.CHANNEL_FAILED
                 )
-                val transport = NextJsServerTransport(context)
-                transport.send(
-                    context,
-                    "Failed to upload $type to Drive: $error (saved locally in ${file.parentFile?.name})",
-                    commandName
-                )
+                val serverTransport = NextJsServerTransport(context)
+                val msg = "Failed to upload $type to Drive: $error (saved locally in ${file.parentFile?.name})"
+                serverTransport.send(context, msg, commandName)
+                if (originatingTransport != null && originatingTransport !is NextJsServerTransport) {
+                    originatingTransport.send(context, msg, commandName)
+                }
             }
         )
     }

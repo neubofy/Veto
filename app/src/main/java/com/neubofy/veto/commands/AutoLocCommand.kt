@@ -57,7 +57,7 @@ class AutoLocCommand(context: Context) : Command(context) {
 
             val inputData = Data.Builder()
                 .putString(CommandExecutionWorker.KEY_COMMAND, locateCommand)
-                .putString(CommandExecutionWorker.KEY_TRANSPORT_TYPE, CommandExecutionWorker.TRANS_Veto_SERVER)
+                .putString(CommandExecutionWorker.KEY_TRANSPORT_TYPE, CommandExecutionWorker.TRANS_NEXTJS_SERVER)
                 .putString(CommandExecutionWorker.KEY_DESTINATION, "Background_Upload")
                 .build()
 

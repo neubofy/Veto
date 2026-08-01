@@ -46,6 +46,7 @@ class CameraCommand(context: Context) : Command(context) {
         val dummyCameraActivity = Intent(context, DummyCameraxActivity::class.java)
         dummyCameraActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_COMMAND, keyword)
+        com.neubofy.veto.transports.TransportHelper.attachTransportToIntent(dummyCameraActivity, transport)
 
         if (args.getOrNull(0) == "front") {
             dummyCameraActivity.putExtra(

@@ -316,7 +316,7 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
 
             androidx.work.Data inputData = new androidx.work.Data.Builder()
                 .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_COMMAND, locateCommand)
-                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_TRANSPORT_TYPE, com.neubofy.veto.workers.CommandExecutionWorker.TRANS_Veto_SERVER)
+                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_TRANSPORT_TYPE, com.neubofy.veto.workers.CommandExecutionWorker.TRANS_NEXTJS_SERVER)
                 .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_DESTINATION, "Background_Upload")
                 .build();
 
@@ -350,7 +350,7 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
         
         androidx.work.Data inputData = new androidx.work.Data.Builder()
                 .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_COMMAND, locateCommand)
-                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_TRANSPORT_TYPE, com.neubofy.veto.workers.CommandExecutionWorker.TRANS_Veto_SERVER)
+                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_TRANSPORT_TYPE, com.neubofy.veto.workers.CommandExecutionWorker.TRANS_NEXTJS_SERVER)
                 .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_DESTINATION, "Manual_Upload")
                 .build();
 

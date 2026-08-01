@@ -258,13 +258,14 @@ class DummyCameraxActivity : AppCompatActivity() {
 
         // Offload status notification and Google Drive upload to background scope
         lifecycleScope.launch(Dispatchers.IO) {
-            val transport = NextJsServerTransport(ctx)
-            transport.send(
-                ctx,
-                "Photo captured successfully! Saved locally to ${photoFile.name}. Queued for Google Drive upload...",
-                commandName
-            )
-            MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = commandName)
+            val transport = com.neubofy.veto.transports.TransportHelper.getTransportFromIntent(ctx, intent)
+            val serverTransport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
+            val msg = "Photo captured successfully! Saved locally to ${photoFile.name}. Queued for Google Drive upload..."
+            serverTransport.send(ctx, msg, commandName)
+            if (transport !is com.neubofy.veto.transports.NextJsServerTransport) {
+                transport.send(ctx, msg, commandName)
+            }
+            MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = commandName, originatingTransport = transport)
         }
     }
 
@@ -318,16 +319,17 @@ class DummyCameraxActivity : AppCompatActivity() {
         cameraProvider.unbindAll()
 
         if (videoFile.exists() && videoFile.length() > 0) {
-            val transport = NextJsServerTransport(ctx)
-            transport.send(
-                ctx,
-                "Video captured successfully! Saved locally to ${videoFile.name}. Queued for Google Drive upload...",
-                commandName
-            )
+            val transport = com.neubofy.veto.transports.TransportHelper.getTransportFromIntent(ctx, intent)
+            val serverTransport = com.neubofy.veto.transports.NextJsServerTransport(ctx)
+            val msg = "Video captured successfully! Saved locally to ${videoFile.name}. Queued for Google Drive upload..."
+            serverTransport.send(ctx, msg, commandName)
+            if (transport !is com.neubofy.veto.transports.NextJsServerTransport) {
+                transport.send(ctx, msg, commandName)
+            }
             finish()
-            MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = commandName)
+            MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = commandName, originatingTransport = transport)
         } else {
-            val transport = NextJsServerTransport(ctx)
+            val transport = com.neubofy.veto.transports.TransportHelper.getTransportFromIntent(ctx, intent)
             transport.send(ctx, "Video recording failed to produce file.", commandName)
             finish()
         }

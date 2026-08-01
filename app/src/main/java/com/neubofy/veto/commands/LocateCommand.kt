@@ -26,7 +26,7 @@ class LocateCommand(context: Context) : Command(context) {
 
     override val keyword = "locate"
 
-    override val usage = "locate [last | gps]"
+    override val usage = "locate [current | last]"
 
     @get:DrawableRes
     override val icon = R.drawable.ic_location

@@ -182,12 +182,9 @@ class GpsLocationProvider<T>(
                 return
             }
         } else {
-            // Skip a few initial locations to wait for a more accurate GPS-based location.
-            // Wait either until the accuracy does not improve anymore or for a fixed number of results.
-            if (requestedProvider == LocationManager.GPS_PROVIDER
-                && isAccDiffLarge
-                && locationCount < 15
-            ) {
+            // If location accuracy is good (<= 50m) or we have received at least 2 updates, return immediately
+            val acc = vetoLocation.accuracy
+            if (acc != null && acc > 50f && isAccDiffLarge && locationCount < 2) {
                 return
             }
             // Return this location and finish
