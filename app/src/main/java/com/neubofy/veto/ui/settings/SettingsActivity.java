@@ -136,6 +136,10 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
 
         buttonManualLocate = findViewById(R.id.buttonManualLocate);
         buttonManualLocate.setOnClickListener(v -> manualUpdateLocation());
+        Button buttonClearLocationHistory = findViewById(R.id.buttonClearLocationHistory);
+        if (buttonClearLocationHistory != null) {
+            buttonClearLocationHistory.setOnClickListener(v -> clearCachedLocationData());
+        }
         
         // System & Application
         btnViewLogs = findViewById(R.id.btnViewLogs);
@@ -344,14 +348,14 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
     }
 
     private void manualUpdateLocation() {
-        Toast.makeText(this, "Locating...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Triggering AutoLoc...", Toast.LENGTH_SHORT).show();
         SettingsRepository settings = SettingsRepository.Companion.getInstance(this);
-        String locateCommand = (String) settings.get(com.neubofy.veto.data.Settings.SET_Veto_COMMAND) + " locate gps";
+        String locateCommand = (String) settings.get(com.neubofy.veto.data.Settings.SET_Veto_COMMAND) + " autoloc run";
         
         androidx.work.Data inputData = new androidx.work.Data.Builder()
                 .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_COMMAND, locateCommand)
                 .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_TRANSPORT_TYPE, com.neubofy.veto.workers.CommandExecutionWorker.TRANS_NEXTJS_SERVER)
-                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_DESTINATION, "Manual_Upload")
+                .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_DESTINATION, "Manual_AutoLoc_Upload")
                 .build();
 
         androidx.work.WorkRequest workRequest = new androidx.work.OneTimeWorkRequest.Builder(com.neubofy.veto.workers.CommandExecutionWorker.class)
@@ -359,6 +363,11 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
                 .build();
 
         androidx.work.WorkManager.getInstance(this).enqueue(workRequest);
+    }
+
+    private void clearCachedLocationData() {
+        SettingsRepository.Companion.getInstance(this).clearRecentLocations();
+        Toast.makeText(this, "Cached location history cleared!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

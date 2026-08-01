@@ -336,6 +336,12 @@ class SettingsRepository private constructor(private val context: Context) {
         }
     }
 
+    fun clearRecentLocations() {
+        val encRepo = EncryptedSettingsRepository.getInstance(context)
+        encRepo.setRecentLocationsJson(null)
+        encRepo.setLastUploadedLocationJson(null)
+    }
+
     fun getLastUploadedLocation(): VetoLocation? {
         val encRepo = EncryptedSettingsRepository.getInstance(context)
         val json = encRepo.getLastUploadedLocationJson() ?: return null

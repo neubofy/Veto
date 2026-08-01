@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/lib/firebaseClient';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
@@ -52,11 +52,11 @@ export default function Home() {
   });
   
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
-  const [refreshing, setRefreshing] = useState(false);
   const [selectedOutput, setSelectedOutput] = useState<string | null>(null);
+  const [locations, setLocations] = useState<any[]>([]);
+  const [selectedLocIndex, setSelectedLocIndex] = useState<number>(0);
 
-
-  // Check photo separately
+  // Auto-resolve pending state when photo arrives
   useEffect(() => {
     if (activeCmd && isCommandPending) {
        const baseCmd = activeCmd.split(' ')[0];
@@ -70,7 +70,7 @@ export default function Home() {
     }
   }, [photos, activeCmd, isCommandPending, commandStartTime]);
 
-  // Check results separately
+  // Auto-resolve pending state when result arrives
   useEffect(() => {
     if (activeCmd && isCommandPending) {
        const baseCmd = activeCmd.split(' ')[0];
@@ -84,10 +84,7 @@ export default function Home() {
     }
   }, [results, activeCmd, isCommandPending, commandStartTime]);
 
-  const [locations, setLocations] = useState<any[]>([]);
-  const [selectedLocIndex, setSelectedLocIndex] = useState<number>(0);
-
-  // Real-time Firebase listeners (no polling required!)
+  // Real-time Firebase listeners
   useEffect(() => {
     let unsubUser = () => {};
     let unsubPhotos = () => {};
@@ -159,9 +156,7 @@ export default function Home() {
     router.push('/login');
   };
 
-
-
-    const sendCommand = async (command: string) => {
+  const sendCommand = async (command: string) => {
     if (!user) return;
     
     if (isCommandPending) {
@@ -183,7 +178,7 @@ export default function Home() {
     setActiveCmd(command.startsWith('delete') ? 'delete' : command);
     setIsCommandPending(true);
     setCommandStartTime(Date.now());
-    setFeedback({ type: 'info', text: 'Executing command...' });
+    setFeedback({ type: 'info', text: `Sending command: ${command}...` });
     
     try {
       const token = await user.getIdToken();
@@ -198,12 +193,12 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       
-      setFeedback({ type: 'success', text: 'Command sent! Waiting for device...' });
+      setFeedback({ type: 'success', text: 'Command sent! Waiting for device response...' });
       
       setTimeout(() => {
         setIsCommandPending((prev) => {
           if (prev) {
-            setFeedback({ type: 'info', text: 'Command taking a while. You can manually refresh later.' });
+            setFeedback({ type: 'info', text: 'Command execution in progress on device...' });
             setActiveCmd(null);
             setTimeout(() => setFeedback(null), 4000);
             return false;
@@ -313,15 +308,15 @@ export default function Home() {
     let lat: number | null = null;
     let lon: number | null = null;
 
-    const mapsMatch = text.match(/https?:\/\/[^\s]*[\?&](?:q|ll)=(-?\d+\.\d+),(-?\d+\.\d+)/);
+    const mapsMatch = text.match(/https?:\/\/[^\s]*[\?&](?:q|ll|query)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i);
     if (mapsMatch) {
       lat = parseFloat(mapsMatch[1]);
       lon = parseFloat(mapsMatch[2]);
     }
 
     if (!lat || !lon) {
-      const latMatch = text.match(/Lat(?:itude)?:\s*(-?\d+\.\d+)/i);
-      const lonMatch = text.match(/Lon(?:gitude)?:\s*(-?\d+\.\d+)/i);
+      const latMatch = text.match(/Lat(?:itude)?:\s*(-?\d+(?:\.\d+)?)/i);
+      const lonMatch = text.match(/Lon(?:gitude)?:\s*(-?\d+(?:\.\d+)?)/i);
       if (latMatch && lonMatch) {
         lat = parseFloat(latMatch[1]);
         lon = parseFloat(lonMatch[2]);
@@ -329,7 +324,7 @@ export default function Home() {
     }
 
     if (!lat || !lon) {
-      const pairMatch = text.match(/(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);
+      const pairMatch = text.match(/(-?\d{1,2}(?:\.\d+)?)\s*,\s*(-?\d{1,3}(?:\.\d+)?)/);
       if (pairMatch) {
         lat = parseFloat(pairMatch[1]);
         lon = parseFloat(pairMatch[2]);
@@ -361,7 +356,7 @@ export default function Home() {
       );
     }
     
-    // Parse Key-Value pairs (e.g. Device Stats)
+    // Key-Value pairs
     if (text.includes(':')) {
       const lines = text.split('\n').filter(line => line.trim().length > 0);
       const kvLines = lines.filter(line => line.includes(':'));
@@ -530,6 +525,7 @@ export default function Home() {
       </div>
     </main>
   );
+
   if (!user) return null;
 
   return (
@@ -546,8 +542,6 @@ export default function Home() {
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Device control & telemetry</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-          
-          
           <div className="glass-panel" style={{ padding: '8px 16px', display: 'flex', flexDirection: 'column', gap: '4px', borderRadius: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-primary)' }}>
@@ -569,12 +563,10 @@ export default function Home() {
         </div>
       </header>
 
-
-
-      {/* Location History Google Maps Card */}
+      {/* AutoLoc Location History Google Maps Card */}
       <section className="glass-panel" style={{ padding: '1.25rem', marginBottom: '3rem', borderRadius: '16px' }}>
         {(() => {
-          const autoLocs = locations.filter(loc => loc.command === 'autoloc' || (loc.sourceType && loc.sourceType.includes('autoloc')));
+          const autoLocs = locations.filter(loc => loc.command === 'autoloc' || (loc.sourceType && loc.sourceType.includes('autoloc')) || loc.raw?.includes('AutoLoc'));
 
           return (
             <>
@@ -622,10 +614,39 @@ export default function Home() {
               ) : (
                 (() => {
                   const activeLoc = autoLocs[selectedLocIndex] || autoLocs[0];
-                  const lat = activeLoc.lat || 0;
-                  const lon = activeLoc.lon || 0;
-                  const mapsUrl = activeLoc.mapsUrl || `https://maps.google.com/maps?q=${lat},${lon}`;
-                  const embedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+                  let lat = typeof activeLoc.lat === 'number' && activeLoc.lat !== 0 ? activeLoc.lat : 0;
+                  let lon = typeof activeLoc.lon === 'number' && activeLoc.lon !== 0 ? activeLoc.lon : 0;
+
+                  if (!lat || !lon) {
+                    const text = activeLoc.raw || activeLoc.mapsUrl || '';
+                    const mapsMatch = text.match(/https?:\/\/[^\s]*[\?&](?:q|ll|query)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i);
+                    if (mapsMatch) {
+                      lat = parseFloat(mapsMatch[1]);
+                      lon = parseFloat(mapsMatch[2]);
+                    }
+                  }
+
+                  if (!lat || !lon) {
+                    const text = activeLoc.raw || '';
+                    const latMatch = text.match(/Lat(?:itude)?:\s*(-?\d+(?:\.\d+)?)/i);
+                    const lonMatch = text.match(/Lon(?:gitude)?:\s*(-?\d+(?:\.\d+)?)/i);
+                    if (latMatch && lonMatch) {
+                      lat = parseFloat(latMatch[1]);
+                      lon = parseFloat(lonMatch[2]);
+                    }
+                  }
+
+                  if (!lat || !lon) {
+                    const text = activeLoc.raw || '';
+                    const pairMatch = text.match(/(-?\d{1,2}(?:\.\d+)?)\s*,\s*(-?\d{1,3}(?:\.\d+)?)/);
+                    if (pairMatch) {
+                      lat = parseFloat(pairMatch[1]);
+                      lon = parseFloat(pairMatch[2]);
+                    }
+                  }
+
+                  const mapsUrl = activeLoc.mapsUrl || (lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}` : '');
+                  const embedUrl = lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed` : '';
 
                   return (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
@@ -649,13 +670,17 @@ export default function Home() {
                             <div><strong>📡 Source:</strong><br />{activeLoc.provider || 'GPS'}</div>
                             <div><strong>📍 Coordinates:</strong><br />{lat && lon ? `${lat}, ${lon}` : 'N/A'}</div>
                             {activeLoc.accuracy && activeLoc.accuracy !== 'N/A' && <div><strong>🎯 Accuracy:</strong><br />{activeLoc.accuracy}</div>}
-                            {activeLoc.battery && activeLoc.battery !== 'N/A' && <div><strong>🔋 Battery:</strong><br />{activeLoc.battery}</div>}
                           </div>
                         </div>
 
-                        <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', padding: '0.75rem', fontSize: '0.9rem', fontWeight: '600' }}>
-                          🗺️ Open Location #{selectedLocIndex + 1} in Google Maps
-                        </a>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', padding: '0.75rem', fontSize: '0.9rem', fontWeight: '600' }}>
+                            🗺️ Open in Google Maps
+                          </a>
+                          <button onClick={() => deleteData('autoloc')} className="btn btn-danger" style={{ padding: '0.75rem 1rem', fontSize: '0.85rem' }}>
+                            🗑️ Delete Location History
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );
@@ -666,6 +691,7 @@ export default function Home() {
         })()}
       </section>
 
+      {/* Core Commands */}
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Core Commands</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
@@ -675,15 +701,6 @@ export default function Home() {
             {activeCmd === 'locate' ? 'Locating...' : 'Locate'}
           </button>
           {renderResult('locate')}
-        </div>
-
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔄</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>AutoLoc Tracker</h3>
-          <button disabled={activeCmd === 'autoloc'} onClick={() => sendCommand('autoloc on')} className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('autoloc') }}>
-            {activeCmd === 'autoloc' ? 'Triggering...' : 'Trigger AutoLoc'}
-          </button>
-          {renderResult('autoloc')}
         </div>
 
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
@@ -704,7 +721,7 @@ export default function Home() {
           {renderResult('lock')}
         </div>
         
-        <div className="glass-panel" style={{ padding: '1.5rem', gridColumn: '1 / -1' }}>
+        <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📊</div>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Device Stats</h3>
           <button disabled={activeCmd === 'stats'} onClick={() => sendCommand('stats')} className="btn" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('stats') }}>
@@ -714,6 +731,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Device Toggles */}
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Device Toggles</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         
@@ -759,20 +777,19 @@ export default function Home() {
 
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔄</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>AutoLoc Background Tracking</h3>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>AutoLoc Tracking</h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '1rem' }}>
-            Periodic background GPS updates sent automatically to Location History.
+            Periodic background GPS updates sent automatically.
           </p>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
             <button disabled={activeCmd === 'autoloc on'} onClick={() => sendCommand('autoloc on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('autoloc on') }}>On</button>
             <button disabled={activeCmd === 'autoloc off'} onClick={() => sendCommand('autoloc off')} className="btn" style={{ flex: 1, ...getBtnStyle('autoloc off') }}>Off</button>
           </div>
-          <button onClick={() => deleteData('autoloc')} className="btn btn-danger" style={{ width: '100%', fontSize: '0.8rem', padding: '6px' }}>
-            Delete AutoLoc Data
-          </button>
+          {renderResult('autoloc')}
         </div>
       </div>
 
+      {/* Experimental Commands */}
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>Experimental</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
@@ -817,6 +834,7 @@ export default function Home() {
         </div>
       </div>
       
+      {/* Danger Zone */}
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--danger-color)' }}>Danger Zone</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
         <div className="glass-panel" style={{ padding: '1.5rem', border: '1px solid rgba(248, 81, 73, 0.3)' }}>
@@ -853,6 +871,7 @@ export default function Home() {
           </button>
         </div>
       </div>
+
       {/* Reusable Output Modal */}
       {selectedOutput && (results[selectedOutput] || photos[selectedOutput]) && (
         <div style={{

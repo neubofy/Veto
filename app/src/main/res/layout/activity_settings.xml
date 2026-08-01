@@ -456,7 +456,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/Widget.Material3.Button.TonalButton"
-                        android:text="Update Last Location Now" />
+                        android:text="Update Last Location Now"
+                        android:layout_marginBottom="8dp" />
+
+                    <Button
+                        android:id="@+id/buttonClearLocationHistory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:text="Clear Cached Location History"
+                        android:textColor="?attr/colorError"
+                        app:strokeColor="?attr/colorError" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
