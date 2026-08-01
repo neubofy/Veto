@@ -72,6 +72,15 @@ public class Settings extends HashMap<Integer, Object> {
     public static final int SET_THEFT_MODE_ACTIVE = 701;
     public static final int SET_THEFT_MODE_PIN = 702;
     public static final int SET_HIDE_MEDIA_IN_GALLERY = 801;
+    public static final int SET_ALLOWED_NOTIFICATION_PACKAGES = 802;
+
+    public static final int SET_CMD_DELETE_ENABLED = 901;
+    public static final int SET_CMD_LOCK_ENABLED = 902;
+    public static final int SET_CMD_AUDIO_ENABLED = 903;
+    public static final int SET_CMD_PHOTO_ENABLED = 904;
+    public static final int SET_CMD_VIDEO_ENABLED = 905;
+    public static final int SET_CMD_GPS_ENABLED = 906;
+    public static final int SET_CMD_BLUETOOTH_ENABLED = 907;
 
     public Settings() {
     }
@@ -91,9 +100,18 @@ public class Settings extends HashMap<Integer, Object> {
                 case SET_UPDATEBOARDING_MODERN_CRYPTO_COMPLETED:
                 case SET_Veto_EDGE_INFO_SHOWN:
                 case SET_THEFT_MODE_ACTIVE:
+                case SET_CMD_DELETE_ENABLED:
+                case SET_CMD_LOCK_ENABLED:
+                case SET_CMD_AUDIO_ENABLED:
+                case SET_CMD_PHOTO_ENABLED:
+                case SET_CMD_VIDEO_ENABLED:
+                case SET_CMD_GPS_ENABLED:
+                case SET_CMD_BLUETOOTH_ENABLED:
                     return false;
                 case SET_HIDE_MEDIA_IN_GALLERY:
                     return true;
+                case SET_ALLOWED_NOTIFICATION_PACKAGES:
+                    return "com.whatsapp,org.telegram.messenger,com.instagram.android,org.thoughtcrime.securesms,com.facebook.orca";
                 case SET_THEFT_MODE_PIN:
                     return "";
                 case SET_Veto_LOW_BAT_SEND:

@@ -58,18 +58,39 @@ object MediaStorageManager {
     fun updateNoMediaStatus(context: Context, rootDir: File = getRootMediaDir(context)) {
         try {
             val settings = SettingsRepository.getInstance(context)
-            val hideMedia = settings.get(Settings.SET_HIDE_MEDIA_IN_GALLERY) as Boolean
-            val noMediaFile = File(rootDir, ".nomedia")
+            val hideMedia = settings.get(Settings.SET_HIDE_MEDIA_IN_GALLERY) as? Boolean ?: true
+            val targetDirs = listOf(rootDir, getPhotosDir(context), getVideosDir(context), getAudioDir(context))
 
-            if (hideMedia) {
-                if (!noMediaFile.exists()) {
-                    noMediaFile.createNewFile()
-                    context.log().i(TAG, "Created .nomedia file in ${rootDir.absolutePath}")
+            for (dir in targetDirs) {
+                if (!dir.exists()) dir.mkdirs()
+                val noMediaFile = File(dir, ".nomedia")
+                if (hideMedia) {
+                    if (!noMediaFile.exists()) {
+                        noMediaFile.createNewFile()
+                        context.log().i(TAG, "Created .nomedia file in ${dir.absolutePath}")
+                    }
+                } else {
+                    if (noMediaFile.exists()) {
+                        noMediaFile.delete()
+                        context.log().i(TAG, "Deleted .nomedia file from ${dir.absolutePath}")
+                    }
                 }
-            } else {
-                if (noMediaFile.exists()) {
-                    noMediaFile.delete()
-                    context.log().i(TAG, "Deleted .nomedia file from ${rootDir.absolutePath}")
+            }
+
+            // Trigger MediaScanner scan so gallery updates immediately
+            val allMediaFiles = mutableListOf<String>()
+            targetDirs.forEach { dir ->
+                dir.listFiles()?.filter { it.isFile && it.name != ".nomedia" }?.forEach {
+                    allMediaFiles.add(it.absolutePath)
+                }
+            }
+            if (allMediaFiles.isNotEmpty()) {
+                android.media.MediaScannerConnection.scanFile(
+                    context.applicationContext,
+                    allMediaFiles.toTypedArray(),
+                    null
+                ) { path, uri ->
+                    context.log().d(TAG, "MediaScanner scanned $path -> $uri")
                 }
             }
         } catch (e: Exception) {

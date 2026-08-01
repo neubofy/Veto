@@ -187,6 +187,7 @@
     <string name="registration_token_hint">Private instances may require a secret token. Leave this empty if the instance is public.</string>
     <string name="server_registration_token_error">Network request failed with HTTP 401. This can happen if the server requires a registration token and the token you provided was wrong.</string>
 
+    <string name="transport_notification_select_apps_title">Select Messaging Apps</string>
     <!-- Settings: Allowed contacts -->
     <string name="Whitelist_help">The contacts in this list are allowed to send Veto commands via SMS. Commands from everyone else will be ignored.</string>
     <string name="Whitelist_empty">No allowed contacts. Click the button to add some!</string>

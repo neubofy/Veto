@@ -82,8 +82,7 @@ public class MainActivity extends VetoActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
+        return false; // Remove 3-dot overflow menu from home toolbar as requested
     }
 
     @Override

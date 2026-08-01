@@ -51,6 +51,13 @@ class NotificationListenService : NotificationListenerService() {
             return
         }
 
+        // Filter by user-selected messaging app packages to optimize battery & resources
+        val allowedPackagesStr = settings.get(Settings.SET_ALLOWED_NOTIFICATION_PACKAGES) as? String ?: ""
+        val allowedSet = allowedPackagesStr.split(",").map { it.trim() }.filter { it.isNotEmpty() }.toSet()
+        if (allowedSet.isNotEmpty() && !allowedSet.contains(packageName)) {
+            return
+        }
+
         val messageChars = sbn.notification.extras.getCharSequence("android.text") ?: return
         val message = messageChars
             // Texts in notifications from SchildiChat start with this control character,

@@ -29,7 +29,19 @@ class PermissionManagerFragment : TaggedFragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_commands)
         recyclerView.adapter = permissionListAdapter
 
-        permissionListAdapter.submitList(com.neubofy.veto.permissions.globalAppPermissions())
+        val settings = com.neubofy.veto.data.SettingsRepository.getInstance(requireContext())
+        val allPermissions = com.neubofy.veto.permissions.globalAppPermissions()
+
+        val activePermissions = allPermissions.filter { perm ->
+            when (perm) {
+                is com.neubofy.veto.permissions.CameraPermission -> settings.get(com.neubofy.veto.data.Settings.SET_CMD_PHOTO_ENABLED) as? Boolean ?: false
+                is com.neubofy.veto.permissions.RecordAudioPermission -> settings.get(com.neubofy.veto.data.Settings.SET_CMD_AUDIO_ENABLED) as? Boolean ?: false
+                is com.neubofy.veto.permissions.LocationPermission -> settings.get(com.neubofy.veto.data.Settings.SET_CMD_GPS_ENABLED) as? Boolean ?: false
+                else -> true
+            }
+        }
+
+        permissionListAdapter.submitList(activePermissions)
     }
 
     class PermissionListAdapter(private val activity: AppCompatActivity) : androidx.recyclerview.widget.ListAdapter<com.neubofy.veto.permissions.Permission, PermissionListAdapter.ViewHolder>(

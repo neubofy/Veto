@@ -37,6 +37,34 @@ class CommandListViewHolder(
             textViewLongDescription.visibility = View.GONE
         }
 
+        // Command enable / disable toggle switch
+        val switchToggle = itemView.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.command_toggle_switch)
+        val settings = com.neubofy.veto.data.SettingsRepository.getInstance(context)
+
+        val settingKey = when (item.keyword) {
+            "delete" -> com.neubofy.veto.data.Settings.SET_CMD_DELETE_ENABLED
+            "lock" -> com.neubofy.veto.data.Settings.SET_CMD_LOCK_ENABLED
+            "audio" -> com.neubofy.veto.data.Settings.SET_CMD_AUDIO_ENABLED
+            "photo", "camera" -> com.neubofy.veto.data.Settings.SET_CMD_PHOTO_ENABLED
+            "video" -> com.neubofy.veto.data.Settings.SET_CMD_VIDEO_ENABLED
+            "gps" -> com.neubofy.veto.data.Settings.SET_CMD_GPS_ENABLED
+            "bluetooth" -> com.neubofy.veto.data.Settings.SET_CMD_BLUETOOTH_ENABLED
+            else -> null
+        }
+
+        if (settingKey == null) {
+            switchToggle.visibility = View.GONE
+        } else {
+            switchToggle.visibility = View.VISIBLE
+            switchToggle.isChecked = settings.get(settingKey) as? Boolean ?: false
+            switchToggle.setOnCheckedChangeListener { _, isChecked ->
+                settings.set(settingKey, isChecked)
+                if (isChecked) {
+                    android.widget.Toast.makeText(context, "Enabled ${item.keyword}. Highlighted required permissions.", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         // Required permissions
         val permReqTitle = itemView.findViewById<TextView>(R.id.permissions_required_title)
         val permReqList = itemView.findViewById<LinearLayout>(R.id.permissions_required_list)

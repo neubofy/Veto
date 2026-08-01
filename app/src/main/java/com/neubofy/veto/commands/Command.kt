@@ -40,6 +40,26 @@ abstract class Command(val context: Context) {
         args: List<String>,
         transport: Transport<T>,
     ) {
+        val settingKey = when (keyword) {
+            "delete" -> com.neubofy.veto.data.Settings.SET_CMD_DELETE_ENABLED
+            "lock" -> com.neubofy.veto.data.Settings.SET_CMD_LOCK_ENABLED
+            "audio" -> com.neubofy.veto.data.Settings.SET_CMD_AUDIO_ENABLED
+            "photo", "camera" -> com.neubofy.veto.data.Settings.SET_CMD_PHOTO_ENABLED
+            "video" -> com.neubofy.veto.data.Settings.SET_CMD_VIDEO_ENABLED
+            "gps" -> com.neubofy.veto.data.Settings.SET_CMD_GPS_ENABLED
+            "bluetooth" -> com.neubofy.veto.data.Settings.SET_CMD_BLUETOOTH_ENABLED
+            else -> null
+        }
+        if (settingKey != null) {
+            val isEnabled = settings.get(settingKey) as? Boolean ?: false
+            if (!isEnabled) {
+                val msg = "Command '$keyword' is disabled in Veto settings. Turn it ON in app Command Manager to use."
+                context.log().w(TAG, msg)
+                transport.send(context, msg, keyword)
+                return
+            }
+        }
+
         val missing = missingRequiredPermissions()
         if (missing.isNotEmpty()) {
             val msg = context.getString(

@@ -46,6 +46,12 @@ class NotificationReplyTransport(
 
     override val requiredPermissions = listOf(NotificationAccessPermission())
 
+    override val actions = listOf(
+        TransportAction(R.string.transport_notification_select_apps_title) { activity ->
+            showAppSelectionDialog(activity)
+        }
+    )
+
     override fun getDestinationString() = destination?.packageName ?: "Notification Response"
 
     override fun isAllowed(parsed: ParserResult.Success): Boolean {
@@ -142,4 +148,37 @@ class NotificationReplyTransport(
 
         context.log().w(TAG, "Could not sent reply, no suitable Action or RemoteInput found.")
     }
+}
+
+fun showAppSelectionDialog(activity: androidx.appcompat.app.AppCompatActivity) {
+    val settings = SettingsRepository.getInstance(activity)
+    val currentStr = settings.get(Settings.SET_ALLOWED_NOTIFICATION_PACKAGES) as? String ?: ""
+    val selectedPackages = currentStr.split(",").map { it.trim() }.filter { it.isNotEmpty() }.toMutableSet()
+
+    val knownApps = listOf(
+        "WhatsApp" to "com.whatsapp",
+        "WhatsApp Business" to "com.whatsapp.w4b",
+        "Telegram" to "org.telegram.messenger",
+        "Instagram" to "com.instagram.android",
+        "Signal" to "org.thoughtcrime.securesms",
+        "Facebook Messenger" to "com.facebook.orca",
+        "Google Messages" to "com.google.android.apps.messaging",
+        "Slack" to "com.Slack"
+    )
+
+    val appNames = knownApps.map { it.first }.toTypedArray()
+    val checkedItems = knownApps.map { selectedPackages.contains(it.second) }.toBooleanArray()
+
+    com.google.android.material.dialog.MaterialAlertDialogBuilder(activity)
+        .setTitle(activity.getString(R.string.transport_notification_select_apps_title))
+        .setMultiChoiceItems(appNames, checkedItems) { _, which, isChecked ->
+            val pkg = knownApps[which].second
+            if (isChecked) selectedPackages.add(pkg) else selectedPackages.remove(pkg)
+        }
+        .setPositiveButton(android.R.string.ok) { _, _ ->
+            settings.set(Settings.SET_ALLOWED_NOTIFICATION_PACKAGES, selectedPackages.joinToString(","))
+            android.widget.Toast.makeText(activity, "Messaging app list saved.", android.widget.Toast.LENGTH_SHORT).show()
+        }
+        .setNegativeButton(android.R.string.cancel, null)
+        .show()
 }

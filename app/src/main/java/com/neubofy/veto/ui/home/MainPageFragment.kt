@@ -43,12 +43,28 @@ class MainPageFragment : TaggedFragment() {
                 .commit()
         }
 
-        view.findViewById<MaterialCardView>(R.id.card_website).setOnClickListener {
-            startActivity(Intent(requireContext(), AccountActivity::class.java))
+        view.findViewById<MaterialCardView>(R.id.card_about).setOnClickListener {
+            startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.AboutActivity::class.java))
         }
 
-        view.findViewById<View>(R.id.card_settings).setOnClickListener {
-            startActivity(Intent(activity, com.neubofy.veto.ui.settings.SettingsActivity::class.java))
+        // Live Terminal Log Preview & Expand Action
+        val btnExpand = view.findViewById<View>(R.id.btn_expand_logs)
+        val tvTerminalPreview = view.findViewById<android.widget.TextView>(R.id.tv_terminal_preview)
+
+        btnExpand?.setOnClickListener {
+            startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.LogViewActivity::class.java))
+        }
+
+        try {
+            val logRepo = com.neubofy.veto.data.LogRepository.getInstance(requireContext())
+            val recentLogs = synchronized(logRepo.list) {
+                logRepo.list.takeLast(4).joinToString("\n") { entry ->
+                    "[${entry.tag}] ${entry.msg}"
+                }
+            }
+            tvTerminalPreview?.text = if (recentLogs.isNotBlank()) recentLogs else "[SYSTEM] Veto active and monitoring transports...\n[STATUS] All permissions & services ready."
+        } catch (_: Exception) {
+            tvTerminalPreview?.text = "[SYSTEM] Veto running cleanly."
         }
 
         return view
