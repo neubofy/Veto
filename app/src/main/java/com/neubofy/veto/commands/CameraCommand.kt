@@ -19,8 +19,8 @@ class CameraCommand(context: Context) : Command(context) {
         private val TAG = CameraCommand::class.simpleName
     }
 
-    override val keyword = "camera"
-    override val usage = "camera [front | back] [flash]"
+    override val keyword = "photo"
+    override val usage = "photo [front | back] [flash]"
 
     @get:DrawableRes
     override val icon = R.drawable.ic_camera

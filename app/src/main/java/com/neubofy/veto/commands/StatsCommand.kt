@@ -47,17 +47,11 @@ class StatsCommand(context: Context) : Command(context) {
         val bm = context.getSystemService(Context.BATTERY_SERVICE) as android.os.BatteryManager
         val batteryPct = bm.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY)
 
-        // Telephony details (SIM/IMEI & Number)
-        var networkOperator = "Unknown"
-        var simPhoneNumber = "Not available (Carrier blank / No perm)"
-
+        // Telephony details (Multi-SIM & eSIM)
         val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as android.telephony.TelephonyManager
-        try {
-            networkOperator = tm.networkOperatorName ?: "Unknown"
-        } catch (e: Exception) {
-            // Ignore
-        }
+        val mainOperator = try { tm.networkOperatorName.takeIf { !it.isNullOrBlank() } ?: "Unknown" } catch (_: Exception) { "Unknown" }
 
+        val simLines = mutableListOf<String>()
         val phonePerm = com.neubofy.veto.permissions.PhoneStatePermission()
         if (phonePerm.isGranted(context)) {
             try {
@@ -65,33 +59,38 @@ class StatsCommand(context: Context) : Command(context) {
                 @Suppress("MissingPermission")
                 val activeList = sm?.activeSubscriptionInfoList
                 if (!activeList.isNullOrEmpty()) {
-                    for (info in activeList) {
+                    for ((index, info) in activeList.withIndex()) {
+                        val carrierName = info.carrierName?.toString()?.takeIf { it.isNotBlank() } ?: mainOperator
+                        var num: String? = null
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                            val num = sm.getPhoneNumber(info.subscriptionId)
-                            if (!num.isNullOrBlank()) {
-                                simPhoneNumber = num
-                                break
-                            }
+                            num = sm.getPhoneNumber(info.subscriptionId)
                         }
-                        @Suppress("DEPRECATION")
-                        val subNum = info.number
-                        if (!subNum.isNullOrBlank()) {
-                            simPhoneNumber = subNum
-                            break
+                        if (num.isNullOrBlank()) {
+                            @Suppress("DEPRECATION")
+                            num = info.number
                         }
-                    }
-                }
-                if (simPhoneNumber.startsWith("Not available")) {
-                    @Suppress("DEPRECATION", "MissingPermission")
-                    val line1 = tm.line1Number
-                    if (!line1.isNullOrBlank()) {
-                        simPhoneNumber = line1
+                        val finalNum = if (!num.isNullOrBlank()) num else "Number unavailable (Carrier restricted)"
+                        simLines.add("SIM ${index + 1} ($carrierName): $finalNum")
                     }
                 }
             } catch (e: Exception) {
                 context.log().e("StatsCommand", "Error reading SIM phone number: ${e.message}")
             }
         }
+        if (simLines.isEmpty()) {
+            try {
+                @Suppress("DEPRECATION", "MissingPermission")
+                val line1 = tm.line1Number
+                if (!line1.isNullOrBlank()) {
+                    simLines.add("SIM 1 ($mainOperator): $line1")
+                }
+            } catch (_: Exception) {}
+        }
+        if (simLines.isEmpty()) {
+            simLines.add("SIM 1 ($mainOperator): Not available (Permission / Carrier blank)")
+        }
+
+        val simFormattedOutput = simLines.joinToString("\n")
 
         val deferred = CompletableDeferred<List<android.net.wifi.ScanResult>>()
 
@@ -111,8 +110,7 @@ class StatsCommand(context: Context) : Command(context) {
             Model: $manufacturer $model
             OS: Android $androidVersion (SDK $sdkLevel)
             Battery: $batteryPct%
-            SIM Network: $networkOperator
-            SIM Number: $simPhoneNumber
+            $simFormattedOutput
             IPs: $ipsString
             WiFi: ${wifisString.ifEmpty { "Unavailable/Timed out" }}
         """.trimIndent()

