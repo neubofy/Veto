@@ -62,6 +62,7 @@ public class Settings extends HashMap<Integer, Object> {
     public static final int SET_LAST_KNOWN_LOCATION_ALTITUDE = 507;
     public static final int SET_LAST_KNOWN_LOCATION_BEARING = 508;
     public static final int SET_LAST_KNOWN_LOCATION_SPEED = 509;
+    public static final int SET_LAST_KNOWN_LOCATION_HISTORY = 510;
 
     public static final int SET_THEME = 601;
     public static final String VAL_THEME_FOLLOW_SYSTEM = "follow_system";
@@ -82,6 +83,14 @@ public class Settings extends HashMap<Integer, Object> {
     public static final int SET_CMD_GPS_ENABLED = 906;
     public static final int SET_CMD_BLUETOOTH_ENABLED = 907;
 
+    public static final int SET_CMD_RING_ENABLED = 908;
+    public static final int SET_CMD_FLASH_ENABLED = 909;
+    public static final int SET_CMD_LOCATE_ENABLED = 910;
+    public static final int SET_CMD_STATS_ENABLED = 911;
+    public static final int SET_CMD_THEFT_ENABLED = 912;
+    public static final int SET_CMD_AUTOLOC_ENABLED = 913;
+    public static final int SET_CMD_RINGERMODE_ENABLED = 914;
+
     public Settings() {
     }
 
@@ -90,6 +99,14 @@ public class Settings extends HashMap<Integer, Object> {
             return super.get(key);
         } else {
             switch (key) {
+                case SET_CMD_RING_ENABLED:
+                case SET_CMD_FLASH_ENABLED:
+                case SET_CMD_LOCATE_ENABLED:
+                case SET_CMD_STATS_ENABLED:
+                case SET_CMD_THEFT_ENABLED:
+                case SET_CMD_AUTOLOC_ENABLED:
+                case SET_CMD_RINGERMODE_ENABLED:
+                    return true;
                 case SET_WIPE_ENABLED:
                 case SET_ACCESS_VIA_PIN:
                 case SET_FIRST_TIME_WHITELIST:

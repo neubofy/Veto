@@ -41,7 +41,7 @@ class CommandListViewHolder(
         val switchToggle = itemView.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.command_toggle_switch)
         val settings = com.neubofy.veto.data.SettingsRepository.getInstance(context)
 
-        val settingKey = when (item.keyword) {
+        val settingKey = when (item.keyword.lowercase()) {
             "delete" -> com.neubofy.veto.data.Settings.SET_CMD_DELETE_ENABLED
             "lock" -> com.neubofy.veto.data.Settings.SET_CMD_LOCK_ENABLED
             "audio" -> com.neubofy.veto.data.Settings.SET_CMD_AUDIO_ENABLED
@@ -49,20 +49,27 @@ class CommandListViewHolder(
             "video" -> com.neubofy.veto.data.Settings.SET_CMD_VIDEO_ENABLED
             "gps" -> com.neubofy.veto.data.Settings.SET_CMD_GPS_ENABLED
             "bluetooth" -> com.neubofy.veto.data.Settings.SET_CMD_BLUETOOTH_ENABLED
-            else -> null
+            "ring" -> com.neubofy.veto.data.Settings.SET_CMD_RING_ENABLED
+            "flash" -> com.neubofy.veto.data.Settings.SET_CMD_FLASH_ENABLED
+            "locate" -> com.neubofy.veto.data.Settings.SET_CMD_LOCATE_ENABLED
+            "stats" -> com.neubofy.veto.data.Settings.SET_CMD_STATS_ENABLED
+            "theft" -> com.neubofy.veto.data.Settings.SET_CMD_THEFT_ENABLED
+            "autoloc" -> com.neubofy.veto.data.Settings.SET_CMD_AUTOLOC_ENABLED
+            "ringer", "ringermode" -> com.neubofy.veto.data.Settings.SET_CMD_RINGERMODE_ENABLED
+            else -> com.neubofy.veto.data.Settings.SET_CMD_RING_ENABLED
         }
 
-        if (settingKey == null) {
-            switchToggle.visibility = View.GONE
-        } else {
-            switchToggle.visibility = View.VISIBLE
-            switchToggle.isChecked = settings.get(settingKey) as? Boolean ?: false
-            switchToggle.setOnCheckedChangeListener { _, isChecked ->
-                settings.set(settingKey, isChecked)
-                if (isChecked) {
-                    android.widget.Toast.makeText(context, "Enabled ${item.keyword}. Highlighted required permissions.", android.widget.Toast.LENGTH_SHORT).show()
-                }
-            }
+        switchToggle.visibility = View.VISIBLE
+        switchToggle.setOnCheckedChangeListener(null)
+        val defaultVal = when (item.keyword.lowercase()) {
+            "delete", "lock", "audio", "photo", "camera", "video", "gps", "bluetooth" -> false
+            else -> true
+        }
+        switchToggle.isChecked = settings.get(settingKey) as? Boolean ?: defaultVal
+        switchToggle.setOnCheckedChangeListener { _, isChecked ->
+            settings.set(settingKey, isChecked)
+            val stateText = if (isChecked) "Enabled" else "Disabled"
+            android.widget.Toast.makeText(context, "$stateText ${item.keyword}", android.widget.Toast.LENGTH_SHORT).show()
         }
 
         // Required permissions

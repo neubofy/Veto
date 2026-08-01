@@ -190,10 +190,11 @@ class GpsLocationProvider<T>(
             ) {
                 return
             }
-            // Return this location and finish
-            val settings = SettingsRepository.getInstance(context)
-            settings.storeLastKnownLocation(vetoLocation)
-            transport.sendNewLocation(context, vetoLocation, commandName)
+            // Route through LocationHistoryManager for 100m radius distance filter and 5-location cache
+            val shouldSend = com.neubofy.veto.utils.LocationHistoryManager.processNewLocation(context, vetoLocation)
+            if (shouldSend) {
+                transport.sendNewLocation(context, vetoLocation, commandName)
+            }
             cleanup()
         }
     }

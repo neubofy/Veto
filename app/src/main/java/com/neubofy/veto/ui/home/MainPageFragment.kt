@@ -47,24 +47,38 @@ class MainPageFragment : TaggedFragment() {
             startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.AboutActivity::class.java))
         }
 
-        // Live Terminal Log Preview & Expand Action
-        val btnExpand = view.findViewById<View>(R.id.btn_expand_logs)
-        val tvTerminalPreview = view.findViewById<android.widget.TextView>(R.id.tv_terminal_preview)
+        view.findViewById<MaterialCardView>(R.id.card_settings).setOnClickListener {
+            startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.SettingsActivity::class.java))
+        }
 
-        btnExpand?.setOnClickListener {
+        view.findViewById<MaterialCardView>(R.id.card_logs).setOnClickListener {
             startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.LogViewActivity::class.java))
         }
 
-        try {
-            val logRepo = com.neubofy.veto.data.LogRepository.getInstance(requireContext())
-            val recentLogs = synchronized(logRepo.list) {
-                logRepo.list.takeLast(4).joinToString("\n") { entry ->
-                    "[${entry.tag}] ${entry.msg}"
+        // Cloud Storage Setup & 1-Click Folder Open
+        view.findViewById<View>(R.id.btn_setup_cloud)?.setOnClickListener {
+            startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.AccountActivity::class.java))
+        }
+
+        view.findViewById<View>(R.id.btn_open_cloud_folder)?.setOnClickListener {
+            try {
+                val driveIntent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://drive.google.com")).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
+                startActivity(driveIntent)
+            } catch (e: Exception) {
+                android.widget.Toast.makeText(requireContext(), "Opening Google Drive web...", android.widget.Toast.LENGTH_SHORT).show()
             }
-            tvTerminalPreview?.text = if (recentLogs.isNotBlank()) recentLogs else "[SYSTEM] Veto active and monitoring transports...\n[STATUS] All permissions & services ready."
-        } catch (_: Exception) {
-            tvTerminalPreview?.text = "[SYSTEM] Veto running cleanly."
+        }
+
+        // Local Storage Setup & 1-Click Folder Open
+        view.findViewById<View>(R.id.btn_setup_local)?.setOnClickListener {
+            val path = com.neubofy.veto.utils.MediaStorageManager.setupStorage(requireContext())
+            android.widget.Toast.makeText(requireContext(), "Storage setup verified:\n$path", android.widget.Toast.LENGTH_LONG).show()
+        }
+
+        view.findViewById<View>(R.id.btn_open_local_folder)?.setOnClickListener {
+            com.neubofy.veto.utils.MediaStorageManager.openLocalFolder(requireContext())
         }
 
         return view

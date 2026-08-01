@@ -14,6 +14,7 @@ import com.neubofy.veto.utils.log
 fun availableTransports(context: Context): List<Transport<*>> = listOf(
     SmsTransport(context, "42", -1),
     NotificationReplyTransport(context, null),
+    NextJsServerTransport(context),
     InAppTransport(context),
 )
 

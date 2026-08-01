@@ -54,7 +54,37 @@ export default function Home() {
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedOutput, setSelectedOutput] = useState<string | null>(null);
+  const [currentLocIndex, setCurrentLocIndex] = useState(0);
 
+  // Extract up to 5 location points from results (locate, autoloc, gps)
+  const locationHistory = (() => {
+    const locs: { lat: number; lon: number; text: string; timestamp: string }[] = [];
+    const sourceKeys = ['locate', 'autoloc', 'gps'];
+    
+    sourceKeys.forEach(key => {
+      const res = results[key];
+      if (res && res.result) {
+        const regex = /Lat:\s*([-\d.]+)[,\s]+Lon:\s*([-\d.]+)/gi;
+        let match;
+        while ((match = regex.exec(res.result)) !== null) {
+          const lat = parseFloat(match[1]);
+          const lon = parseFloat(match[2]);
+          if (!isNaN(lat) && !isNaN(lon)) {
+            if (!locs.some(l => Math.abs(l.lat - lat) < 0.0001 && Math.abs(l.lon - lon) < 0.0001)) {
+              locs.push({
+                lat,
+                lon,
+                text: match[0],
+                timestamp: res.timestamp || new Date().toISOString()
+              });
+            }
+          }
+        }
+      }
+    });
+    
+    return locs.slice(0, 5);
+  })();
 
   // Check photo separately
   useEffect(() => {
@@ -530,7 +560,83 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Cached Location History Map Card with 5-Location Arrow Navigation */}
+      <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '3rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '10px' }}>
+          <div>
+            <h2 style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>📍</span> Location History (Last 5 Places)
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Navigate cached places recorded beyond 100m radius threshold</p>
+          </div>
 
+          {locationHistory.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button 
+                onClick={() => setCurrentLocIndex(prev => Math.max(0, prev - 1))}
+                disabled={currentLocIndex === 0}
+                className="btn"
+                style={{ padding: '6px 14px', fontSize: '1rem', cursor: currentLocIndex === 0 ? 'not-allowed' : 'pointer' }}
+                title="Previous Location"
+              >
+                ◀ Prev
+              </button>
+              <span style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                {currentLocIndex + 1} / {locationHistory.length}
+              </span>
+              <button 
+                onClick={() => setCurrentLocIndex(prev => Math.min(locationHistory.length - 1, prev + 1))}
+                disabled={currentLocIndex >= locationHistory.length - 1}
+                className="btn"
+                style={{ padding: '6px 14px', fontSize: '1rem', cursor: currentLocIndex >= locationHistory.length - 1 ? 'not-allowed' : 'pointer' }}
+                title="Next Location"
+              >
+                Next ▶
+              </button>
+            </div>
+          )}
+        </div>
+
+        {locationHistory.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ width: '100%', height: '380px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+              <iframe 
+                width="100%" 
+                height="100%" 
+                frameBorder="0" 
+                scrolling="no" 
+                src={`https://maps.google.com/maps?q=${locationHistory[currentLocIndex].lat},${locationHistory[currentLocIndex].lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                style={{ border: 'none' }}
+              ></iframe>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'var(--border-light)', padding: '1rem', borderRadius: '8px', flexWrap: 'wrap', gap: '10px' }}>
+              <div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
+                  Location #{currentLocIndex + 1} • {new Date(locationHistory[currentLocIndex].timestamp).toLocaleString()}
+                </div>
+                <div style={{ fontSize: '1rem', fontWeight: '600', fontFamily: 'monospace', marginTop: '4px' }}>
+                  Lat: {locationHistory[currentLocIndex].lat.toFixed(6)}, Lon: {locationHistory[currentLocIndex].lon.toFixed(6)}
+                </div>
+              </div>
+              <a 
+                href={`https://maps.google.com/?q=${locationHistory[currentLocIndex].lat},${locationHistory[currentLocIndex].lon}`} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="btn btn-primary" 
+                style={{ textDecoration: 'none', padding: '8px 16px', fontSize: '0.9rem' }}
+              >
+                Open in Google Maps ↗
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '2.5rem', backgroundColor: 'var(--border-light)', borderRadius: '12px' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🗺️</div>
+            <p style={{ color: 'var(--text-secondary)' }}>No location history cached yet. Click <strong>Locate Device</strong> or enable <strong>AutoLoc</strong> to populate location history.</p>
+          </div>
+        )}
+      </div>
 
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Core Commands</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>

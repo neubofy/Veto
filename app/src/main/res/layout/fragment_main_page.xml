@@ -158,17 +158,88 @@
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Settings Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_settings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="3dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutlineVariant">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:src="@drawable/ic_settings"
+                        app:tint="?attr/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Settings"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- App Logs Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_logs"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="3dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutlineVariant">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:src="@drawable/ic_content_copy"
+                        app:tint="?attr/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="App Logs"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </GridLayout>
 
-        <!-- Live Terminal Log Card (Bottom) -->
+        <!-- Cloud Storage Card (Google Drive Setup & 1-Click Open) -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_live_terminal"
+            android:id="@+id/card_cloud_storage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
-            app:cardBackgroundColor="#141414"
             app:cardCornerRadius="20dp"
-            app:cardElevation="4dp">
+            app:cardElevation="3dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorOutlineVariant">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -182,37 +253,132 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_in_app"
+                        app:tint="?attr/colorPrimary" />
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text=">_ LIVE TERMINAL LOGS"
-                        android:textColor="#00FF66"
-                        android:fontFamily="monospace"
-                        android:textSize="13sp"
+                        android:layout_marginStart="12dp"
+                        android:text="Cloud Storage (Google Drive)"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/btn_expand_logs"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="EXPAND"
-                        android:textColor="#00E5FF"
-                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tv_terminal_preview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="#0A0A0A"
-                    android:fontFamily="monospace"
-                    android:padding="12dp"
-                    android:textColor="#33FF88"
-                    android:textSize="11sp"
-                    tools:text="[INFO] Veto application initialized\n[DEBUG] Service listening on Notification &amp; SMS\n[INFO] Target Sdk 32 enabled" />
+                    android:layout_marginTop="6dp"
+                    android:text="Automatically sync captured photos, videos &amp; location logs to Google Drive."
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_setup_cloud"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:text="Setup Cloud"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btn_open_cloud_folder"
+                        style="@style/Widget.Material3.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:text="Open Drive Folder"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Local Storage Card (Media Folders Setup & 1-Click Open) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_local_storage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="3dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorOutlineVariant">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_security"
+                        app:tint="?attr/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:text="Local Storage Manager"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Smart setup for Veto, Photos, Videos &amp; Audio folders without duplicate files."
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_setup_local"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:text="Re-setup Storage"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btn_open_local_folder"
+                        style="@style/Widget.Material3.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:text="Open Local Folder"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

@@ -97,4 +97,34 @@ object MediaStorageManager {
             context.log().e(TAG, "Error updating .nomedia status: ${e.message}")
         }
     }
+
+    fun setupStorage(context: Context): String {
+        val root = getRootMediaDir(context)
+        getPhotosDir(context)
+        getVideosDir(context)
+        getAudioDir(context)
+        updateNoMediaStatus(context, root)
+        return root.absolutePath
+    }
+
+    fun openLocalFolder(context: Context) {
+        val rootDir = getRootMediaDir(context)
+        try {
+            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                setDataAndType(android.net.Uri.parse(rootDir.absolutePath), "resource/folder")
+                addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            try {
+                val intent = android.content.Intent(android.content.Intent.ACTION_GET_CONTENT).apply {
+                    setDataAndType(android.net.Uri.fromFile(rootDir), "*/*")
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+            } catch (_: Exception) {
+                android.widget.Toast.makeText(context, "Veto Storage: ${rootDir.absolutePath}", android.widget.Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 }

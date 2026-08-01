@@ -17,10 +17,14 @@ class NextJsServerTransport(
 ) : Transport<Unit>(Unit) {
 
     override val icon = R.drawable.ic_in_app
-    override val title = R.string.transport_inapp_title // Reuse title or create new
-    override val description = "Sends command results back to the Dashboard"
+    override val title = R.string.transport_dashboard_title
+    override val description = "Control device remotely and view real-time results on the Veto Web Dashboard."
     override val requiredPermissions = emptyList<com.neubofy.veto.permissions.Permission>()
-    override val actions = emptyList<TransportAction>()
+    override val actions = listOf(
+        TransportAction(R.string.transport_dashboard_title) { activity ->
+            activity.startActivity(android.content.Intent(activity, com.neubofy.veto.ui.settings.AccountActivity::class.java))
+        }
+    )
 
     override fun getDestinationString(): String = "Next.js Dashboard"
 
