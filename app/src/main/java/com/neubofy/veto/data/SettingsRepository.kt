@@ -306,4 +306,48 @@ class SettingsRepository private constructor(private val context: Context) {
             timeMillis = (get(Settings.SET_LAST_KNOWN_LOCATION_TIME) as Number).toLong(),
         )
     }
+
+    fun storeRecentLocation(loc: VetoLocation) {
+        val encRepo = EncryptedSettingsRepository.getInstance(context)
+        val json = encRepo.getRecentLocationsJson()
+        val type = object : com.google.gson.reflect.TypeToken<MutableList<VetoLocation>>() {}.type
+        val list: MutableList<VetoLocation> = try {
+            if (json != null) gson.fromJson(json, type) ?: mutableListOf() else mutableListOf()
+        } catch (e: Exception) {
+            mutableListOf()
+        }
+
+        list.add(0, loc)
+        while (list.size > 5) {
+            list.removeAt(list.size - 1)
+        }
+
+        encRepo.setRecentLocationsJson(gson.toJson(list))
+    }
+
+    fun getRecentLocations(): List<VetoLocation> {
+        val encRepo = EncryptedSettingsRepository.getInstance(context)
+        val json = encRepo.getRecentLocationsJson() ?: return emptyList()
+        val type = object : com.google.gson.reflect.TypeToken<List<VetoLocation>>() {}.type
+        return try {
+            gson.fromJson(json, type) ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    fun getLastUploadedLocation(): VetoLocation? {
+        val encRepo = EncryptedSettingsRepository.getInstance(context)
+        val json = encRepo.getLastUploadedLocationJson() ?: return null
+        return try {
+            gson.fromJson(json, VetoLocation::class.java)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun setLastUploadedLocation(loc: VetoLocation) {
+        val encRepo = EncryptedSettingsRepository.getInstance(context)
+        encRepo.setLastUploadedLocationJson(gson.toJson(loc))
+    }
 }

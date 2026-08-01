@@ -27,6 +27,8 @@ class EncryptedSettingsRepository private constructor(context: Context) {
         private const val KEY_DELETE_PASSWORD = "KEY_DELETE_PASSWORD"
         private const val KEY_ALLOWLIST_JSON = "KEY_ALLOWLIST_JSON"
         private const val KEY_TEMP_ALLOWLIST_JSON = "KEY_TEMP_ALLOWLIST_JSON"
+        private const val KEY_RECENT_LOCATIONS_JSON = "KEY_RECENT_LOCATIONS_JSON"
+        private const val KEY_LAST_UPLOADED_LOCATION_JSON = "KEY_LAST_UPLOADED_LOCATION_JSON"
     }
 
     val sharedPrefs: SharedPreferences
@@ -99,6 +101,30 @@ class EncryptedSettingsRepository private constructor(context: Context) {
             sharedPrefs.edit().remove(KEY_TEMP_ALLOWLIST_JSON).apply()
         } else {
             sharedPrefs.edit().putString(KEY_TEMP_ALLOWLIST_JSON, json).apply()
+        }
+    }
+
+    fun getRecentLocationsJson(): String? {
+        return sharedPrefs.getString(KEY_RECENT_LOCATIONS_JSON, null)
+    }
+
+    fun setRecentLocationsJson(json: String?) {
+        if (json.isNullOrBlank()) {
+            sharedPrefs.edit().remove(KEY_RECENT_LOCATIONS_JSON).apply()
+        } else {
+            sharedPrefs.edit().putString(KEY_RECENT_LOCATIONS_JSON, json).apply()
+        }
+    }
+
+    fun getLastUploadedLocationJson(): String? {
+        return sharedPrefs.getString(KEY_LAST_UPLOADED_LOCATION_JSON, null)
+    }
+
+    fun setLastUploadedLocationJson(json: String?) {
+        if (json.isNullOrBlank()) {
+            sharedPrefs.edit().remove(KEY_LAST_UPLOADED_LOCATION_JSON).apply()
+        } else {
+            sharedPrefs.edit().putString(KEY_LAST_UPLOADED_LOCATION_JSON, json).apply()
         }
     }
 }

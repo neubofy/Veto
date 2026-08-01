@@ -84,11 +84,15 @@ export default function Home() {
     }
   }, [results, activeCmd, isCommandPending, commandStartTime]);
 
+  const [locations, setLocations] = useState<any[]>([]);
+  const [selectedLocIndex, setSelectedLocIndex] = useState<number>(0);
+
   // Real-time Firebase listeners (no polling required!)
   useEffect(() => {
     let unsubUser = () => {};
     let unsubPhotos = () => {};
     let unsubResults = () => {};
+    let unsubLocations = () => {};
 
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -114,13 +118,22 @@ export default function Home() {
           localStorage.setItem('veto_results', JSON.stringify(newResults));
         });
 
+        unsubLocations = onSnapshot(collection(db, 'users', currentUser.uid, 'locations'), (snapshot) => {
+          const newLocs: any[] = [];
+          snapshot.forEach(d => { newLocs.push({ id: d.id, ...d.data() }); });
+          newLocs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+          setLocations(newLocs.slice(0, 5));
+        });
+
       } else {
         setUser(null);
         unsubUser();
         unsubPhotos();
         unsubResults();
+        unsubLocations();
         setPhotos({});
         setResults({});
+        setLocations([]);
         localStorage.removeItem('veto_photos');
         localStorage.removeItem('veto_results');
         router.push('/login');
@@ -133,6 +146,7 @@ export default function Home() {
       unsubUser();
       unsubPhotos();
       unsubResults();
+      unsubLocations();
     };
   }, [router]);
 
@@ -531,6 +545,81 @@ export default function Home() {
       </header>
 
 
+
+      {/* Location History Google Maps Card */}
+      <section className="glass-panel" style={{ padding: '1.5rem', marginBottom: '3rem', borderRadius: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
+          <div>
+            <h2 style={{ fontSize: '1.5rem', margin: 0 }}>📍 Recorded Location History (Last 5)</h2>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+              Auto-pruned history of up to 5 locations. Server upload updates when movement &gt; 100m.
+            </p>
+          </div>
+          {locations.length > 0 && (
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {locations.map((loc, idx) => (
+                <button
+                  key={loc.id || idx}
+                  onClick={() => setSelectedLocIndex(idx)}
+                  className="btn"
+                  style={{
+                    padding: '6px 12px',
+                    fontSize: '0.85rem',
+                    backgroundColor: selectedLocIndex === idx ? '#238636' : 'var(--border-light)',
+                    color: selectedLocIndex === idx ? '#fff' : 'var(--text-primary)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Location {idx + 1} {idx === 0 ? '(Latest)' : ''}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {locations.length === 0 ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)', backgroundColor: 'var(--border-light)', borderRadius: '12px' }}>
+            No recorded locations yet. Run <strong>locate</strong> command or enable <strong>autoloc</strong> in app settings.
+          </div>
+        ) : (
+          (() => {
+            const activeLoc = locations[selectedLocIndex] || locations[0];
+            const lat = activeLoc.lat || 0;
+            const lon = activeLoc.lon || 0;
+            const mapsUrl = activeLoc.mapsUrl || `https://maps.google.com/maps?q=${lat},${lon}`;
+            const embedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
+            return (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginTop: '1rem' }}>
+                <div style={{ width: '100%', height: '320px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+                  {lat && lon ? (
+                    <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={embedUrl} style={{ border: 'none' }}></iframe>
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--border-light)' }}>
+                      Location Map Loading...
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1rem' }}>
+                  <div style={{ backgroundColor: 'var(--border-light)', padding: '1rem', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div><strong>🕒 Timestamp:</strong> {activeLoc.timestamp ? new Date(activeLoc.timestamp).toLocaleString() : 'N/A'}</div>
+                    <div><strong>📍 Coordinates:</strong> {lat && lon ? `${lat}, ${lon}` : 'N/A'}</div>
+                    <div><strong>🎯 Accuracy:</strong> {activeLoc.accuracy || 'N/A'}</div>
+                    <div><strong>🔋 Battery:</strong> {activeLoc.battery || 'N/A'}</div>
+                  </div>
+
+                  <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', padding: '0.85rem' }}>
+                    🗺️ Open Location #{selectedLocIndex + 1} in Google Maps
+                  </a>
+                </div>
+              </div>
+            );
+          })()
+        )}
+      </section>
 
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Core Commands</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>

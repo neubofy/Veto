@@ -72,6 +72,7 @@ object DashboardSync {
                         val responseCode = connection.responseCode
                         if (responseCode in 200..299) {
                             context.log().i(TAG, "Successfully synced token to Dashboard")
+                            settings.set(Settings.SET_SYNCED_FCM_TOKEN, fcmToken)
                             callback?.invoke("Synced Successfully!", true)
                         } else {
                             context.log().e(TAG, "Failed to sync token. Server returned $responseCode")

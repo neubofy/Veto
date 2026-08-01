@@ -101,4 +101,35 @@ class NextJsServerTransport(
             context.log().e("NextJsServerTransport", "Interrupted while waiting for sync")
         }
     }
+
+    override fun sendNewLocation(context: Context, location: com.neubofy.veto.data.VetoLocation, commandName: String?) {
+        val settings = SettingsRepository.getInstance(context)
+        settings.storeRecentLocation(location)
+
+        val lastUploaded = settings.getLastUploadedLocation()
+        var shouldUpload = false
+
+        if (lastUploaded == null) {
+            shouldUpload = true
+        } else {
+            val results = FloatArray(1)
+            android.location.Location.distanceBetween(
+                lastUploaded.lat, lastUploaded.lon,
+                location.lat, location.lon,
+                results
+            )
+            val distanceMeters = results[0]
+            if (distanceMeters > 100f) {
+                shouldUpload = true
+                context.log().i("NextJsServerTransport", "Location distance $distanceMeters m > 100m. Uploading to Dashboard.")
+            } else {
+                context.log().i("NextJsServerTransport", "Location distance $distanceMeters m <= 100m. Cached locally only, skipping server upload.")
+            }
+        }
+
+        if (shouldUpload) {
+            settings.setLastUploadedLocation(location)
+            super.sendNewLocation(context, location, commandName)
+        }
+    }
 }
