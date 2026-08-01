@@ -1,6 +1,7 @@
 package com.neubofy.veto.ui
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -43,6 +44,7 @@ class DummyCameraxActivity : AppCompatActivity() {
     private var cameraExtra: Int = CAMERA_BACK
     private var shouldFlash: Boolean = false
     private var hasStarted = false
+    private var wakeLock: android.os.PowerManager.WakeLock? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +53,24 @@ class DummyCameraxActivity : AppCompatActivity() {
             finish()
             return
         }
+
+        // Acquire WakeLock to keep CPU active during screen-off capture
+        try {
+            val pm = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            @Suppress("DEPRECATION")
+            wakeLock = pm.newWakeLock(
+                android.os.PowerManager.PARTIAL_WAKE_LOCK or android.os.PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                "veto:camera_stealth_wake"
+            ).apply { acquire(45000L) }
+        } catch (e: Exception) {
+            this.log().w(TAG, "Failed to acquire WakeLock: ${e.message}")
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        }
+
         viewBinding = ActivityDummyCameraxBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
@@ -58,11 +78,11 @@ class DummyCameraxActivity : AppCompatActivity() {
         window.setDimAmount(0f)
         window.setGravity(android.view.Gravity.TOP or android.view.Gravity.START)
         window.setLayout(1, 1)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+
+        @Suppress("DEPRECATION")
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
@@ -114,7 +134,16 @@ class DummyCameraxActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraExecutor.shutdown()
+        try {
+            if (!cameraExecutor.isShutdown) {
+                cameraExecutor.shutdown()
+            }
+        } catch (_: Exception) {}
+        try {
+            if (wakeLock?.isHeld == true) {
+                wakeLock?.release()
+            }
+        } catch (_: Exception) {}
     }
 
     private fun hasCameraPermission(): Boolean {
@@ -249,7 +278,7 @@ class DummyCameraxActivity : AppCompatActivity() {
             androidx.camera.video.FallbackStrategy.lowerQualityOrHigherThan(androidx.camera.video.Quality.SD)
         )
         val recorder = androidx.camera.video.Recorder.Builder()
-            .setExecutor(cameraExecutor)
+            .setExecutor(ContextCompat.getMainExecutor(this))
             .setQualitySelector(qualitySelector)
             .build()
         val videoCapture = androidx.camera.video.VideoCapture.withOutput(recorder)
