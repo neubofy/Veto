@@ -684,6 +684,16 @@ export default function Home() {
         </div>
 
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🛰️</div>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>GPS Toggle</h3>
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
+            <button disabled={activeCmd === 'gps on'} onClick={() => sendCommand('gps on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('gps on') }}>On</button>
+            <button disabled={activeCmd === 'gps off'} onClick={() => sendCommand('gps off')} className="btn" style={{ flex: 1, ...getBtnStyle('gps off') }}>Off</button>
+          </div>
+          {renderResult('gps')}
+        </div>
+
+        <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🌙</div>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Do Not Disturb</h3>
           <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
