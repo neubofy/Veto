@@ -51,9 +51,6 @@ class LocateCommand(context: Context) : Command(context) {
         args: List<String>,
         transport: Transport<T>,
     ) {
-        val isAutoLoc = args.contains("autoloc_trigger")
-        val effectiveKeyword = if (isAutoLoc) "autoloc" else keyword
-
         // veto locate last -> returns all locally cached recent locations (up to 5)
         if (args.contains("last")) {
             withContext(Dispatchers.IO) {
@@ -64,9 +61,9 @@ class LocateCommand(context: Context) : Command(context) {
                     recents.forEachIndexed { idx, loc ->
                         sb.append("#${idx + 1}: ${loc.toCompactString()}\n\n")
                     }
-                    transport.send(context, sb.toString().trim(), effectiveKeyword)
+                    transport.send(context, sb.toString().trim(), keyword)
                 } else {
-                    val provider = GpsLocationProvider(context, transport, GPS_PROVIDER, null, effectiveKeyword)
+                    val provider = GpsLocationProvider(context, transport, GPS_PROVIDER, null, keyword)
                     provider.getLastKnownLocation()
                 }
             }
@@ -80,7 +77,7 @@ class LocateCommand(context: Context) : Command(context) {
                 TAG,
                 "Cannot locate: Location is off"
             )
-            transport.send(context, context.getString(R.string.cmd_locate_response_location_off), effectiveKeyword)
+            transport.send(context, context.getString(R.string.cmd_locate_response_location_off), keyword)
             return
         }
 
@@ -88,7 +85,7 @@ class LocateCommand(context: Context) : Command(context) {
 
         // Force GPS only
         providers.clear()
-        providers.add(GpsLocationProvider(context, transport, GPS_PROVIDER, null, effectiveKeyword))
+        providers.add(GpsLocationProvider(context, transport, GPS_PROVIDER, null, keyword))
 
         // run the providers and get the locations
         withContext(Dispatchers.IO) {

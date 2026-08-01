@@ -43,10 +43,6 @@ public class ServerLocationUploadService extends VetoJobService {
     }
 
     public static void scheduleJob(Context context, long delayMinutes) {
-        // Feature disabled per user request (Coming Soon)
-        cancelJob(context);
-        if (true) return;
-
         VetoLogKt.log(context).d(TAG, "Scheduling upload service");
         SettingsRepository settings = SettingsRepository.Companion.getInstance(context);
 
@@ -115,10 +111,8 @@ public class ServerLocationUploadService extends VetoJobService {
         int locTypeInt = (int) settings.get(Settings.SET_VetoSERVER_LOCATION_TYPE);
         BackgroundLocationType locType = new BackgroundLocationType(locTypeInt);
 
-        String locateCommand = settings.get(Settings.SET_Veto_COMMAND) + " locate";
-        if (locType.getGps()) {
-            locateCommand += " gps";
-        }
+        // User requested autoloc for periodic background tracking
+        String locateCommand = settings.get(Settings.SET_Veto_COMMAND) + " autoloc";
 
         // TODO: Should we use a PeriodicWorkRequest?? Instead of creating Work from a Job?
         Data inputData = new Data.Builder()

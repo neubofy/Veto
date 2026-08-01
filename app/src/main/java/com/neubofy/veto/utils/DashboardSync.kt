@@ -13,7 +13,7 @@ import java.net.URL
 object DashboardSync {
     private val TAG = DashboardSync::class.java.simpleName
 
-    fun uploadTokenIfPaired(context: Context, callback: ((String, Boolean) -> Unit)? = null) {
+    fun uploadTokenIfPaired(context: Context, retryCount: Int = 0, callback: ((String, Boolean) -> Unit)? = null) {
         val settings = SettingsRepository.getInstance(context)
         val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
         val userId = settings.get(Settings.SET_VetoSERVER_ID) as String
@@ -27,7 +27,14 @@ object DashboardSync {
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             context.log().e(TAG, "User not authenticated. Cannot sync token.")
-            callback?.invoke("User not authenticated.", false)
+            if (retryCount < 3) {
+                context.log().i(TAG, "Retrying token sync in 10 seconds (attempt ${retryCount + 1})...")
+                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                    uploadTokenIfPaired(context, retryCount + 1, callback)
+                }, 10000)
+            } else {
+                callback?.invoke("User not authenticated.", false)
+            }
             return
         }
 

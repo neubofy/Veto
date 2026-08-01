@@ -101,11 +101,12 @@ class DeleteCommand(context: Context) : Command(context) {
             val devicePolicyManager =
                 context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
 
-            // TODO: Use wipeDevice(), otherwise it won't work with targetSDK >= 34
-            // See https://gitlab.com/Neubofy/veto/-/issues/199#note_1975457249
-            // and https://gitlab.com/Neubofy/veto/-/issues/220
             try {
-                devicePolicyManager.wipeData(0)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    devicePolicyManager.wipeDevice(0)
+                } else {
+                    devicePolicyManager.wipeData(0)
+                }
             } catch (e: Exception) {
                 context.log().e(TAG, e.stackTraceToString())
 

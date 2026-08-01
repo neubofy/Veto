@@ -40,8 +40,6 @@ class VetoApplication : Application() {
     private fun doUpdateMigrations(context: Context) {
         val settings = SettingsRepository.getInstance(context)
         settings.migrateSettings()
-        UpdateboardingModernCryptoActivity.notifyAboutCryptoRefreshIfRequired(context)
-        PinUpdate.migratePin(context)
     }
 
     fun restartServices() {

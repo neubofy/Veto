@@ -4,27 +4,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/lib/firebaseClient';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { doc, collection, onSnapshot } from 'firebase/firestore';
+import { doc, collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 
 type FeedbackType = 'info' | 'success' | 'error';
 interface Feedback { type: FeedbackType; text: string; }
-
-const AuthenticatedImage = ({ url, user }: { url: string, user: User }) => {
-  const [src, setSrc] = useState<string>('');
-  useEffect(() => {
-    user.getIdToken().then(token => {
-      setSrc(`/api/image?url=${encodeURIComponent(url)}&token=${token}`);
-    });
-  }, [url, user]);
-
-  if (!src) return <div className="skeleton" style={{ width: '100%', height: '300px' }}></div>;
-  return (
-    <a href={src} target="_blank" rel="noreferrer" title="Click to open in new tab" style={{ display: 'block' }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="Captured" style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
-    </a>
-  );
-};
 
 export default function Home() {
   const router = useRouter();
@@ -35,61 +18,29 @@ export default function Home() {
   const [isCommandPending, setIsCommandPending] = useState<boolean>(false);
   const [deviceLinked, setDeviceLinked] = useState<boolean>(false);
   
-  const [results, setResults] = useState<Record<string, any>>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('veto_results');
-      if (saved) return JSON.parse(saved);
-    }
-    return {};
-  });
-  
-  const [photos, setPhotos] = useState<Record<string, any>>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('veto_photos');
-      if (saved) return JSON.parse(saved);
-    }
-    return {};
-  });
-  
+  const [history, setHistory] = useState<any[]>([]);
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
   const [selectedOutput, setSelectedOutput] = useState<string | null>(null);
-  const [locations, setLocations] = useState<any[]>([]);
   const [selectedLocIndex, setSelectedLocIndex] = useState<number>(0);
 
-  // Auto-resolve pending state when photo arrives
+  // Auto-resolve pending state when a new result arrives for the active command
   useEffect(() => {
     if (activeCmd && isCommandPending) {
        const baseCmd = activeCmd.split(' ')[0];
-       const phto = photos[baseCmd];
-       if (phto && new Date(phto.timestamp).getTime() > commandStartTime) {
-         setIsCommandPending(false);
-         setActiveCmd(null);
-         setFeedback({ type: 'success', text: 'Photo arrived!' });
-         setTimeout(() => setFeedback(null), 5000);
-       }
-    }
-  }, [photos, activeCmd, isCommandPending, commandStartTime]);
-
-  // Auto-resolve pending state when result arrives
-  useEffect(() => {
-    if (activeCmd && isCommandPending) {
-       const baseCmd = activeCmd.split(' ')[0];
-       const result = results[baseCmd];
-       if (result && new Date(result.timestamp).getTime() > commandStartTime) {
+       const latestResult = history.find(h => h.command === baseCmd);
+       if (latestResult && new Date(latestResult.timestamp).getTime() > commandStartTime) {
          setIsCommandPending(false);
          setActiveCmd(null);
          setFeedback({ type: 'success', text: 'Data arrived!' });
          setTimeout(() => setFeedback(null), 5000);
        }
     }
-  }, [results, activeCmd, isCommandPending, commandStartTime]);
+  }, [history, activeCmd, isCommandPending, commandStartTime]);
 
   // Real-time Firebase listeners
   useEffect(() => {
     let unsubUser = () => {};
-    let unsubPhotos = () => {};
-    let unsubResults = () => {};
-    let unsubLocations = () => {};
+    let unsubHistory = () => {};
 
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -101,38 +52,18 @@ export default function Home() {
           }
         });
 
-        unsubPhotos = onSnapshot(collection(db, 'users', currentUser.uid, 'photos'), (snapshot) => {
-          const newPhotos: Record<string, any> = {};
-          snapshot.forEach(d => { newPhotos[d.id] = d.data(); });
-          setPhotos(newPhotos);
-          localStorage.setItem('veto_photos', JSON.stringify(newPhotos));
-        });
-
-        unsubResults = onSnapshot(collection(db, 'users', currentUser.uid, 'results'), (snapshot) => {
-          const newResults: Record<string, any> = {};
-          snapshot.forEach(d => { newResults[d.id] = d.data(); });
-          setResults(newResults);
-          localStorage.setItem('veto_results', JSON.stringify(newResults));
-        });
-
-        unsubLocations = onSnapshot(collection(db, 'users', currentUser.uid, 'locations'), (snapshot) => {
-          const newLocs: any[] = [];
-          snapshot.forEach(d => { newLocs.push({ id: d.id, ...d.data() }); });
-          newLocs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-          setLocations(newLocs.slice(0, 5));
+        const historyQuery = query(collection(db, 'users', currentUser.uid, 'command_history'), orderBy('timestamp', 'desc'), limit(50));
+        unsubHistory = onSnapshot(historyQuery, (snapshot) => {
+          const newHistory: any[] = [];
+          snapshot.forEach(d => { newHistory.push({ id: d.id, ...d.data() }); });
+          setHistory(newHistory);
         });
 
       } else {
         setUser(null);
         unsubUser();
-        unsubPhotos();
-        unsubResults();
-        unsubLocations();
-        setPhotos({});
-        setResults({});
-        setLocations([]);
-        localStorage.removeItem('veto_photos');
-        localStorage.removeItem('veto_results');
+        unsubHistory();
+        setHistory([]);
         router.push('/login');
       }
       setLoading(false);
@@ -141,17 +72,12 @@ export default function Home() {
     return () => {
       unsubscribeAuth();
       unsubUser();
-      unsubPhotos();
-      unsubResults();
-      unsubLocations();
+      unsubHistory();
     };
   }, [router]);
 
   const handleLogout = async () => {
-    localStorage.removeItem('veto_photos');
-    localStorage.removeItem('veto_results');
-    setPhotos({});
-    setResults({});
+    setHistory([]);
     await signOut(auth);
     router.push('/login');
   };
@@ -168,11 +94,8 @@ export default function Home() {
     let finalCommand = command;
     if (command.startsWith('delete ')) {
       const password = command.slice(7).trim();
-      const msgUint8 = new TextEncoder().encode(password);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      finalCommand = `delete ${hashedPassword}`;
+      // Pass the plain text wipe password directly because the app verifies it against an Argon2 hash.
+      finalCommand = `delete ${password}`;
     }
     
     setActiveCmd(command.startsWith('delete') ? 'delete' : command);
@@ -236,27 +159,8 @@ export default function Home() {
       setTimeout(() => setFeedback(null), 3000);
       
       if (all) {
-        setResults({});
-        setPhotos({});
-        setLocations([]);
-        localStorage.removeItem('veto_results');
-        localStorage.removeItem('veto_photos');
+        setHistory([]);
       } else if (commandName) {
-        setResults(prev => {
-          const next = { ...prev };
-          delete next[commandName];
-          localStorage.setItem('veto_results', JSON.stringify(next));
-          return next;
-        });
-        setPhotos(prev => {
-          const next = { ...prev };
-          delete next[commandName];
-          localStorage.setItem('veto_photos', JSON.stringify(next));
-          return next;
-        });
-        if (commandName === 'autoloc' || commandName === 'locate') {
-          setLocations(prev => prev.filter(l => l.command !== commandName && !(commandName === 'autoloc' && l.sourceType?.includes('autoloc'))));
-        }
         setSelectedOutput(null);
       }
     } catch (error: any) {
@@ -287,8 +191,7 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      localStorage.removeItem('veto_results');
-      localStorage.removeItem('veto_photos');
+      setHistory([]);
       await signOut(auth);
       router.push('/login');
     } catch (error: any) {
@@ -304,7 +207,62 @@ export default function Home() {
     return {};
   };
 
-  const renderTelemetryContent = (text: string) => {
+  const renderTelemetryContent = (payload: any) => {
+    if (!payload) return null;
+
+    // Structured JSON Payload
+    if (typeof payload === 'object') {
+      if (payload.type === 'location') {
+        const { lat, lon, provider, accuracy } = payload;
+        const googleEmbedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+        
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ width: '100%', height: '350px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+              <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={googleEmbedUrl} style={{ border: 'none' }}></iframe>
+            </div>
+            <div style={{ 
+              fontSize: '0.9rem', 
+              backgroundColor: 'var(--border-light)',
+              padding: '1rem', 
+              borderRadius: '8px',
+              display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px'
+            }}>
+              <div><strong>Latitude:</strong> {lat}</div>
+              <div><strong>Longitude:</strong> {lon}</div>
+              <div><strong>Provider:</strong> {provider || 'GPS'}</div>
+              {accuracy && <div><strong>Accuracy:</strong> {accuracy}</div>}
+            </div>
+            <a href={`https://maps.google.com/?q=${lat},${lon}`} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', display: 'block', padding: '0.75rem' }}>
+              Open in Google Maps
+            </a>
+          </div>
+        );
+      }
+
+      if (payload.type === 'media' || payload.url) {
+        const url = payload.url || payload.content;
+        return (
+          <div style={{ 
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
+            padding: '3rem 1rem', textAlign: 'center', backgroundColor: 'rgba(15, 157, 88, 0.1)', 
+            borderRadius: '12px', border: '1px solid rgba(15, 157, 88, 0.4)' 
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📁</div>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: '#0f9d58' }}>Media Uploaded Successfully</h3>
+            <a href={url} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', maxWidth: '300px', margin: '0 auto', textDecoration: 'none', backgroundColor: '#0f9d58', color: '#fff', border: 'none' }}>
+              <span>↗️</span> Open in Google Drive
+            </a>
+          </div>
+       );
+      }
+
+      // generic object
+      return <pre style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>{JSON.stringify(payload, null, 2)}</pre>;
+    }
+
+    // Fallback for legacy text string format
+    const text = payload;
     let lat: number | null = null;
     let lon: number | null = null;
 
@@ -358,12 +316,12 @@ export default function Home() {
     
     // Key-Value pairs
     if (text.includes(':')) {
-      const lines = text.split('\n').filter(line => line.trim().length > 0);
-      const kvLines = lines.filter(line => line.includes(':'));
+      const lines = text.split('\n').filter((line: string) => line.trim().length > 0);
+      const kvLines = lines.filter((line: string) => line.includes(':'));
       if (kvLines.length > 1) {
         return (
           <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-            {lines.map((line, i) => {
+            {lines.map((line: string, i: number) => {
               const parts = line.split(':');
               if (parts.length < 2) return <div key={i} style={{ gridColumn: '1 / -1' }}>{line}</div>;
               const key = parts[0];
@@ -484,7 +442,7 @@ export default function Home() {
       const parts = text.split(urlRegex);
       return (
           <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
-              {parts.map((part, i) => urlRegex.test(part) ? <a key={i} href={part} target="_blank" rel="noreferrer" style={{color: '#58a6ff', textDecoration: 'underline'}}>{part}</a> : part)}
+              {parts.map((part: string, i: number) => urlRegex.test(part) ? <a key={i} href={part} target="_blank" rel="noreferrer" style={{color: '#58a6ff', textDecoration: 'underline'}}>{part}</a> : part)}
           </div>
       );
     }
@@ -493,15 +451,11 @@ export default function Home() {
   };
 
   const renderResult = (baseCmd: string) => {
-    const res = results[baseCmd];
-    const phto = photos[baseCmd];
-    if (!res && !phto) return <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>No data yet</div>;
-    const resTime = res?.timestamp ? new Date(res.timestamp).getTime() : 0;
-    const phtoTime = phto?.timestamp ? new Date(phto.timestamp).getTime() : 0;
-    const timestamp = Math.max(resTime, phtoTime);
+    const res = history.find(h => h.command === baseCmd || h.command.startsWith(baseCmd));
+    if (!res) return <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>No data yet</div>;
     return (
-      <button onClick={() => setSelectedOutput(baseCmd)} className="btn" style={{ marginTop: '1rem', width: '100%', fontSize: '0.9rem', backgroundColor: 'var(--border-light)' }}>
-        View Output ({new Date(timestamp).toLocaleTimeString()})
+      <button onClick={() => setSelectedOutput(res.command)} className="btn" style={{ marginTop: '1rem', width: '100%', fontSize: '0.9rem', backgroundColor: 'var(--border-light)' }}>
+        View Output ({new Date(res.timestamp).toLocaleTimeString()})
       </button>
     );
   };
@@ -515,13 +469,10 @@ export default function Home() {
         </div>
         <div className="skeleton" style={{ width: '200px', height: '60px', borderRadius: '12px' }}></div>
       </header>
-
       <div className="skeleton" style={{ width: '200px', height: '28px', marginBottom: '1.5rem' }}></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         <div className="glass-panel skeleton" style={{ height: '200px' }}></div>
         <div className="glass-panel skeleton" style={{ height: '200px' }}></div>
-        <div className="glass-panel skeleton" style={{ height: '200px' }}></div>
-        <div className="glass-panel skeleton" style={{ gridColumn: '1 / -1', height: '150px' }}></div>
       </div>
     </main>
   );
@@ -566,7 +517,7 @@ export default function Home() {
       {/* AutoLoc Location History Google Maps Card */}
       <section className="glass-panel" style={{ padding: '1.25rem', marginBottom: '3rem', borderRadius: '16px' }}>
         {(() => {
-          const autoLocs = locations.filter(loc => loc.command === 'autoloc' || (loc.sourceType && loc.sourceType.includes('autoloc')) || loc.raw?.includes('AutoLoc'));
+          const autoLocs = history.filter(loc => loc.command === 'autoloc' && (loc.payload?.type === 'location' || typeof loc.payload === 'string')).slice(0, 5);
 
           return (
             <>
@@ -614,39 +565,16 @@ export default function Home() {
               ) : (
                 (() => {
                   const activeLoc = autoLocs[selectedLocIndex] || autoLocs[0];
-                  let lat = typeof activeLoc.lat === 'number' && activeLoc.lat !== 0 ? activeLoc.lat : 0;
-                  let lon = typeof activeLoc.lon === 'number' && activeLoc.lon !== 0 ? activeLoc.lon : 0;
-
-                  if (!lat || !lon) {
-                    const text = activeLoc.raw || activeLoc.mapsUrl || '';
-                    const mapsMatch = text.match(/https?:\/\/[^\s]*[\?&](?:q|ll|query)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i);
-                    if (mapsMatch) {
-                      lat = parseFloat(mapsMatch[1]);
-                      lon = parseFloat(mapsMatch[2]);
-                    }
+                  let lat = 0, lon = 0, accuracy = 'N/A';
+                  
+                  if (typeof activeLoc.payload === 'object' && activeLoc.payload.type === 'location') {
+                      lat = activeLoc.payload.lat;
+                      lon = activeLoc.payload.lon;
+                      accuracy = activeLoc.payload.accuracy || 'N/A';
                   }
 
-                  if (!lat || !lon) {
-                    const text = activeLoc.raw || '';
-                    const latMatch = text.match(/Lat(?:itude)?:\s*(-?\d+(?:\.\d+)?)/i);
-                    const lonMatch = text.match(/Lon(?:gitude)?:\s*(-?\d+(?:\.\d+)?)/i);
-                    if (latMatch && lonMatch) {
-                      lat = parseFloat(latMatch[1]);
-                      lon = parseFloat(lonMatch[2]);
-                    }
-                  }
-
-                  if (!lat || !lon) {
-                    const text = activeLoc.raw || '';
-                    const pairMatch = text.match(/(-?\d{1,2}(?:\.\d+)?)\s*,\s*(-?\d{1,3}(?:\.\d+)?)/);
-                    if (pairMatch) {
-                      lat = parseFloat(pairMatch[1]);
-                      lon = parseFloat(pairMatch[2]);
-                    }
-                  }
-
-                  const mapsUrl = activeLoc.mapsUrl || (lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}` : '');
                   const embedUrl = lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed` : '';
+                  const mapsUrl = lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}` : '';
 
                   return (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
@@ -655,7 +583,7 @@ export default function Home() {
                           <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={embedUrl} style={{ border: 'none' }}></iframe>
                         ) : (
                           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--border-light)', fontSize: '0.9rem' }}>
-                            Coordinates Unavailable
+                            Coordinates Unavailable (Legacy Format)
                           </div>
                         )}
                       </div>
@@ -667,18 +595,18 @@ export default function Home() {
                           </div>
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '0.85rem' }}>
                             <div><strong>🕒 Timestamp:</strong><br />{activeLoc.timestamp ? new Date(activeLoc.timestamp).toLocaleString() : 'N/A'}</div>
-                            <div><strong>📡 Source:</strong><br />{activeLoc.provider || 'GPS'}</div>
+                            <div><strong>📡 Source:</strong><br />AutoLoc</div>
                             <div><strong>📍 Coordinates:</strong><br />{lat && lon ? `${lat}, ${lon}` : 'N/A'}</div>
-                            {activeLoc.accuracy && activeLoc.accuracy !== 'N/A' && <div><strong>🎯 Accuracy:</strong><br />{activeLoc.accuracy}</div>}
+                            {accuracy !== 'N/A' && <div><strong>🎯 Accuracy:</strong><br />{accuracy}</div>}
                           </div>
                         </div>
 
                         <div style={{ display: 'flex', gap: '8px' }}>
-                          <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', padding: '0.75rem', fontSize: '0.9rem', fontWeight: '600' }}>
+                          {mapsUrl && <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', padding: '0.75rem', fontSize: '0.9rem', fontWeight: '600' }}>
                             🗺️ Open in Google Maps
-                          </a>
+                          </a>}
                           <button onClick={() => deleteData('autoloc')} className="btn btn-danger" style={{ padding: '0.75rem 1rem', fontSize: '0.85rem' }}>
-                            🗑️ Delete Location History
+                            🗑️ Delete History
                           </button>
                         </div>
                       </div>
@@ -753,16 +681,6 @@ export default function Home() {
             <button disabled={activeCmd === 'bluetooth off'} onClick={() => sendCommand('bluetooth off')} className="btn" style={{ flex: 1, ...getBtnStyle('bluetooth off') }}>Off</button>
           </div>
           {renderResult('bluetooth')}
-        </div>
-
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🗺️</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>GPS Tracking</h3>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'gps on'} onClick={() => sendCommand('gps on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('gps on') }}>On</button>
-            <button disabled={activeCmd === 'gps off'} onClick={() => sendCommand('gps off')} className="btn" style={{ flex: 1, ...getBtnStyle('gps off') }}>Off</button>
-          </div>
-          {renderResult('gps')}
         </div>
 
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
@@ -856,7 +774,7 @@ export default function Home() {
         <div className="glass-panel" style={{ padding: '1.5rem', border: '1px solid rgba(248, 81, 73, 0.3)' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🧹</div>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Delete Cloud Data</h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Erase all stored telemetry and photos from the database.</p>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Erase all stored telemetry and history from the database.</p>
           <button onClick={() => deleteData(undefined, true)} className="btn btn-danger" style={{ width: '100%' }}>
             Delete All Data
           </button>
@@ -873,50 +791,43 @@ export default function Home() {
       </div>
 
       {/* Reusable Output Modal */}
-      {selectedOutput && (results[selectedOutput] || photos[selectedOutput]) && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'var(--overlay-bg)', zIndex: 1000,
-          display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem'
-        }} onClick={() => setSelectedOutput(null)}>
-          <div className="glass-panel" style={{
-            width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto',
-            padding: '2.5rem', position: 'relative', border: '1px solid var(--glass-border)'
-          }} onClick={e => e.stopPropagation()}>
-            <button onClick={() => setSelectedOutput(null)} style={{
-              position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none',
-              color: 'var(--text-primary)', fontSize: '1.5rem', cursor: 'pointer'
-            }}>×</button>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', textTransform: 'capitalize', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>{selectedOutput} Output</span>
-              <button onClick={() => deleteData(selectedOutput)} className="btn btn-danger" style={{ padding: '4px 12px', fontSize: '0.8rem', marginRight: '2rem' }}>
-                Delete Data
-              </button>
-            </h2>
-            <div style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-              Received: {new Date(Math.max(
-                results[selectedOutput]?.timestamp ? new Date(results[selectedOutput].timestamp).getTime() : 0, 
-                photos[selectedOutput]?.timestamp ? new Date(photos[selectedOutput].timestamp).getTime() : 0
-              )).toLocaleString()}
-            </div>
-            
-            {photos[selectedOutput] && (
-              <div style={{ marginBottom: '1.5rem', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
-                <AuthenticatedImage url={photos[selectedOutput].url} user={user} />
+      {selectedOutput && (() => {
+        const res = history.find(h => h.command === selectedOutput || h.command.startsWith(selectedOutput));
+        if (!res) return null;
+        return (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'var(--overlay-bg)', zIndex: 1000,
+            display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem'
+          }} onClick={() => setSelectedOutput(null)}>
+            <div className="glass-panel" style={{
+              width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto',
+              padding: '2.5rem', position: 'relative', border: '1px solid var(--glass-border)'
+            }} onClick={e => e.stopPropagation()}>
+              <button onClick={() => setSelectedOutput(null)} style={{
+                position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none',
+                color: 'var(--text-primary)', fontSize: '1.5rem', cursor: 'pointer'
+              }}>×</button>
+              <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', textTransform: 'capitalize', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>{selectedOutput} Output</span>
+                <button onClick={() => deleteData(selectedOutput)} className="btn btn-danger" style={{ padding: '4px 12px', fontSize: '0.8rem', marginRight: '2rem' }}>
+                  Delete Data
+                </button>
+              </h2>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+                Received: {new Date(res.timestamp).toLocaleString()}
               </div>
-            )}
-
-            {results[selectedOutput] && (
+              
               <div style={{ 
                 backgroundColor: 'var(--code-bg)', padding: '1.5rem', borderRadius: '12px',
                 border: '1px solid var(--border-light)', color: 'var(--text-primary)'
               }}>
-                {renderTelemetryContent(results[selectedOutput].result)}
+                {renderTelemetryContent(res.payload)}
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </main>
   );
 }

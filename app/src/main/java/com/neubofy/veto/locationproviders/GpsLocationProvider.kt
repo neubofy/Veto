@@ -117,7 +117,9 @@ class GpsLocationProvider<T>(
             Looper.getMainLooper(),
         )
 
-        transport.send(context, context.getString(R.string.cmd_locate_response_gps_will_follow), commandName)
+        if (commandName != "autoloc") {
+            transport.send(context, context.getString(R.string.cmd_locate_response_gps_will_follow), commandName)
+        }
         return def
     }
 
@@ -138,11 +140,13 @@ class GpsLocationProvider<T>(
                 transport.sendNewLocation(context, cachedLoc, commandName)
             } else {
                 // No location and nothing to fall back to.
-                transport.send(
-                    context,
-                    context.getString(R.string.cmd_locate_last_known_location_not_available),
-                    commandName
-                )
+                if (commandName != "autoloc") {
+                    transport.send(
+                        context,
+                        context.getString(R.string.cmd_locate_last_known_location_not_available),
+                        commandName
+                    )
+                }
             }
         } else {
             if (cachedLoc == null) {
@@ -227,9 +231,11 @@ class GpsLocationProvider<T>(
         if (currBest != null) {
             transport.sendNewLocation(context, currBest, commandName)
         } else {
-            val msg = context.getString(R.string.cmd_locate_response_gps_fail)
-            context.log().d(TAG, msg)
-            transport.send(context, msg, commandName)
+            if (commandName != "autoloc") {
+                val msg = context.getString(R.string.cmd_locate_response_gps_fail)
+                context.log().d(TAG, msg)
+                transport.send(context, msg, commandName)
+            }
         }
         cleanup()
     }

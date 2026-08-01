@@ -3,16 +3,16 @@ package com.neubofy.veto.commands
 import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.neubofy.veto.R
 import com.neubofy.veto.data.Settings
-import com.neubofy.veto.transports.Transport
-import com.neubofy.veto.workers.CommandExecutionWorker
-import java.util.concurrent.TimeUnit
 import com.neubofy.veto.permissions.Permission
+import com.neubofy.veto.transports.Transport
+import com.neubofy.veto.workers.AutoLocWorker
+import java.util.concurrent.TimeUnit
 
 class AutoLocCommand(context: Context) : Command(context) {
 
@@ -21,8 +21,7 @@ class AutoLocCommand(context: Context) : Command(context) {
 
     @get:DrawableRes
     override val icon = R.drawable.ic_location
-    
-    // Using an existing string resource for simplicity, or we can use R.string.command_locate_description
+
     @get:StringRes
     override val shortDescription = R.string.cmd_locate_description_short
 
@@ -46,43 +45,35 @@ class AutoLocCommand(context: Context) : Command(context) {
         val action = args[0]
         val workManager = WorkManager.getInstance(context)
 
-        if (action == "run") {
-            com.neubofy.veto.locationproviders.AutoLocProvider(context).executeAutoLoc().await()
-            return
-        }
-
-        if (action == "on") {
-            val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "autoloc")
-            if (error != null) {
-                transport.send(context, error, keyword)
-                return
+        when (action) {
+            "on" -> {
+                val intervalMinutes = settings.get(Settings.SET_VetoSERVER_UPDATE_TIME) as Int
+                val periodicWork = PeriodicWorkRequest.Builder(
+                    AutoLocWorker::class.java,
+                    intervalMinutes.toLong(),
+                    TimeUnit.MINUTES
+                ).build()
+                workManager.enqueueUniquePeriodicWork(
+                    WORK_NAME,
+                    ExistingPeriodicWorkPolicy.UPDATE,
+                    periodicWork
+                )
+                transport.send(context, "Background auto-location started (Interval: $intervalMinutes mins)", keyword)
             }
-            val intervalMinutes = settings.get(Settings.SET_VetoSERVER_UPDATE_TIME) as Int
-            val locateCommand = settings.get(Settings.SET_Veto_COMMAND).toString() + " autoloc run"
 
-            val inputData = Data.Builder()
-                .putString(CommandExecutionWorker.KEY_COMMAND, locateCommand)
-                .putString(CommandExecutionWorker.KEY_TRANSPORT_TYPE, CommandExecutionWorker.TRANS_NEXTJS_SERVER)
-                .putString(CommandExecutionWorker.KEY_DESTINATION, "Background_Upload")
-                .build()
+            "off" -> {
+                workManager.cancelUniqueWork(WORK_NAME)
+                transport.send(context, "Background auto-location stopped.", keyword)
+            }
 
-            val periodicWork = PeriodicWorkRequest.Builder(
-                CommandExecutionWorker::class.java,
-                intervalMinutes.toLong(),
-                TimeUnit.MINUTES
-            ).setInputData(inputData).build()
+            "run" -> {
+                // Manual trigger from the in-app button — same logic as WorkManager periodic run
+                val workRequest = OneTimeWorkRequest.Builder(AutoLocWorker::class.java).build()
+                workManager.enqueue(workRequest)
+                // Silent upload — no reply needed
+            }
 
-            workManager.enqueueUniquePeriodicWork(
-                WORK_NAME,
-                ExistingPeriodicWorkPolicy.UPDATE, // Update existing job if any
-                periodicWork
-            )
-            transport.send(context, "Background auto-location started (Interval: $intervalMinutes mins)", keyword)
-        } else if (action == "off") {
-            workManager.cancelUniqueWork(WORK_NAME)
-            transport.send(context, "Background auto-location stopped.", keyword)
-        } else {
-            transport.send(context, "Invalid action. Usage: $usage", keyword)
+            else -> transport.send(context, "Invalid action. Usage: $usage", keyword)
         }
     }
 }

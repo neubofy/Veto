@@ -51,24 +51,7 @@ class InAppTransport(
 
         val title = context.getString(R.string.transport_inapp_title)
 
-        Notifications.notify(context, title, msg, Notifications.CHANNEL_IN_APP) { builder ->
-            val copyIntent = Intent(context, CopyInAppTextReceiver::class.java)
-            copyIntent.putExtra(EXTRA_TEXT_TO_COPY, msg)
-
-            val requestCode = (0..900_000).random()
-            val copyPendingIntent = PendingIntent.getBroadcast(
-                context,
-                requestCode,
-                copyIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-
-            builder.addAction(
-                R.drawable.ic_content_copy,
-                context.getString(R.string.copy),
-                copyPendingIntent
-            )
-        }
+        Notifications.notify(context, title, msg, Notifications.CHANNEL_IN_APP)
     }
 }
 

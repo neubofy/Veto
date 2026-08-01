@@ -29,42 +29,28 @@ export async function POST(req: Request) {
     const batch = adminDb.batch();
 
     if (all) {
-      // Delete all results documents in Firestore subcollection
+      // Delete all history documents
+      const historySnap = await userRef.collection('command_history').get();
+      historySnap.docs.forEach((doc: any) => {
+        batch.delete(doc.ref);
+      });
+      // also cleanup legacy
       const resultsSnap = await userRef.collection('results').get();
-      resultsSnap.docs.forEach((doc: any) => {
-        batch.delete(doc.ref);
-      });
-
-      // Delete all photos documents in Firestore subcollection
+      resultsSnap.docs.forEach((doc: any) => batch.delete(doc.ref));
       const photosSnap = await userRef.collection('photos').get();
-      photosSnap.docs.forEach((doc: any) => {
-        batch.delete(doc.ref);
-      });
-
-      // Delete all locations documents in Firestore subcollection
+      photosSnap.docs.forEach((doc: any) => batch.delete(doc.ref));
       const locationsSnap = await userRef.collection('locations').get();
-      locationsSnap.docs.forEach((doc: any) => {
+      locationsSnap.docs.forEach((doc: any) => batch.delete(doc.ref));
+
+    } else if (commandName) {
+      // Delete specific command history
+      const historySnap = await userRef.collection('command_history').where('command', '==', commandName).get();
+      historySnap.docs.forEach((doc: any) => {
         batch.delete(doc.ref);
       });
-    } else if (commandName) {
-      // Delete specific command result document
-      const resultDoc = userRef.collection('results').doc(commandName);
-      batch.delete(resultDoc);
-
-      // Delete specific command photo document
-      const photoDoc = userRef.collection('photos').doc(commandName);
-      batch.delete(photoDoc);
-
-      // Delete location documents for autoloc/locate
-      if (commandName === 'autoloc' || commandName === 'locate') {
-        const locSnap = await userRef.collection('locations').get();
-        locSnap.docs.forEach((doc: any) => {
-          const data = doc.data();
-          if (data.command === commandName || (commandName === 'autoloc' && data.sourceType?.includes('autoloc'))) {
-            batch.delete(doc.ref);
-          }
-        });
-      }
+      // legacy cleanup
+      batch.delete(userRef.collection('results').doc(commandName));
+      batch.delete(userRef.collection('photos').doc(commandName));
     } else {
       return NextResponse.json({ error: 'Must specify commandName or all=true' }, { status: 400 });
     }
