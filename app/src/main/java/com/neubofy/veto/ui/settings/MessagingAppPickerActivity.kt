@@ -8,19 +8,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.neubofy.veto.R
 import com.neubofy.veto.data.EncryptedSettingsRepository
 import com.neubofy.veto.ui.UiUtil.Companion.setupEdgeToEdgeAppBar
 import com.neubofy.veto.ui.VetoActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 data class AppItem(
     val appName: String,
     val packageName: String,
     val icon: Drawable,
-    val isMessagingApp: Boolean,
     var isSelected: Boolean
 )
 
@@ -37,54 +41,10 @@ class MessagingAppPickerActivity : VetoActivity() {
         setupEdgeToEdgeAppBar(findViewById(R.id.appBar))
 
         encRepo = EncryptedSettingsRepository.getInstance(this)
-        val allowedPackages = encRepo.getAllowedNotificationPackages()
-
-        val pm = packageManager
-        val seenPackages = mutableSetOf<String>()
-
-        // Method 1: Query Launcher Intent Activities
-        val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-        val launcherApps = pm.queryIntentActivities(mainIntent, 0)
-        launcherApps.forEach { resolveInfo ->
-            val pkgName = resolveInfo.activityInfo.packageName
-            if (!seenPackages.contains(pkgName)) {
-                seenPackages.add(pkgName)
-                val appName = resolveInfo.loadLabel(pm).toString()
-                val icon = resolveInfo.loadIcon(pm)
-                val isMsg = isMessagingPackage(pkgName)
-                val isSelected = allowedPackages.contains(pkgName)
-                appList.add(AppItem(appName, pkgName, icon, isMsg, isSelected))
-            }
-        }
-
-        // Method 2: Query Installed Applications fallback for non-launcher apps
-        val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
-        installedApps.forEach { appInfo ->
-            val pkgName = appInfo.packageName
-            if (!seenPackages.contains(pkgName) && !isSystemInternalPackage(pkgName)) {
-                seenPackages.add(pkgName)
-                val appName = pm.getApplicationLabel(appInfo).toString()
-                val icon = pm.getApplicationIcon(appInfo)
-                val isMsg = isMessagingPackage(pkgName)
-                val isSelected = allowedPackages.contains(pkgName)
-                appList.add(AppItem(appName, pkgName, icon, isMsg, isSelected))
-            }
-        }
-
-        // Prioritize Messaging apps at the top, then sort alphabetically
-        appList.sortWith(Comparator { a, b ->
-            if (a.isMessagingApp && !b.isMessagingApp) {
-                -1
-            } else if (!a.isMessagingApp && b.isMessagingApp) {
-                1
-            } else {
-                a.appName.compareTo(b.appName, ignoreCase = true)
-            }
-        })
-
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        val tvEmptyState = findViewById<TextView>(R.id.tvEmptyState)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_apps)
+
         adapter = MessagingAppAdapter(appList) { updatedItem ->
             val currentAllowed = encRepo.getAllowedNotificationPackages().toMutableSet()
             if (updatedItem.isSelected) {
@@ -95,22 +55,78 @@ class MessagingAppPickerActivity : VetoActivity() {
             encRepo.setAllowedNotificationPackages(currentAllowed)
         }
         recyclerView.adapter = adapter
-    }
 
-    private fun isSystemInternalPackage(pkg: String): Boolean {
-        val lower = pkg.lowercase()
-        return lower == "android" || lower.startsWith("com.android.systemui") || lower.startsWith("com.android.providers")
+        // Load apps asynchronously on IO thread to prevent UI freezing
+        lifecycleScope.launch(Dispatchers.IO) {
+            val allowedPackages = encRepo.getAllowedNotificationPackages()
+            val pm = packageManager
+            val seenPackages = mutableSetOf<String>()
+            val items = mutableListOf<AppItem>()
+
+            // Query launcher intent activities
+            val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
+                addCategory(Intent.CATEGORY_LAUNCHER)
+            }
+            val launcherApps = pm.queryIntentActivities(mainIntent, 0)
+
+            launcherApps.forEach { resolveInfo ->
+                val pkgName = resolveInfo.activityInfo.packageName
+                if (!seenPackages.contains(pkgName) && isMessagingPackage(pkgName)) {
+                    seenPackages.add(pkgName)
+                    val appName = resolveInfo.loadLabel(pm).toString()
+                    val icon = resolveInfo.loadIcon(pm)
+                    val isSelected = allowedPackages.contains(pkgName)
+                    items.add(AppItem(appName, pkgName, icon, isSelected))
+                }
+            }
+
+            // Also check installed applications for messaging packages
+            val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+            installedApps.forEach { appInfo ->
+                val pkgName = appInfo.packageName
+                if (!seenPackages.contains(pkgName) && isMessagingPackage(pkgName)) {
+                    seenPackages.add(pkgName)
+                    val appName = pm.getApplicationLabel(appInfo).toString()
+                    val icon = pm.getApplicationIcon(appInfo)
+                    val isSelected = allowedPackages.contains(pkgName)
+                    items.add(AppItem(appName, pkgName, icon, isSelected))
+                }
+            }
+
+            items.sortBy { it.appName.lowercase() }
+
+            withContext(Dispatchers.Main) {
+                progressBar.visibility = View.GONE
+                appList.clear()
+                appList.addAll(items)
+                adapter.notifyDataSetChanged()
+
+                if (items.isEmpty()) {
+                    tvEmptyState.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                } else {
+                    tvEmptyState.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
     private fun isMessagingPackage(pkg: String): Boolean {
         val lower = pkg.lowercase()
-        return lower.contains("whatsapp") || pkg == "com.whatsapp" || pkg == "com.whatsapp.w4b" ||
-                lower.contains("telegram") || lower.contains("signal") ||
-                lower.contains("messenger") || lower.contains("discord") || lower.contains("viber") ||
-                lower.contains("instagram") || lower.contains("skype") || lower.contains("slack") ||
-                lower.contains("teams") || lower.contains("line") || lower.contains("wechat") ||
-                lower.contains("snapchat") || lower.contains("message") || lower.contains("sms") ||
-                lower.contains("chat")
+        return pkg == "com.whatsapp" || pkg == "com.whatsapp.w4b" || lower.contains("whatsapp") ||
+                pkg == "org.telegram.messenger" || lower.contains("telegram") ||
+                pkg == "org.thoughtcrime.securesms" || lower.contains("signal") ||
+                pkg == "com.facebook.orca" || lower.contains("messenger") ||
+                pkg == "com.instagram.android" || lower.contains("instagram") ||
+                pkg == "com.discord" || lower.contains("discord") ||
+                pkg == "com.viber.voip" || lower.contains("viber") ||
+                pkg == "com.skype.raider" || lower.contains("skype") ||
+                pkg == "com.tencent.mm" || lower.contains("wechat") ||
+                pkg == "jp.naver.line.android" || lower.contains("line") ||
+                pkg == "com.slack" || lower.contains("slack") ||
+                pkg == "com.microsoft.teams" || lower.contains("teams") ||
+                pkg == "com.snapchat.android" || lower.contains("snapchat")
     }
 
     inner class MessagingAppAdapter(
@@ -136,12 +152,8 @@ class MessagingAppPickerActivity : VetoActivity() {
             holder.tvName.text = item.appName
             holder.tvPackage.text = item.packageName
             holder.imgIcon.setImageDrawable(item.icon)
-            
-            if (item.isMessagingApp) {
-                holder.tvBadge.visibility = View.VISIBLE
-            } else {
-                holder.tvBadge.visibility = View.GONE
-            }
+            holder.tvBadge.visibility = View.VISIBLE
+            holder.tvBadge.text = "💬 Messaging App"
 
             holder.cbSelected.setOnCheckedChangeListener(null)
             holder.cbSelected.isChecked = item.isSelected

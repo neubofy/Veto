@@ -54,11 +54,21 @@ class LocateCommand(context: Context) : Command(context) {
         val isAutoLoc = args.contains("autoloc_trigger")
         val effectiveKeyword = if (isAutoLoc) "autoloc" else keyword
 
-        // veto locate last
+        // veto locate last -> returns all locally cached recent locations (up to 5)
         if (args.contains("last")) {
             withContext(Dispatchers.IO) {
-                val provider = GpsLocationProvider(context, transport, GPS_PROVIDER, null, effectiveKeyword)
-                provider.getLastKnownLocation()
+                val settings = com.neubofy.veto.data.SettingsRepository.getInstance(context)
+                val recents = settings.getRecentLocations()
+                if (recents.isNotEmpty()) {
+                    val sb = StringBuilder("📍 Locally Cached Location History (Last ${recents.size}):\n\n")
+                    recents.forEachIndexed { idx, loc ->
+                        sb.append("#${idx + 1}: ${loc.toCompactString()}\n\n")
+                    }
+                    transport.send(context, sb.toString().trim(), effectiveKeyword)
+                } else {
+                    val provider = GpsLocationProvider(context, transport, GPS_PROVIDER, null, effectiveKeyword)
+                    provider.getLastKnownLocation()
+                }
             }
             return
         }

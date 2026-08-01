@@ -33,6 +33,24 @@
             android:textColor="?attr/colorOnSurfaceVariant" />
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp" />
+
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="32dp"
+        android:text="No supported messaging apps (WhatsApp, Telegram, Signal, Messenger, etc.) found on device."
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_apps"
         android:layout_width="match_parent"
@@ -40,6 +58,7 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:padding="8dp"
+        android:visibility="gone"
         app:layoutManager="LinearLayoutManager" />
 
 </LinearLayout>

@@ -67,4 +67,16 @@ data class VetoLocation(
             .append(getGoogleMapsLink(lat, lon))
         return string.toString()
     }
+
+    fun toCompactString(): String {
+        val accStr = if (accuracy != null) "%.1f m".format(accuracy) else "N/A"
+        return "Lat: $lat, Lon: $lon | Acc: $accStr | Batt: $batteryLevel% | Time: ${Date(timeMillis)}\n${getGoogleMapsLink(lat, lon)}"
+    }
+
+    fun toAutoLocPayload(): String {
+        val accStr = if (accuracy != null) "%.1f m".format(accuracy) else "N/A"
+        val altStr = if (altitude != null) "%.1f m".format(altitude) else "N/A"
+        val speedStr = if (speed != null) "%.1f km/h".format(speed * 3.6) else "N/A"
+        return "AutoLoc Background Track\nLat: $lat\nLon: $lon\nAccuracy: $accStr\nAltitude: $altStr\nSpeed: $speedStr\nBattery: $batteryLevel %\nTime: ${Date(timeMillis)}\n${getGoogleMapsLink(lat, lon)}"
+    }
 }

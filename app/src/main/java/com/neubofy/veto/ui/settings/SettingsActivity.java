@@ -312,7 +312,7 @@ public class SettingsActivity extends VetoActivity implements CompoundButton.OnC
     private void startAutoLoc() {
         try {
             int intervalMinutes = (int) settings.get(Settings.SET_VetoSERVER_UPDATE_TIME);
-            String locateCommand = settings.get(Settings.SET_Veto_COMMAND).toString() + " locate gps";
+            String locateCommand = settings.get(Settings.SET_Veto_COMMAND).toString() + " locate gps autoloc_trigger";
 
             androidx.work.Data inputData = new androidx.work.Data.Builder()
                 .putString(com.neubofy.veto.workers.CommandExecutionWorker.KEY_COMMAND, locateCommand)
