@@ -13,7 +13,7 @@
         android:padding="8dp"
         android:useDefaultMargins="true">
 
-        <!-- Device Info & Command Control Card -->
+        <!-- Device Info & Telemetry Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_device_info"
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Device Status &amp; Command Controls"
+                    android:text="Device Status Telemetry"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -42,9 +42,10 @@
                     android:id="@+id/tvDeviceDetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📱 Model: Loading... | 🔋 Battery: Loading..."
+                    android:text="📱 Model: Loading...\n🔋 Battery: Loading...\n🔷 Bluetooth: Loading...\n🌙 DND Mode: Loading...\n🔊 Sound Mode: Loading...\n🔦 Flashlight: Loading..."
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="14sp"
+                    android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="16dp" />
 
                 <View
@@ -56,38 +57,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Command Execution Permissions"
+                    android:text="Master Command Controls (Toggle ON/OFF)"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
 
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switchCmdLocate"
+                <LinearLayout
+                    android:id="@+id/layout_command_switches"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Location Commands (locate, autoloc, theft)"
-                    android:textSize="14sp" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switchCmdPhoto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Photo Capture (photo)"
-                    android:textSize="14sp" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switchCmdVideo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Video Capture (video)"
-                    android:textSize="14sp" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switchCmdAudio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Audio Recording (audio)"
-                    android:textSize="14sp" />
+                    android:orientation="vertical" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

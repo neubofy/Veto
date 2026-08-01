@@ -44,11 +44,38 @@ class NotificationReplyTransport(
     override val descriptionAuth =
         context.getString(R.string.transport_notification_reply_description_auth)
 
+    private val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+
     override val requiredPermissions = listOf(NotificationAccessPermission())
+
+    override val actions = listOf(
+        TransportAction(R.string.transport_select_messaging_apps) { activity ->
+            activity.startActivity(Intent(context, com.neubofy.veto.ui.settings.MessagingAppPickerActivity::class.java))
+        }
+    )
 
     override fun getDestinationString() = destination?.packageName ?: "Notification Response"
 
     override fun isAllowed(parsed: ParserResult.Success): Boolean {
+        // Master enable/disable check
+        if (!encRepo.isTransportEnabled("notification_reply")) {
+            context.log().w(TAG, "Notification Reply transport is disabled in app settings")
+            return false
+        }
+
+        // Package filtering check
+        val allowedPackages = encRepo.getAllowedNotificationPackages()
+        if (allowedPackages.isEmpty()) {
+            context.log().w(TAG, "No messaging apps selected in Notification Reply settings")
+            return false
+        }
+
+        val incomingPkg = destination?.packageName
+        if (incomingPkg != null && !allowedPackages.contains(incomingPkg)) {
+            context.log().w(TAG, "Notification from $incomingPkg is not in allowed messaging apps list")
+            return false
+        }
+
         val pinAccessEnabled = settings.get(Settings.SET_ACCESS_VIA_PIN) as Boolean
         if (!pinAccessEnabled) {
             return false

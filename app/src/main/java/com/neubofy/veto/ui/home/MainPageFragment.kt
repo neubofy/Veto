@@ -22,37 +22,111 @@ class MainPageFragment : TaggedFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_main_page, container, false)
 
+        val ctx = requireContext()
         val tvDeviceDetails = view.findViewById<TextView>(R.id.tvDeviceDetails)
+        
+        // 1. Model & OS
         val model = android.os.Build.MODEL
-        val battery = com.neubofy.veto.utils.Utils.getBatteryLevel(requireContext())
         val osVersion = android.os.Build.VERSION.RELEASE
-        tvDeviceDetails.text = "📱 Model: $model (Android $osVersion)\n🔋 Battery Level: $battery%"
 
-        val locateCmd = com.neubofy.veto.commands.LocateCommand(requireContext())
-        val photoCmd = com.neubofy.veto.commands.CameraCommand(requireContext())
-        val videoCmd = com.neubofy.veto.commands.VideoCommand(requireContext())
-        val audioCmd = com.neubofy.veto.commands.AudioCommand(requireContext())
-        val autoLocCmd = com.neubofy.veto.commands.AutoLocCommand(requireContext())
-        val theftCmd = com.neubofy.veto.commands.TheftCommand(requireContext())
+        // 2. Battery & Charging
+        val batteryLevel = com.neubofy.veto.utils.Utils.getBatteryLevel(ctx)
+        val batteryIntent = ctx.registerReceiver(null, android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED))
+        val status = batteryIntent?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
+        val isCharging = status == android.os.BatteryManager.BATTERY_STATUS_CHARGING || status == android.os.BatteryManager.BATTERY_STATUS_FULL
+        val batteryStr = "$batteryLevel% ${if (isCharging) "⚡ (Charging)" else ""}"
 
-        val switchCmdLocate = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switchCmdLocate)
-        val switchCmdPhoto = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switchCmdPhoto)
-        val switchCmdVideo = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switchCmdVideo)
-        val switchCmdAudio = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switchCmdAudio)
+        // 3. Bluetooth Status (Safe Permission Handling)
+        var btStr = "Unavailable"
+        try {
+            val hasBtPerm = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                androidx.core.content.ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.BLUETOOTH_CONNECT) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            } else {
+                androidx.core.content.ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.BLUETOOTH) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            }
 
-        switchCmdLocate.isChecked = locateCmd.isEnabled()
-        switchCmdPhoto.isChecked = photoCmd.isEnabled()
-        switchCmdVideo.isChecked = videoCmd.isEnabled()
-        switchCmdAudio.isChecked = audioCmd.isEnabled()
-
-        switchCmdLocate.setOnCheckedChangeListener { _, isChecked ->
-            locateCmd.setEnabled(isChecked)
-            autoLocCmd.setEnabled(isChecked)
-            theftCmd.setEnabled(isChecked)
+            if (hasBtPerm) {
+                val btAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+                btStr = if (btAdapter != null && btAdapter.isEnabled) "🔷 Enabled" else "⚪ Disabled"
+            } else {
+                btStr = "⚠️ Permission Required"
+            }
+        } catch (e: Exception) {
+            btStr = "Unavailable"
         }
-        switchCmdPhoto.setOnCheckedChangeListener { _, isChecked -> photoCmd.setEnabled(isChecked) }
-        switchCmdVideo.setOnCheckedChangeListener { _, isChecked -> videoCmd.setEnabled(isChecked) }
-        switchCmdAudio.setOnCheckedChangeListener { _, isChecked -> audioCmd.setEnabled(isChecked) }
+
+        // 4. DND Mode
+        var dndStr = "Off"
+        try {
+            val nm = ctx.getSystemService(android.content.Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+            dndStr = when (nm.currentInterruptionFilter) {
+                android.app.NotificationManager.INTERRUPTION_FILTER_ALL -> "Off (Allow All)"
+                android.app.NotificationManager.INTERRUPTION_FILTER_PRIORITY -> "Priority Only"
+                android.app.NotificationManager.INTERRUPTION_FILTER_ALARMS -> "Alarms Only"
+                android.app.NotificationManager.INTERRUPTION_FILTER_NONE -> "Total Silence"
+                else -> "Off"
+            }
+        } catch (e: Exception) {
+            dndStr = "Unavailable"
+        }
+
+        // 5. Sound / Ringer Mode
+        var soundStr = "Normal"
+        try {
+            val am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE) as android.media.AudioManager
+            soundStr = when (am.ringerMode) {
+                android.media.AudioManager.RINGER_MODE_SILENT -> "🔇 Silent"
+                android.media.AudioManager.RINGER_MODE_VIBRATE -> "📳 Vibrate"
+                android.media.AudioManager.RINGER_MODE_NORMAL -> "🔊 Normal"
+                else -> "Normal"
+            }
+        } catch (e: Exception) {
+            soundStr = "Unavailable"
+        }
+
+        // 6. Flashlight
+        val hasFlash = ctx.packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_CAMERA_FLASH)
+        val flashStr = if (hasFlash) "🔦 Available" else "N/A"
+
+        tvDeviceDetails.text = "📱 Model: $model (Android $osVersion)\n🔋 Battery: $batteryStr\n🔷 Bluetooth: $btStr\n🌙 DND Mode: $dndStr\n🔊 Sound Mode: $soundStr\n🔦 Flashlight: $flashStr"
+
+        // Dynamic Command Switches List
+        val layoutSwitches = view.findViewById<android.widget.LinearLayout>(R.id.layout_command_switches)
+        layoutSwitches.removeAllViews()
+
+        val allCommands = listOf(
+            com.neubofy.veto.commands.LocateCommand(ctx),
+            com.neubofy.veto.commands.AutoLocCommand(ctx),
+            com.neubofy.veto.commands.CameraCommand(ctx),
+            com.neubofy.veto.commands.VideoCommand(ctx),
+            com.neubofy.veto.commands.AudioCommand(ctx),
+            com.neubofy.veto.commands.RingCommand(ctx),
+            com.neubofy.veto.commands.DeleteCommand(ctx),
+            com.neubofy.veto.commands.LockCommand(ctx),
+            com.neubofy.veto.commands.FlashCommand(ctx),
+            com.neubofy.veto.commands.BluetoothCommand(ctx),
+            com.neubofy.veto.commands.GpsCommand(ctx),
+            com.neubofy.veto.commands.NoDisturbCommand(ctx),
+            com.neubofy.veto.commands.RingerModeCommand(ctx),
+            com.neubofy.veto.commands.StatsCommand(ctx),
+            com.neubofy.veto.commands.TheftCommand(ctx)
+        )
+
+        allCommands.forEach { cmd ->
+            val switch = com.google.android.material.materialswitch.MaterialSwitch(ctx).apply {
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                text = "${cmd.keyword.uppercase()} — ${ctx.getString(cmd.shortDescription)}"
+                textSize = 14f
+                isChecked = cmd.isEnabled()
+                setOnCheckedChangeListener { _, isChecked ->
+                    cmd.setEnabled(isChecked)
+                }
+            }
+            layoutSwitches.addView(switch)
+        }
 
         view.findViewById<MaterialCardView>(R.id.card_commands).setOnClickListener {
             startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.CommandsActivity::class.java))

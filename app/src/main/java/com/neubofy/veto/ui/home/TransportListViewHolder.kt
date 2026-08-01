@@ -47,6 +47,29 @@ class TransportListViewHolder(
         val permReqList = itemView.findViewById<LinearLayout>(R.id.permissions_required_list)
         setupPermissionsList(activity, permReqTitle, permReqList, item.requiredPermissions, true)
 
+        // Bind Master Switch
+        val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+        val transportKey = when (item) {
+            is com.neubofy.veto.transports.SmsTransport -> "sms"
+            is com.neubofy.veto.transports.NotificationReplyTransport -> "notification_reply"
+            is com.neubofy.veto.transports.NextJsServerTransport -> "cloud"
+            else -> "inapp"
+        }
+
+        val switchMaster = itemView.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switch_transport_master)
+        switchMaster.setOnCheckedChangeListener(null)
+        switchMaster.isChecked = encRepo.isTransportEnabled(transportKey)
+
+        switchMaster.setOnCheckedChangeListener { _, isChecked ->
+            encRepo.setTransportEnabled(transportKey, isChecked)
+            if (isChecked) {
+                val missing = item.missingRequiredPermissions(context)
+                if (missing.isNotEmpty()) {
+                    missing.firstOrNull()?.request(activity)
+                }
+            }
+        }
+
         setupActions(item)
     }
 

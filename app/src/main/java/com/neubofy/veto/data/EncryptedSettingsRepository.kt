@@ -127,4 +127,20 @@ class EncryptedSettingsRepository private constructor(context: Context) {
             sharedPrefs.edit().putString(KEY_LAST_UPLOADED_LOCATION_JSON, json).apply()
         }
     }
+
+    fun isTransportEnabled(transportKey: String): Boolean {
+        return sharedPrefs.getBoolean("KEY_TRANSPORT_ENABLED_${transportKey.uppercase()}", false)
+    }
+
+    fun setTransportEnabled(transportKey: String, enabled: Boolean) {
+        sharedPrefs.edit().putBoolean("KEY_TRANSPORT_ENABLED_${transportKey.uppercase()}", enabled).apply()
+    }
+
+    fun getAllowedNotificationPackages(): Set<String> {
+        return sharedPrefs.getStringSet("KEY_ALLOWED_NOTIFICATION_PACKAGES", emptySet()) ?: emptySet()
+    }
+
+    fun setAllowedNotificationPackages(packages: Set<String>) {
+        sharedPrefs.edit().putStringSet("KEY_ALLOWED_NOTIFICATION_PACKAGES", packages).apply()
+    }
 }

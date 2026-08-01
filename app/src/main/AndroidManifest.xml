@@ -78,6 +78,10 @@
             android:exported="false"
             android:label="@string/Settings_LCLDServer_AddAccount" />
         <activity
+            android:name=".ui.settings.MessagingAppPickerActivity"
+            android:exported="false"
+            android:label="Allowed Messaging Apps" />
+        <activity
             android:name=".ui.DummyCameraxActivity"
             android:excludeFromRecents="true"
             android:exported="false"

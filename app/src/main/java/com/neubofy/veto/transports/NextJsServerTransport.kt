@@ -25,11 +25,18 @@ class NextJsServerTransport(
     override fun getDestinationString(): String = "Next.js Dashboard"
 
     override fun isAllowed(parsed: ParserResult.Success): Boolean {
-        return true
+        val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+        return encRepo.isTransportEnabled("cloud")
     }
 
     override fun send(context: Context, msg: String, commandName: String?) {
         super.send(context, msg, commandName)
+
+        val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+        if (!encRepo.isTransportEnabled("cloud")) {
+            context.log().i("NextJsServerTransport", "Cloud transport disabled in app settings. Skipping upload.")
+            return
+        }
 
         val settings = SettingsRepository.getInstance(context)
         val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String

@@ -3,6 +3,7 @@
     <string name="app_name" translatable="false">Veto</string>
 
     <!-- Generic -->
+    <string name="transport_select_messaging_apps">Select Allowed Messaging Apps</string>
     <string name="Ok" translatable="false">@android:string/ok</string>
     <string name="loading">Loadingâ€¦</string>
     <string name="help">Help</string>
