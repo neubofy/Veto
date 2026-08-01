@@ -56,10 +56,20 @@ class BluetoothCommand(context: Context) : Command(context) {
             }
             transport.send(context, msg, keyword)
         } else if (args.contains("on")) {
-            bluetoothAdapter.enable()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                com.neubofy.veto.utils.SecureSettings.setBluetooth(context, true)
+                bluetoothAdapter.enable()
+            } else {
+                bluetoothAdapter.enable()
+            }
             transport.send(context, context.getString(R.string.cmd_bluetooth_response_on), keyword)
         } else if (args.contains("off")) {
-            bluetoothAdapter.disable()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                com.neubofy.veto.utils.SecureSettings.setBluetooth(context, false)
+                bluetoothAdapter.disable()
+            } else {
+                bluetoothAdapter.disable()
+            }
             transport.send(context, context.getString(R.string.cmd_bluetooth_response_off), keyword)
         }
     }

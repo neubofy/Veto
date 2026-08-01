@@ -52,6 +52,13 @@ object MediaSyncManager {
         commandName: String
     ) {
         val typeCapitalized = type.replaceFirstChar { it.uppercase() }
+        Notifications.notify(
+            context,
+            "Google Drive Backup",
+            "Uploading captured $type (${file.name}) to Google Drive...",
+            Notifications.CHANNEL_SERVER
+        )
+
         GoogleDriveUploader.uploadFile(
             context = context,
             file = file,
@@ -59,6 +66,12 @@ object MediaSyncManager {
             type = type,
             onSuccess = { link ->
                 context.log().i(TAG, "$typeCapitalized uploaded successfully to Drive: $link")
+                Notifications.notify(
+                    context,
+                    "Google Drive Backup Complete",
+                    "$typeCapitalized uploaded to Google Drive. Tap link to open: $link",
+                    Notifications.CHANNEL_SERVER
+                )
                 val transport = NextJsServerTransport(context)
                 transport.send(
                     context,
@@ -68,6 +81,12 @@ object MediaSyncManager {
             },
             onError = { error ->
                 context.log().e(TAG, "Failed to upload $type to Drive: $error")
+                Notifications.notify(
+                    context,
+                    "Google Drive Backup Failed",
+                    "Saved locally in ${file.name}. Upload error: $error",
+                    Notifications.CHANNEL_FAILED
+                )
                 val transport = NextJsServerTransport(context)
                 transport.send(
                     context,

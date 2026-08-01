@@ -15,6 +15,7 @@ fun globalAppPermissions() = listOf(
     NotificationAccessPermission(),
     OverlayPermission(),
     RecordAudioPermission(),
+    PhoneStatePermission(),
     StoragePermission(),
     SmsPermission(),
     WriteSecureSettingsPermission()

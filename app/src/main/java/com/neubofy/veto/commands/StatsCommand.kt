@@ -27,6 +27,8 @@ class StatsCommand(context: Context) : Command(context) {
 
     override val requiredPermissions = listOf(LocationPermission())
 
+    override val optionalPermissions = listOf(com.neubofy.veto.permissions.PhoneStatePermission())
+
     override suspend fun <T> executeInternal(
         args: List<String>,
         transport: Transport<T>,
@@ -44,14 +46,39 @@ class StatsCommand(context: Context) : Command(context) {
         val bm = context.getSystemService(Context.BATTERY_SERVICE) as android.os.BatteryManager
         val batteryPct = bm.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY)
 
-        // Telephony details (SIM/IMEI)
+        // Telephony details (SIM/IMEI & Number)
         var networkOperator = "Unknown"
-        
+        var simPhoneNumber = "Not available (Carrier blank / No perm)"
+
         val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as android.telephony.TelephonyManager
         try {
             networkOperator = tm.networkOperatorName ?: "Unknown"
         } catch (e: Exception) {
             // Ignore
+        }
+
+        val phonePerm = com.neubofy.veto.permissions.PhoneStatePermission()
+        if (phonePerm.isGranted(context)) {
+            try {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    val sm = context.getSystemService(android.telephony.SubscriptionManager::class.java)
+                    val activeList = sm?.activeSubscriptionInfoList
+                    if (!activeList.isNullOrEmpty()) {
+                        val num = sm.getPhoneNumber(activeList[0].subscriptionId)
+                        if (!num.isNullOrBlank()) {
+                            simPhoneNumber = num
+                        }
+                    }
+                } else {
+                    @Suppress("DEPRECATION", "MissingPermission")
+                    val line1 = tm.line1Number
+                    if (!line1.isNullOrBlank()) {
+                        simPhoneNumber = line1
+                    }
+                }
+            } catch (e: Exception) {
+                // Ignore
+            }
         }
 
         val deferred = CompletableDeferred<List<android.net.wifi.ScanResult>>()
@@ -73,6 +100,7 @@ class StatsCommand(context: Context) : Command(context) {
             OS: Android $androidVersion (SDK $sdkLevel)
             Battery: $batteryPct%
             SIM Network: $networkOperator
+            SIM Number: $simPhoneNumber
             IPs: $ipsString
             WiFi: ${wifisString.ifEmpty { "Unavailable/Timed out" }}
         """.trimIndent()

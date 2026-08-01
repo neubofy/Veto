@@ -634,7 +634,10 @@ export default function Home() {
         
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🎥</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Video Capture</h3>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>Video Capture</span>
+            <span style={{ fontSize: '0.7rem', backgroundColor: 'rgba(235, 163, 54, 0.2)', color: '#eba336', border: '1px solid rgba(235, 163, 54, 0.4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>BETA</span>
+          </h3>
           <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
             <button disabled={activeCmd === 'video front'} onClick={() => sendCommand('video front')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('video front') }}>Front</button>
             <button disabled={activeCmd === 'video back'} onClick={() => sendCommand('video back')} className="btn" style={{ flex: 1, ...getBtnStyle('video back') }}>Back</button>

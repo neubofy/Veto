@@ -272,7 +272,7 @@
     <string name="cmd_audio_description_short">Record stealth audio</string>
     <string name="cmd_audio_description_long">Records 30 seconds of audio from the microphone and uploads it directly to your Google Drive.</string>
 
-    <string name="cmd_video_description_short">Record stealth video</string>
+    <string name="cmd_video_description_short">[BETA] Record stealth video</string>
     <string name="cmd_video_description_long">Records 30 seconds of video from the front or back camera and uploads it directly to your Google Drive. Usage: video [front|back]</string>
 
     <string name="cmd_delete_description_short">Factory-reset the device</string>
@@ -337,6 +337,8 @@
     <string name="perm_location_name">Location</string>
     <string name="perm_notification_access_name">Notification access</string>
     <string name="perm_overlay_name">Display over other apps</string>
+    <string name="perm_phone_state_name">Phone &amp; SIM state</string>
+    <string name="perm_phone_state_desc">Allows Veto to read SIM card carrier details and phone number for stats reporting.</string>
     <string name="perm_post_notification_name">Post notifications</string>
     <string name="perm_sms_name">SMS</string>
     <string name="perm_unused_app_name">Unused app restrictions</string>
