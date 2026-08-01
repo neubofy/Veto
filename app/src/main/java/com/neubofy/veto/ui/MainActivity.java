@@ -21,7 +21,6 @@ import com.neubofy.veto.data.Settings;
 import com.neubofy.veto.data.SettingsRepository;
 import com.neubofy.veto.services.TempContactExpiredService;
 import com.neubofy.veto.ui.home.MainPageFragment;
-import com.neubofy.veto.ui.onboarding.UpdateboardingModernCryptoActivity;
 
 import com.neubofy.veto.ui.settings.AboutActivity;
 import com.neubofy.veto.utils.UpdateManager;
@@ -79,12 +78,6 @@ public class MainActivity extends VetoActivity {
                 com.neubofy.veto.utils.Notifications.CHANNEL_FAILED,
                 com.neubofy.veto.ui.settings.LogViewActivity.class
             );
-        }
-
-        if (!(Boolean) settings.get(Settings.SET_UPDATEBOARDING_MODERN_CRYPTO_COMPLETED)) {
-            startActivity(new Intent(this, UpdateboardingModernCryptoActivity.class));
-            finish();
-            return;
         }
 
         if (savedInstanceState == null) {

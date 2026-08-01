@@ -6,8 +6,6 @@ import android.service.notification.StatusBarNotification
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.data.UncaughtExceptionHandler.Companion.initUncaughtExceptionHandler
-import com.neubofy.veto.ui.onboarding.PinUpdate
-import com.neubofy.veto.ui.onboarding.UpdateboardingModernCryptoActivity
 import com.neubofy.veto.utils.Notifications
 import com.neubofy.veto.utils.log
 
