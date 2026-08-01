@@ -118,7 +118,7 @@ public class Settings extends HashMap<Integer, Object> {
                 case SET_Veto_CRYPT_PRIVKEY:
                 case SET_Veto_CRYPT_PUBKEY:
                 case SET_VetoSERVER_URL:
-                    return "";
+                    return "https://veto.neubofy.in";
                 case SET_VetoSERVER_PUSH_URL:
                     return "";
                 case SET_VetoSERVER_LAST_CMD_MILLIS:

@@ -102,8 +102,12 @@ class AccountActivity : VetoActivity() {
             }
         }
 
-        val currentUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
-        if (currentUrl.isNotEmpty()) etDashboardUrl.setText(currentUrl)
+        var currentUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
+        if (currentUrl.isEmpty()) {
+            currentUrl = "https://veto.neubofy.in"
+            settings.set(Settings.SET_VetoSERVER_URL, currentUrl)
+        }
+        etDashboardUrl.setText(currentUrl)
 
         // Google Sign In Setup
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
