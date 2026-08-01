@@ -38,6 +38,10 @@ export async function POST(req: Request) {
       let lon = 0;
       let mapsUrl = '';
       let accuracy = '';
+      let altitude = '';
+      let bearing = '';
+      let speed = '';
+      let provider = 'GPS';
       let battery = '';
 
       const mapsMatch = result.match(/https?:\/\/maps\.google\.com\/maps\?q=(-?\d+\.\d+),(-?\d+\.\d+)/);
@@ -50,18 +54,40 @@ export async function POST(req: Request) {
       const accMatch = result.match(/Accuracy:\s*([\d\.]+\s*m)/i);
       if (accMatch) accuracy = accMatch[1];
 
-      const battMatch = result.match(/Battery:\s*(\d+%)/i);
+      const altMatch = result.match(/Altitude:\s*([\d\.]+\s*m)/i);
+      if (altMatch) altitude = altMatch[1];
+
+      const bearMatch = result.match(/Bearing:\s*([\d\.]+)/i);
+      if (bearMatch) bearing = `${bearMatch[1]}°`;
+
+      const speedMatch = result.match(/Speed:\s*([^\n]+)/i);
+      if (speedMatch) speed = speedMatch[1];
+
+      const provMatch = result.match(/^([A-Za-z0-9_]+):/);
+      if (provMatch && provMatch[1] !== 'Lat' && provMatch[1] !== 'Lon' && provMatch[1] !== 'Time') {
+        provider = provMatch[1];
+      }
+
+      const battMatch = result.match(/Battery:\s*(\d+\s*%)/i);
       if (battMatch) battery = battMatch[1];
+
+      const sourceType = commandName === 'autoloc' ? 'Auto-Location Background (autoloc)' : 'Manual Request (locate)';
 
       const locRef = adminDb.collection('users').doc(userId).collection('locations');
       await locRef.add({
+        command: commandName,
+        sourceType,
         raw: result,
         timestamp: new Date().toISOString(),
         mapsUrl: mapsUrl || (lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}` : ''),
         lat,
         lon,
-        accuracy,
-        battery
+        accuracy: accuracy || 'N/A',
+        altitude: altitude || 'N/A',
+        bearing: bearing || 'N/A',
+        speed: speed || 'N/A',
+        provider: provider || 'GPS',
+        battery: battery || 'N/A'
       });
 
       // Keep only 5 most recent locations in Firestore

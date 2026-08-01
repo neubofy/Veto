@@ -39,6 +39,7 @@ class CommandsActivity : VetoActivity() {
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val name: TextView = view.findViewById(R.id.command_name)
             val keyword: TextView = view.findViewById(R.id.command_keyword)
+            val switchEnabled: com.google.android.material.materialswitch.MaterialSwitch = view.findViewById(R.id.switch_command_enabled)
             val testButton: Button = view.findViewById(R.id.button_test)
         }
 
@@ -52,6 +53,13 @@ class CommandsActivity : VetoActivity() {
             val cmd = commands[position]
             holder.name.text = cmd.keyword.replaceFirstChar { it.uppercase() }
             holder.keyword.text = "Keyword: ${cmd.keyword}"
+
+            holder.switchEnabled.setOnCheckedChangeListener(null)
+            holder.switchEnabled.isChecked = cmd.isEnabled()
+
+            holder.switchEnabled.setOnCheckedChangeListener { _, isChecked ->
+                cmd.setEnabled(isChecked)
+            }
 
             // Disable TEST for sensitive commands
             if (cmd.keyword == "delete" || cmd.keyword == "wipe") {

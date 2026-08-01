@@ -13,15 +13,28 @@
         android:paddingHorizontal="12dp"
         android:paddingVertical="@dimen/margin_small">
 
-        <TextView
-            android:id="@+id/usage"
-            style="@style/TextAppearance.Material3.TitleMedium"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:drawablePadding="10dp"
-            tools:drawableStartCompat="@drawable/ic_camera"
-            tools:text="camera [on | off]" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/margin_small">
+
+            <TextView
+                android:id="@+id/usage"
+                style="@style/TextAppearance.Material3.TitleMedium"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                tools:drawableStartCompat="@drawable/ic_camera"
+                tools:text="camera [on | off]" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_command_enabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/description_short"

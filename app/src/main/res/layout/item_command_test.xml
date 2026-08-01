@@ -37,6 +37,12 @@
                 tools:text="Keyword: locate" />
         </LinearLayout>
 
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switch_command_enabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp" />
+
         <Button
             android:id="@+id/button_test"
             style="?attr/materialButtonOutlinedStyle"

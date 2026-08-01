@@ -1,6 +1,6 @@
 package com.neubofy.veto.ui.settings
 
-import android.content.pm.ApplicationInfo
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.neubofy.veto.R
 import com.neubofy.veto.data.EncryptedSettingsRepository
+import com.neubofy.veto.ui.UiUtil.Companion.setupEdgeToEdgeAppBar
 import com.neubofy.veto.ui.VetoActivity
 
 data class AppItem(
     val appName: String,
     val packageName: String,
     val icon: Drawable,
+    val isMessagingApp: Boolean,
     var isSelected: Boolean
 )
 
@@ -32,26 +34,40 @@ class MessagingAppPickerActivity : VetoActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_messaging_app_picker)
 
+        setupEdgeToEdgeAppBar(findViewById(R.id.appBar))
+
         encRepo = EncryptedSettingsRepository.getInstance(this)
         val allowedPackages = encRepo.getAllowedNotificationPackages()
 
         val pm = packageManager
-        val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+        val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
+            addCategory(Intent.CATEGORY_LAUNCHER)
+        }
+        val launcherApps = pm.queryIntentActivities(mainIntent, 0)
+        val seenPackages = mutableSetOf<String>()
 
-        installedApps.forEach { appInfo ->
-            val isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-            val isUpdatedSystem = (appInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
-            
-            // Show non-system apps or common messaging apps
-            if (!isSystem || isUpdatedSystem || isMessagingPackage(appInfo.packageName)) {
-                val name = pm.getApplicationLabel(appInfo).toString()
-                val icon = pm.getApplicationIcon(appInfo)
-                val isSelected = allowedPackages.contains(appInfo.packageName)
-                appList.add(AppItem(name, appInfo.packageName, icon, isSelected))
+        launcherApps.forEach { resolveInfo ->
+            val pkgName = resolveInfo.activityInfo.packageName
+            if (!seenPackages.contains(pkgName)) {
+                seenPackages.add(pkgName)
+                val appName = resolveInfo.loadLabel(pm).toString()
+                val icon = resolveInfo.loadIcon(pm)
+                val isMsg = isMessagingPackage(pkgName)
+                val isSelected = allowedPackages.contains(pkgName)
+                appList.add(AppItem(appName, pkgName, icon, isMsg, isSelected))
             }
         }
 
-        appList.sortBy { it.appName }
+        // Prioritize Messaging apps at the top, then sort alphabetically
+        appList.sortWith(Comparator { a, b ->
+            if (a.isMessagingApp && !b.isMessagingApp) {
+                -1
+            } else if (!a.isMessagingApp && b.isMessagingApp) {
+                1
+            } else {
+                a.appName.compareTo(b.appName, ignoreCase = true)
+            }
+        })
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_apps)
         adapter = MessagingAppAdapter(appList) { updatedItem ->
@@ -69,8 +85,11 @@ class MessagingAppPickerActivity : VetoActivity() {
     private fun isMessagingPackage(pkg: String): Boolean {
         val lower = pkg.lowercase()
         return lower.contains("whatsapp") || lower.contains("telegram") || lower.contains("signal") ||
-                lower.contains("message") || lower.contains("sms") || lower.contains("chat") ||
-                lower.contains("messenger") || lower.contains("discord") || lower.contains("viber")
+                lower.contains("message") || lower.contains("sms") || lower.contains("mms") ||
+                lower.contains("chat") || lower.contains("messenger") || lower.contains("discord") ||
+                lower.contains("viber") || lower.contains("instagram") || lower.contains("skype") ||
+                lower.contains("slack") || lower.contains("teams") || lower.contains("line") ||
+                lower.contains("wechat") || lower.contains("snapchat")
     }
 
     inner class MessagingAppAdapter(
@@ -82,6 +101,7 @@ class MessagingAppPickerActivity : VetoActivity() {
             val imgIcon: ImageView = view.findViewById(R.id.imgAppIcon)
             val tvName: TextView = view.findViewById(R.id.tvAppName)
             val tvPackage: TextView = view.findViewById(R.id.tvPackageName)
+            val tvBadge: TextView = view.findViewById(R.id.tvBadge)
             val cbSelected: MaterialCheckBox = view.findViewById(R.id.cbAppSelected)
         }
 
@@ -95,6 +115,13 @@ class MessagingAppPickerActivity : VetoActivity() {
             holder.tvName.text = item.appName
             holder.tvPackage.text = item.packageName
             holder.imgIcon.setImageDrawable(item.icon)
+            
+            if (item.isMessagingApp) {
+                holder.tvBadge.visibility = View.VISIBLE
+            } else {
+                holder.tvBadge.visibility = View.GONE
+            }
+
             holder.cbSelected.setOnCheckedChangeListener(null)
             holder.cbSelected.isChecked = item.isSelected
 

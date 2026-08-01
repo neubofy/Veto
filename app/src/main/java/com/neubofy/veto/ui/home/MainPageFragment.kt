@@ -90,44 +90,6 @@ class MainPageFragment : TaggedFragment() {
 
         tvDeviceDetails.text = "📱 Model: $model (Android $osVersion)\n🔋 Battery: $batteryStr\n🔷 Bluetooth: $btStr\n🌙 DND Mode: $dndStr\n🔊 Sound Mode: $soundStr\n🔦 Flashlight: $flashStr"
 
-        // Dynamic Command Switches List
-        val layoutSwitches = view.findViewById<android.widget.LinearLayout>(R.id.layout_command_switches)
-        layoutSwitches.removeAllViews()
-
-        val allCommands = listOf(
-            com.neubofy.veto.commands.LocateCommand(ctx),
-            com.neubofy.veto.commands.AutoLocCommand(ctx),
-            com.neubofy.veto.commands.CameraCommand(ctx),
-            com.neubofy.veto.commands.VideoCommand(ctx),
-            com.neubofy.veto.commands.AudioCommand(ctx),
-            com.neubofy.veto.commands.RingCommand(ctx),
-            com.neubofy.veto.commands.DeleteCommand(ctx),
-            com.neubofy.veto.commands.LockCommand(ctx),
-            com.neubofy.veto.commands.FlashCommand(ctx),
-            com.neubofy.veto.commands.BluetoothCommand(ctx),
-            com.neubofy.veto.commands.GpsCommand(ctx),
-            com.neubofy.veto.commands.NoDisturbCommand(ctx),
-            com.neubofy.veto.commands.RingerModeCommand(ctx),
-            com.neubofy.veto.commands.StatsCommand(ctx),
-            com.neubofy.veto.commands.TheftCommand(ctx)
-        )
-
-        allCommands.forEach { cmd ->
-            val switch = com.google.android.material.materialswitch.MaterialSwitch(ctx).apply {
-                layoutParams = android.widget.LinearLayout.LayoutParams(
-                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                text = "${cmd.keyword.uppercase()} — ${ctx.getString(cmd.shortDescription)}"
-                textSize = 14f
-                isChecked = cmd.isEnabled()
-                setOnCheckedChangeListener { _, isChecked ->
-                    cmd.setEnabled(isChecked)
-                }
-            }
-            layoutSwitches.addView(switch)
-        }
-
         view.findViewById<MaterialCardView>(R.id.card_commands).setOnClickListener {
             startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.CommandsActivity::class.java))
         }
