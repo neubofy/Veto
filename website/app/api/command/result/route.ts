@@ -26,14 +26,23 @@ export async function POST(req: Request) {
 
     const commandName = command || 'unknown';
 
-    // Save the command result into a command-specific document
-    await adminDb.collection('users').doc(userId).collection('results').doc(commandName).set({
-      result: result,
-      timestamp: new Date().toISOString()
-    }, { merge: true });
+    // Save command results into results subcollection EXCEPT for background autoloc tracking
+    if (commandName !== 'autoloc') {
+      // Don't overwrite a complete location result with an intermediate "GPS location search initiated" progress message
+      const isProgressMessage = result.includes('GPS location search initiated') || result.includes('will follow');
+      const existingLocateDoc = await adminDb.collection('users').doc(userId).collection('results').doc(commandName).get();
+      const hasExistingResult = existingLocateDoc.exists && existingLocateDoc.data()?.result?.includes('maps.google.com');
 
-    // If result contains location info, save to locations subcollection and prune to 5 max
-    if (commandName === 'locate' || commandName === 'autoloc' || result.includes('maps.google.com') || result.includes('Lat:') || result.includes('lat:')) {
+      if (!isProgressMessage || !hasExistingResult) {
+        await adminDb.collection('users').doc(userId).collection('results').doc(commandName).set({
+          result: result,
+          timestamp: new Date().toISOString()
+        }, { merge: true });
+      }
+    }
+
+    // Save background autoloc tracking to locations subcollection (up to 5 items)
+    if (commandName === 'autoloc' || (commandName === 'locate' && (result.includes('maps.google.com') || result.includes('Lat:') || result.includes('lat:')))) {
       let lat = 0;
       let lon = 0;
       let mapsUrl = '';
@@ -91,32 +100,33 @@ export async function POST(req: Request) {
       const battMatch = result.match(/Battery:\s*(\d+\s*%)/i);
       if (battMatch) battery = battMatch[1];
 
-      const sourceType = commandName === 'autoloc' ? 'Auto-Location Background (autoloc)' : 'Manual Request (locate)';
+      // Only add to locations subcollection if we have valid coordinates or if autoloc
+      if ((lat && lon) || commandName === 'autoloc') {
+        const locRef = adminDb.collection('users').doc(userId).collection('locations');
+        await locRef.add({
+          command: commandName,
+          sourceType: commandName === 'autoloc' ? 'Auto-Location Background (autoloc)' : 'Manual Request (locate)',
+          raw: result,
+          timestamp: new Date().toISOString(),
+          mapsUrl: mapsUrl || (lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}` : ''),
+          lat,
+          lon,
+          accuracy: accuracy || 'N/A',
+          altitude: altitude || 'N/A',
+          bearing: bearing || 'N/A',
+          speed: speed || 'N/A',
+          provider: provider || 'GPS',
+          battery: battery || 'N/A'
+        });
 
-      const locRef = adminDb.collection('users').doc(userId).collection('locations');
-      await locRef.add({
-        command: commandName,
-        sourceType,
-        raw: result,
-        timestamp: new Date().toISOString(),
-        mapsUrl: mapsUrl || (lat && lon ? `https://maps.google.com/maps?q=${lat},${lon}` : ''),
-        lat,
-        lon,
-        accuracy: accuracy || 'N/A',
-        altitude: altitude || 'N/A',
-        bearing: bearing || 'N/A',
-        speed: speed || 'N/A',
-        provider: provider || 'GPS',
-        battery: battery || 'N/A'
-      });
-
-      // Keep only 5 most recent locations in Firestore
-      const locsSnap = await locRef.orderBy('timestamp', 'desc').get();
-      if (locsSnap.docs.length > 5) {
-        const docsToDelete = locsSnap.docs.slice(5);
-        const batch = adminDb.batch();
-        docsToDelete.forEach((doc: any) => batch.delete(doc.ref));
-        await batch.commit();
+        // Keep only 5 most recent locations in Firestore
+        const locsSnap = await locRef.orderBy('timestamp', 'desc').get();
+        if (locsSnap.docs.length > 5) {
+          const docsToDelete = locsSnap.docs.slice(5);
+          const batch = adminDb.batch();
+          docsToDelete.forEach((doc: any) => batch.delete(doc.ref));
+          await batch.commit();
+        }
       }
     }
 

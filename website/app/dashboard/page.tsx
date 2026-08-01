@@ -572,102 +572,101 @@ export default function Home() {
 
 
       {/* Location History Google Maps Card */}
-      <section className="glass-panel" style={{ padding: '1.5rem', marginBottom: '3rem', borderRadius: '16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
-          <div>
-            <h2 style={{ fontSize: '1.5rem', margin: 0 }}>🗺️ Location History &amp; GPS Telemetry (Last 5)</h2>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-              Separated record of manual <strong>locate</strong> commands and background <strong>autoloc</strong> tracking.
-            </p>
-          </div>
-          {locations.length > 0 && (
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {locations.map((loc, idx) => {
-                const isAuto = loc.command === 'autoloc' || (loc.sourceType && loc.sourceType.includes('autoloc'));
-                const badge = isAuto ? '🔄 Auto' : '📍 Manual';
-                const isSelected = selectedLocIndex === idx;
+      <section className="glass-panel" style={{ padding: '1.25rem', marginBottom: '3rem', borderRadius: '16px' }}>
+        {(() => {
+          const autoLocs = locations.filter(loc => loc.command === 'autoloc' || (loc.sourceType && loc.sourceType.includes('autoloc')));
 
-                return (
-                  <button
-                    key={loc.id || idx}
-                    onClick={() => setSelectedLocIndex(idx)}
-                    className="btn"
-                    style={{
-                      padding: '6px 14px',
-                      fontSize: '0.85rem',
-                      fontWeight: '600',
-                      backgroundColor: isSelected ? '#238636' : 'var(--border-light)',
-                      color: isSelected ? '#fff' : 'var(--text-primary)',
-                      border: isSelected ? '1px solid #2ea043' : '1px solid var(--glass-border)',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px'
-                    }}
-                  >
-                    <span>{badge}</span>
-                    <span>Loc #{idx + 1} {idx === 0 ? '(Latest)' : ''}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {locations.length === 0 ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-secondary)', backgroundColor: 'var(--border-light)', borderRadius: '12px' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📍</div>
-            No recorded locations found in database.<br />
-            Run the <strong>Locate Device</strong> command or enable <strong>autoloc</strong> in app settings.
-          </div>
-        ) : (
-          (() => {
-            const activeLoc = locations[selectedLocIndex] || locations[0];
-            const lat = activeLoc.lat || 0;
-            const lon = activeLoc.lon || 0;
-            const mapsUrl = activeLoc.mapsUrl || `https://maps.google.com/maps?q=${lat},${lon}`;
-            const embedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
-            const isAuto = activeLoc.command === 'autoloc' || (activeLoc.sourceType && activeLoc.sourceType.includes('autoloc'));
-            const sourceTypeLabel = isAuto ? '🔄 Auto-Location Background Track (autoloc)' : '📍 Manual Command Request (locate)';
-
-            return (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-                <div style={{ width: '100%', height: '350px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
-                  {lat && lon ? (
-                    <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={embedUrl} style={{ border: 'none' }}></iframe>
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--border-light)' }}>
-                      Coordinates Unavailable
-                    </div>
-                  )}
+          return (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <h2 style={{ fontSize: '1.35rem', margin: 0 }}>🔄 AutoLoc Background History (Last 5)</h2>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                    Automatic periodic background GPS tracking records sent by device.
+                  </p>
                 </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1rem' }}>
-                  <div style={{ backgroundColor: 'var(--border-light)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: isAuto ? '#a5d6ff' : '#7ee787', paddingBottom: '6px', borderBottom: '1px solid var(--glass-border)' }}>
-                      {sourceTypeLabel}
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '0.9rem' }}>
-                      <div><strong>🕒 Time:</strong><br />{activeLoc.timestamp ? new Date(activeLoc.timestamp).toLocaleTimeString() : 'N/A'}</div>
-                      <div><strong>📡 Provider:</strong><br />{activeLoc.provider || 'GPS'}</div>
-                      <div><strong>📍 Latitude:</strong><br />{lat || 'N/A'}</div>
-                      <div><strong>📍 Longitude:</strong><br />{lon || 'N/A'}</div>
-                      <div><strong>🎯 Accuracy:</strong><br />{activeLoc.accuracy || 'N/A'}</div>
-                      <div><strong>🔋 Battery:</strong><br />{activeLoc.battery || 'N/A'}</div>
-                      <div><strong>🏔️ Altitude:</strong><br />{activeLoc.altitude || 'N/A'}</div>
-                      <div><strong>🧭 Speed / Bearing:</strong><br />{activeLoc.speed || 'N/A'} {activeLoc.bearing || ''}</div>
-                    </div>
+                {autoLocs.length > 0 && (
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    {autoLocs.map((loc, idx) => {
+                      const isSelected = selectedLocIndex === idx;
+                      return (
+                        <button
+                          key={loc.id || idx}
+                          onClick={() => setSelectedLocIndex(idx)}
+                          className="btn"
+                          style={{
+                            padding: '6px 10px',
+                            fontSize: '0.8rem',
+                            fontWeight: '600',
+                            backgroundColor: isSelected ? '#238636' : 'var(--border-light)',
+                            color: isSelected ? '#fff' : 'var(--text-primary)',
+                            border: isSelected ? '1px solid #2ea043' : '1px solid var(--glass-border)',
+                            borderRadius: '8px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Loc #{idx + 1} {idx === 0 ? '(Latest)' : ''}
+                        </button>
+                      );
+                    })}
                   </div>
-
-                  <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', padding: '0.85rem', fontSize: '1rem', fontWeight: '600' }}>
-                    🗺️ Open Location #{selectedLocIndex + 1} in Google Maps
-                  </a>
-                </div>
+                )}
               </div>
-            );
-          })()
-        )}
+
+              {autoLocs.length === 0 ? (
+                <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'var(--text-secondary)', backgroundColor: 'var(--border-light)', borderRadius: '12px', fontSize: '0.9rem' }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📍</div>
+                  No background <strong>autoloc</strong> location tracks recorded yet.<br />
+                  Enable <strong>AutoLoc Background Tracking</strong> in app settings or using the toggle below.
+                </div>
+              ) : (
+                (() => {
+                  const activeLoc = autoLocs[selectedLocIndex] || autoLocs[0];
+                  const lat = activeLoc.lat || 0;
+                  const lon = activeLoc.lon || 0;
+                  const mapsUrl = activeLoc.mapsUrl || `https://maps.google.com/maps?q=${lat},${lon}`;
+                  const embedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
+                  return (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+                      <div style={{ width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 16px rgba(0,0,0,0.15)' }}>
+                        {lat && lon ? (
+                          <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={embedUrl} style={{ border: 'none' }}></iframe>
+                        ) : (
+                          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--border-light)', fontSize: '0.9rem' }}>
+                            Coordinates Unavailable
+                          </div>
+                        )}
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1rem' }}>
+                        <div style={{ backgroundColor: 'var(--border-light)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#a5d6ff', paddingBottom: '4px', borderBottom: '1px solid var(--glass-border)' }}>
+                            🔄 AutoLoc Background Track #{selectedLocIndex + 1}
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', fontSize: '0.85rem' }}>
+                            <div><strong>🕒 Time:</strong><br />{activeLoc.timestamp ? new Date(activeLoc.timestamp).toLocaleTimeString() : 'N/A'}</div>
+                            <div><strong>📡 Provider:</strong><br />{activeLoc.provider || 'GPS'}</div>
+                            <div><strong>📍 Latitude:</strong><br />{lat || 'N/A'}</div>
+                            <div><strong>📍 Longitude:</strong><br />{lon || 'N/A'}</div>
+                            <div><strong>🎯 Accuracy:</strong><br />{activeLoc.accuracy || 'N/A'}</div>
+                            <div><strong>🔋 Battery:</strong><br />{activeLoc.battery || 'N/A'}</div>
+                            <div><strong>🏔️ Altitude:</strong><br />{activeLoc.altitude || 'N/A'}</div>
+                            <div><strong>🧭 Speed / Bearing:</strong><br />{activeLoc.speed || 'N/A'} {activeLoc.bearing || ''}</div>
+                          </div>
+                        </div>
+
+                        <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', padding: '0.75rem', fontSize: '0.9rem', fontWeight: '600' }}>
+                          🗺️ Open Location #{selectedLocIndex + 1} in Google Maps
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })()
+              )}
+            </>
+          );
+        })()}
       </section>
 
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Core Commands</h2>

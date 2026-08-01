@@ -113,29 +113,38 @@ class NextJsServerTransport(
         val settings = SettingsRepository.getInstance(context)
         settings.storeRecentLocation(location)
 
-        val lastUploaded = settings.getLastUploadedLocation()
+        val isAutoLoc = commandName == "autoloc"
         var shouldUpload = false
 
-        if (lastUploaded == null) {
+        if (!isAutoLoc) {
+            // Manual locate command: ALWAYS upload immediately!
             shouldUpload = true
         } else {
-            val results = FloatArray(1)
-            android.location.Location.distanceBetween(
-                lastUploaded.lat, lastUploaded.lon,
-                location.lat, location.lon,
-                results
-            )
-            val distanceMeters = results[0]
-            if (distanceMeters > 100f) {
+            // Background autoloc tracking: upload if first time or movement > 100m
+            val lastUploaded = settings.getLastUploadedLocation()
+            if (lastUploaded == null) {
                 shouldUpload = true
-                context.log().i("NextJsServerTransport", "Location distance $distanceMeters m > 100m. Uploading to Dashboard.")
             } else {
-                context.log().i("NextJsServerTransport", "Location distance $distanceMeters m <= 100m. Cached locally only, skipping server upload.")
+                val results = FloatArray(1)
+                android.location.Location.distanceBetween(
+                    lastUploaded.lat, lastUploaded.lon,
+                    location.lat, location.lon,
+                    results
+                )
+                val distanceMeters = results[0]
+                if (distanceMeters > 100f) {
+                    shouldUpload = true
+                    context.log().i("NextJsServerTransport", "AutoLoc distance $distanceMeters m > 100m. Uploading to Dashboard.")
+                } else {
+                    context.log().i("NextJsServerTransport", "AutoLoc distance $distanceMeters m <= 100m. Skipping periodic upload.")
+                }
             }
         }
 
         if (shouldUpload) {
-            settings.setLastUploadedLocation(location)
+            if (isAutoLoc) {
+                settings.setLastUploadedLocation(location)
+            }
             super.sendNewLocation(context, location, commandName)
         }
     }
