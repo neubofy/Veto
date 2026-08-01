@@ -36,12 +36,6 @@ class NextJsServerTransport(
     override fun send(context: Context, msg: String, commandName: String?) {
         super.send(context, msg, commandName)
 
-        val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
-        if (!encRepo.isTransportEnabled("cloud")) {
-            context.log().i("NextJsServerTransport", "Cloud transport disabled in app settings. Skipping upload.")
-            return
-        }
-
         val settings = SettingsRepository.getInstance(context)
         val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
         val userId = settings.get(Settings.SET_VetoSERVER_ID) as String
@@ -104,7 +98,11 @@ class NextJsServerTransport(
 
     override fun sendNewLocation(context: Context, location: com.neubofy.veto.data.VetoLocation, commandName: String?) {
         val settings = SettingsRepository.getInstance(context)
-        settings.storeRecentLocation(location)
+
+        // Only store to autoloc recent cache when this IS autoloc — don't pollute with locate data
+        if (commandName == "autoloc") {
+            settings.storeRecentLocation(location)
+        }
 
         val isAutoLoc = commandName == "autoloc"
         var shouldUpload = false

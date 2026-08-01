@@ -58,12 +58,16 @@ class AutoLocCommand(context: Context) : Command(context) {
                     ExistingPeriodicWorkPolicy.UPDATE,
                     periodicWork
                 )
-                transport.send(context, "Background auto-location started (Interval: $intervalMinutes mins)", keyword)
+                if (transport !is com.neubofy.veto.transports.NextJsServerTransport) {
+                    transport.send(context, "Background auto-location started (Interval: $intervalMinutes mins)", keyword)
+                }
             }
 
             "off" -> {
                 workManager.cancelUniqueWork(WORK_NAME)
-                transport.send(context, "Background auto-location stopped.", keyword)
+                if (transport !is com.neubofy.veto.transports.NextJsServerTransport) {
+                    transport.send(context, "Background auto-location stopped.", keyword)
+                }
             }
 
             "run" -> {

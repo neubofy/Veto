@@ -11,17 +11,8 @@ object MediaStorageManager {
     private const val ROOT_DIR_NAME = "Veto"
 
     fun getRootMediaDir(context: Context): File {
-        val baseDir = try {
-            val externalPublic = File(Environment.getExternalStorageDirectory(), ROOT_DIR_NAME)
-            if (!externalPublic.exists()) {
-                externalPublic.mkdirs()
-            }
-            if (externalPublic.canWrite()) externalPublic else context.getExternalFilesDir(null) ?: context.filesDir
-        } catch (e: Exception) {
-            context.getExternalFilesDir(null) ?: context.filesDir
-        }
-
-        val rootDir = File(baseDir, if (baseDir.name == ROOT_DIR_NAME) "" else ROOT_DIR_NAME)
+        val baseDir = context.cacheDir
+        val rootDir = File(baseDir, ROOT_DIR_NAME)
         if (!rootDir.exists()) {
             rootDir.mkdirs()
         }
@@ -30,9 +21,6 @@ object MediaStorageManager {
         File(rootDir, "Photos").mkdirs()
         File(rootDir, "Videos").mkdirs()
         File(rootDir, "Audio").mkdirs()
-
-        // Ensure .nomedia setting is applied
-        updateNoMediaStatus(context, rootDir)
 
         return rootDir
     }
@@ -56,25 +44,7 @@ object MediaStorageManager {
     }
 
     fun updateNoMediaStatus(context: Context, rootDir: File = getRootMediaDir(context)) {
-        try {
-            val settings = SettingsRepository.getInstance(context)
-            val hideMedia = settings.get(Settings.SET_HIDE_MEDIA_IN_GALLERY) as Boolean
-            val noMediaFile = File(rootDir, ".nomedia")
-
-            if (hideMedia) {
-                if (!noMediaFile.exists()) {
-                    noMediaFile.createNewFile()
-                    context.log().i(TAG, "Created .nomedia file in ${rootDir.absolutePath}")
-                }
-            } else {
-                if (noMediaFile.exists()) {
-                    noMediaFile.delete()
-                    context.log().i(TAG, "Deleted .nomedia file from ${rootDir.absolutePath}")
-                }
-            }
-        } catch (e: Exception) {
-            context.log().e(TAG, "Error updating .nomedia status: ${e.message}")
-        }
+        // Obsolete: cacheDir is already private and ignored by gallery scanners.
     }
 
     fun verifyPreconditions(context: Context, type: String): String? {

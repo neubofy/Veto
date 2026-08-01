@@ -150,6 +150,16 @@ object GoogleDriveUploader {
                     }
             } catch (e: Exception) {
                 onError("Upload exception: ${e.message}")
+            } finally {
+                // ALWAYS clean up the temporary cache file when the worker finishes!
+                if (file.exists()) {
+                    try {
+                        file.delete()
+                        context.log().i(TAG, "Cleaned up temporary file: ${file.name}")
+                    } catch (e: Exception) {
+                        context.log().e(TAG, "Failed to clean up file: ${file.name}")
+                    }
+                }
             }
         }.start()
     }

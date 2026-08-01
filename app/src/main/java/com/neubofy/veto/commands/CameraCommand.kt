@@ -12,7 +12,6 @@ import com.neubofy.veto.ui.DummyCameraxActivity
 import com.neubofy.veto.utils.log
 
 
-import com.neubofy.veto.permissions.StoragePermission
 
 class CameraCommand(context: Context) : Command(context) {
     companion object {
@@ -30,7 +29,7 @@ class CameraCommand(context: Context) : Command(context) {
 
     override val longDescription = R.string.cmd_camera_description_long
 
-    override val requiredPermissions = listOf(CameraPermission(), StoragePermission())
+    override val requiredPermissions = listOf(CameraPermission())
 
     override suspend fun <T> executeInternal(
         args: List<String>,

@@ -117,7 +117,7 @@ class GpsLocationProvider<T>(
             Looper.getMainLooper(),
         )
 
-        if (commandName != "autoloc") {
+        if (commandName != "autoloc" && transport !is com.neubofy.veto.transports.NextJsServerTransport) {
             transport.send(context, context.getString(R.string.cmd_locate_response_gps_will_follow), commandName)
         }
         return def

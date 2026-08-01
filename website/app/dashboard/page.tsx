@@ -207,8 +207,20 @@ export default function Home() {
     return {};
   };
 
-  const renderTelemetryContent = (payload: any) => {
-    if (!payload) return null;
+  const renderTelemetryContent = (rawPayload: any) => {
+    if (!rawPayload) return null;
+
+    // Unwrap double-wrapped payloads: { type: 'text', content: '{"type":"location",...}' }
+    let payload = rawPayload;
+    if (typeof payload === 'object' && payload.type === 'text' && typeof payload.content === 'string') {
+      try {
+        const parsed = JSON.parse(payload.content);
+        payload = parsed;
+      } catch {
+        // Not JSON inside, use the raw text content
+        payload = payload.content;
+      }
+    }
 
     // Structured JSON Payload
     if (typeof payload === 'object') {

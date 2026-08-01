@@ -26,9 +26,18 @@ export async function POST(req: Request) {
 
     const commandName = command || 'unknown';
 
-    // Check for spam messages that we want to drop (e.g. from older app versions if they haven't updated yet)
-    if (typeof result === 'string' && (result.includes('GPS location search initiated') || result.includes('will follow'))) {
-      return NextResponse.json({ success: true, dropped: true });
+    // Server-side safety net: drop status/acknowledgment messages that aren't real data
+    // The app should already filter these, but older versions may still send them
+    if (typeof result === 'string') {
+      const lower = result.toLowerCase();
+      const isSpam = [
+        'will follow', 'search initiated', 'gps location',
+        'auto-location started', 'auto-location stopped',
+        'usage:', 'invalid action',
+      ].some(pattern => lower.includes(pattern));
+      if (isSpam) {
+        return NextResponse.json({ success: true, dropped: true });
+      }
     }
 
     // Save ALL results into a unified command_history collection

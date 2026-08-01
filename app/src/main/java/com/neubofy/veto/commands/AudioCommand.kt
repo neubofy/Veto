@@ -12,7 +12,6 @@ import com.neubofy.veto.utils.log
 import java.io.File
 import java.io.IOException
 
-import com.neubofy.veto.permissions.StoragePermission
 
 class AudioCommand(context: Context) : Command(context) {
     companion object {
@@ -30,7 +29,7 @@ class AudioCommand(context: Context) : Command(context) {
 
     override val longDescription = R.string.cmd_audio_description_long
 
-    override val requiredPermissions = listOf(RecordAudioPermission(), StoragePermission())
+    override val requiredPermissions = listOf(RecordAudioPermission())
 
     override suspend fun <T> executeInternal(args: List<String>, transport: Transport<T>) {
         val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "audio")

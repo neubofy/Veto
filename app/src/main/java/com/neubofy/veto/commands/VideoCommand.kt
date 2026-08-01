@@ -11,7 +11,7 @@ import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.ui.DummyCameraxActivity
 import com.neubofy.veto.utils.log
 
-import com.neubofy.veto.permissions.StoragePermission
+
 
 class VideoCommand(context: Context) : Command(context) {
     override val keyword = "video"
@@ -25,7 +25,7 @@ class VideoCommand(context: Context) : Command(context) {
 
     override val longDescription = R.string.cmd_video_description_long
 
-    override val requiredPermissions = listOf(CameraPermission(), RecordAudioPermission(), StoragePermission())
+    override val requiredPermissions = listOf(CameraPermission(), RecordAudioPermission())
 
     override suspend fun <T> executeInternal(
         args: List<String>,
