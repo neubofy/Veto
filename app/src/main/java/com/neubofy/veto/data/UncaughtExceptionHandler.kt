@@ -25,11 +25,14 @@ class UncaughtExceptionHandler(
         // Log the crash
         context.log().e(TAG, createNiceCrashLog(e))
 
-        // Set the flag so that when the user launches the app again, the crash details are shown
+        // Record crash to Firebase Crashlytics
+        try {
+            com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance().recordException(e)
+        } catch (_: Exception) {}
+
+        // Set the flag so that when the user launches the app again, the crash details are handled cleanly
         val repo = SettingsRepository.getInstance(context)
         repo.set(Settings.SET_APP_CRASHED_LOG_ENTRY, 1)
-
-        // Don't show the CrashedActivity now (it often fails)
     }
 
     private fun createNiceCrashLog(e: Throwable): String {

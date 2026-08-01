@@ -9,6 +9,7 @@ import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.utils.NetworkUtils
 import com.neubofy.veto.utils.WifiScan
 import com.neubofy.veto.utils.getSsidCompat
+import com.neubofy.veto.utils.log
 import kotlinx.coroutines.CompletableDeferred
 
 
@@ -60,16 +61,27 @@ class StatsCommand(context: Context) : Command(context) {
         val phonePerm = com.neubofy.veto.permissions.PhoneStatePermission()
         if (phonePerm.isGranted(context)) {
             try {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    val sm = context.getSystemService(android.telephony.SubscriptionManager::class.java)
-                    val activeList = sm?.activeSubscriptionInfoList
-                    if (!activeList.isNullOrEmpty()) {
-                        val num = sm.getPhoneNumber(activeList[0].subscriptionId)
-                        if (!num.isNullOrBlank()) {
-                            simPhoneNumber = num
+                val sm = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as? android.telephony.SubscriptionManager
+                @Suppress("MissingPermission")
+                val activeList = sm?.activeSubscriptionInfoList
+                if (!activeList.isNullOrEmpty()) {
+                    for (info in activeList) {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                            val num = sm.getPhoneNumber(info.subscriptionId)
+                            if (!num.isNullOrBlank()) {
+                                simPhoneNumber = num
+                                break
+                            }
+                        }
+                        @Suppress("DEPRECATION")
+                        val subNum = info.number
+                        if (!subNum.isNullOrBlank()) {
+                            simPhoneNumber = subNum
+                            break
                         }
                     }
-                } else {
+                }
+                if (simPhoneNumber.startsWith("Not available")) {
                     @Suppress("DEPRECATION", "MissingPermission")
                     val line1 = tm.line1Number
                     if (!line1.isNullOrBlank()) {
@@ -77,7 +89,7 @@ class StatsCommand(context: Context) : Command(context) {
                     }
                 }
             } catch (e: Exception) {
-                // Ignore
+                context.log().e("StatsCommand", "Error reading SIM phone number: ${e.message}")
             }
         }
 
