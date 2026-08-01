@@ -40,18 +40,33 @@ class MessagingAppPickerActivity : VetoActivity() {
         val allowedPackages = encRepo.getAllowedNotificationPackages()
 
         val pm = packageManager
+        val seenPackages = mutableSetOf<String>()
+
+        // Method 1: Query Launcher Intent Activities
         val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
         }
         val launcherApps = pm.queryIntentActivities(mainIntent, 0)
-        val seenPackages = mutableSetOf<String>()
-
         launcherApps.forEach { resolveInfo ->
             val pkgName = resolveInfo.activityInfo.packageName
             if (!seenPackages.contains(pkgName)) {
                 seenPackages.add(pkgName)
                 val appName = resolveInfo.loadLabel(pm).toString()
                 val icon = resolveInfo.loadIcon(pm)
+                val isMsg = isMessagingPackage(pkgName)
+                val isSelected = allowedPackages.contains(pkgName)
+                appList.add(AppItem(appName, pkgName, icon, isMsg, isSelected))
+            }
+        }
+
+        // Method 2: Query Installed Applications fallback for non-launcher apps
+        val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+        installedApps.forEach { appInfo ->
+            val pkgName = appInfo.packageName
+            if (!seenPackages.contains(pkgName) && !isSystemInternalPackage(pkgName)) {
+                seenPackages.add(pkgName)
+                val appName = pm.getApplicationLabel(appInfo).toString()
+                val icon = pm.getApplicationIcon(appInfo)
                 val isMsg = isMessagingPackage(pkgName)
                 val isSelected = allowedPackages.contains(pkgName)
                 appList.add(AppItem(appName, pkgName, icon, isMsg, isSelected))
@@ -82,14 +97,20 @@ class MessagingAppPickerActivity : VetoActivity() {
         recyclerView.adapter = adapter
     }
 
+    private fun isSystemInternalPackage(pkg: String): Boolean {
+        val lower = pkg.lowercase()
+        return lower == "android" || lower.startsWith("com.android.systemui") || lower.startsWith("com.android.providers")
+    }
+
     private fun isMessagingPackage(pkg: String): Boolean {
         val lower = pkg.lowercase()
-        return lower.contains("whatsapp") || lower.contains("telegram") || lower.contains("signal") ||
-                lower.contains("message") || lower.contains("sms") || lower.contains("mms") ||
-                lower.contains("chat") || lower.contains("messenger") || lower.contains("discord") ||
-                lower.contains("viber") || lower.contains("instagram") || lower.contains("skype") ||
-                lower.contains("slack") || lower.contains("teams") || lower.contains("line") ||
-                lower.contains("wechat") || lower.contains("snapchat")
+        return lower.contains("whatsapp") || pkg == "com.whatsapp" || pkg == "com.whatsapp.w4b" ||
+                lower.contains("telegram") || lower.contains("signal") ||
+                lower.contains("messenger") || lower.contains("discord") || lower.contains("viber") ||
+                lower.contains("instagram") || lower.contains("skype") || lower.contains("slack") ||
+                lower.contains("teams") || lower.contains("line") || lower.contains("wechat") ||
+                lower.contains("snapchat") || lower.contains("message") || lower.contains("sms") ||
+                lower.contains("chat")
     }
 
     inner class MessagingAppAdapter(
