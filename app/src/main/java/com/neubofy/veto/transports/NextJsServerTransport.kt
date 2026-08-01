@@ -150,7 +150,7 @@ class NextJsServerTransport(
             json.put("accuracy", "${location.accuracy}m")
 
             // Send structured JSON instead of string
-            super.send(context, json.toString(), commandName)
+            send(context, json.toString(), commandName)
         }
     }
 }
