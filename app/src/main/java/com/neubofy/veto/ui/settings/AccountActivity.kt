@@ -53,8 +53,6 @@ class AccountActivity : VetoActivity() {
     private lateinit var tvDriveStatus: TextView
     private lateinit var btnFixDrive: Button
 
-    private lateinit var tvLocalMediaStatus: TextView
-    private lateinit var btnFixLocalDirs: Button
 
     companion object {
         private val TAG = AccountActivity::class.java.simpleName
@@ -85,8 +83,6 @@ class AccountActivity : VetoActivity() {
         tvDriveStatus = findViewById(R.id.tvDriveStatus)
         btnFixDrive = findViewById(R.id.btnFixDrive)
 
-        tvLocalMediaStatus = findViewById(R.id.tvLocalMediaStatus)
-        btnFixLocalDirs = findViewById(R.id.btnFixLocalDirs)
 
         auth = FirebaseAuth.getInstance()
         val settings = SettingsRepository.getInstance(this)
@@ -199,11 +195,6 @@ class AccountActivity : VetoActivity() {
             )
         }
 
-        btnFixLocalDirs.setOnClickListener {
-            MediaStorageManager.getRootMediaDir(this)
-            Snackbar.make(btnFixLocalDirs, "Local storage folders created!", Snackbar.LENGTH_SHORT).show()
-            updateUI()
-        }
 
         updateUI()
     }
@@ -260,24 +251,6 @@ class AccountActivity : VetoActivity() {
                 btnFixDrive.visibility = View.VISIBLE
             }
 
-            // Check Local Storage
-            try {
-                val rootDir = MediaStorageManager.getRootMediaDir(this)
-                val photosDir = MediaStorageManager.getPhotosDir(this)
-                val videosDir = MediaStorageManager.getVideosDir(this)
-                val audioDir = MediaStorageManager.getAudioDir(this)
-
-                if (rootDir.exists() && photosDir.exists() && videosDir.exists() && audioDir.exists()) {
-                    tvLocalMediaStatus.text = "🟢 Local Storage (Veto/): Ready"
-                    btnFixLocalDirs.visibility = View.GONE
-                } else {
-                    tvLocalMediaStatus.text = "🔴 Local Storage (Veto/): Folders Missing"
-                    btnFixLocalDirs.visibility = View.VISIBLE
-                }
-            } catch (e: Exception) {
-                tvLocalMediaStatus.text = "🔴 Local Storage Error: ${e.message}"
-                btnFixLocalDirs.visibility = View.VISIBLE
-            }
 
             tvStatus.text = "Device Paired with Web Dashboard"
         } else {

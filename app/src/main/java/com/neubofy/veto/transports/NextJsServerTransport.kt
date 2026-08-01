@@ -15,6 +15,9 @@ import java.net.URL
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class NextJsServerTransport(
     private val context: Context,
@@ -51,48 +54,50 @@ class NextJsServerTransport(
             return
         }
 
-        try {
-            // Using Tasks.await prevents thread deadlocks compared to the old CountDownLatch
-            val tokenResult = Tasks.await(currentUser.getIdToken(false), 30, TimeUnit.SECONDS)
-            val idToken = tokenResult?.token
-            if (idToken == null) {
-                context.log().e("NextJsServerTransport", "Firebase Auth token is null")
-                return
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Using Tasks.await prevents thread deadlocks compared to the old CountDownLatch
+                val tokenResult = Tasks.await(currentUser.getIdToken(false), 30, TimeUnit.SECONDS)
+                val idToken = tokenResult?.token
+                if (idToken == null) {
+                    context.log().e("NextJsServerTransport", "Firebase Auth token is null")
+                    return@launch
+                }
+
+                val apiUrl = if (dashboardUrl.endsWith("/")) "${dashboardUrl}api/command/result" else "$dashboardUrl/api/command/result"
+                val url = URL(apiUrl)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "POST"
+                connection.setRequestProperty("Content-Type", "application/json")
+                connection.setRequestProperty("Authorization", "Bearer $idToken")
+                connection.doOutput = true
+
+                val jsonParam = JSONObject()
+                // Send the raw string. The Next.js server will parse it if it is JSON.
+                jsonParam.put("result", msg)
+                if (commandName != null) {
+                    jsonParam.put("command", commandName)
+                }
+
+                val out = OutputStreamWriter(connection.outputStream)
+                out.write(jsonParam.toString())
+                out.close()
+
+                val responseCode = connection.responseCode
+                if (responseCode in 200..299) {
+                    context.log().i("NextJsServerTransport", "Successfully synced command result to Dashboard")
+                } else {
+                    context.log().e("NextJsServerTransport", "Failed to sync result. Server returned $responseCode")
+                }
+            } catch (e: ExecutionException) {
+                context.log().e("NextJsServerTransport", "ExecutionException: ${e.message}")
+            } catch (e: InterruptedException) {
+                context.log().e("NextJsServerTransport", "InterruptedException: ${e.message}")
+            } catch (e: TimeoutException) {
+                context.log().e("NextJsServerTransport", "TimeoutException: ${e.message}")
+            } catch (e: Exception) {
+                context.log().e("NextJsServerTransport", "Error syncing result: ${e.message}")
             }
-
-            val apiUrl = if (dashboardUrl.endsWith("/")) "${dashboardUrl}api/command/result" else "$dashboardUrl/api/command/result"
-            val url = URL(apiUrl)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.requestMethod = "POST"
-            connection.setRequestProperty("Content-Type", "application/json")
-            connection.setRequestProperty("Authorization", "Bearer $idToken")
-            connection.doOutput = true
-
-            val jsonParam = JSONObject()
-            // Send the raw string. The Next.js server will parse it if it is JSON.
-            jsonParam.put("result", msg)
-            if (commandName != null) {
-                jsonParam.put("command", commandName)
-            }
-
-            val out = OutputStreamWriter(connection.outputStream)
-            out.write(jsonParam.toString())
-            out.close()
-
-            val responseCode = connection.responseCode
-            if (responseCode in 200..299) {
-                context.log().i("NextJsServerTransport", "Successfully synced command result to Dashboard")
-            } else {
-                context.log().e("NextJsServerTransport", "Failed to sync result. Server returned $responseCode")
-            }
-        } catch (e: ExecutionException) {
-            context.log().e("NextJsServerTransport", "ExecutionException: ${e.message}")
-        } catch (e: InterruptedException) {
-            context.log().e("NextJsServerTransport", "InterruptedException: ${e.message}")
-        } catch (e: TimeoutException) {
-            context.log().e("NextJsServerTransport", "TimeoutException: ${e.message}")
-        } catch (e: Exception) {
-            context.log().e("NextJsServerTransport", "Error syncing result: ${e.message}")
         }
     }
 
