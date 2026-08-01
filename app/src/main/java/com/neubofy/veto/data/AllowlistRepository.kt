@@ -34,31 +34,44 @@ class AllowlistRepository private constructor(private val context: Context) {
     }
 
     private val gson = Gson()
+    private val encRepo = EncryptedSettingsRepository.getInstance(context)
 
     var list: AllowlistModel
         private set
 
     init {
-        val file = File(context.filesDir, ALLOWLIST_FILENAME)
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-        val reader = JsonReader(FileReader(file))
-        list = try {
-            gson.fromJson(reader, AllowlistModel::class.java) ?: AllowlistModel()
-        } catch (e: JsonSyntaxException) {
-            context.log().e(TAG, e.stackTraceToString())
-            // Reset the list
-            notifyAllowlistReset()
-            AllowlistModel()
+        val encryptedJson = encRepo.getAllowlistJson()
+        if (encryptedJson != null) {
+            list = try {
+                gson.fromJson(encryptedJson, AllowlistModel::class.java) ?: AllowlistModel()
+            } catch (e: JsonSyntaxException) {
+                context.log().e(TAG, e.stackTraceToString())
+                notifyAllowlistReset()
+                AllowlistModel()
+            }
+        } else {
+            val legacyFile = File(context.filesDir, ALLOWLIST_FILENAME)
+            if (legacyFile.exists() && legacyFile.length() > 0) {
+                list = try {
+                    val reader = JsonReader(FileReader(legacyFile))
+                    gson.fromJson(reader, AllowlistModel::class.java) ?: AllowlistModel()
+                } catch (e: JsonSyntaxException) {
+                    context.log().e(TAG, e.stackTraceToString())
+                    notifyAllowlistReset()
+                    AllowlistModel()
+                }
+                saveList()
+                try { legacyFile.delete() } catch (_: Exception) {}
+            } else {
+                list = AllowlistModel()
+            }
         }
     }
 
     private fun saveList() {
         val copiedList = list.clone()
         val raw = gson.toJson(copiedList)
-        val file = File(context.filesDir, ALLOWLIST_FILENAME)
-        file.writeText(raw)
+        encRepo.setAllowlistJson(raw)
     }
 
     fun writeAsJson(outputStreamWriter: OutputStreamWriter) {

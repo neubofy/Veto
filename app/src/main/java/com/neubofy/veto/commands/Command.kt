@@ -36,10 +36,29 @@ abstract class Command(val context: Context) {
         return requiredPermissions.filter { p -> !p.isGranted(context) }
     }
 
+    fun isEnabled(): Boolean {
+        val prefKey = "KEY_CMD_ENABLED_${keyword.uppercase()}"
+        val enc = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+        return enc.sharedPrefs.getBoolean(prefKey, true)
+    }
+
+    fun setEnabled(enabled: Boolean) {
+        val prefKey = "KEY_CMD_ENABLED_${keyword.uppercase()}"
+        val enc = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+        enc.sharedPrefs.edit().putBoolean(prefKey, enabled).apply()
+    }
+
     suspend fun <T> execute(
         args: List<String>,
         transport: Transport<T>,
     ) {
+        if (!isEnabled()) {
+            val msg = "Command '$keyword' is currently disabled in app settings."
+            context.log().w(TAG, msg)
+            transport.send(context, msg, keyword)
+            return
+        }
+
         val missing = missingRequiredPermissions()
         if (missing.isNotEmpty()) {
             val msg = context.getString(

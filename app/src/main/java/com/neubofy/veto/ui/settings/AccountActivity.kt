@@ -1,10 +1,13 @@
 package com.neubofy.veto.ui.settings
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,6 +25,8 @@ import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.ui.VetoActivity
 import com.neubofy.veto.utils.DashboardSync
+import com.neubofy.veto.utils.GoogleDriveUploader
+import com.neubofy.veto.utils.MediaStorageManager
 import com.neubofy.veto.utils.log
 
 class AccountActivity : VetoActivity() {
@@ -35,9 +40,21 @@ class AccountActivity : VetoActivity() {
     private lateinit var layoutLoggedIn: LinearLayout
     private lateinit var btnGoogleSignIn: MaterialButton
     private lateinit var btnOpenWebsite: MaterialButton
-    private lateinit var btnSyncDevice: MaterialButton
     private lateinit var btnClearCache: MaterialButton
     private lateinit var btnSignOut: MaterialButton
+
+    private lateinit var tvUserName: TextView
+    private lateinit var tvUserEmail: TextView
+    private lateinit var ivUserProfile: ImageView
+
+    private lateinit var tvFcmStatus: TextView
+    private lateinit var btnFixFcm: Button
+
+    private lateinit var tvDriveStatus: TextView
+    private lateinit var btnFixDrive: Button
+
+    private lateinit var tvLocalMediaStatus: TextView
+    private lateinit var btnFixLocalDirs: Button
 
     companion object {
         private val TAG = AccountActivity::class.java.simpleName
@@ -55,9 +72,21 @@ class AccountActivity : VetoActivity() {
         layoutLoggedIn = findViewById(R.id.layoutLoggedIn)
         btnGoogleSignIn = findViewById(R.id.btnGoogleSignIn)
         btnOpenWebsite = findViewById(R.id.btnOpenWebsite)
-        btnSyncDevice = findViewById(R.id.btnSyncDevice)
         btnClearCache = findViewById(R.id.btnClearCache)
         btnSignOut = findViewById(R.id.btnSignOut)
+
+        tvUserName = findViewById(R.id.tvUserName)
+        tvUserEmail = findViewById(R.id.tvUserEmail)
+        ivUserProfile = findViewById(R.id.ivUserProfile)
+
+        tvFcmStatus = findViewById(R.id.tvFcmStatus)
+        btnFixFcm = findViewById(R.id.btnFixFcm)
+
+        tvDriveStatus = findViewById(R.id.tvDriveStatus)
+        btnFixDrive = findViewById(R.id.btnFixDrive)
+
+        tvLocalMediaStatus = findViewById(R.id.tvLocalMediaStatus)
+        btnFixLocalDirs = findViewById(R.id.btnFixLocalDirs)
 
         auth = FirebaseAuth.getInstance()
         val settings = SettingsRepository.getInstance(this)
@@ -112,6 +141,7 @@ class AccountActivity : VetoActivity() {
             auth.signOut()
             googleSignInClient.signOut()
             settings.set(Settings.SET_VetoSERVER_ID, "")
+            settings.set(Settings.SET_SYNCED_FCM_TOKEN, "")
             updateUI()
             Snackbar.make(btnSignOut, "Signed Out Successfully", Snackbar.LENGTH_SHORT).show()
         }
@@ -137,13 +167,38 @@ class AccountActivity : VetoActivity() {
             }
         }
 
-        btnSyncDevice.setOnClickListener {
-            tvStatus.text = "Syncing with Dashboard..."
-            DashboardSync.uploadTokenIfPaired(this) { statusMsg, isSuccess ->
+        btnFixFcm.setOnClickListener {
+            tvStatus.text = "Re-syncing FCM Token..."
+            DashboardSync.uploadTokenIfPaired(this) { statusMsg, _ ->
                 runOnUiThread {
                     tvStatus.text = statusMsg
+                    updateUI()
                 }
             }
+        }
+
+        btnFixDrive.setOnClickListener {
+            tvStatus.text = "Re-creating Drive folders..."
+            GoogleDriveUploader.setupDrive(this,
+                onSuccess = {
+                    runOnUiThread {
+                        tvStatus.text = "Drive Setup Complete!"
+                        updateUI()
+                    }
+                },
+                onError = { err ->
+                    runOnUiThread {
+                        tvStatus.text = "Drive Error: $err"
+                        updateUI()
+                    }
+                }
+            )
+        }
+
+        btnFixLocalDirs.setOnClickListener {
+            MediaStorageManager.getRootMediaDir(this)
+            Snackbar.make(btnFixLocalDirs, "Local storage folders created!", Snackbar.LENGTH_SHORT).show()
+            updateUI()
         }
 
         updateUI()
@@ -152,7 +207,7 @@ class AccountActivity : VetoActivity() {
     private fun validateUrl(settings: SettingsRepository): Boolean {
         val url = etDashboardUrl.text.toString().trim()
         if (url.isEmpty()) {
-            Snackbar.make(btnGoogleSignIn, "Please enter a Dashboard URL in Advanced Settings.", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(btnGoogleSignIn, "Please enter a Dashboard URL in Server Settings.", Snackbar.LENGTH_SHORT).show()
             return false
         }
         settings.set(Settings.SET_VetoSERVER_URL, url)
@@ -165,8 +220,11 @@ class AccountActivity : VetoActivity() {
             // Logged In State
             layoutLogin.visibility = View.GONE
             layoutLoggedIn.visibility = View.VISIBLE
-            val email = user.email ?: "Unknown"
             
+            tvUserName.text = user.displayName ?: "Paired User"
+            tvUserEmail.text = user.email ?: "No email"
+
+            // Check FCM Token Sync
             com.google.firebase.messaging.FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
                 var isSynced = false
                 if (task.isSuccessful) {
@@ -176,16 +234,53 @@ class AccountActivity : VetoActivity() {
                 }
                 
                 if (isSynced) {
-                    tvStatus.text = "Device is Paired & Synced!\nLogged in as $email"
+                    tvFcmStatus.text = "🟢 FCM Token: Synced"
+                    btnFixFcm.visibility = View.GONE
                 } else {
-                    tvStatus.text = "Device Needs Syncing!\nLogged in as $email\nClick 'Sync Device to Veto'"
+                    tvFcmStatus.text = "🔴 FCM Token: Sync Needed"
+                    btnFixFcm.visibility = View.VISIBLE
                 }
             }
+
+            // Check Google Drive Folders
+            val drivePrefs = getSharedPreferences("veto_drive_prefs", Context.MODE_PRIVATE)
+            val photoF = drivePrefs.getString("drive_folder_photo", null)
+            val videoF = drivePrefs.getString("drive_folder_video", null)
+            val audioF = drivePrefs.getString("drive_folder_audio", null)
+
+            if (!photoF.isNullOrBlank() && !videoF.isNullOrBlank() && !audioF.isNullOrBlank()) {
+                tvDriveStatus.text = "🟢 Google Drive Folders: Configured"
+                btnFixDrive.visibility = View.GONE
+            } else {
+                tvDriveStatus.text = "🔴 Google Drive Folders: Missing or Incomplete"
+                btnFixDrive.visibility = View.VISIBLE
+            }
+
+            // Check Local Storage
+            try {
+                val rootDir = MediaStorageManager.getRootMediaDir(this)
+                val photosDir = MediaStorageManager.getPhotosDir(this)
+                val videosDir = MediaStorageManager.getVideosDir(this)
+                val audioDir = MediaStorageManager.getAudioDir(this)
+
+                if (rootDir.exists() && photosDir.exists() && videosDir.exists() && audioDir.exists()) {
+                    tvLocalMediaStatus.text = "🟢 Local Storage (Veto/): Ready"
+                    btnFixLocalDirs.visibility = View.GONE
+                } else {
+                    tvLocalMediaStatus.text = "🔴 Local Storage (Veto/): Folders Missing"
+                    btnFixLocalDirs.visibility = View.VISIBLE
+                }
+            } catch (e: Exception) {
+                tvLocalMediaStatus.text = "🔴 Local Storage Error: ${e.message}"
+                btnFixLocalDirs.visibility = View.VISIBLE
+            }
+
+            tvStatus.text = "Device Paired with Web Dashboard"
         } else {
             // Logged Out State
             layoutLogin.visibility = View.VISIBLE
             layoutLoggedIn.visibility = View.GONE
-            tvStatus.text = "Not Connected"
+            tvStatus.text = "Device Not Connected"
         }
     }
 
@@ -196,23 +291,24 @@ class AccountActivity : VetoActivity() {
             settings.set(Settings.SET_VetoSERVER_ID, user.uid)
 
             tvStatus.text = "Setting up Google Drive folders..."
-            com.neubofy.veto.utils.GoogleDriveUploader.setupDrive(this, 
+            GoogleDriveUploader.setupDrive(this, 
                 onSuccess = {
                     runOnUiThread {
                         tvStatus.text = "Drive Setup Complete. Syncing FCM Token..."
                         DashboardSync.uploadTokenIfPaired(this) { statusMsg, _ ->
                             runOnUiThread {
                                 tvStatus.text = statusMsg
+                                updateUI()
                             }
                         }
                         Snackbar.make(btnGoogleSignIn, "Paired & Drive Configured!", Snackbar.LENGTH_LONG).show()
-                        updateUI()
                     }
                 },
                 onError = { error ->
                     runOnUiThread {
                         tvStatus.text = "Drive Setup Failed: $error"
                         Snackbar.make(btnGoogleSignIn, "Drive Setup Failed: $error", Snackbar.LENGTH_LONG).show()
+                        updateUI()
                     }
                 }
             )

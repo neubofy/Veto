@@ -40,6 +40,12 @@ export async function POST(req: Request) {
       photosSnap.docs.forEach((doc: any) => {
         batch.delete(doc.ref);
       });
+
+      // Delete all locations documents in Firestore subcollection
+      const locationsSnap = await userRef.collection('locations').get();
+      locationsSnap.docs.forEach((doc: any) => {
+        batch.delete(doc.ref);
+      });
     } else if (commandName) {
       // Delete specific command result document
       const resultDoc = userRef.collection('results').doc(commandName);
@@ -48,6 +54,17 @@ export async function POST(req: Request) {
       // Delete specific command photo document
       const photoDoc = userRef.collection('photos').doc(commandName);
       batch.delete(photoDoc);
+
+      // Delete location documents for autoloc/locate
+      if (commandName === 'autoloc' || commandName === 'locate') {
+        const locSnap = await userRef.collection('locations').get();
+        locSnap.docs.forEach((doc: any) => {
+          const data = doc.data();
+          if (data.command === commandName || (commandName === 'autoloc' && data.sourceType?.includes('autoloc'))) {
+            batch.delete(doc.ref);
+          }
+        });
+      }
     } else {
       return NextResponse.json({ error: 'Must specify commandName or all=true' }, { status: 400 });
     }

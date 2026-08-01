@@ -67,8 +67,8 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical">
-                            <CheckBox
-                                android:id="@+id/checkBoxWipeData"
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/switchDeviceWipe"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -130,8 +130,8 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical">
-                            <CheckBox
-                                android:id="@+id/checkBoxVetoviaPin"
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/switchVetoviaPin"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -457,6 +457,46 @@
                         android:layout_height="wrap_content"
                         style="@style/Widget.Material3.Button.TonalButton"
                         android:text="Update Last Location Now" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- System & Application Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="System &amp; Application"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <Button
+                        android:id="@+id/btnViewLogs"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="View App Logs"
+                        android:layout_marginBottom="8dp" />
+
+                    <Button
+                        android:id="@+id/btnAboutVeto"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="About Veto" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

@@ -5,6 +5,22 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
+        <package android:name="org.telegram.messenger" />
+        <package android:name="org.thoughtcrime.securesms" />
+        <package android:name="com.facebook.orca" />
+        <package android:name="com.instagram.android" />
+        <package android:name="com.discord" />
+        <package android:name="com.viber.voip" />
+    </queries>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -77,6 +93,10 @@
             android:name=".ui.settings.AccountActivity"
             android:exported="false"
             android:label="@string/Settings_LCLDServer_AddAccount" />
+        <activity
+            android:name=".ui.settings.MessagingAppPickerActivity"
+            android:exported="false"
+            android:label="Allowed Messaging Apps" />
         <activity
             android:name=".ui.DummyCameraxActivity"
             android:excludeFromRecents="true"

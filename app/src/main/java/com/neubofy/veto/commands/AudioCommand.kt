@@ -33,8 +33,9 @@ class AudioCommand(context: Context) : Command(context) {
     override val requiredPermissions = listOf(RecordAudioPermission(), StoragePermission())
 
     override suspend fun <T> executeInternal(args: List<String>, transport: Transport<T>) {
-        if (!settings.serverAccountExists()) {
-            transport.send(context, "Cannot record audio: no Veto Server account paired.", keyword)
+        val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "audio")
+        if (error != null) {
+            transport.send(context, error, keyword)
             return
         }
 

@@ -65,14 +65,18 @@ class DeleteCommand(context: Context) : Command(context) {
             return
         }
 
-        val expectedHash = MessageDigest.getInstance("SHA-256")
-            .digest(expectedPassword.toByteArray())
-            .joinToString("") { "%02x".format(it) }
+        val isValid = if (expectedPassword.startsWith("\$argon2id\$")) {
+            com.neubofy.veto.utils.CypherUtils.checkPasswordForDelete(expectedPassword, pwd)
+        } else {
+            // Legacy unhashed or plaintext match fallback: verify and automatically upgrade to Argon2id
+            val match = expectedPassword == pwd
+            if (match) {
+                encSettings.setDeletePassword(pwd)
+            }
+            match
+        }
 
-        val isPlaintextMatch = MessageDigest.isEqual(expectedPassword.toByteArray(), pwd.toByteArray())
-        val isHashMatch = MessageDigest.isEqual(expectedHash.toByteArray(), pwd.toByteArray())
-
-        if (!isPlaintextMatch && !isHashMatch) {
+        if (!isValid) {
             val msg = context.getString(R.string.cmd_delete_response_pwd_wrong)
             context.log().i(TAG, msg)
             transport.send(context, msg, keyword)

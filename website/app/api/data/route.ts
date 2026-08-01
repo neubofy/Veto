@@ -26,6 +26,9 @@ export async function GET(req: Request) {
     
     // Read the user's latest results from the 'results' subcollection
     const resultsSnap = await adminDb.collection('users').doc(userId).collection('results').get();
+
+    // Read up to 5 latest locations from the 'locations' subcollection
+    const locationsSnap = await adminDb.collection('users').doc(userId).collection('locations').orderBy('timestamp', 'desc').limit(5).get();
     
     // Convert to maps keyed by command name
     const photos: Record<string, any> = {};
@@ -37,12 +40,17 @@ export async function GET(req: Request) {
     resultsSnap.docs.forEach((doc: any) => {
       results[doc.id] = doc.data();
     });
+
+    const locations = locationsSnap.docs.map((doc: any) => ({
+      id: doc.id,
+      ...doc.data()
+    }));
     
     if (!userDoc.exists) {
-      return NextResponse.json({ data: null, photos, results });
+      return NextResponse.json({ data: null, photos, results, locations });
     }
 
-    return NextResponse.json({ data: userDoc.data(), photos, results });
+    return NextResponse.json({ data: userDoc.data(), photos, results, locations });
   } catch (error: any) {
     console.error('Error fetching user data:', error);
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });

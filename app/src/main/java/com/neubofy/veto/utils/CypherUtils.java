@@ -69,12 +69,20 @@ public class CypherUtils {
     private static final String CONTEXT_STRING_ASYM_KEY_WRAP = "context:asymmetricKeyWrap";
     private static final String CONTEXT_STRING_Veto_PIN = "context:vetoPin";
     private static final String CONTEXT_STRING_LOGIN = "context:loginAuthentication";
+    private static final String CONTEXT_STRING_DELETE_PASSWORD = "context:deletePassword";
     private static final String CONTEXT_PREFIX = "context:";
 
     // ------ Section: Password and hashing ------
 
     public static String hashPasswordForVetoPin(String password) {
         password = CONTEXT_STRING_Veto_PIN + password;
+        byte[] salt = generateSecureRandom(ARGON2_SALT_LENGTH);
+        Argon2Result result = hashPasswordArgon2(password, salt);
+        return Argon2EncodingUtils.encode(result.hash, result.params);
+    }
+
+    public static String hashPasswordForDelete(String password) {
+        password = CONTEXT_STRING_DELETE_PASSWORD + password;
         byte[] salt = generateSecureRandom(ARGON2_SALT_LENGTH);
         Argon2Result result = hashPasswordArgon2(password, salt);
         return Argon2EncodingUtils.encode(result.hash, result.params);
@@ -136,6 +144,10 @@ public class CypherUtils {
 
     public static boolean checkPasswordForVetoPin(String expectedHash, String password) {
         return checkPassword(expectedHash, CONTEXT_STRING_Veto_PIN + password);
+    }
+
+    public static boolean checkPasswordForDelete(String expectedHash, String password) {
+        return checkPassword(expectedHash, CONTEXT_STRING_DELETE_PASSWORD + password);
     }
 
     public static boolean checkPasswordForLogin(String expectedHash, String password) {

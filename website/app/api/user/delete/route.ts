@@ -28,6 +28,7 @@ export async function POST(req: Request) {
 
     const resultsSnap = await userRef.collection('results').get();
     const photosSnap = await userRef.collection('photos').get();
+    const locationsSnap = await userRef.collection('locations').get();
 
     const batch = adminDb.batch();
 
@@ -37,9 +38,14 @@ export async function POST(req: Request) {
     });
 
     // Clear photos
-    for (const doc of photosSnap.docs) {
+    photosSnap.forEach((doc: any) => {
       batch.delete(doc.ref);
-    }
+    });
+
+    // Clear locations
+    locationsSnap.forEach((doc: any) => {
+      batch.delete(doc.ref);
+    });
 
     // Delete the user document
     batch.delete(userRef);

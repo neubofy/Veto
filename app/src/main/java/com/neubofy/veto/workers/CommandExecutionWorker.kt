@@ -112,13 +112,18 @@ class CommandExecutionWorker(
             }
 
             TRANS_NOTIFICATION_REPLY -> {
-                val cached = (applicationContext as VetoApplication).latestStatusBarNotification
-                if (cached?.packageName != destination || cached.key != notificationKey) {
+                val app = applicationContext as VetoApplication
+                var cached = app.latestStatusBarNotification
+                if (cached?.packageName != destination || cached?.key != notificationKey) {
+                    val activeNotifs = com.neubofy.veto.services.NotificationListenService.instance?.activeNotifications
+                    cached = activeNotifs?.firstOrNull { it.key == notificationKey }
+                        ?: activeNotifs?.firstOrNull { it.packageName == destination }
+                }
+
+                if (cached == null) {
                     applicationContext.log().e(
                         TAG,
-                        "Cached StatusBarNotification not up-to-date! "
-                                + "${cached?.packageName} != $destination || "
-                                + "${cached?.key} != $notificationKey"
+                        "Could not resolve StatusBarNotification for destination=$destination, key=$notificationKey"
                     )
                     return null
                 }

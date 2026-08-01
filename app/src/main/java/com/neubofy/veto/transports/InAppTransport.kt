@@ -38,10 +38,7 @@ class InAppTransport(
 
     override val requiredPermissions = listOf(PostNotificationsPermission())
 
-    override val actions =
-        listOf(TransportAction(R.string.transport_inapp_send_command_title) { activity ->
-            onTestCommandClicked(activity)
-        })
+    override val actions = emptyList<TransportAction>()
 
     override fun getDestinationString(): String = context.getString(R.string.transport_inapp_title)
 

@@ -47,8 +47,13 @@ class AutoLocCommand(context: Context) : Command(context) {
         val workManager = WorkManager.getInstance(context)
 
         if (action == "on") {
+            val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "autoloc")
+            if (error != null) {
+                transport.send(context, error, keyword)
+                return
+            }
             val intervalMinutes = settings.get(Settings.SET_VetoSERVER_UPDATE_TIME) as Int
-            val locateCommand = settings.get(Settings.SET_Veto_COMMAND).toString() + " locate gps"
+            val locateCommand = settings.get(Settings.SET_Veto_COMMAND).toString() + " locate gps autoloc_trigger"
 
             val inputData = Data.Builder()
                 .putString(CommandExecutionWorker.KEY_COMMAND, locateCommand)

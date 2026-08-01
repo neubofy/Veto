@@ -56,6 +56,12 @@ class SmsTransport(
     override fun getDestinationString() = phoneNumber
 
     override fun isAllowed(parsed: ParserResult.Success): Boolean {
+        val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+        if (!encRepo.isTransportEnabled("sms")) {
+            context.log().w(TAG, "SMS transport is disabled in app settings")
+            return false
+        }
+
         // Case 1: phone number in Allowed Contacts
         if (allowlistRepo.containsNumber(phoneNumber)) {
             context.log().i(TAG, "$phoneNumber used Veto via allowlist")

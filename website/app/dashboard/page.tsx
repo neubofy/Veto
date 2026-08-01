@@ -84,11 +84,15 @@ export default function Home() {
     }
   }, [results, activeCmd, isCommandPending, commandStartTime]);
 
+  const [locations, setLocations] = useState<any[]>([]);
+  const [selectedLocIndex, setSelectedLocIndex] = useState<number>(0);
+
   // Real-time Firebase listeners (no polling required!)
   useEffect(() => {
     let unsubUser = () => {};
     let unsubPhotos = () => {};
     let unsubResults = () => {};
+    let unsubLocations = () => {};
 
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -114,13 +118,22 @@ export default function Home() {
           localStorage.setItem('veto_results', JSON.stringify(newResults));
         });
 
+        unsubLocations = onSnapshot(collection(db, 'users', currentUser.uid, 'locations'), (snapshot) => {
+          const newLocs: any[] = [];
+          snapshot.forEach(d => { newLocs.push({ id: d.id, ...d.data() }); });
+          newLocs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+          setLocations(newLocs.slice(0, 5));
+        });
+
       } else {
         setUser(null);
         unsubUser();
         unsubPhotos();
         unsubResults();
+        unsubLocations();
         setPhotos({});
         setResults({});
+        setLocations([]);
         localStorage.removeItem('veto_photos');
         localStorage.removeItem('veto_results');
         router.push('/login');
@@ -133,6 +146,7 @@ export default function Home() {
       unsubUser();
       unsubPhotos();
       unsubResults();
+      unsubLocations();
     };
   }, [router]);
 
@@ -229,6 +243,7 @@ export default function Home() {
       if (all) {
         setResults({});
         setPhotos({});
+        setLocations([]);
         localStorage.removeItem('veto_results');
         localStorage.removeItem('veto_photos');
       } else if (commandName) {
@@ -244,6 +259,9 @@ export default function Home() {
           localStorage.setItem('veto_photos', JSON.stringify(next));
           return next;
         });
+        if (commandName === 'autoloc' || commandName === 'locate') {
+          setLocations(prev => prev.filter(l => l.command !== commandName && !(commandName === 'autoloc' && l.sourceType?.includes('autoloc'))));
+        }
         setSelectedOutput(null);
       }
     } catch (error: any) {
@@ -292,12 +310,33 @@ export default function Home() {
   };
 
   const renderTelemetryContent = (text: string) => {
-    const latMatch = text.match(/Lat:\s*([-\d.]+)/);
-    const lonMatch = text.match(/Lon:\s*([-\d.]+)/);
+    let lat: number | null = null;
+    let lon: number | null = null;
+
+    const mapsMatch = text.match(/https?:\/\/[^\s]*[\?&](?:q|ll)=(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (mapsMatch) {
+      lat = parseFloat(mapsMatch[1]);
+      lon = parseFloat(mapsMatch[2]);
+    }
+
+    if (!lat || !lon) {
+      const latMatch = text.match(/Lat(?:itude)?:\s*(-?\d+\.\d+)/i);
+      const lonMatch = text.match(/Lon(?:gitude)?:\s*(-?\d+\.\d+)/i);
+      if (latMatch && lonMatch) {
+        lat = parseFloat(latMatch[1]);
+        lon = parseFloat(lonMatch[2]);
+      }
+    }
+
+    if (!lat || !lon) {
+      const pairMatch = text.match(/(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);
+      if (pairMatch) {
+        lat = parseFloat(pairMatch[1]);
+        lon = parseFloat(pairMatch[2]);
+      }
+    }
     
-    if (latMatch && lonMatch) {
-      const lat = parseFloat(latMatch[1]);
-      const lon = parseFloat(lonMatch[1]);
+    if (lat && lon) {
       const googleEmbedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
       
       return (
@@ -532,6 +571,105 @@ export default function Home() {
 
 
 
+      {/* Location History Google Maps Card */}
+      <section className="glass-panel" style={{ padding: '1.5rem', marginBottom: '3rem', borderRadius: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div>
+            <h2 style={{ fontSize: '1.5rem', margin: 0 }}>🗺️ Location History &amp; GPS Telemetry (Last 5)</h2>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+              Separated record of manual <strong>locate</strong> commands and background <strong>autoloc</strong> tracking.
+            </p>
+          </div>
+          {locations.length > 0 && (
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {locations.map((loc, idx) => {
+                const isAuto = loc.command === 'autoloc' || (loc.sourceType && loc.sourceType.includes('autoloc'));
+                const badge = isAuto ? '🔄 Auto' : '📍 Manual';
+                const isSelected = selectedLocIndex === idx;
+
+                return (
+                  <button
+                    key={loc.id || idx}
+                    onClick={() => setSelectedLocIndex(idx)}
+                    className="btn"
+                    style={{
+                      padding: '6px 14px',
+                      fontSize: '0.85rem',
+                      fontWeight: '600',
+                      backgroundColor: isSelected ? '#238636' : 'var(--border-light)',
+                      color: isSelected ? '#fff' : 'var(--text-primary)',
+                      border: isSelected ? '1px solid #2ea043' : '1px solid var(--glass-border)',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <span>{badge}</span>
+                    <span>Loc #{idx + 1} {idx === 0 ? '(Latest)' : ''}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {locations.length === 0 ? (
+          <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-secondary)', backgroundColor: 'var(--border-light)', borderRadius: '12px' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📍</div>
+            No recorded locations found in database.<br />
+            Run the <strong>Locate Device</strong> command or enable <strong>autoloc</strong> in app settings.
+          </div>
+        ) : (
+          (() => {
+            const activeLoc = locations[selectedLocIndex] || locations[0];
+            const lat = activeLoc.lat || 0;
+            const lon = activeLoc.lon || 0;
+            const mapsUrl = activeLoc.mapsUrl || `https://maps.google.com/maps?q=${lat},${lon}`;
+            const embedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+            const isAuto = activeLoc.command === 'autoloc' || (activeLoc.sourceType && activeLoc.sourceType.includes('autoloc'));
+            const sourceTypeLabel = isAuto ? '🔄 Auto-Location Background Track (autoloc)' : '📍 Manual Command Request (locate)';
+
+            return (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+                <div style={{ width: '100%', height: '350px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
+                  {lat && lon ? (
+                    <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={embedUrl} style={{ border: 'none' }}></iframe>
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--border-light)' }}>
+                      Coordinates Unavailable
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1rem' }}>
+                  <div style={{ backgroundColor: 'var(--border-light)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: isAuto ? '#a5d6ff' : '#7ee787', paddingBottom: '6px', borderBottom: '1px solid var(--glass-border)' }}>
+                      {sourceTypeLabel}
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '0.9rem' }}>
+                      <div><strong>🕒 Time:</strong><br />{activeLoc.timestamp ? new Date(activeLoc.timestamp).toLocaleTimeString() : 'N/A'}</div>
+                      <div><strong>📡 Provider:</strong><br />{activeLoc.provider || 'GPS'}</div>
+                      <div><strong>📍 Latitude:</strong><br />{lat || 'N/A'}</div>
+                      <div><strong>📍 Longitude:</strong><br />{lon || 'N/A'}</div>
+                      <div><strong>🎯 Accuracy:</strong><br />{activeLoc.accuracy || 'N/A'}</div>
+                      <div><strong>🔋 Battery:</strong><br />{activeLoc.battery || 'N/A'}</div>
+                      <div><strong>🏔️ Altitude:</strong><br />{activeLoc.altitude || 'N/A'}</div>
+                      <div><strong>🧭 Speed / Bearing:</strong><br />{activeLoc.speed || 'N/A'} {activeLoc.bearing || ''}</div>
+                    </div>
+                  </div>
+
+                  <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', padding: '0.85rem', fontSize: '1rem', fontWeight: '600' }}>
+                    🗺️ Open Location #{selectedLocIndex + 1} in Google Maps
+                  </a>
+                </div>
+              </div>
+            );
+          })()
+        )}
+      </section>
+
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Core Commands</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
@@ -612,6 +750,21 @@ export default function Home() {
             <button disabled={activeCmd === 'nodisturb off'} onClick={() => sendCommand('nodisturb off')} className="btn" style={{ flex: 1, ...getBtnStyle('nodisturb off') }}>Off</button>
           </div>
           {renderResult('nodisturb')}
+        </div>
+
+        <div className="glass-panel" style={{ padding: '1.5rem' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔄</div>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>AutoLoc Background Tracking</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '1rem' }}>
+            Periodic background GPS updates sent automatically to Location History.
+          </p>
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '0.75rem' }}>
+            <button disabled={activeCmd === 'autoloc on'} onClick={() => sendCommand('autoloc on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('autoloc on') }}>On</button>
+            <button disabled={activeCmd === 'autoloc off'} onClick={() => sendCommand('autoloc off')} className="btn" style={{ flex: 1, ...getBtnStyle('autoloc off') }}>Off</button>
+          </div>
+          <button onClick={() => deleteData('autoloc')} className="btn btn-danger" style={{ width: '100%', fontSize: '0.8rem', padding: '6px' }}>
+            Delete AutoLoc Data
+          </button>
         </div>
       </div>
 

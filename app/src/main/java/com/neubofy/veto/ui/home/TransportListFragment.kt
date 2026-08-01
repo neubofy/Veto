@@ -31,5 +31,19 @@ class TransportListFragment : TaggedFragment() {
         recyclerView.adapter = transportListAdapter
 
         transportListAdapter.submitList(availableTransports(view.context))
+
+        val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(requireContext())
+        val switchCloud = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switch_cloud_transport)
+        if (switchCloud != null) {
+            switchCloud.setOnCheckedChangeListener(null)
+            switchCloud.isChecked = encRepo.isTransportEnabled("cloud")
+            switchCloud.setOnCheckedChangeListener { _, isChecked ->
+                encRepo.setTransportEnabled("cloud", isChecked)
+            }
+        }
+
+        view.findViewById<View>(R.id.btn_open_dashboard_account)?.setOnClickListener {
+            startActivity(android.content.Intent(requireContext(), com.neubofy.veto.ui.settings.AccountActivity::class.java))
+        }
     }
 }

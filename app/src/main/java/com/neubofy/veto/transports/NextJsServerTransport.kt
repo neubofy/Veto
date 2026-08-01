@@ -25,11 +25,18 @@ class NextJsServerTransport(
     override fun getDestinationString(): String = "Next.js Dashboard"
 
     override fun isAllowed(parsed: ParserResult.Success): Boolean {
-        return true
+        val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+        return encRepo.isTransportEnabled("cloud")
     }
 
     override fun send(context: Context, msg: String, commandName: String?) {
         super.send(context, msg, commandName)
+
+        val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+        if (!encRepo.isTransportEnabled("cloud")) {
+            context.log().i("NextJsServerTransport", "Cloud transport disabled in app settings. Skipping upload.")
+            return
+        }
 
         val settings = SettingsRepository.getInstance(context)
         val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
@@ -99,6 +106,37 @@ class NextJsServerTransport(
             latch.await(30, java.util.concurrent.TimeUnit.SECONDS)
         } catch (e: InterruptedException) {
             context.log().e("NextJsServerTransport", "Interrupted while waiting for sync")
+        }
+    }
+
+    override fun sendNewLocation(context: Context, location: com.neubofy.veto.data.VetoLocation, commandName: String?) {
+        val settings = SettingsRepository.getInstance(context)
+        settings.storeRecentLocation(location)
+
+        val lastUploaded = settings.getLastUploadedLocation()
+        var shouldUpload = false
+
+        if (lastUploaded == null) {
+            shouldUpload = true
+        } else {
+            val results = FloatArray(1)
+            android.location.Location.distanceBetween(
+                lastUploaded.lat, lastUploaded.lon,
+                location.lat, location.lon,
+                results
+            )
+            val distanceMeters = results[0]
+            if (distanceMeters > 100f) {
+                shouldUpload = true
+                context.log().i("NextJsServerTransport", "Location distance $distanceMeters m > 100m. Uploading to Dashboard.")
+            } else {
+                context.log().i("NextJsServerTransport", "Location distance $distanceMeters m <= 100m. Cached locally only, skipping server upload.")
+            }
+        }
+
+        if (shouldUpload) {
+            settings.setLastUploadedLocation(location)
+            super.sendNewLocation(context, location, commandName)
         }
     }
 }

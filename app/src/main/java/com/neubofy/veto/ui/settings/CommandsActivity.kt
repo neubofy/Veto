@@ -39,6 +39,7 @@ class CommandsActivity : VetoActivity() {
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val name: TextView = view.findViewById(R.id.command_name)
             val keyword: TextView = view.findViewById(R.id.command_keyword)
+            val switchEnabled: com.google.android.material.materialswitch.MaterialSwitch = view.findViewById(R.id.switch_command_enabled)
             val testButton: Button = view.findViewById(R.id.button_test)
         }
 
@@ -53,15 +54,38 @@ class CommandsActivity : VetoActivity() {
             holder.name.text = cmd.keyword.replaceFirstChar { it.uppercase() }
             holder.keyword.text = "Keyword: ${cmd.keyword}"
 
+            holder.switchEnabled.setOnCheckedChangeListener(null)
+            holder.switchEnabled.isChecked = cmd.isEnabled()
+
+            holder.switchEnabled.setOnCheckedChangeListener { _, isChecked ->
+                cmd.setEnabled(isChecked)
+            }
+
             // Disable TEST for sensitive commands
             if (cmd.keyword == "delete" || cmd.keyword == "wipe") {
                 holder.testButton.visibility = View.GONE
             } else {
                 holder.testButton.visibility = View.VISIBLE
                 holder.testButton.setOnClickListener {
-                    val transport = InAppTransport(this@CommandsActivity)
-                    lifecycleScope.launch {
-                        cmd.execute(emptyList(), transport)
+                    val missing = cmd.missingRequiredPermissions()
+                    if (missing.isNotEmpty()) {
+                        val firstMissing = missing.first()
+                        android.widget.Toast.makeText(
+                            this@CommandsActivity,
+                            "Missing permission: ${getString(firstMissing.name)}. Opening permissions page...",
+                            android.widget.Toast.LENGTH_LONG
+                        ).show()
+                        val intent = android.content.Intent(this@CommandsActivity, com.neubofy.veto.ui.MainActivity::class.java).apply {
+                            putExtra(com.neubofy.veto.ui.MainActivity.EXTRA_OPEN_FRAGMENT, "PERMISSIONS")
+                            putExtra(com.neubofy.veto.ui.home.PermissionManagerFragment.ARG_HIGHLIGHT_PERMISSION_NAME, firstMissing.name)
+                            flags = android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP or android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        }
+                        startActivity(intent)
+                    } else {
+                        val transport = InAppTransport(this@CommandsActivity)
+                        lifecycleScope.launch {
+                            cmd.execute(emptyList(), transport)
+                        }
                     }
                 }
             }
