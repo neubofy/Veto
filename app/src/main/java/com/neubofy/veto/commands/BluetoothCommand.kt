@@ -11,6 +11,7 @@ import com.neubofy.veto.R
 import com.neubofy.veto.permissions.BluetoothConnectPermission
 import com.neubofy.veto.permissions.Permission
 import com.neubofy.veto.transports.Transport
+import com.neubofy.veto.utils.log
 
 
 class BluetoothCommand(context: Context) : Command(context) {
@@ -56,11 +57,61 @@ class BluetoothCommand(context: Context) : Command(context) {
             }
             transport.send(context, msg, keyword)
         } else if (args.contains("on")) {
-            bluetoothAdapter.enable()
-            transport.send(context, context.getString(R.string.cmd_bluetooth_response_on), keyword)
+            if (bluetoothAdapter.isEnabled) {
+                transport.send(context, context.getString(R.string.cmd_bluetooth_response_on), keyword)
+                return
+            }
+
+            var enabled = false
+            try {
+                @Suppress("DEPRECATION")
+                enabled = bluetoothAdapter.enable()
+            } catch (e: Exception) {
+                context.log().e("BluetoothCommand", "bluetoothAdapter.enable() failed: ${e.message}")
+            }
+
+            if (!enabled) {
+                val secureSuccess = com.neubofy.veto.utils.SecureSettings.setBluetooth(context, true)
+                context.log().d("BluetoothCommand", "SecureSettings.setBluetooth(on) result: $secureSuccess")
+            }
+
+            // Verify state
+            kotlinx.coroutines.delay(500L)
+            if (bluetoothAdapter.isEnabled) {
+                transport.send(context, context.getString(R.string.cmd_bluetooth_response_on), keyword)
+            } else {
+                val errorMsg = "Failed to turn on Bluetooth. (Missing BLUETOOTH_CONNECT or WRITE_SECURE_SETTINGS permission)"
+                context.log().e("BluetoothCommand", errorMsg)
+                transport.send(context, errorMsg, keyword)
+            }
         } else if (args.contains("off")) {
-            bluetoothAdapter.disable()
-            transport.send(context, context.getString(R.string.cmd_bluetooth_response_off), keyword)
+            if (!bluetoothAdapter.isEnabled) {
+                transport.send(context, context.getString(R.string.cmd_bluetooth_response_off), keyword)
+                return
+            }
+
+            var disabled = false
+            try {
+                @Suppress("DEPRECATION")
+                disabled = bluetoothAdapter.disable()
+            } catch (e: Exception) {
+                context.log().e("BluetoothCommand", "bluetoothAdapter.disable() failed: ${e.message}")
+            }
+
+            if (!disabled) {
+                val secureSuccess = com.neubofy.veto.utils.SecureSettings.setBluetooth(context, false)
+                context.log().d("BluetoothCommand", "SecureSettings.setBluetooth(off) result: $secureSuccess")
+            }
+
+            // Verify state
+            kotlinx.coroutines.delay(500L)
+            if (!bluetoothAdapter.isEnabled) {
+                transport.send(context, context.getString(R.string.cmd_bluetooth_response_off), keyword)
+            } else {
+                val errorMsg = "Failed to turn off Bluetooth. (Missing BLUETOOTH_CONNECT or WRITE_SECURE_SETTINGS permission)"
+                context.log().e("BluetoothCommand", errorMsg)
+                transport.send(context, errorMsg, keyword)
+            }
         }
     }
 }

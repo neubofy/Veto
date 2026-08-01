@@ -47,9 +47,14 @@ public class MainActivity extends VetoActivity {
         settings.load();
 
         if (((Integer) settings.get(Settings.SET_APP_CRASHED_LOG_ENTRY)) == 1) {
-            startActivity(new Intent(this, CrashedActivity.class));
-            finish();
-            return;
+            settings.set(Settings.SET_APP_CRASHED_LOG_ENTRY, 0);
+            com.neubofy.veto.utils.Notifications.notify(
+                this,
+                "Veto Background Recovery",
+                "App recovered from an uncaught background crash. Log entry saved in Log View.",
+                com.neubofy.veto.utils.Notifications.CHANNEL_FAILED,
+                com.neubofy.veto.ui.settings.LogViewActivity.class
+            );
         }
 
         if (!(Boolean) settings.get(Settings.SET_UPDATEBOARDING_MODERN_CRYPTO_COMPLETED)) {

@@ -44,38 +44,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Allowed Contacts Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_allowed_contacts"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:layout_margin="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_people"
-                    app:tint="?attr/colorPrimary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Allowed Contacts"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:gravity="center" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
         <!-- Transport Channels Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_transport_channels"
@@ -94,7 +62,7 @@
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/ic_send"
+                    android:src="@drawable/ic_cell_wifi"
                     app:tint="?attr/colorPrimary" />
 
                 <TextView
@@ -138,48 +106,35 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Website Dashboard Card (Full Width) -->
+        <!-- Website Dashboard Access Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_website"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="?attr/colorPrimaryContainer">
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="20dp"
-                android:gravity="center_vertical">
+                android:gravity="center">
 
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/ic_in_app"
-                    app:tint="?attr/colorOnPrimaryContainer" />
+                    app:tint="?attr/colorPrimary" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Control via Veto Website"
-                        android:textSize="18sp"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sign in &amp; connect device"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:alpha="0.8"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                    android:layout_marginTop="12dp"
+                    android:text="Web Dashboard"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

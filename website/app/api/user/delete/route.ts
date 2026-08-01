@@ -4,11 +4,18 @@ import { adminDb, adminAuth } from '@/lib/firebaseAdmin';
 export async function POST(req: Request) {
   try {
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const body = await req.json().catch(() => ({}));
+    
+    // Extract token from either Authorization header or request body
+    let token = body.token;
+    if (!token && authHeader?.startsWith('Bearer ')) {
+      token = authHeader.split('Bearer ')[1];
     }
 
-    const token = authHeader.split('Bearer ')[1];
+    if (!token) {
+      return NextResponse.json({ error: 'Missing authentication token' }, { status: 401 });
+    }
+
     let decodedToken;
     try {
       decodedToken = await adminAuth.verifyIdToken(token);

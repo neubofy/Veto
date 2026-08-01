@@ -27,9 +27,7 @@ class MainPageFragment : TaggedFragment() {
 
 
 
-        view.findViewById<MaterialCardView>(R.id.card_allowed_contacts).setOnClickListener {
-            startActivity(Intent(requireContext(), AllowlistActivity::class.java))
-        }
+
 
         view.findViewById<MaterialCardView>(R.id.card_transport_channels).setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()

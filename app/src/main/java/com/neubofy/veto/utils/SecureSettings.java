@@ -18,4 +18,15 @@ public class SecureSettings {
         VetoLogKt.log(context).d(TAG, "Turned GPS on/off using SecureSettings: " + enable);
     }
 
+    public static boolean setBluetooth(Context context, boolean enable) {
+        try {
+            int value = enable ? 1 : 0;
+            Settings.Global.putInt(context.getContentResolver(), "bluetooth_on", value);
+            VetoLogKt.log(context).d(TAG, "Turned Bluetooth on/off using SecureSettings: " + enable);
+            return true;
+        } catch (Exception e) {
+            VetoLogKt.log(context).e(TAG, "Failed to toggle bluetooth via SecureSettings: " + e.getMessage());
+            return false;
+        }
+    }
 }
