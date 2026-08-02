@@ -110,9 +110,7 @@
         <activity
             android:name=".ui.SetupWarningsActivity"
             android:label="@string/setup_warnings_title" />
-        <activity
-            android:name=".ui.settings.VetoServerActivity"
-            android:label="@string/Settings_LCLDServer" />
+
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:label="@string/Settings_LCLDConfig" />
@@ -132,7 +130,7 @@
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:turnScreenOn="true" />
-        <activity android:name=".ui.onboarding.UpdateboardingModernCryptoActivity" />
+
         <activity android:name=".ui.settings.AboutActivity" android:label="About Veto" />
         <activity android:name=".ui.settings.CommandsActivity" android:label="Commands" />
         <activity

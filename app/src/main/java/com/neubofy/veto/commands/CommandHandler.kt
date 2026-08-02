@@ -32,7 +32,6 @@ fun availableCommands(context: Context): List<Command> {
         AudioCommand(context),
         VideoCommand(context),
     )
-    // FIXME: The HelpCommand does not know about itself
     commands.add(HelpCommand(commands, context))
     return commands
 }

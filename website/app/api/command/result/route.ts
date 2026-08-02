@@ -26,19 +26,7 @@ export async function POST(req: Request) {
 
     const commandName = command || 'unknown';
 
-    // Server-side safety net: drop status/acknowledgment messages that aren't real data
-    // The app should already filter these, but older versions may still send them
-    if (typeof result === 'string') {
-      const lower = result.toLowerCase();
-      const isSpam = [
-        'will follow', 'search initiated', 'gps location',
-        'auto-location started', 'auto-location stopped',
-        'usage:', 'invalid action',
-      ].some(pattern => lower.includes(pattern));
-      if (isSpam) {
-        return NextResponse.json({ success: true, dropped: true });
-      }
-    }
+
 
     // Save ALL results into a unified command_history collection
     const historyRef = adminDb.collection('users').doc(userId).collection('command_history');

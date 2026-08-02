@@ -107,9 +107,14 @@ class NextJsServerTransport(
         json.put("lat", location.lat)
         json.put("lon", location.lon)
         json.put("provider", location.provider)
-        json.put("accuracy", "${location.accuracy}m")
+        json.put("accuracy", if (location.accuracy != null) "${location.accuracy}m" else "N/A")
+        json.put("battery", "${location.batteryLevel}%")
+        json.put("batteryLevel", location.batteryLevel)
+        if (location.speed != null) json.put("speed", "${(location.speed * 3.6).toInt()} km/h")
+        if (location.altitude != null) json.put("altitude", "${location.altitude.toInt()}m")
+        json.put("timestamp", java.util.Date(location.timeMillis).toString())
 
-        // Send structured JSON instead of string
+        // Send structured JSON
         send(context, json.toString(), commandName)
     }
 }

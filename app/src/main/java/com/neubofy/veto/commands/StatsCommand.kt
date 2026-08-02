@@ -62,6 +62,7 @@ class StatsCommand(context: Context) : Command(context) {
                     for ((index, info) in activeList.withIndex()) {
                         val carrierName = info.carrierName?.toString()?.takeIf { it.isNotBlank() } ?: mainOperator
                         var num: String? = null
+                        @Suppress("MissingPermission")
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                             num = sm.getPhoneNumber(info.subscriptionId)
                         }

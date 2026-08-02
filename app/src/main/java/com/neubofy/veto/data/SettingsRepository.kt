@@ -132,8 +132,8 @@ class SettingsRepository private constructor(private val context: Context) {
         encSettings.sharedPrefs.edit().putString("KEY_ALL_SETTINGS_JSON", gson.toJson(settings)).apply()
     }
 
-    fun <T> set(key: Int, value: T) {
-        settings.set(key, value)
+    fun <T : Any> set(key: Int, value: T) {
+        settings[key] = value
         saveSettings()
     }
 
@@ -160,11 +160,9 @@ class SettingsRepository private constructor(private val context: Context) {
     fun migrateSettings() {
         val currentVersion = get(Settings.SET_SET_VERSION) as Int
 
-
         if (currentVersion < 3) {
             migrateDeletePassword()
         }
-        migrateBackgroundLocationType()
 
         set(Settings.SET_SET_VERSION, Settings.SETTINGS_VERSION)
     }
@@ -179,13 +177,7 @@ class SettingsRepository private constructor(private val context: Context) {
         encSettings.setDeletePassword(pin)
     }
 
-    private fun migrateBackgroundLocationType() {
-        val oldType = get(Settings.SET_VetoSERVER_LOCATION_TYPE) as Int
-        if (oldType < BackgroundLocationType.BASE) {
-            val newType = BackgroundLocationType.fromOldEncoding(oldType)
-            set(Settings.SET_VetoSERVER_LOCATION_TYPE, newType.encode())
-        }
-    }
+
 
 // ---------- Convenience helpers ----------
 

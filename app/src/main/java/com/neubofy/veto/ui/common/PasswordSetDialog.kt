@@ -14,6 +14,10 @@ import com.neubofy.veto.utils.CypherUtils
 
 class PasswordSetDialog(
     val context: Context,
+    val minLength: Int = CypherUtils.MIN_PASSWORD_LENGTH,
+    val title: String? = null,
+    val positiveButtonText: String? = null,
+    val message: String? = null,
     val onSuccess: (String) -> Unit,
 ) {
 
@@ -22,36 +26,59 @@ class PasswordSetDialog(
     init {
         val passwordLayout: View =
             LayoutInflater.from(context).inflate(R.layout.dialog_password_set, null)
-        val editTextPassword = passwordLayout.findViewById<EditText?>(R.id.editTextPassword)
+        val editTextPassword = passwordLayout.findViewById<EditText>(R.id.editTextPassword)
 
-        dialog = MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.password_enter)
+        val builder = MaterialAlertDialogBuilder(context)
+            .setTitle(title ?: context.getString(R.string.password_enter))
             .setView(passwordLayout)
-            .setPositiveButton(R.string.Ok) { _, _ ->
-                val password = editTextPassword.getText().toString()
+            .setPositiveButton(positiveButtonText ?: context.getString(R.string.Ok)) { _, _ ->
+                val password = editTextPassword.text.toString()
 
                 if (password.isBlank()) {
-                    // an empty password should not trigger the min length check
                     onSuccess("")
-                } else if (availableCommands(context).stream()
-                        .anyMatch { cmd: Command? -> cmd!!.keyword == password }
-                ) {
+                } else if (availableCommands(context).any { cmd: Command -> cmd.keyword == password }) {
                     Toast.makeText(
                         context,
                         R.string.password_match_command_keyword,
                         Toast.LENGTH_LONG
                     ).show()
-                } else if (password.length < CypherUtils.MIN_PASSWORD_LENGTH) {
-                    Toast.makeText(context, R.string.password_min_length, Toast.LENGTH_LONG)
-                        .show()
+                } else if (password.length < minLength) {
+                    Toast.makeText(context, R.string.password_min_length, Toast.LENGTH_LONG).show()
                 } else {
                     onSuccess(password)
                 }
             }
-            .create()
+            .setNegativeButton(R.string.cancel, null)
+
+        if (!message.isNullOrEmpty()) {
+            builder.setMessage(message)
+        }
+
+        dialog = builder.create()
     }
 
     fun show() {
-        dialog.show();
+        dialog.show()
+    }
+
+    companion object {
+        @JvmStatic
+        fun showPasswordSetDialog(
+            context: Context,
+            title: String,
+            positiveButtonText: String,
+            message: String,
+            minLength: Int,
+            onSuccess: (String) -> Unit
+        ) {
+            PasswordSetDialog(
+                context = context,
+                minLength = minLength,
+                title = title,
+                positiveButtonText = positiveButtonText,
+                message = message,
+                onSuccess = onSuccess
+            ).show()
+        }
     }
 }

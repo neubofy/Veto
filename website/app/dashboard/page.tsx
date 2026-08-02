@@ -21,17 +21,16 @@ export default function Home() {
   const [history, setHistory] = useState<any[]>([]);
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
   const [selectedOutput, setSelectedOutput] = useState<string | null>(null);
-  const [selectedLocIndex, setSelectedLocIndex] = useState<number>(0);
 
   // Auto-resolve pending state when a new result arrives for the active command
   useEffect(() => {
     if (activeCmd && isCommandPending) {
        const baseCmd = activeCmd.split(' ')[0];
-       const latestResult = history.find(h => h.command === baseCmd);
+       const latestResult = history.find(h => h.command === baseCmd || h.command.startsWith(baseCmd));
        if (latestResult && new Date(latestResult.timestamp).getTime() > commandStartTime) {
          setIsCommandPending(false);
          setActiveCmd(null);
-         setFeedback({ type: 'success', text: 'Data arrived!' });
+         setFeedback({ type: 'success', text: 'Device response received!' });
          setTimeout(() => setFeedback(null), 5000);
        }
     }
@@ -94,7 +93,6 @@ export default function Home() {
     let finalCommand = command;
     if (command.startsWith('delete ')) {
       const password = command.slice(7).trim();
-      // Pass the plain text wipe password directly because the app verifies it against an Argon2 hash.
       finalCommand = `delete ${password}`;
     }
     
@@ -210,14 +208,13 @@ export default function Home() {
   const renderTelemetryContent = (rawPayload: any) => {
     if (!rawPayload) return null;
 
-    // Unwrap double-wrapped payloads: { type: 'text', content: '{"type":"location",...}' }
+    // Unwrap double-wrapped payloads
     let payload = rawPayload;
     if (typeof payload === 'object' && payload.type === 'text' && typeof payload.content === 'string') {
       try {
         const parsed = JSON.parse(payload.content);
         payload = parsed;
       } catch {
-        // Not JSON inside, use the raw text content
         payload = payload.content;
       }
     }
@@ -225,28 +222,35 @@ export default function Home() {
     // Structured JSON Payload
     if (typeof payload === 'object') {
       if (payload.type === 'location') {
-        const { lat, lon, provider, accuracy } = payload;
+        const { lat, lon, provider, accuracy, battery, batteryLevel, speed, altitude } = payload;
         const googleEmbedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+        const battText = battery || (batteryLevel !== undefined ? `${batteryLevel}%` : null);
         
         return (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ width: '100%', height: '350px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+            <div style={{ width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
               <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={googleEmbedUrl} style={{ border: 'none' }}></iframe>
             </div>
             <div style={{ 
-              fontSize: '0.9rem', 
+              fontSize: '0.85rem', 
               backgroundColor: 'var(--border-light)',
-              padding: '1rem', 
+              padding: '0.85rem', 
               borderRadius: '8px',
-              display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px'
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', 
+              gap: '8px',
+              width: '100%'
             }}>
-              <div><strong>Latitude:</strong> {lat}</div>
-              <div><strong>Longitude:</strong> {lon}</div>
+              <div style={{ wordBreak: 'break-all' }}><strong>Latitude:</strong> {lat}</div>
+              <div style={{ wordBreak: 'break-all' }}><strong>Longitude:</strong> {lon}</div>
               <div><strong>Provider:</strong> {provider || 'GPS'}</div>
               {accuracy && <div><strong>Accuracy:</strong> {accuracy}</div>}
+              {battText && <div><strong>Battery:</strong> {battText} 🔋</div>}
+              {speed && <div><strong>Speed:</strong> {speed}</div>}
+              {altitude && <div><strong>Altitude:</strong> {altitude}</div>}
             </div>
-            <a href={`https://maps.google.com/?q=${lat},${lon}`} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', display: 'block', padding: '0.75rem' }}>
-              Open in Google Maps
+            <a href={`https://maps.google.com/?q=${lat},${lon}`} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', display: 'block', padding: '0.75rem', width: '100%' }}>
+              Open in Google Maps ↗
             </a>
           </div>
         );
@@ -257,23 +261,48 @@ export default function Home() {
         return (
           <div style={{ 
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-            padding: '3rem 1rem', textAlign: 'center', backgroundColor: 'rgba(15, 157, 88, 0.1)', 
-            borderRadius: '12px', border: '1px solid rgba(15, 157, 88, 0.4)' 
+            padding: '2rem 1rem', textAlign: 'center', backgroundColor: 'rgba(15, 157, 88, 0.1)', 
+            borderRadius: '12px', border: '1px solid rgba(15, 157, 88, 0.4)', width: '100%' 
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📁</div>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: '#0f9d58' }}>Media Uploaded Successfully</h3>
-            <a href={url} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', maxWidth: '300px', margin: '0 auto', textDecoration: 'none', backgroundColor: '#0f9d58', color: '#fff', border: 'none' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📁</div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: '#0f9d58' }}>Media Saved to Google Drive</h3>
+            <a href={url} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', maxWidth: '280px', margin: '0 auto', textDecoration: 'none', backgroundColor: '#0f9d58', color: '#fff', border: 'none' }}>
               <span>↗️</span> Open in Google Drive
             </a>
           </div>
        );
       }
 
+      if (payload.type === 'stats') {
+        const { device, os, battery, sim, ips, wifi } = payload;
+        const items = [
+          { icon: '📱', label: 'Device', value: device },
+          { icon: '💻', label: 'OS', value: os },
+          { icon: '🔋', label: 'Battery', value: battery ? `${battery}%` : 'N/A' },
+          { icon: '📶', label: 'SIM', value: sim },
+          { icon: '🌐', label: 'IPs', value: ips },
+          { icon: '📡', label: 'WiFi', value: wifi },
+        ].filter(item => item.value);
+
+        return (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', width: '100%' }}>
+            {items.map((item, idx) => (
+              <div key={idx} style={{ backgroundColor: 'var(--border-light)', padding: '0.85rem', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                  {item.icon} {item.label}
+                </div>
+                <div style={{ fontSize: '0.95rem', fontWeight: '500', wordBreak: 'break-word' }}>{item.value}</div>
+              </div>
+            ))}
+          </div>
+        );
+      }
+
       // generic object
-      return <pre style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>{JSON.stringify(payload, null, 2)}</pre>;
+      return <pre style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5', overflowX: 'auto', maxWidth: '100%' }}>{JSON.stringify(payload, null, 2)}</pre>;
     }
 
-    // Fallback for legacy text string format
+    // Fallback for text string format
     const text = payload;
     let lat: number | null = null;
     let lon: number | null = null;
@@ -305,22 +334,24 @@ export default function Home() {
       const googleEmbedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
       
       return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ width: '100%', height: '350px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+          <div style={{ width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
             <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={googleEmbedUrl} style={{ border: 'none' }}></iframe>
           </div>
           <div style={{ 
-            fontSize: '0.9rem', 
+            fontSize: '0.85rem', 
             backgroundColor: 'var(--border-light)',
-            padding: '1rem', 
+            padding: '0.85rem', 
             borderRadius: '8px',
             fontFamily: 'monospace',
-            whiteSpace: 'pre-wrap'
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            width: '100%'
           }}>
             {text}
           </div>
-          <a href={`https://maps.google.com/?q=${lat},${lon}`} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', display: 'block', padding: '0.75rem' }}>
-            Open in Google Maps
+          <a href={`https://maps.google.com/?q=${lat},${lon}`} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', display: 'block', padding: '0.75rem', width: '100%' }}>
+            Open in Google Maps ↗
           </a>
         </div>
       );
@@ -332,7 +363,7 @@ export default function Home() {
       const kvLines = lines.filter((line: string) => line.includes(':'));
       if (kvLines.length > 1) {
         return (
-          <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem', width: '100%' }}>
             {lines.map((line: string, i: number) => {
               const parts = line.split(':');
               if (parts.length < 2) return <div key={i} style={{ gridColumn: '1 / -1' }}>{line}</div>;
@@ -348,45 +379,43 @@ export default function Home() {
               return (
                 <div key={i} style={{ 
                   backgroundColor: isDriveLink ? 'rgba(15, 157, 88, 0.1)' : 'var(--border-light)',
-                  padding: '1rem', 
+                  padding: '0.85rem', 
                   borderRadius: '8px',
                   border: isDriveLink ? '1px solid rgba(15, 157, 88, 0.4)' : '1px solid var(--glass-border)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  width: '100%'
                 }}>
                   <div>
                     <div style={{ 
                       display: 'flex', 
                       justifyContent: 'space-between', 
                       alignItems: 'center',
-                      marginBottom: '0.5rem'
+                      marginBottom: '0.25rem'
                     }}>
-                      <div style={{ fontSize: '0.8rem', color: isDriveLink ? '#0f9d58' : 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: isDriveLink ? 'bold' : 'normal' }}>
+                      <div style={{ fontSize: '0.75rem', color: isDriveLink ? '#0f9d58' : 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: isDriveLink ? 'bold' : 'normal' }}>
                         {key.trim()}
                       </div>
                       <button 
                         onClick={handleCopy}
                         title="Copy"
-                        style={{
-                          background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1.2rem', padding: '0 4px'
-                        }}
+                        style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem', padding: '0 4px' }}
                       >
                         📋
                       </button>
                     </div>
                     <div style={{ 
-                      fontSize: '1rem', 
+                      fontSize: '0.9rem', 
                       fontWeight: '500', 
                       color: 'var(--text-primary)',
                       wordBreak: 'break-word',
-                      whiteSpace: 'pre-wrap',
-                      marginTop: isDriveLink ? '0.5rem' : '0'
+                      whiteSpace: 'pre-wrap'
                     }}>
                       {isDriveLink ? (
-                        <a href={val} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', textDecoration: 'none', backgroundColor: '#0f9d58', color: '#fff', border: 'none' }}>
-                          <span>📁</span> Open in Google Drive
+                        <a href={val} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', width: '100%', textDecoration: 'none', backgroundColor: '#0f9d58', color: '#fff', border: 'none', padding: '6px 12px', fontSize: '0.85rem' }}>
+                          <span>📁</span> Google Drive ↗
                         </a>
                       ) : val.startsWith('http') ? (
                         <a href={val} target="_blank" rel="noreferrer" style={{color: '#58a6ff', textDecoration: 'underline'}}>{val}</a>
@@ -400,21 +429,6 @@ export default function Home() {
         );
       }
     }
-    
-    const isPendingMedia = text.toLowerCase().includes('recording') || text.toLowerCase().includes('uploading') || text.toLowerCase().includes('taking');
-    if (isPendingMedia) {
-      return (
-        <div style={{ 
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-          padding: '3rem 1rem', textAlign: 'center', backgroundColor: 'var(--border-light)', 
-          borderRadius: '12px', border: '1px solid var(--glass-border)' 
-        }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem', animation: 'pulseGlow 2s infinite' }}>☁️</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Data is uploading to your Google Drive</h3>
-          <p style={{ color: 'var(--text-secondary)' }}>A secure link will be available here shortly.</p>
-        </div>
-      );
-    }
 
     const driveLinkMatch = text.match(/(https?:\/\/drive\.google\.com[^\s]+)/);
     if (driveLinkMatch) {
@@ -422,12 +436,12 @@ export default function Home() {
        return (
           <div style={{ 
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-            padding: '3rem 1rem', textAlign: 'center', backgroundColor: 'rgba(15, 157, 88, 0.1)', 
-            borderRadius: '12px', border: '1px solid rgba(15, 157, 88, 0.4)' 
+            padding: '2rem 1rem', textAlign: 'center', backgroundColor: 'rgba(15, 157, 88, 0.1)', 
+            borderRadius: '12px', border: '1px solid rgba(15, 157, 88, 0.4)', width: '100%' 
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📁</div>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: '#0f9d58' }}>Media Uploaded Successfully</h3>
-            <a href={url} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', maxWidth: '300px', margin: '0 auto', textDecoration: 'none', backgroundColor: '#0f9d58', color: '#fff', border: 'none' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📁</div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: '#0f9d58' }}>Media Saved to Google Drive</h3>
+            <a href={url} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', maxWidth: '280px', margin: '0 auto', textDecoration: 'none', backgroundColor: '#0f9d58', color: '#fff', border: 'none' }}>
               <span>↗️</span> Open in Google Drive
             </a>
           </div>
@@ -439,52 +453,42 @@ export default function Home() {
       return (
           <div style={{ 
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-            padding: '3rem 1rem', textAlign: 'center', backgroundColor: 'rgba(248, 81, 73, 0.1)', 
-            borderRadius: '12px', border: '1px solid rgba(248, 81, 73, 0.4)' 
+            padding: '2rem 1rem', textAlign: 'center', backgroundColor: 'rgba(248, 81, 73, 0.1)', 
+            borderRadius: '12px', border: '1px solid rgba(248, 81, 73, 0.4)', width: '100%' 
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>❌</div>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Task Failed</h3>
-            <p style={{ color: 'var(--text-secondary)' }}>{text}</p>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>❌</div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Task Failed</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', wordBreak: 'break-word' }}>{text}</p>
           </div>
       );
     }
 
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    if (urlRegex.test(text)) {
-      const parts = text.split(urlRegex);
-      return (
-          <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
-              {parts.map((part: string, i: number) => urlRegex.test(part) ? <a key={i} href={part} target="_blank" rel="noreferrer" style={{color: '#58a6ff', textDecoration: 'underline'}}>{part}</a> : part)}
-          </div>
-      );
-    }
-    
-    return <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>{text}</div>;
+    return <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5', wordBreak: 'break-word', width: '100%' }}>{text}</div>;
   };
 
   const renderResult = (baseCmd: string) => {
     const res = history.find(h => h.command === baseCmd || h.command.startsWith(baseCmd));
-    if (!res) return <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>No data yet</div>;
+    if (!res) return <div style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>No data yet</div>;
     return (
-      <button onClick={() => setSelectedOutput(res.command)} className="btn" style={{ marginTop: '1rem', width: '100%', fontSize: '0.9rem', backgroundColor: 'var(--border-light)' }}>
-        View Output ({new Date(res.timestamp).toLocaleTimeString()})
+      <button onClick={() => setSelectedOutput(res.command)} className="btn" style={{ marginTop: '0.75rem', width: '100%', fontSize: '0.85rem', backgroundColor: 'var(--border-light)' }}>
+        View Output ({new Date(res.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})
       </button>
     );
   };
 
   if (loading) return (
-    <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-      <header style={{ marginBottom: '3rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
+    <main style={{ padding: '1.5rem 1rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+      <header style={{ marginBottom: '2rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <div className="skeleton" style={{ width: '250px', height: '40px', marginBottom: '0.5rem' }}></div>
-          <div className="skeleton" style={{ width: '200px', height: '24px' }}></div>
+          <div className="skeleton" style={{ width: '220px', height: '36px', marginBottom: '0.5rem' }}></div>
+          <div className="skeleton" style={{ width: '160px', height: '20px' }}></div>
         </div>
-        <div className="skeleton" style={{ width: '200px', height: '60px', borderRadius: '12px' }}></div>
+        <div className="skeleton" style={{ width: '180px', height: '50px', borderRadius: '12px' }}></div>
       </header>
-      <div className="skeleton" style={{ width: '200px', height: '28px', marginBottom: '1.5rem' }}></div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
-        <div className="glass-panel skeleton" style={{ height: '200px' }}></div>
-        <div className="glass-panel skeleton" style={{ height: '200px' }}></div>
+      <div className="skeleton" style={{ width: '180px', height: '24px', marginBottom: '1rem' }}></div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div className="glass-panel skeleton" style={{ height: '180px' }}></div>
+        <div className="glass-panel skeleton" style={{ height: '180px' }}></div>
       </div>
     </main>
   );
@@ -492,76 +496,74 @@ export default function Home() {
   if (!user) return null;
 
   return (
-    <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+    <main style={{ padding: '1.5rem 1rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
       {feedback && (
         <div className={`notification-banner notification-${feedback.type}`}>
           {feedback.text}
         </div>
       )}
       
-      <header style={{ marginBottom: '3rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
+      <header style={{ marginBottom: '2rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>Veto Dashboard</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Device control & telemetry</p>
+          <h1 style={{ fontSize: '2.2rem', fontWeight: '700', marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Veto Dashboard</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Device control & telemetry</p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-          <div className="glass-panel" style={{ padding: '8px 16px', display: 'flex', flexDirection: 'column', gap: '4px', borderRadius: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-primary)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div className="glass-panel" style={{ padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: '2px', borderRadius: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)', wordBreak: 'break-all' }}>
                 {user.email}
               </span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
               <div style={{ 
                 width: '8px', height: '8px', borderRadius: '50%', 
                 backgroundColor: deviceLinked ? '#2ea043' : '#f85149', 
-                boxShadow: deviceLinked ? '0 0 10px #2ea043' : '0 0 10px #f85149' 
+                boxShadow: deviceLinked ? '0 0 8px #2ea043' : '0 0 8px #f85149' 
               }}></div>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                 {deviceLinked ? 'App Connected' : 'App Not Connected'}
               </span>
             </div>
           </div>
-          <button onClick={handleLogout} className="btn btn-danger" style={{ padding: '8px 16px', fontSize: '0.9rem' }}>Logout</button>
+          <button onClick={handleLogout} className="btn btn-danger" style={{ padding: '8px 14px', fontSize: '0.85rem' }}>Logout</button>
         </div>
       </header>
 
-
-
       {/* Core Commands */}
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Core Commands</h2>
-      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📍</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Locate Device</h3>
-          <button disabled={activeCmd === 'locate'} onClick={() => sendCommand('locate')} className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('locate') }}>
+      <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem' }}>Core Commands</h2>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>📍</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Locate Device</h3>
+          <button disabled={activeCmd === 'locate'} onClick={() => sendCommand('locate')} className="btn btn-primary" style={{ width: '100%', ...getBtnStyle('locate') }}>
             {activeCmd === 'locate' ? 'Locating...' : 'Locate'}
           </button>
           {renderResult('locate')}
         </div>
 
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔊</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Ring Alarm</h3>
-          <button disabled={activeCmd === 'ring'} onClick={() => sendCommand('ring')} className="btn" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('ring') }}>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🔊</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Ring Alarm</h3>
+          <button disabled={activeCmd === 'ring'} onClick={() => sendCommand('ring')} className="btn" style={{ width: '100%', ...getBtnStyle('ring') }}>
             {activeCmd === 'ring' ? 'Sending...' : 'Trigger Siren'}
           </button>
           {renderResult('ring')}
         </div>
 
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔒</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Lock Device</h3>
-          <button disabled={activeCmd === 'lock'} onClick={() => sendCommand('lock')} className="btn" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('lock') }}>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🔒</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Lock Device</h3>
+          <button disabled={activeCmd === 'lock'} onClick={() => sendCommand('lock')} className="btn" style={{ width: '100%', ...getBtnStyle('lock') }}>
             {activeCmd === 'lock' ? 'Locking...' : 'Lock Screen'}
           </button>
           {renderResult('lock')}
         </div>
         
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📊</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Device Stats</h3>
-          <button disabled={activeCmd === 'stats'} onClick={() => sendCommand('stats')} className="btn" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('stats') }}>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>📊</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Device Stats</h3>
+          <button disabled={activeCmd === 'stats'} onClick={() => sendCommand('stats')} className="btn" style={{ width: '100%', ...getBtnStyle('stats') }}>
             {activeCmd === 'stats' ? 'Fetching...' : 'Get Stats'}
           </button>
           {renderResult('stats')}
@@ -569,91 +571,86 @@ export default function Home() {
       </div>
 
       {/* Device Toggles */}
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Device Toggles</h2>
-      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+      <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem' }}>Device Toggles</h2>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔦</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Flashlight</h3>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'flash on'} onClick={() => sendCommand('flash on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('flash on') }}>On</button>
-            <button disabled={activeCmd === 'flash off'} onClick={() => sendCommand('flash off')} className="btn" style={{ flex: 1, ...getBtnStyle('flash off') }}>Off</button>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🔦</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Flashlight</h3>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '0.75rem' }}>
+            <button disabled={activeCmd === 'flash on'} onClick={() => sendCommand('flash on')} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('flash on') }}>On</button>
+            <button disabled={activeCmd === 'flash off'} onClick={() => sendCommand('flash off')} className="btn" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('flash off') }}>Off</button>
           </div>
           {renderResult('flash')}
         </div>
 
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔵</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Bluetooth</h3>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'bluetooth on'} onClick={() => sendCommand('bluetooth on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('bluetooth on') }}>On</button>
-            <button disabled={activeCmd === 'bluetooth off'} onClick={() => sendCommand('bluetooth off')} className="btn" style={{ flex: 1, ...getBtnStyle('bluetooth off') }}>Off</button>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🔵</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Bluetooth</h3>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '0.75rem' }}>
+            <button disabled={activeCmd === 'bluetooth on'} onClick={() => sendCommand('bluetooth on')} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('bluetooth on') }}>On</button>
+            <button disabled={activeCmd === 'bluetooth off'} onClick={() => sendCommand('bluetooth off')} className="btn" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('bluetooth off') }}>Off</button>
           </div>
           {renderResult('bluetooth')}
         </div>
 
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🛰️</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>GPS Toggle</h3>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'gps on'} onClick={() => sendCommand('gps on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('gps on') }}>On</button>
-            <button disabled={activeCmd === 'gps off'} onClick={() => sendCommand('gps off')} className="btn" style={{ flex: 1, ...getBtnStyle('gps off') }}>Off</button>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🛰️</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>GPS Toggle</h3>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '0.75rem' }}>
+            <button disabled={activeCmd === 'gps on'} onClick={() => sendCommand('gps on')} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('gps on') }}>On</button>
+            <button disabled={activeCmd === 'gps off'} onClick={() => sendCommand('gps off')} className="btn" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('gps off') }}>Off</button>
           </div>
           {renderResult('gps')}
         </div>
 
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🌙</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Do Not Disturb</h3>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'nodisturb on'} onClick={() => sendCommand('nodisturb on')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('nodisturb on') }}>On</button>
-            <button disabled={activeCmd === 'nodisturb off'} onClick={() => sendCommand('nodisturb off')} className="btn" style={{ flex: 1, ...getBtnStyle('nodisturb off') }}>Off</button>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🌙</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Do Not Disturb</h3>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '0.75rem' }}>
+            <button disabled={activeCmd === 'nodisturb on'} onClick={() => sendCommand('nodisturb on')} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('nodisturb on') }}>On</button>
+            <button disabled={activeCmd === 'nodisturb off'} onClick={() => sendCommand('nodisturb off')} className="btn" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('nodisturb off') }}>Off</button>
           </div>
           {renderResult('nodisturb')}
         </div>
-
-
       </div>
 
-      {/* Experimental Commands */}
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>Experimental</h2>
-      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📸</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Photo Capture</h3>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'photo front'} onClick={() => sendCommand('photo front')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('photo front') }}>Front</button>
-            <button disabled={activeCmd === 'photo back'} onClick={() => sendCommand('photo back')} className="btn" style={{ flex: 1, ...getBtnStyle('photo back') }}>Back</button>
+      {/* Surveillance & Security */}
+      <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem' }}>Surveillance & Security</h2>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>📷</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Take Photo</h3>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '0.75rem' }}>
+            <button disabled={activeCmd === 'photo front'} onClick={() => sendCommand('photo front')} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('photo front') }}>Front</button>
+            <button disabled={activeCmd === 'photo back'} onClick={() => sendCommand('photo back')} className="btn" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('photo back') }}>Back</button>
           </div>
           {renderResult('photo')}
         </div>
 
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🎤</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Audio Recording</h3>
-          <button disabled={activeCmd === 'audio'} onClick={() => sendCommand('audio')} className="btn" style={{ width: '100%', marginBottom: '1rem', ...getBtnStyle('audio') }}>
-            {activeCmd === 'audio' ? 'Recording 30s...' : 'Record Audio'}
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🎙️</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Record Audio</h3>
+          <button disabled={activeCmd === 'audio'} onClick={() => sendCommand('audio')} className="btn" style={{ width: '100%', ...getBtnStyle('audio') }}>
+            {activeCmd === 'audio' ? 'Recording...' : 'Record 30s Audio'}
           </button>
           {renderResult('audio')}
         </div>
-        
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🎥</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span>Video Capture</span>
-            <span style={{ fontSize: '0.7rem', backgroundColor: 'rgba(235, 163, 54, 0.2)', color: '#eba336', border: '1px solid rgba(235, 163, 54, 0.4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>BETA</span>
-          </h3>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-            <button disabled={activeCmd === 'video front'} onClick={() => sendCommand('video front')} className="btn btn-primary" style={{ flex: 1, ...getBtnStyle('video front') }}>Front</button>
-            <button disabled={activeCmd === 'video back'} onClick={() => sendCommand('video back')} className="btn" style={{ flex: 1, ...getBtnStyle('video back') }}>Back</button>
+
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🎥</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Record Video</h3>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '0.75rem' }}>
+            <button disabled={activeCmd === 'video front'} onClick={() => sendCommand('video front')} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('video front') }}>Front</button>
+            <button disabled={activeCmd === 'video back'} onClick={() => sendCommand('video back')} className="btn" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('video back') }}>Back</button>
           </div>
           {renderResult('video')}
         </div>
         
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🚨</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Theft Mode</h3>
-          <button disabled={activeCmd === 'theft'} onClick={() => sendCommand('theft')} className="btn" style={{ width: '100%', borderColor: '#eba336', color: '#eba336', marginBottom: '1rem', ...getBtnStyle('theft') }}>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🚨</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Theft Mode</h3>
+          <button disabled={activeCmd === 'theft'} onClick={() => sendCommand('theft')} className="btn" style={{ width: '100%', borderColor: '#eba336', color: '#eba336', ...getBtnStyle('theft') }}>
             {activeCmd === 'theft' ? 'Activating...' : 'Activate Theft Mode'}
           </button>
           {renderResult('theft')}
@@ -661,12 +658,12 @@ export default function Home() {
       </div>
       
       {/* Danger Zone */}
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--danger-color)' }}>Danger Zone</h2>
-      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-        <div className="glass-panel" style={{ padding: '1.5rem', border: '1px solid rgba(248, 81, 73, 0.3)' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⚠️</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Factory Reset</h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Permanently wipe all data from your device.</p>
+      <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: 'var(--danger-color)' }}>Danger Zone</h2>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div className="glass-panel" style={{ padding: '1.25rem', border: '1px solid rgba(248, 81, 73, 0.3)' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>⚠️</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Factory Reset</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Permanently wipe all data from your device.</p>
           <button disabled={activeCmd === 'delete'} onClick={() => {
             const password = window.prompt('WARNING: This will PERMANENTLY WIPE all data from your phone!\n\nTo proceed, please enter your Veto app password:');
             if (password) {
@@ -679,19 +676,19 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="glass-panel" style={{ padding: '1.5rem', border: '1px solid rgba(248, 81, 73, 0.3)' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🧹</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Delete Cloud Data</h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Erase all stored telemetry and history from the database.</p>
+        <div className="glass-panel" style={{ padding: '1.25rem', border: '1px solid rgba(248, 81, 73, 0.3)' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🧹</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Delete Cloud Data</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Erase all stored telemetry and history from database.</p>
           <button onClick={() => deleteData(undefined, true)} className="btn btn-danger" style={{ width: '100%' }}>
             Delete All Data
           </button>
         </div>
 
-        <div className="glass-panel" style={{ padding: '1.5rem', border: '1px solid rgba(248, 81, 73, 0.3)' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>☠️</div>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Delete Account</h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Permanently delete your account and all associated data.</p>
+        <div className="glass-panel" style={{ padding: '1.25rem', border: '1px solid rgba(248, 81, 73, 0.3)' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>☠️</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Delete Account</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Permanently delete your account and all data.</p>
           <button onClick={() => deleteAccount()} className="btn btn-danger" style={{ width: '100%' }}>
             Delete Account
           </button>
@@ -700,35 +697,38 @@ export default function Home() {
 
       {/* Reusable Output Modal */}
       {selectedOutput && (() => {
-        const res = history.find(h => h.command === selectedOutput || h.command.startsWith(selectedOutput));
-        if (!res) return null;
+        const matchingEntries = history.filter(h => h.command === selectedOutput || h.command.startsWith(selectedOutput));
+        if (matchingEntries.length === 0) return null;
+        const res = matchingEntries[0];
+
         return (
           <div style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
             backgroundColor: 'var(--overlay-bg)', zIndex: 1000,
-            display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem'
+            display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0.75rem'
           }} onClick={() => setSelectedOutput(null)}>
             <div className="glass-panel" style={{
-              width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto',
-              padding: '2.5rem', position: 'relative', border: '1px solid var(--glass-border)'
+              width: '100%', maxWidth: '750px', maxHeight: '92vh', overflowY: 'auto',
+              padding: '1.5rem 1.25rem', position: 'relative', border: '1px solid var(--glass-border)'
             }} onClick={e => e.stopPropagation()}>
               <button onClick={() => setSelectedOutput(null)} style={{
                 position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none',
-                color: 'var(--text-primary)', fontSize: '1.5rem', cursor: 'pointer'
+                color: 'var(--text-primary)', fontSize: '1.5rem', cursor: 'pointer', lineHeight: '1'
               }}>×</button>
-              <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', textTransform: 'capitalize', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>{selectedOutput} Output</span>
-                <button onClick={() => deleteData(selectedOutput)} className="btn btn-danger" style={{ padding: '4px 12px', fontSize: '0.8rem', marginRight: '2rem' }}>
-                  Delete Data
+              
+              <h2 style={{ fontSize: '1.3rem', marginBottom: '0.5rem', textTransform: 'capitalize', display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>{selectedOutput} Result</span>
+                <button onClick={() => deleteData(selectedOutput)} className="btn btn-danger" style={{ padding: '4px 10px', fontSize: '0.75rem', marginRight: '2rem' }}>
+                  Delete Entry
                 </button>
               </h2>
-              <div style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '1rem', fontSize: '0.85rem' }}>
                 Received: {new Date(res.timestamp).toLocaleString()}
               </div>
               
               <div style={{ 
-                backgroundColor: 'var(--code-bg)', padding: '1.5rem', borderRadius: '12px',
-                border: '1px solid var(--border-light)', color: 'var(--text-primary)'
+                backgroundColor: 'var(--code-bg)', padding: '1.25rem 1rem', borderRadius: '12px',
+                border: '1px solid var(--border-light)', color: 'var(--text-primary)', width: '100%', overflowX: 'hidden'
               }}>
                 {renderTelemetryContent(res.payload)}
               </div>

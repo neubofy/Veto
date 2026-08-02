@@ -13,7 +13,6 @@ import androidx.work.WorkerParameters
 import com.neubofy.veto.VetoApplication
 import com.neubofy.veto.R
 import com.neubofy.veto.commands.CommandHandler
-// import com.neubofy.veto.transports.VetoServerTransport
 import com.neubofy.veto.transports.InAppTransport
 import com.neubofy.veto.transports.NotificationReplyTransport
 import com.neubofy.veto.transports.SmsTransport
@@ -39,7 +38,6 @@ class CommandExecutionWorker(
         // Transport types
         const val TRANS_SMS = "TRANS_SMS"
         const val TRANS_NOTIFICATION_REPLY = "TRANS_NOTIFICATION_REPLY"
-        const val TRANS_Veto_SERVER = "TRANS_Veto_SERVER"
         const val TRANS_INAPP = "TRANS_INAPP"
         const val TRANS_NEXTJS_SERVER = "TRANS_NEXTJS_SERVER"
 
@@ -128,10 +126,6 @@ class CommandExecutionWorker(
                 }
                 val transport = NotificationReplyTransport(applicationContext, cached)
                 CommandHandler<StatusBarNotification?>(transport, true)
-            }
-
-            TRANS_Veto_SERVER -> {
-                return null
             }
 
             TRANS_INAPP -> {
