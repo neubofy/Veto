@@ -78,6 +78,30 @@ class LockScreenMessage : VetoActivity() {
         hideSystemUI()
     }
 
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        val km = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+        if (km?.isKeyguardLocked == true) {
+            val reorderIntent = android.content.Intent(this, LockScreenMessage::class.java).apply {
+                addFlags(android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(reorderIntent)
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (!hasFocus) {
+            val km = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+            if (km?.isKeyguardLocked == true) {
+                val reorderIntent = android.content.Intent(this, LockScreenMessage::class.java).apply {
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                startActivity(reorderIntent)
+            }
+        }
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return true
     }

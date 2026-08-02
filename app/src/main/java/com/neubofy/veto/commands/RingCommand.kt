@@ -5,9 +5,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.neubofy.veto.R
 import com.neubofy.veto.permissions.DoNotDisturbAccessPermission
-import com.neubofy.veto.permissions.OverlayPermission
+import com.neubofy.veto.services.RingerService
 import com.neubofy.veto.transports.Transport
-import com.neubofy.veto.ui.RingerActivity
+import com.neubofy.veto.utils.log
 
 
 const val RING_DURATION_DEFAULT_SECS = 30
@@ -27,9 +27,7 @@ class RingCommand(context: Context) : Command(context) {
 
     override val longDescription = null
 
-    // DNDAccess is required for changing the alarm mode and volume
-    // TODO(#145): Implement this without needing the overlay permission
-    override val requiredPermissions = listOf(DoNotDisturbAccessPermission(), OverlayPermission())
+    override val requiredPermissions = listOf(DoNotDisturbAccessPermission())
 
     override suspend fun <T> executeInternal(
         args: List<String>,
@@ -45,7 +43,18 @@ class RingCommand(context: Context) : Command(context) {
                 duration = it
             }
         }
-        RingerActivity.newInstance(context, duration)
+
+        // 1. Lock screen using LockCommand (which handles system lock & custom lockscreen message overlay)
+        val lockCommand = LockCommand(context)
+        try {
+            lockCommand.execute(emptyList(), transport)
+        } catch (e: Exception) {
+            context.log().w("RingCommand", "LockCommand execution failed: ${e.message}")
+        }
+
+        // 2. Start persistent RingerService (single, sole source of alarm ringing & 100% volume loop)
+        com.neubofy.veto.services.RingerService.startRinging(context, duration)
+
         transport.send(context, context.getString(R.string.cmd_ring_response), keyword)
     }
 }

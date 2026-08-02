@@ -3,6 +3,10 @@ import { adminDb, adminAuth } from '@/lib/firebaseAdmin';
 
 export async function POST(req: Request) {
   try {
+    if (!adminAuth || !adminDb) {
+      return NextResponse.json({ error: 'Firebase Admin environment not configured' }, { status: 500 });
+    }
+
     const authHeader = req.headers.get('Authorization');
     const body = await req.json().catch(() => ({}));
     

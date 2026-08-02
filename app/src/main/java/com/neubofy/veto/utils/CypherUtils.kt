@@ -42,7 +42,7 @@ object CypherUtils {
 
     private const val ARGON2_T = 1
     private const val ARGON2_P = 4
-    private const val ARGON2_M = 131072
+    private const val ARGON2_M = 32768
     private const val ARGON2_HASH_LENGTH = 32
     private const val ARGON2_SALT_LENGTH = 16
 

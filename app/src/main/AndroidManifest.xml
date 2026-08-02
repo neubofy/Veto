@@ -127,6 +127,8 @@
             android:label="@string/log_view_title" />
         <activity
             android:name=".ui.RingerActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:turnScreenOn="true" />
@@ -135,7 +137,12 @@
         <activity android:name=".ui.settings.CommandsActivity" android:label="Commands" />
         <activity
             android:name=".ui.LockScreenMessage"
-            android:showOnLockScreen="true" />
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true" />
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
@@ -186,6 +193,10 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".services.RingerService"
+            android:exported="false" />
 
         <service
             android:name=".services.VetoFirebaseMessagingService"
