@@ -72,6 +72,9 @@ class NotificationListenService : NotificationListenerService() {
 
         // Deduplicate: same package + same message within 5 seconds = drop
         val now = System.currentTimeMillis()
+        // Clean up expired entries (> 10s old) so memory doesn't accumulate
+        recentCommands.entries.removeAll { (now - it.value) > 10000 }
+
         val commandKey = "${sbn.packageName}_$message"
         val lastSeen = recentCommands[commandKey]
         if (lastSeen != null && (now - lastSeen) < 5000) {

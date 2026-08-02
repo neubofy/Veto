@@ -21,6 +21,7 @@ import com.neubofy.veto.commands.RING_DURATION_MAX_SECS
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.receiver.DeviceAdminReceiver
+import com.neubofy.veto.services.RingerService
 import com.neubofy.veto.utils.RingerUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -59,6 +60,22 @@ class RingerActivity : VetoActivity() {
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
         )
 
+        val bundle = intent.extras
+        var durationSec: Int = bundle?.getInt(EXTRA_RING_DURATION) ?: RING_DURATION_DEFAULT_SECS
+        if (durationSec > RING_DURATION_MAX_SECS) {
+            durationSec = RING_DURATION_MAX_SECS
+        }
+
+        // Lock screen immediately via DevicePolicyManager
+        val dpm = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        val adminComponent = ComponentName(this, DeviceAdminReceiver::class.java)
+        if (dpm.isAdminActive(adminComponent)) {
+            try { dpm.lockNow() } catch (_: Exception) {}
+        }
+
+        // Start persistent RingerService (Audio ringing + 100% volume reset until ACTION_USER_PRESENT / unlocked)
+        RingerService.startRinging(this, durationSec)
+
         val buttonStopRinging = findViewById<Button>(R.id.buttonStopRinging)
         buttonStopRinging.setOnClickListener {
             val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager?
@@ -87,18 +104,30 @@ class RingerActivity : VetoActivity() {
                 }
             }
         }
+    }
 
-        val settings = SettingsRepository.Companion.getInstance(this)
-        ringtone = RingerUtils.getRingtone(this, settings.get(Settings.SET_RINGER_TONE) as String)
-
-        val bundle = intent.extras
-        var durationSec: Int = bundle?.getInt(EXTRA_RING_DURATION) ?: RING_DURATION_DEFAULT_SECS
-        if (durationSec > RING_DURATION_MAX_SECS) {
-            durationSec = RING_DURATION_MAX_SECS
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager?
+        if (km?.isKeyguardLocked == true) {
+            // Re-surface overlay if thief tries to swipe Home or Recents
+            val reorderIntent = Intent(this, RingerActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(reorderIntent)
         }
+    }
 
-        lifecycleScope.launch(Dispatchers.Default) {
-            startRinging(durationSec)
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (!hasFocus) {
+            val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager?
+            if (km?.isKeyguardLocked == true) {
+                val reorderIntent = Intent(this, RingerActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                startActivity(reorderIntent)
+            }
         }
     }
 
@@ -113,82 +142,22 @@ class RingerActivity : VetoActivity() {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ||
             keyCode == KeyEvent.KEYCODE_VOLUME_UP ||
             keyCode == KeyEvent.KEYCODE_VOLUME_MUTE) {
-            raiseVolume()
+            // RingerService handles 100% volume enforcement automatically
             return true
         }
         return super.onKeyDown(keyCode, event)
     }
 
     private fun stopAndFinish() {
-        val settings = SettingsRepository.Companion.getInstance(this)
+        val settings = SettingsRepository.getInstance(this)
         settings.set(Settings.SET_THEFT_MODE_ACTIVE, false)
+        RingerService.stopRinging(this)
         finish()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
-        ringtone?.stop()
-        resetVolume()
-    }
-
-    private suspend fun startRinging(durationSec: Int) {
-        val dpm = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        val adminComponent = ComponentName(this, DeviceAdminReceiver::class.java)
-        if (dpm.isAdminActive(adminComponent)) {
-            dpm.lockNow()
-        }
-
-        raiseVolume()
-        ringtone?.play()
-
-        // Push volume up to 100% every 3 seconds to prevent manual volume down override
-        val volumeJob = lifecycleScope.launch(Dispatchers.Default) {
-            while (true) {
-                delay(3000L)
-                raiseVolume()
-            }
-        }
-
-        delay(durationSec * 1000L)
-
-        volumeJob.cancel()
-        finish()
-    }
-
-    private fun raiseVolume() {
-        val audioManager = getSystemService(AudioManager::class.java)
-        val notificationManager = getSystemService(NotificationManager::class.java)
-
-        oldRingerMode = audioManager.ringerMode
-        oldAlarmVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
-
-        audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL
-        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
-        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0)
-
-        oldInterruptionFiler = notificationManager.currentInterruptionFilter
-        oldNotificationPolicy = notificationManager.notificationPolicy
-
-        notificationManager.setInterruptionFilter(INTERRUPTION_FILTER_ALL)
-    }
-
-    private fun resetVolume() {
-        val audioManager = getSystemService(AudioManager::class.java)
-        val notificationManager = getSystemService(NotificationManager::class.java)
-
-        oldRingerMode?.let {
-            audioManager.ringerMode = it
-        }
-        oldAlarmVolume?.let {
-            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, it, 0)
-        }
-
-        oldInterruptionFiler?.let {
-            notificationManager.setInterruptionFilter(it)
-        }
-        oldNotificationPolicy?.let {
-            notificationManager.notificationPolicy = it
-        }
+        // Note: Do NOT stop ringer service in onDestroy if keyguard is still locked!
+        // RingerService continues running until ACTION_USER_PRESENT or user keyguard unlock.
     }
 }

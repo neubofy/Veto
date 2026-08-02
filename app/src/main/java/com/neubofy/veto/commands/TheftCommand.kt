@@ -7,6 +7,7 @@ import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.permissions.LocationPermission
 import com.neubofy.veto.transports.Transport
+import com.neubofy.veto.utils.log
 
 class TheftCommand(context: Context) : Command(context) {
 
@@ -22,21 +23,37 @@ class TheftCommand(context: Context) : Command(context) {
         
         settings.set(Settings.SET_THEFT_MODE_ACTIVE, true)
 
-        // Trigger Location Update first
-        val locateCommand = LocateCommand(context)
-        locateCommand.execute(listOf("gps"), transport)
+        // 1. Trigger Location Update
+        try {
+            val locateCommand = LocateCommand(context)
+            locateCommand.execute(listOf("gps"), transport)
+        } catch (e: Exception) {
+            context.log().w("TheftCommand", "LocateCommand in TheftMode failed: ${e.message}")
+        }
 
-        // Enable Bluetooth (requested)
-        val bluetoothCommand = BluetoothCommand(context)
-        bluetoothCommand.execute(listOf("on"), transport)
+        // 2. Enable Bluetooth
+        try {
+            val bluetoothCommand = BluetoothCommand(context)
+            bluetoothCommand.execute(listOf("on"), transport)
+        } catch (e: Exception) {
+            context.log().w("TheftCommand", "BluetoothCommand in TheftMode failed: ${e.message}")
+        }
 
-        // Disable DND (requested)
-        val dndCommand = NoDisturbCommand(context)
-        dndCommand.execute(listOf("off"), transport)
+        // 3. Disable DND
+        try {
+            val dndCommand = NoDisturbCommand(context)
+            dndCommand.execute(listOf("off"), transport)
+        } catch (e: Exception) {
+            context.log().w("TheftCommand", "NoDisturbCommand in TheftMode failed: ${e.message}")
+        }
 
-        // Trigger Ring Command for looping Ring and locking
-        val ringCommand = RingCommand(context)
-        ringCommand.execute(listOf("long"), transport)
+        // 4. Trigger Ring Command (Alarm Siren + Lock + 100% Volume Loop)
+        try {
+            val ringCommand = RingCommand(context)
+            ringCommand.execute(listOf("long"), transport)
+        } catch (e: Exception) {
+            context.log().w("TheftCommand", "RingCommand in TheftMode failed: ${e.message}")
+        }
         
         transport.send(context, context.getString(R.string.command_theft_description), keyword)
     }
