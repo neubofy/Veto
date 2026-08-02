@@ -7,6 +7,7 @@ import com.neubofy.veto.data.SettingsRepository
 
 import com.neubofy.veto.services.TempContactExpiredService
 import com.neubofy.veto.utils.log
+import kotlinx.coroutines.launch
 
 
 class BootReceiver : BroadcastReceiver() {
@@ -28,12 +29,15 @@ class BootReceiver : BroadcastReceiver() {
 
             val settings = SettingsRepository.getInstance(context)
             if (settings.get(com.neubofy.veto.data.Settings.SET_THEFT_MODE_ACTIVE) == true) {
-                // To keep it simple, we just re-execute the ring command via its Activity
-                // since the background service was removed.
                 try {
-                    com.neubofy.veto.ui.RingerActivity.newInstance(context, com.neubofy.veto.commands.RING_DURATION_LONG_SECS)
+                    val dummyTransport = com.neubofy.veto.transports.InAppTransport(context)
+                    val lockCommand = com.neubofy.veto.commands.LockCommand(context)
+                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                        lockCommand.execute(emptyList(), dummyTransport)
+                    }
+                    com.neubofy.veto.services.RingerService.startRinging(context, com.neubofy.veto.commands.RING_DURATION_LONG_SECS)
                 } catch (e: Exception) {
-                    context.log().e(TAG, "Failed to start RingerActivity on boot: \${e.message}")
+                    context.log().e(TAG, "Failed to start theft recovery on boot: ${e.message}")
                 }
             }
 

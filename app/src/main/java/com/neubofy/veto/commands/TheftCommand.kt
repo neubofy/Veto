@@ -23,7 +23,15 @@ class TheftCommand(context: Context) : Command(context) {
         
         settings.set(Settings.SET_THEFT_MODE_ACTIVE, true)
 
-        // 1. Trigger Location Update
+        // 1. Enable GPS explicitly
+        try {
+            val gpsCommand = GpsCommand(context)
+            gpsCommand.execute(listOf("on"), transport)
+        } catch (e: Exception) {
+            context.log().w("TheftCommand", "GpsCommand in TheftMode failed: ${e.message}")
+        }
+
+        // 2. Trigger Location Update
         try {
             val locateCommand = LocateCommand(context)
             locateCommand.execute(listOf("gps"), transport)

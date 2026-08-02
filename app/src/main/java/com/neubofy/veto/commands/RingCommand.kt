@@ -5,9 +5,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.neubofy.veto.R
 import com.neubofy.veto.permissions.DoNotDisturbAccessPermission
-import com.neubofy.veto.permissions.OverlayPermission
+import com.neubofy.veto.services.RingerService
 import com.neubofy.veto.transports.Transport
-import com.neubofy.veto.ui.RingerActivity
 import com.neubofy.veto.utils.log
 
 
@@ -29,7 +28,6 @@ class RingCommand(context: Context) : Command(context) {
     override val longDescription = null
 
     override val requiredPermissions = listOf(DoNotDisturbAccessPermission())
-    override val optionalPermissions = listOf(OverlayPermission())
 
     override suspend fun <T> executeInternal(
         args: List<String>,
@@ -46,16 +44,15 @@ class RingCommand(context: Context) : Command(context) {
             }
         }
 
-        // Lock screen as part of RingCommand package
+        // 1. Lock screen using LockCommand (which handles system lock & custom lockscreen message overlay)
         val lockCommand = LockCommand(context)
         try {
             lockCommand.execute(emptyList(), transport)
         } catch (e: Exception) {
-            context.log().w("RingCommand", "LockCommand failed: ${e.message}")
+            context.log().w("RingCommand", "LockCommand execution failed: ${e.message}")
         }
 
-        // Launch RingerActivity and start persistent RingerService
-        RingerActivity.newInstance(context, duration)
+        // 2. Start persistent RingerService (single, sole source of alarm ringing & 100% volume loop)
         com.neubofy.veto.services.RingerService.startRinging(context, duration)
 
         transport.send(context, context.getString(R.string.cmd_ring_response), keyword)

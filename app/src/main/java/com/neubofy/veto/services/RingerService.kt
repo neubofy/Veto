@@ -102,7 +102,7 @@ class RingerService : Service() {
         raiseVolumeToMax()
         ringtone?.play()
 
-        // 100% Volume Lock Loop (Resets volume to 100% every 2 seconds if user presses volume down)
+        // 100% Volume Lock Loop (Resets volume to 100% every 2 seconds if user turns volume down)
         serviceScope.launch {
             val startTime = System.currentTimeMillis()
             val maxDurationMillis = durationSecs * 1000L

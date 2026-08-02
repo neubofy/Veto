@@ -42,14 +42,6 @@ class RingerActivity : VetoActivity() {
         }
     }
 
-    private var ringtone: Ringtone? = null
-
-    private var oldRingerMode: Int? = null
-    private var oldAlarmVolume: Int? = null
-
-    private var oldInterruptionFiler: Int? = null
-    private var oldNotificationPolicy: NotificationManager.Policy? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ring)
@@ -64,13 +56,6 @@ class RingerActivity : VetoActivity() {
         var durationSec: Int = bundle?.getInt(EXTRA_RING_DURATION) ?: RING_DURATION_DEFAULT_SECS
         if (durationSec > RING_DURATION_MAX_SECS) {
             durationSec = RING_DURATION_MAX_SECS
-        }
-
-        // Lock screen immediately via DevicePolicyManager
-        val dpm = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        val adminComponent = ComponentName(this, DeviceAdminReceiver::class.java)
-        if (dpm.isAdminActive(adminComponent)) {
-            try { dpm.lockNow() } catch (_: Exception) {}
         }
 
         // Start persistent RingerService (Audio ringing + 100% volume reset until ACTION_USER_PRESENT / unlocked)
@@ -110,7 +95,6 @@ class RingerActivity : VetoActivity() {
         super.onUserLeaveHint()
         val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager?
         if (km?.isKeyguardLocked == true) {
-            // Re-surface overlay if thief tries to swipe Home or Recents
             val reorderIntent = Intent(this, RingerActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NEW_TASK)
             }
@@ -142,7 +126,6 @@ class RingerActivity : VetoActivity() {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ||
             keyCode == KeyEvent.KEYCODE_VOLUME_UP ||
             keyCode == KeyEvent.KEYCODE_VOLUME_MUTE) {
-            // RingerService handles 100% volume enforcement automatically
             return true
         }
         return super.onKeyDown(keyCode, event)
@@ -157,7 +140,5 @@ class RingerActivity : VetoActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // Note: Do NOT stop ringer service in onDestroy if keyguard is still locked!
-        // RingerService continues running until ACTION_USER_PRESENT or user keyguard unlock.
     }
 }
