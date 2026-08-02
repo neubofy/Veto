@@ -225,7 +225,7 @@ export default function Home() {
     // Structured JSON Payload
     if (typeof payload === 'object') {
       if (payload.type === 'location') {
-        const { lat, lon, provider, accuracy } = payload;
+        const { lat, lon, provider, accuracy, batteryLevel, speed, altitude, bearing, timeMillis } = payload;
         const googleEmbedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
         
         return (
@@ -240,10 +240,13 @@ export default function Home() {
               borderRadius: '8px',
               display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px'
             }}>
-              <div><strong>Latitude:</strong> {lat}</div>
-              <div><strong>Longitude:</strong> {lon}</div>
               <div><strong>Provider:</strong> {provider || 'GPS'}</div>
               {accuracy && <div><strong>Accuracy:</strong> {accuracy}</div>}
+              {batteryLevel !== undefined && <div><strong>Battery:</strong> {batteryLevel}%</div>}
+              {speed !== undefined && <div><strong>Speed:</strong> {speed} m/s</div>}
+              {altitude !== undefined && <div><strong>Altitude:</strong> {altitude} m</div>}
+              {bearing !== undefined && <div><strong>Bearing:</strong> {bearing}°</div>}
+              {timeMillis && <div style={{ gridColumn: '1 / -1' }}><strong>Time:</strong> {new Date(timeMillis).toLocaleString()}</div>}
             </div>
             <a href={`https://maps.google.com/?q=${lat},${lon}`} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', display: 'block', padding: '0.75rem' }}>
               Open in Google Maps
