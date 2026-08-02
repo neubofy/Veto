@@ -164,7 +164,6 @@ class SettingsRepository private constructor(private val context: Context) {
         if (currentVersion < 3) {
             migrateDeletePassword()
         }
-        migrateBackgroundLocationType()
 
         set(Settings.SET_SET_VERSION, Settings.SETTINGS_VERSION)
     }
@@ -177,14 +176,6 @@ class SettingsRepository private constructor(private val context: Context) {
         val encSettings = EncryptedSettingsRepository.getInstance(context)
         val pin = encSettings.getVetoPin()
         encSettings.setDeletePassword(pin)
-    }
-
-    private fun migrateBackgroundLocationType() {
-        val oldType = get(Settings.SET_VetoSERVER_LOCATION_TYPE) as Int
-        if (oldType < BackgroundLocationType.BASE) {
-            val newType = BackgroundLocationType.fromOldEncoding(oldType)
-            set(Settings.SET_VetoSERVER_LOCATION_TYPE, newType.encode())
-        }
     }
 
 // ---------- Convenience helpers ----------

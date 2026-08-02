@@ -29,7 +29,6 @@ public class Settings extends HashMap<Integer, Object> {
     public static final int SET_VetoSERVER_ID = 104;
     public static final int SET_SYNCED_FCM_TOKEN = 1041;
     public static final int SET_VetoSERVER_PASSWORD_SET = 105;
-    public static final int SET_VetoSERVER_LOCATION_TYPE = 106; // BackgroundLocationType
     //public static final int SET_VetoSERVER_AUTO_UPLOAD = 107;
     public static final int SET_Veto_CRYPT_PUBKEY = 108;
     public static final int SET_Veto_CRYPT_PRIVKEY = 109;
@@ -38,7 +37,6 @@ public class Settings extends HashMap<Integer, Object> {
     //public static final int SET_Veto_CRYPT_NEW_SALT = 112;
     public static final int SET_UPDATEBOARDING_MODERN_CRYPTO_COMPLETED = 113;
     public static final int SET_VetoSERVER_PUSH_URL = 114;
-    public static final int SET_VetoSERVER_LAST_LOCATION_UPLOAD_TIME = 115;
     public static final int SET_VetoSERVER_LAST_CMD_MILLIS = 116;
     public static final int SET_Veto_EDGE_INFO_SHOWN = 117;
 
@@ -97,8 +95,6 @@ public class Settings extends HashMap<Integer, Object> {
                 case SET_VetoSMS_COUNTER:
                 case SET_SET_VERSION:
                     return 0;
-                case SET_VetoSERVER_LOCATION_TYPE:
-                    return BackgroundLocationType.Companion.getEMPTY();
                 case SET_RINGER_TONE:
                     return RingerUtils.getDefaultRingtoneAsString();
                 case SET_PIN:
@@ -117,7 +113,6 @@ public class Settings extends HashMap<Integer, Object> {
                 case SET_APP_CRASHED_LOG_ENTRY:
                     return 0;
                 case SET_LAST_LOW_BAT_UPLOAD:
-                case SET_VetoSERVER_LAST_LOCATION_UPLOAD_TIME:
                     return -1L;
                 case SET_THEME:
                     return VAL_THEME_FOLLOW_SYSTEM;

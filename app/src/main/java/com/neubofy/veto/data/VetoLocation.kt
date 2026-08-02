@@ -46,8 +46,6 @@ data class VetoLocation(
     override fun toString(): String {
         val string = StringBuilder()
             .append("$provider:\n")
-            .append("Lat: $lat\n")
-            .append("Lon: $lon\n")
 
         if (accuracy != null) {
             string.append("Accuracy: %.1f m\n".format(accuracy))
@@ -70,6 +68,6 @@ data class VetoLocation(
 
     fun toCompactString(): String {
         val accStr = if (accuracy != null) "%.1f m".format(accuracy) else "N/A"
-        return "Lat: $lat, Lon: $lon | Acc: $accStr | Batt: $batteryLevel% | Time: ${Date(timeMillis)}\n${getGoogleMapsLink(lat, lon)}"
+        return "Acc: $accStr | Batt: $batteryLevel% | Time: ${Date(timeMillis)}\n${getGoogleMapsLink(lat, lon)}"
     }
 }

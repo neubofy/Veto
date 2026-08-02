@@ -108,6 +108,11 @@ class NextJsServerTransport(
         json.put("lon", location.lon)
         json.put("provider", location.provider)
         json.put("accuracy", "${location.accuracy}m")
+        json.put("batteryLevel", location.batteryLevel)
+        json.put("timeMillis", location.timeMillis)
+        if (location.altitude != null) json.put("altitude", location.altitude)
+        if (location.bearing != null) json.put("bearing", location.bearing)
+        if (location.speed != null) json.put("speed", location.speed)
 
         // Send structured JSON instead of string
         send(context, json.toString(), commandName)
