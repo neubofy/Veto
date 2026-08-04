@@ -30,6 +30,16 @@
                 tools:drawableStartCompat="@drawable/ic_camera"
                 tools:text="camera [on | off]" />
 
+                        <ImageView
+                android:id="@+id/btn_help_web"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_help"
+                android:contentDescription="@string/cmd_help_web" />
+
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_command_enabled"
                 android:layout_width="wrap_content"

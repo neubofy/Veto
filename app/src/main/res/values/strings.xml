@@ -452,4 +452,5 @@
     <string name="setting_media_title">Media &amp; Storage</string>
     <string name="setting_hide_gallery_title">Hide Veto media in device gallery</string>
     <string name="setting_hide_gallery_desc">Creates a .nomedia file in the Veto directory so captured photos, videos, and audio do not appear in Photos/Gallery apps.</string>
+    <string name="cmd_help_web">View command details on website</string>
 </resources>
