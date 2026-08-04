@@ -1,10 +1,22 @@
-'use client';
+import re
+
+with open('website/app/page.tsx', 'r') as f:
+    content = f.read()
+
+# We want to extract the footer
+footer_start = content.find('      {/* Footer */}')
+if footer_start == -1:
+    footer_start = content.find('<footer')
+
+footer_content = content[footer_start:]
+
+new_page = """'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { auth } from '@/lib/firebaseClient';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { motion } from 'framer-motion';
-import { Shield, Bluetooth, MapPin, BellRing, Lock, EyeOff, ServerOff, Sliders, HardDrive } from 'lucide-react';
+import { Shield, Bluetooth, MapPin, BellRing, Lock, EyeOff, Smartphone, ServerOff, Sliders, HardDrive, Image as ImageIcon, Video, Mic } from 'lucide-react';
 
 export default function LandingPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -30,19 +42,19 @@ export default function LandingPage() {
   return (
     <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-color)', color: 'var(--text-primary)' }}>
       {/* Navigation Bar */}
-      <nav style={{ 
-        padding: '1rem 2rem', 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        borderBottom: '1px solid var(--border-light, rgba(255,255,255,0.1))', 
+      <nav style={{
+        padding: '1rem 2rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottom: '1px solid var(--border-light, rgba(255,255,255,0.1))',
         background: 'var(--nav-bg)',
-        backdropFilter: 'blur(12px)', 
-        position: 'sticky', 
-        top: 0, 
-        zIndex: 100, 
-        flexWrap: 'wrap', 
-        gap: '1rem' 
+        backdropFilter: 'blur(12px)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        flexWrap: 'wrap',
+        gap: '1rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div style={{ fontSize: '1.8rem', fontWeight: '900', background: 'linear-gradient(135deg, #2f81f7, #a482d8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.5px' }}>
@@ -79,7 +91,7 @@ export default function LandingPage() {
         style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '6rem 1.5rem 4rem 1.5rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}
       >
         <div style={{ background: 'radial-gradient(circle, rgba(47, 129, 247, 0.2) 0%, rgba(13, 17, 23, 0) 70%)', width: '700px', height: '700px', position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, pointerEvents: 'none' }}></div>
-        
+
         <div style={{ position: 'relative', zIndex: 1, maxWidth: '1000px' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '30px', backgroundColor: 'rgba(47, 129, 247, 0.1)', border: '1px solid var(--primary-color)', marginBottom: '1.5rem', fontSize: '0.9rem', color: '#58a6ff' }}>
             <Shield size={16} /> The Ultimate PR Management & Device Recovery Tool
@@ -89,7 +101,7 @@ export default function LandingPage() {
             Absolute Control.<br/>
             <span style={{ background: 'linear-gradient(90deg, #2f81f7, #a482d8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Zero Compromise.</span>
           </h1>
-          
+
           <p style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.35rem)', color: 'var(--text-secondary)', maxWidth: '800px', margin: '0 auto 3rem auto', lineHeight: 1.6 }}>
             Veto redefines Find My Device apps. Remotely toggle GPS, Bluetooth, and lock your phone with unbypassable security from Dashboard, SMS, WhatsApp, or Telegram. Total data privacy, offline control, and direct Google Drive storage—we just handle the links.
           </p>
@@ -141,7 +153,7 @@ export default function LandingPage() {
               <div style={{ marginBottom: '1.25rem', color: 'var(--primary-color)' }}><MapPin size={40} /></div>
               <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Privacy-Focused Tracking</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                We don&apos;t track your live location by default. Get an instant ping of your current location on demand. <strong>Coming soon:</strong> Auto-update location to dashboard every 15 minutes if the device moves beyond a 100-meter radius.
+                We don't track your live location by default. Get an instant ping of your current location on demand. <strong>Coming soon:</strong> Auto-update location to dashboard every 15 minutes if the device moves beyond a 100-meter radius.
               </p>
             </div>
 
@@ -149,7 +161,7 @@ export default function LandingPage() {
               <div style={{ marginBottom: '1.25rem', color: 'var(--primary-color)' }}><Sliders size={40} /></div>
               <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Granular Granular Control</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                You are in the driver&apos;s seat. Disable any specific command or restrict any transport method directly from the app. High security meets personalized access control.
+                You are in the driver's seat. Disable any specific command or restrict any transport method directly from the app. High security meets personalized access control.
               </p>
             </div>
           </div>
@@ -213,7 +225,7 @@ export default function LandingPage() {
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <div style={{ color: '#a482d8', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Zero Trust Privacy</div>
             <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: '800', marginBottom: '1rem' }}>End-to-End Encryption & Cloudless Control</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6 }}>We don&apos;t want your data. Period.</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6 }}>We don't want your data. Period.</p>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -249,66 +261,8 @@ export default function LandingPage() {
           </div>
         </div>
       </motion.section>
-      {/* Footer */}
-      <footer style={{ padding: '4rem 2rem', borderTop: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', fontSize: '0.9rem', backgroundColor: 'var(--bg-color)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: '3rem', justifyContent: 'space-between' }}>
+"""
 
-          <div style={{ flex: '1 1 300px' }}>
-            <h4 style={{ color: 'var(--text-primary)', fontSize: '1.2rem', marginBottom: '1rem', fontWeight: '600' }}>Veto Security</h4>
-            <p style={{ marginBottom: '1rem', lineHeight: 1.6 }}>Absolute control. Zero compromise. The ultimate Android security and remote management platform.</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <a href="https://github.com/neubofy/Veto" target="_blank" rel="noreferrer" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>GitHub Repository</a>
-              <a href="mailto:support@neubofy.in" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>Support: support@neubofy.in</a>
-              <a href="https://github.com/pawanwashudev-official" target="_blank" rel="noreferrer" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>Developer Profile</a>
-            </div>
-          </div>
-
-          <div style={{ flex: '1 1 300px' }}>
-            <h4 style={{ color: 'var(--text-primary)', fontSize: '1.2rem', marginBottom: '1rem', fontWeight: '600' }}>Social &amp; Contact</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <a href="https://instagram.com/pawanwashudev" target="_blank" rel="noreferrer" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>Instagram @pawanwashudev</a>
-              <a href="https://t.me/pawanwashudev" target="_blank" rel="noreferrer" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>Telegram @pawanwashudev</a>
-              <a href="https://x.com/pawanwashudev" target="_blank" rel="noreferrer" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>X @pawanwashudev</a>
-              <a href="https://wa.me/pawanwashudev" target="_blank" rel="noreferrer" className="nav-link" style={{ color: '#58a6ff', textDecoration: 'none' }}>WhatsApp @pawanwashudev</a>
-            </div>
-          </div>
-
-          <div style={{ flex: '1 1 320px', display: 'flex', justifyContent: 'center' }}>
-            <div className="glass-panel" style={{ width: '320px', borderRadius: '14px', padding: '16px' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://0.gravatar.com/avatar/f1b5ad3b6a5c5ff2617ea5477983f25a265036eee4f453f3c4806fb78c894494?s=256&d=initials"
-                width="64"
-                height="64"
-                alt="Pawan Washudev"
-                style={{ marginBottom: '8px', borderRadius: '50%' }}
-              />
-              <div style={{ color: 'var(--text-primary)', fontSize: '18px', fontWeight: '700' }}>
-                Pawan Washudev
-              </div>
-              <div style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-                Founder, Neubofy
-              </div>
-              <div style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-                Patna, Bihar, India
-              </div>
-              <a
-                href="https://gravatar.com/pawanwashudevofficial?utm_source=email_signature"
-                target="_blank"
-                rel="noreferrer"
-                style={{ display: 'block', color: '#58a6ff', marginTop: '8px', fontSize: '14px', textDecoration: 'none' }}
-              >
-                gravatar.com/pawanwashudevofficial
-              </a>
-            </div>
-          </div>
-
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--border-light)' }}>
-          <p>&copy; {new Date().getFullYear()} Veto Security. All rights reserved.</p>
-          <p style={{ marginTop: '0.5rem', opacity: 0.6, fontSize: '0.8rem' }}>Proprietary software maintained by Neubofy</p>
-        </div>
-      </footer>
-    </main>
-  );
-}
+with open('website/app/page.tsx', 'w') as f:
+    f.write(new_page)
+    f.write(footer_content)
