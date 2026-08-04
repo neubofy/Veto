@@ -92,7 +92,7 @@ export default function LandingPage() {
           </h1>
           
           <p style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.35rem)', color: 'var(--text-secondary)', maxWidth: '750px', margin: '0 auto 3rem auto', lineHeight: 1.6 }}>
-            Veto provides a reliable toolkit to manage, track, and secure your Android device. It uses advanced multi-transport fallbacks, including offline SMS and Web Dashboard access, ensuring you stay connected and protected.
+            Veto provides a reliable toolkit to manage, track, and secure your Android device. Introduce new users to our app with next-gen PR management. It uses advanced multi-transport fallbacks, including offline SMS and Web Dashboard access, ensuring you stay connected and protected.
           </p>
 
           <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -129,29 +129,29 @@ export default function LandingPage() {
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '650px', margin: '0 auto' }}>Built with zero-trust cryptography and multi-transport redundancy so you never lose control of your device.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
             
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
               <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>🛡️</div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>100% Data Sovereignty</h3>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Total Control & Sovereignty</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                Retain complete control over your private data. Deploy your own Vercel Web Dashboard and Firebase instance with zero analytics, zero ad-tracking, and zero third-party telemetry harvesting.
+                You have full control to disable any command or transport method from your app. Veto offers end-to-end encryption for server and Firestore data. Use the app without cloud sync via SMS and messaging apps. Media files are stored in your Google Drive with restricted access links that do not require login.
               </p>
             </div>
 
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>📡</div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Multi-Transport Fallback</h3>
+              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>📍</div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Advanced Location Tracking</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                Control your phone via real-time FCM push notifications, offline SMS text messages (<code style={{ color: '#58a6ff' }}>VETO LOCATE &lt;PIN&gt;</code>), or notification auto-reply interception on WhatsApp, Telegram, and Signal.
+                Fetch your current location anytime. Upcoming Feature: If your device moves beyond a 100-meter radius, its location will automatically update on the dashboard within 15 minutes.
               </p>
             </div>
 
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>🔐</div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Zero-Trust Cryptography</h3>
+              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>🔒</div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Unbypassable Security</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                Features Argon2id key derivation, AES-256-GCM symmetric payload encryption, RSA-3072 OAEP key wrapping, and constant-time password verification to defend against side-channel attacks.
+                Remote locking completely disables biometrics. The Ring mode automatically triggers the lock command, playing a continuous, unbypassable custom siren with device vibration. It includes smart speaker health management, automatically resting and resuming until unlocked.
               </p>
             </div>
 
@@ -189,7 +189,7 @@ export default function LandingPage() {
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>💬</div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#58a6ff' }}>2. Offline SMS Control</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                Execute commands remotely without an internet connection. If calling from an untrusted number, use your PIN: <code style={{ color: '#58a6ff' }}>VETO &lt;PIN&gt; LOCATE</code>. This temporarily whitelists you. Allowed contacts can simply use: <code style={{ color: '#58a6ff' }}>VETO LOCATE</code>.
+                Execute commands remotely without an internet connection, including toggling Bluetooth and GPS. If calling from an untrusted number, use your PIN: <code style={{ color: '#58a6ff' }}>VETO &lt;PIN&gt; LOCATE</code>. This temporarily whitelists you. Allowed contacts can simply use: <code style={{ color: '#58a6ff' }}>VETO LOCATE</code>.
               </p>
             </div>
 
@@ -197,7 +197,7 @@ export default function LandingPage() {
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔔</div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#58a6ff' }}>3. Notification Interception</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                Intercepts auto-reply notification intents from installed messaging apps. Similarly to SMS, use <code style={{ color: '#58a6ff' }}>VETO &lt;PIN&gt; COMMAND</code> to securely authenticate via messaging platforms if your number isn&apos;t whitelisted.
+                Intercepts auto-reply notification intents from messaging apps like WhatsApp and Telegram. Similarly to SMS, use <code style={{ color: '#58a6ff' }}>VETO &lt;PIN&gt; COMMAND</code> to securely authenticate via messaging platforms if your number isn&apos;t whitelisted.
               </p>
             </div>
 
