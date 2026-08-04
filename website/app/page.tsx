@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { auth } from '@/lib/firebaseClient';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { motion } from 'framer-motion';
+import { ShieldCheck, Crosshair, Lock, BellRing, Smartphone, MapPin, Search, Server, HardDrive, Share2, Shield, Settings } from 'lucide-react';
+
 
 export default function LandingPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -80,18 +82,19 @@ export default function LandingPage() {
       >
         <div style={{ background: 'radial-gradient(circle, rgba(47, 129, 247, 0.2) 0%, rgba(13, 17, 23, 0) 70%)', width: '700px', height: '700px', position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, pointerEvents: 'none' }}></div>
         
+
         <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '30px', backgroundColor: 'rgba(47, 129, 247, 0.1)', border: '1px solid var(--primary-color)', marginBottom: '1.5rem', fontSize: '0.9rem', color: '#58a6ff' }}>
-            <span>🛡️</span> Self-Hosted Anti-Theft &amp; Remote Device Recovery
+            <span>🛡️</span> Highly Reliable Remote Device Management
           </div>
 
           <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: '900', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-1.5px' }}>
-            Absolute Device Control.<br/>
-            <span style={{ background: 'linear-gradient(90deg, #2f81f7, #a482d8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Zero Third-Party Compromise.</span>
+            User-Friendly Control.<br/>
+            <span style={{ background: 'linear-gradient(90deg, #2f81f7, #a482d8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Zero Compromise on Security.</span>
           </h1>
           
           <p style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.35rem)', color: 'var(--text-secondary)', maxWidth: '750px', margin: '0 auto 3rem auto', lineHeight: 1.6 }}>
-            Veto provides the ultimate toolkit to track, lock, record, and recover your lost or stolen Android device across offline SMS, messenger auto-replies, and a secure Vercel-hosted Web Dashboard — without relying on commercial tracking servers.
+            Veto provides a reliable toolkit to manage, track, and secure your Android device. Introduce new users to our app with next-gen PR management. It uses advanced multi-transport fallbacks, including offline SMS and Web Dashboard access, ensuring you stay connected and protected.
           </p>
 
           <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -128,29 +131,29 @@ export default function LandingPage() {
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '650px', margin: '0 auto' }}>Built with zero-trust cryptography and multi-transport redundancy so you never lose control of your device.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
             
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>🛡️</div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>100% Data Sovereignty</h3>
+              <div style={{ marginBottom: '1.25rem', color: '#58a6ff' }}><ShieldCheck size={48} /></div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Total Control & Sovereignty</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                Retain complete control over your private data. Deploy your own Vercel Web Dashboard and Firebase instance with zero analytics, zero ad-tracking, and zero third-party telemetry harvesting.
+                You have full control to disable any command or transport method from your app. Veto offers end-to-end encryption for server and Firestore data. Use the app without cloud sync via SMS and messaging apps. Media files are stored in your Google Drive with restricted access links that do not require login.
               </p>
             </div>
 
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>📡</div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Multi-Transport Fallback</h3>
+              <div style={{ marginBottom: '1.25rem', color: '#58a6ff' }}><MapPin size={48} /></div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Advanced Location Tracking</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                Control your phone via real-time FCM push notifications, offline SMS text messages (<code style={{ color: '#58a6ff' }}>VETO LOCATE &lt;PIN&gt;</code>), or notification auto-reply interception on WhatsApp, Telegram, and Signal.
+                Fetch your current location anytime. Upcoming Feature: If your device moves beyond a 100-meter radius, its location will automatically update on the dashboard within 15 minutes.
               </p>
             </div>
 
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>🔐</div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Zero-Trust Cryptography</h3>
+              <div style={{ marginBottom: '1.25rem', color: '#58a6ff' }}><Lock size={48} /></div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Unbypassable Security</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                Features Argon2id key derivation, AES-256-GCM symmetric payload encryption, RSA-3072 OAEP key wrapping, and constant-time password verification to defend against side-channel attacks.
+                Remote locking completely disables biometrics. The Ring mode automatically triggers the lock command, playing a continuous, unbypassable custom siren with device vibration. It includes smart speaker health management, automatically resting and resuming until unlocked.
               </p>
             </div>
 
@@ -174,7 +177,7 @@ export default function LandingPage() {
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', maxWidth: '650px', margin: '0 auto' }}>Whether your phone has a high-speed 5G connection or no cellular data at all, Veto remains accessible.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
             
             <div className="glass-panel" style={{ border: '1px solid var(--primary-color)', borderRadius: '12px', padding: '1.75rem' }}>
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🌐</div>
@@ -188,7 +191,7 @@ export default function LandingPage() {
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>💬</div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#58a6ff' }}>2. Offline SMS Control</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                Execute commands remotely without an internet connection. Send SMS text commands (<code style={{ color: '#58a6ff' }}>VETO LOCATE &lt;PIN&gt;</code>) and receive immediate SMS replies.
+                Execute commands remotely without an internet connection, including toggling Bluetooth and GPS. If calling from an untrusted number, use your PIN: <code style={{ color: '#58a6ff' }}>VETO &lt;PIN&gt; LOCATE</code>. This temporarily whitelists you. Allowed contacts can simply use: <code style={{ color: '#58a6ff' }}>VETO LOCATE</code>.
               </p>
             </div>
 
@@ -196,7 +199,7 @@ export default function LandingPage() {
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔔</div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#58a6ff' }}>3. Notification Interception</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                Intercepts auto-reply notification intents from <strong>ANY installed messaging app</strong> (WhatsApp, Telegram, Signal, Matrix) and executes commands.
+                Intercepts auto-reply notification intents from messaging apps like WhatsApp and Telegram. Similarly to SMS, use <code style={{ color: '#58a6ff' }}>VETO &lt;PIN&gt; COMMAND</code> to securely authenticate via messaging platforms if your number isn&apos;t whitelisted.
               </p>
             </div>
 
@@ -226,6 +229,7 @@ export default function LandingPage() {
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', maxWidth: '650px', margin: '0 auto' }}>Full matrix of commands supported by Veto via Web Dashboard, SMS, or Notification Auto-Reply.</p>
           </div>
 
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
             
             <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
@@ -234,7 +238,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Location</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Powers on location hardware automatically and fetches accurate GPS/Network/Cell coordinates with Google Maps links. Usage: <code style={{ color: 'var(--text-primary)' }}>veto locate [last|gps]</code>
+                Powers on location hardware automatically and fetches accurate GPS/Network/Cell coordinates with Google Maps links.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto locate</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 
@@ -244,7 +248,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(235, 163, 54, 0.15)', color: '#eba336', padding: '2px 8px', borderRadius: '4px' }}>Macro</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth, turns off DND, and blares a 3-minute siren alarm.
+                Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth, turns off DND, and blares a siren alarm.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto theft</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 
@@ -254,7 +258,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Alarm</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Bypasses DND &amp; silent mode, maxes out alarm stream volume, wakes the screen, and loops a high-decibel alert. Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [long|seconds]</code>
+                Bypasses DND &amp; silent mode, maxes out alarm stream volume, wakes the screen, and loops a high-decibel alert.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [long]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
               </p>
             </div>
 
@@ -264,17 +268,17 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Security</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Instantly locks screen using Device Admin API and optionally renders full-screen owner contact overlay message. Usage: <code style={{ color: 'var(--text-primary)' }}>veto lock [custom message]</code>
+                Instantly locks screen using Device Admin API and optionally renders full-screen owner contact overlay message.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto lock [msg]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DeviceAdminPermission</code>
               </p>
             </div>
 
             <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📸 veto camera</span>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📸 veto photo</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Silently captures photo using front or rear camera over lock screens and backs up file to Google Drive. Usage: <code style={{ color: 'var(--text-primary)' }}>veto camera [front|back] [flash]</code>
+                Silently captures photo using front or rear camera over lock screens and backs up file to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto photo [front | back] [flash]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>
               </p>
             </div>
 
@@ -284,7 +288,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Records 30 seconds of high-quality AAC ambient audio from microphone in background and uploads to Google Drive.
+                Records high-quality AAC ambient audio from microphone in background and uploads to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto audio</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
               </p>
             </div>
 
@@ -292,12 +296,11 @@ export default function LandingPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🎥 veto video</span>
-                  <span style={{ fontSize: '0.7rem', backgroundColor: 'rgba(235, 163, 54, 0.2)', color: '#eba336', padding: '1px 5px', borderRadius: '4px', fontWeight: 'bold' }}>BETA</span>
                 </div>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Records 30 seconds of background video from front or back camera and backs up to Google Drive. Usage: <code style={{ color: 'var(--text-primary)' }}>veto video [front|back]</code>
+                Records background video from front or back camera and backs up to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto video [front | back]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>, <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
               </p>
             </div>
 
@@ -307,7 +310,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Toggles camera flashlight hardware ON/OFF or blinks torch 10 times for visual location signaling. Usage: <code style={{ color: 'var(--text-primary)' }}>veto flash [on|off]</code>
+                Toggles camera flashlight hardware ON/OFF or blinks torch for visual location signaling.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto flash [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>None</code>
               </p>
             </div>
 
@@ -317,7 +320,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Telemetry</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Returns device model, Android release, battery %, SIM carrier, SIM phone number, IP addresses, and Wi-Fi SSID scan results.
+                Returns device model, Android release, battery %, SIM carrier, SIM phone number, IP addresses, and Wi-Fi SSID scan results.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto stats</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 
@@ -327,7 +330,107 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(248, 81, 73, 0.15)', color: '#f85149', padding: '2px 8px', borderRadius: '4px' }}>Danger</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Constant-time password-verified emergency factory reset with a 3-second transmission buffer to deliver confirmation. Usage: <code style={{ color: 'var(--text-primary)' }}>veto delete &lt;password&gt; [dryrun]</code>
+                Constant-time password-verified emergency factory reset with a transmission buffer to deliver confirmation.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto delete &lt;password&gt; [dryrun]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DeviceAdminPermission</code>
+              </p>
+            </div>
+
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📡 veto bluetooth</span>
+                <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
+              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Toggles bluetooth hardware ON/OFF.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto bluetooth [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>BluetoothConnectPermission</code>
+              </p>
+            </div>
+
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🔇 veto nodisturb</span>
+                <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>System</span>
+              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Toggles Do Not Disturb mode ON/OFF.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto nodisturb [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
+              </p>
+            </div>
+
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📳 veto ringermode</span>
+                <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>System</span>
+              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Changes the device ringer profile.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ringermode [normal | vibrate | silent]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
+              </p>
+            </div>
+
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🛰️ veto gps</span>
+                <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
+              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Toggles Location / GPS ON/OFF.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto gps [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>WriteSecureSettingsPermission</code>
+              </p>
+            </div>
+
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>❓ veto help</span>
+                <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Utility</span>
+              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
+                Displays list of available commands.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto help</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>None</code>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </motion.section>
+
+
+      {/* Help & FAQ Section */}
+      <motion.section
+        id="faq"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+        style={{ padding: '5rem 1.5rem', backgroundColor: 'var(--bg-color)', borderTop: '1px solid var(--border-light)' }}
+      >
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: '800', marginBottom: '1rem' }}>Help &amp; FAQ</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6 }}>Common questions and troubleshooting for Veto commands and transports.</p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why didn&apos;t my SMS command work?</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                A: If you are sending an SMS from a number that is not on your <strong>Allowlist</strong>, you must include your PIN in the command: <code>veto &lt;PIN&gt; locate</code>. Sending a correct PIN will temporarily whitelist that number for future commands. Also, verify that Veto has SMS permissions enabled.
+              </p>
+            </div>
+
+            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why is Notification Reply not working?</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                A: First, ensure you have granted Veto <strong>Notification Access</strong> in your device settings. Second, you must select the specific messaging app (e.g., WhatsApp, Telegram) within Veto&apos;s settings. Lastly, ensure you are using the PIN format (<code>veto &lt;PIN&gt; command</code>) if required by your settings.
+              </p>
+            </div>
+
+            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why are my commands being ignored when the app is in the background?</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                A: Modern Android versions aggressively kill background tasks. You must <strong>disable battery optimizations</strong> for Veto in your system settings to ensure it can always receive and process your commands.
+              </p>
+            </div>
+
+            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why did media upload (photo/audio) fail?</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                A: Verify that you have linked your <strong>Google Drive</strong> account within the Veto app settings. The device also needs an active internet connection to upload the files.
               </p>
             </div>
 
