@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { auth } from '@/lib/firebaseClient';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { motion } from 'framer-motion';
+import { ShieldCheck, Crosshair, Lock, BellRing, Smartphone, MapPin, Search, Server, HardDrive, Share2, Shield, Settings } from 'lucide-react';
+
 
 export default function LandingPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -132,7 +134,7 @@ export default function LandingPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
             
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>🛡️</div>
+              <div style={{ marginBottom: '1.25rem', color: '#58a6ff' }}><ShieldCheck size={48} /></div>
               <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Total Control & Sovereignty</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 You have full control to disable any command or transport method from your app. Veto offers end-to-end encryption for server and Firestore data. Use the app without cloud sync via SMS and messaging apps. Media files are stored in your Google Drive with restricted access links that do not require login.
@@ -140,7 +142,7 @@ export default function LandingPage() {
             </div>
 
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>📍</div>
+              <div style={{ marginBottom: '1.25rem', color: '#58a6ff' }}><MapPin size={48} /></div>
               <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Advanced Location Tracking</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 Fetch your current location anytime. Upcoming Feature: If your device moves beyond a 100-meter radius, its location will automatically update on the dashboard within 15 minutes.
@@ -148,7 +150,7 @@ export default function LandingPage() {
             </div>
 
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '1.25rem' }}>🔒</div>
+              <div style={{ marginBottom: '1.25rem', color: '#58a6ff' }}><Lock size={48} /></div>
               <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Unbypassable Security</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 Remote locking completely disables biometrics. The Ring mode automatically triggers the lock command, playing a continuous, unbypassable custom siren with device vibration. It includes smart speaker health management, automatically resting and resuming until unlocked.
