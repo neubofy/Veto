@@ -1,6 +1,6 @@
 # Veto
 
-Veto provides the ultimate toolkit to track, lock, record, and recover your lost or stolen Android device across offline SMS, messenger auto-replies, and a secure Vercel-hosted Web Dashboard — without relying on commercial tracking servers.
+Veto is an advanced Android remote management and anti-theft application that provides the ultimate toolkit to track, lock, record, and recover your lost or stolen Android device. It operates across offline SMS, messenger auto-replies, and a secure Vercel-hosted Web Dashboard — providing unmatched multi-transport resilience without relying on commercial tracking servers.
 
 ## Features
 
@@ -49,3 +49,9 @@ The `veto theft` command is designed for critical situations where a device is k
 5. Enables Bluetooth (for potential proximity tracking).
 
 This requires the app to be granted a series of high-level permissions during initial setup, including Device Admin, Location, Notification Access, and Audio modification rights, to ensure these actions can be reliably executed regardless of the device's current state.
+
+## Credits
+This project was heavily inspired by the exceptional open-source work of [fmd-android](https://gitlab.com/fmd-foss/fmd-android). We would like to explicitly credit the `fmd-foss` team for their foundational ideas and approaches to Android remote management and anti-theft security.
+
+## License
+This project is licensed under the GNU General Public License v3.0 (GPLv3). See the [LICENSE](LICENSE) file for more details.

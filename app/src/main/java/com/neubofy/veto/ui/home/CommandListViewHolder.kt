@@ -31,14 +31,7 @@ class CommandListViewHolder(
         itemView.findViewById<TextView>(R.id.description_short).text =
             context.getString(item.shortDescription)
 
-        val textViewLongDescription = itemView.findViewById<TextView>(R.id.description_long)
         val longDesc = item.longDescription
-        if (longDesc != null) {
-            textViewLongDescription.text = context.getString(longDesc)
-            textViewLongDescription.visibility = View.VISIBLE
-        } else {
-            textViewLongDescription.visibility = View.GONE
-        }
 
         // Required permissions
         val permReqTitle = itemView.findViewById<TextView>(R.id.permissions_required_title)
@@ -51,8 +44,15 @@ class CommandListViewHolder(
         setupPermissionsList(activity, permOptTitle, permOptList, item.optionalPermissions)
 
         itemView.findViewById<ImageView>(R.id.btn_help_web)?.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://veto.neubofy.in/#cmd-${item.keyword}"))
-            activity.startActivity(intent)
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                .setTitle(context.getString(item.shortDescription))
+                .setMessage(if (item.longDescription != null) context.getString(item.longDescription!!) else context.getString(item.shortDescription))
+                .setPositiveButton(android.R.string.ok, null)
+                .setNeutralButton("Read on Website") { _, _ ->
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://veto.neubofy.in/#cmd-${item.keyword}"))
+                    activity.startActivity(intent)
+                }
+                .show()
         }
 
     }

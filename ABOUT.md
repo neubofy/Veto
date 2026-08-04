@@ -11,5 +11,5 @@ It provides you with the ultimate toolkit to locate, control, and recover your l
 - **Self-Hosted Ready:** Easily spin up your own Vercel dashboard and Firebase instance to retain 100% control over your data.
 
 ## License
-This software is provided under the proprietary Veto License. 
+This software is provided under the GNU General Public License v3.0.
 See the [LICENSE](LICENSE) file for more details.

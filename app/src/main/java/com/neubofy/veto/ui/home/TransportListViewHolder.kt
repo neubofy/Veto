@@ -40,6 +40,10 @@ class TransportListViewHolder(
                 .setTitle(context.getString(item.title))
                 .setMessage(fullDescription)
                 .setPositiveButton(android.R.string.ok, null)
+                .setNeutralButton("Read on Website") { _, _ ->
+                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://veto.neubofy.in/#transports"))
+                    context.startActivity(intent)
+                }
                 .show()
         }
 

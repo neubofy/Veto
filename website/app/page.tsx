@@ -110,8 +110,8 @@ export default function LandingPage() {
                 Launch Dashboard ➔
               </Link>
             )}
-            <a href="https://github.com/neubofy/Veto/releases" target="_blank" rel="noreferrer" className="btn" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: 'var(--glass-bg)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)', textDecoration: 'none', fontWeight: '600' }}>
-              Download Android App
+            <a href="/api/latest-apk" target="_blank" rel="noreferrer" className="btn" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: 'var(--glass-bg)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)', textDecoration: 'none', fontWeight: '600' }}>
+              Download Android App <span style={{display: "block", fontSize: "0.8rem", opacity: 0.7, fontWeight: "normal"}}>Smartly chooses latest APK</span>
             </a>
           </div>
         </div>
@@ -547,7 +547,7 @@ export default function LandingPage() {
         </div>
         <div style={{ textAlign: 'center', marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--border-light)' }}>
           <p>&copy; {new Date().getFullYear()} Veto Security. All rights reserved.</p>
-          <p style={{ marginTop: '0.5rem', opacity: 0.6, fontSize: '0.8rem' }}>Proprietary software maintained by Neubofy</p>
+          <p style={{ marginTop: '0.5rem', opacity: 0.6, fontSize: '0.8rem' }}>Open source software under GPLv3 maintained by Neubofy</p>
         </div>
       </footer>
 

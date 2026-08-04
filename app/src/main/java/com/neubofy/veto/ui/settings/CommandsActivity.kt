@@ -26,6 +26,11 @@ class CommandsActivity : VetoActivity() {
 
         setupEdgeToEdgeAppBar(findViewById(R.id.appBar))
 
+        findViewById<android.widget.ImageView>(R.id.btn_read_on_website).setOnClickListener {
+            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://veto.neubofy.in/#features"))
+            startActivity(intent)
+        }
+
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_commands_test)
         recyclerView.layoutManager = LinearLayoutManager(this)
         

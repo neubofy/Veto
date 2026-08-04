@@ -19,8 +19,8 @@ export default function TermsPage() {
         <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>1. Acceptance of Terms</h2>
         <p>By downloading, installing, or using the Veto application, you agree to be bound by these terms. If you do not agree, do not use the application.</p>
 
-        <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>2. Source Available License</h2>
-        <p>Veto is a &quot;Source-Available&quot; application. The complete source code is published solely for the purpose of transparency, review, and verification of our security and privacy claims. <strong>You are strictly prohibited from modifying the app source code to create, distribute, or publish your own version of the app.</strong> The code is not Open Source Software (OSS) under OSI definitions.</p>
+        <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>2. Open Source License</h2>
+        <p>Veto is licensed under the GNU General Public License v3.0 (GPLv3). You are free to modify, distribute, and publish your own versions as long as you comply with the terms of the GPLv3 license.</p>
 
         <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>3. Use of Service</h2>
         <p>Veto is a security tool intended for personal device management. You agree to only install this application on devices you own or have explicit legal authorization to manage. You may not use Veto for stalking, harassment, or unauthorized surveillance.</p>
