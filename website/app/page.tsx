@@ -110,8 +110,8 @@ export default function LandingPage() {
                 Launch Dashboard ➔
               </Link>
             )}
-            <a href="https://github.com/neubofy/Veto/releases" target="_blank" rel="noreferrer" className="btn" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: 'var(--glass-bg)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)', textDecoration: 'none', fontWeight: '600' }}>
-              Download Android App
+            <a href="/api/latest-apk" target="_blank" rel="noreferrer" className="btn" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', backgroundColor: 'var(--glass-bg)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)', textDecoration: 'none', fontWeight: '600' }}>
+              Download Android App <span style={{display: "block", fontSize: "0.8rem", opacity: 0.7, fontWeight: "normal"}}>Smartly chooses latest APK</span>
             </a>
           </div>
         </div>
