@@ -547,7 +547,7 @@ export default function LandingPage() {
         </div>
         <div style={{ textAlign: 'center', marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--border-light)' }}>
           <p>&copy; {new Date().getFullYear()} Veto Security. All rights reserved.</p>
-          <p style={{ marginTop: '0.5rem', opacity: 0.6, fontSize: '0.8rem' }}>Proprietary software maintained by Neubofy</p>
+          <p style={{ marginTop: '0.5rem', opacity: 0.6, fontSize: '0.8rem' }}>Open source software under GPLv3 maintained by Neubofy</p>
         </div>
       </footer>
 

@@ -53,12 +53,7 @@
             android:layout_height="wrap_content"
             tools:text="Short description" />
 
-        <TextView
-            android:id="@+id/description_long_hidden"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_normal"
-            tools:text="Long description" />
+
 
         <TextView
             android:id="@+id/permissions_required_title"
