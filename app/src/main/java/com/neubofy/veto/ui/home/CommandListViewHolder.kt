@@ -1,6 +1,9 @@
 package com.neubofy.veto.ui.home
 
 import android.view.View
+import android.content.Intent
+import android.net.Uri
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -46,5 +49,11 @@ class CommandListViewHolder(
         val permOptTitle = itemView.findViewById<TextView>(R.id.permissions_optional_title)
         val permOptList = itemView.findViewById<LinearLayout>(R.id.permissions_optional_list)
         setupPermissionsList(activity, permOptTitle, permOptList, item.optionalPermissions)
+
+        itemView.findViewById<ImageView>(R.id.btn_help_web)?.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://veto.neubofy.in/#cmd-${item.keyword}"))
+            activity.startActivity(intent)
+        }
+
     }
 }

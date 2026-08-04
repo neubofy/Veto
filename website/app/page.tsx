@@ -47,6 +47,7 @@ export default function LandingPage() {
         gap: '1rem' 
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <img src="/icon.png" width="32" height="32" alt="Veto Logo" style={{ borderRadius: '8px' }} />
           <div style={{ fontSize: '1.8rem', fontWeight: '900', background: 'linear-gradient(135deg, #2f81f7, #a482d8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.5px' }}>
             VETO
           </div>
@@ -137,7 +138,7 @@ export default function LandingPage() {
               <div style={{ marginBottom: '1.25rem', color: '#58a6ff' }}><ShieldCheck size={48} /></div>
               <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Total Control & Sovereignty</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                You have full control to disable any command or transport method from your app. Veto offers end-to-end encryption for server and Firestore data. Use the app without cloud sync via SMS and messaging apps. Media files are stored in your Google Drive with restricted access links that do not require login.
+                You have full control to disable any command or transport method from your app. Veto offers end-to-end encryption for server and Firestore data. Use the app without cloud sync via SMS and messaging apps. Media files are stored securely in your Google Drive. Veto handles restricted access links that require your account login to view, ensuring total privacy.
               </p>
             </div>
 
@@ -406,28 +407,36 @@ export default function LandingPage() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
-            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+            <div id="faq-sms" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why didn&apos;t my SMS command work?</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 A: If you are sending an SMS from a number that is not on your <strong>Allowlist</strong>, you must include your PIN in the command: <code>veto &lt;PIN&gt; locate</code>. Sending a correct PIN will temporarily whitelist that number for future commands. Also, verify that Veto has SMS permissions enabled.
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+            <div id="faq-notification" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why is Notification Reply not working?</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 A: First, ensure you have granted Veto <strong>Notification Access</strong> in your device settings. Second, you must select the specific messaging app (e.g., WhatsApp, Telegram) within Veto&apos;s settings. Lastly, ensure you are using the PIN format (<code>veto &lt;PIN&gt; command</code>) if required by your settings.
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+            <div id="faq-background" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why are my commands being ignored when the app is in the background?</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 A: Modern Android versions aggressively kill background tasks. You must <strong>disable battery optimizations</strong> for Veto in your system settings to ensure it can always receive and process your commands.
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+
+            <div id="faq-write-secure-settings" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: How do I grant Write Secure Settings permission?</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                A: The <code>WriteSecureSettingsPermission</code> is required for powerful hardware toggles like GPS and Bluetooth. Because Android restricts this for normal apps, you must grant it manually using a computer via ADB (Android Debug Bridge) with the command: <br/><code style={{ display: 'block', marginTop: '8px', padding: '8px', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>adb shell pm grant com.neubofy.veto android.permission.WRITE_SECURE_SETTINGS</code>
+              </p>
+            </div>
+
+            <div id="faq-media" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why did media upload (photo/audio) fail?</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 A: Verify that you have linked your <strong>Google Drive</strong> account within the Veto app settings. The device also needs an active internet connection to upload the files.
@@ -541,6 +550,42 @@ export default function LandingPage() {
           <p style={{ marginTop: '0.5rem', opacity: 0.6, fontSize: '0.8rem' }}>Proprietary software maintained by Neubofy</p>
         </div>
       </footer>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do I grant Write Secure Settings permission?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The WriteSecureSettingsPermission is required for powerful hardware toggles like GPS and Bluetooth. Because Android restricts this for normal apps, you must grant it manually using a computer via ADB with the command: adb shell pm grant com.neubofy.veto android.permission.WRITE_SECURE_SETTINGS"
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why didn't my SMS command work?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "If you are sending an SMS from a number that is not on your Allowlist, you must include your PIN in the command: veto <PIN> locate. Sending a correct PIN will temporarily whitelist that number for future commands. Also, verify that Veto has SMS permissions enabled."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is Notification Reply not working?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Ensure you have granted Veto Notification Access in your device settings. You must select the specific messaging app within Veto's settings. Also ensure you are using the PIN format if required."
+                }
+              }
+            ]
+          })
+        }}
+      />
     </main>
   );
 }
