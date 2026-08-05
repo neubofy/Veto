@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { auth, db } from '@/lib/firebaseClient';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { doc, collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 
-import CommandConsole from '@/components/CommandConsole';
 import CommandCard from '@/components/CommandCard';
 import CommandRunnerModal from '@/components/CommandRunnerModal';
 import TelemetryModal from '@/components/TelemetryModal';
@@ -222,7 +222,16 @@ export default function DashboardPage() {
           <h1 style={{ fontSize: '2.2rem', fontWeight: '700', marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Veto Dashboard</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Device control & telemetry</p>
         </div>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <Link
+            href="/dashboard/console"
+            className="btn btn-primary"
+            style={{ padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', backgroundColor: '#238636', border: 'none' }}
+          >
+            <span>💻</span> Terminal Console ↗
+          </Link>
+
           <div className="glass-panel" style={{ padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: '2px', borderRadius: '12px' }}>
             <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)', wordBreak: 'break-all' }}>
               {user.email}
@@ -242,9 +251,6 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* Terminal Command Console */}
-      <CommandConsole onSendCommand={sendCommand} isPending={isCommandPending} />
-
       {/* Core Commands */}
       <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem' }}>Core Commands</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
@@ -256,10 +262,6 @@ export default function DashboardPage() {
         <CommandCard
           icon="🔊" title="Ring Alarm" command="ring"
           onOpenRunnerModal={setModalCmd}
-          buttons={[
-            { label: '30s Siren', cmd: 'ring', primary: true },
-            { label: '3m Siren', cmd: 'ring long' }
-          ]}
           onSendCommand={sendCommand} isPending={isCommandPending}
           activeCmd={activeCmd} history={history} onSelectOutput={setSelectedOutput}
         />
@@ -279,6 +281,17 @@ export default function DashboardPage() {
       {/* Device Toggles */}
       <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem' }}>Device Toggles</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <CommandCard
+          icon="🔔" title="Ringer Mode" command="ringermode"
+          onOpenRunnerModal={setModalCmd}
+          buttons={[
+            { label: 'Normal', cmd: 'ringermode normal', primary: true },
+            { label: 'Vibrate', cmd: 'ringermode vibrate' },
+            { label: 'Silent', cmd: 'ringermode silent' }
+          ]}
+          onSendCommand={sendCommand} isPending={isCommandPending}
+          activeCmd={activeCmd} history={history} onSelectOutput={setSelectedOutput}
+        />
         <CommandCard
           icon="🔦" title="Flashlight" command="flash"
           buttons={[
@@ -325,8 +338,7 @@ export default function DashboardPage() {
           onOpenRunnerModal={setModalCmd}
           buttons={[
             { label: 'Front', cmd: 'photo front', primary: true },
-            { label: 'Back', cmd: 'photo back' },
-            { label: 'Flash ⚡', cmd: 'photo back flash' }
+            { label: 'Back', cmd: 'photo back' }
           ]}
           onSendCommand={sendCommand} isPending={isCommandPending}
           activeCmd={activeCmd} history={history} onSelectOutput={setSelectedOutput}
@@ -334,10 +346,6 @@ export default function DashboardPage() {
         <CommandCard
           icon="🎙️" title="Record Audio" command="audio"
           onOpenRunnerModal={setModalCmd}
-          buttons={[
-            { label: '30s Audio', cmd: 'audio', primary: true },
-            { label: '60s Audio', cmd: 'audio 60' }
-          ]}
           onSendCommand={sendCommand} isPending={isCommandPending}
           activeCmd={activeCmd} history={history} onSelectOutput={setSelectedOutput}
         />

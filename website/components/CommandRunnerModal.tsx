@@ -15,6 +15,7 @@ export default function CommandRunnerModal({ commandName, onClose, onConfirm }: 
   const [cameraType, setCameraType] = useState('front');
   const [withFlash, setWithFlash] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
+  const [ringerMode, setRingerMode] = useState('normal');
 
   const handleExecute = () => {
     let cmdString = commandName;
@@ -22,6 +23,9 @@ export default function CommandRunnerModal({ commandName, onClose, onConfirm }: 
     switch (commandName) {
       case 'ring':
         cmdString = `ring ${ringSecs || '30'}`;
+        break;
+      case 'ringermode':
+        cmdString = `ringermode ${ringerMode}`;
         break;
       case 'audio':
         cmdString = `audio ${audioSecs || '30'}`;
@@ -90,6 +94,19 @@ export default function CommandRunnerModal({ commandName, onClose, onConfirm }: 
                   {parseInt(sec) >= 3600 ? `${parseInt(sec)/3600}h` : parseInt(sec) >= 60 ? `${parseInt(sec)/60}m` : `${sec}s`}
                 </button>
               ))}
+            </div>
+          </div>
+        )}
+
+        {commandName === 'ringermode' && (
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
+              Select Ringer Sound Mode:
+            </label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button type="button" onClick={() => setRingerMode('normal')} className={`btn ${ringerMode === 'normal' ? 'btn-primary' : ''}`} style={{ flex: 1, padding: '10px 8px', fontSize: '0.85rem' }}>🔔 Normal</button>
+              <button type="button" onClick={() => setRingerMode('vibrate')} className={`btn ${ringerMode === 'vibrate' ? 'btn-primary' : ''}`} style={{ flex: 1, padding: '10px 8px', fontSize: '0.85rem' }}>📳 Vibrate</button>
+              <button type="button" onClick={() => setRingerMode('silent')} className={`btn ${ringerMode === 'silent' ? 'btn-primary' : ''}`} style={{ flex: 1, padding: '10px 8px', fontSize: '0.85rem' }}>🔕 Silent</button>
             </div>
           </div>
         )}

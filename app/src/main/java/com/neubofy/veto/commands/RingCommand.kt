@@ -10,13 +10,12 @@ import com.neubofy.veto.utils.log
 
 
 const val RING_DURATION_DEFAULT_SECS = 30
-const val RING_DURATION_LONG_SECS = 3 * 60
 const val RING_DURATION_MAX_SECS = 2 * 60 * 60 // 2 hours cap
 
 class RingCommand(context: Context) : Command(context) {
 
     override val keyword = "ring"
-    override val usage = "ring [long | seconds]"
+    override val usage = "ring [seconds]"
 
     @get:DrawableRes
     override val icon = R.drawable.ic_volume_up
@@ -35,9 +34,7 @@ class RingCommand(context: Context) : Command(context) {
         val firstArg = args.getOrElse(0) { "" }
 
         var duration = RING_DURATION_DEFAULT_SECS
-        if (firstArg == "long") {
-            duration = RING_DURATION_LONG_SECS
-        } else if (firstArg.isNotEmpty()) {
+        if (firstArg.isNotEmpty()) {
             firstArg.toIntOrNull()?.let {
                 duration = it.coerceIn(5, RING_DURATION_MAX_SECS)
             }

@@ -53,7 +53,7 @@ class TheftCommand(context: Context) : Command(context) {
         // 5. Trigger Ring Command (Alarm Siren + Lock + 100% Volume Loop)
         try {
             val ringCommand = RingCommand(context)
-            ringCommand.execute(listOf("long"), transport)
+            ringCommand.execute(emptyList(), transport)
         } catch (e: Exception) {
             context.log().w("TheftCommand", "RingCommand in TheftMode failed: ${e.message}")
         }

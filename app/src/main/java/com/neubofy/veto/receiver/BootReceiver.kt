@@ -35,7 +35,7 @@ class BootReceiver : BroadcastReceiver() {
                     kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
                         lockCommand.execute(emptyList(), dummyTransport)
                     }
-                    com.neubofy.veto.services.RingerService.startRinging(context, com.neubofy.veto.commands.RING_DURATION_LONG_SECS)
+                    com.neubofy.veto.services.RingerService.startRinging(context, com.neubofy.veto.commands.RING_DURATION_DEFAULT_SECS)
                 } catch (e: Exception) {
                     context.log().e(TAG, "Failed to start theft recovery on boot: ${e.message}")
                 }
