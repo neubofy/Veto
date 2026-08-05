@@ -37,7 +37,7 @@ export default function CommandRunnerModal({ commandName, onClose, onConfirm }: 
         cmdString = `photo ${cameraType}${withFlash ? ' flash' : ''}`;
         break;
       case 'video':
-        cmdString = `video ${cameraType}`;
+        cmdString = `video ${cameraType}${withFlash ? ' flash' : ''}`;
         break;
       case 'delete':
         if (!deletePassword) {
@@ -158,12 +158,10 @@ export default function CommandRunnerModal({ commandName, onClose, onConfirm }: 
               <button type="button" onClick={() => setCameraType('front')} className={`btn ${cameraType === 'front' ? 'btn-primary' : ''}`} style={{ flex: 1 }}>Front</button>
               <button type="button" onClick={() => setCameraType('back')} className={`btn ${cameraType === 'back' ? 'btn-primary' : ''}`} style={{ flex: 1 }}>Back</button>
             </div>
-            {commandName === 'photo' && (
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
-                <input type="checkbox" checked={withFlash} onChange={e => setWithFlash(e.target.checked)} />
-                Enable Flashlight ⚡
-              </label>
-            )}
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem', color: '#f0f6fc', marginTop: '10px' }}>
+              <input type="checkbox" checked={withFlash} onChange={e => setWithFlash(e.target.checked)} />
+              Enable Flashlight / Torch ⚡
+            </label>
           </div>
         )}
 

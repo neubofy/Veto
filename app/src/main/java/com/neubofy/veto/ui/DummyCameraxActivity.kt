@@ -288,7 +288,7 @@ class DummyCameraxActivity : AppCompatActivity() {
             if (cameraExtra == CAMERA_FRONT) CameraSelector.DEFAULT_FRONT_CAMERA else CameraSelector.DEFAULT_BACK_CAMERA
 
         cameraProvider.unbindAll()
-        try {
+        val camera = try {
             cameraProvider.bindToLifecycle(this, cameraSelector, videoCapture)
         } catch (e: Exception) {
             this.log().e(TAG, "Cannot record video: bindToLifecycle failed. ${e.message}")
@@ -296,6 +296,10 @@ class DummyCameraxActivity : AppCompatActivity() {
             transport.send(ctx, "Video recording failed: bindToLifecycle error", commandName)
             finish()
             return
+        }
+
+        if (shouldFlash && camera.cameraInfo.hasFlashUnit()) {
+            camera.cameraControl.enableTorch(true)
         }
 
         val videosDir = MediaStorageManager.getVideosDir(ctx)

@@ -15,7 +15,7 @@ import com.neubofy.veto.utils.log
 
 class VideoCommand(context: Context) : Command(context) {
     override val keyword = "video"
-    override val usage = "video [front | back]"
+    override val usage = "video [front | back] [flash]"
 
     @get:DrawableRes
     override val icon = R.drawable.ic_camera
@@ -42,10 +42,14 @@ class VideoCommand(context: Context) : Command(context) {
         dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_COMMAND, keyword)
         com.neubofy.veto.transports.TransportHelper.attachTransportToIntent(dummyCameraActivity, transport)
 
-        if (args.getOrNull(0) == "front") {
+        if (args.contains("front")) {
             dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_CAMERA, DummyCameraxActivity.CAMERA_FRONT)
         } else {
             dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_CAMERA, DummyCameraxActivity.CAMERA_BACK)
+        }
+
+        if (args.contains("flash")) {
+            dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_FLASH, true)
         }
         
         context.startActivity(dummyCameraActivity)

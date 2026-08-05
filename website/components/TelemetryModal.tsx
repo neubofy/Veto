@@ -27,6 +27,20 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
     alert(`Copied ${label} to clipboard!`);
   };
 
+  const extractDriveUrl = (input: any): string | null => {
+    if (!input) return null;
+    if (typeof input === 'object') {
+      if (input.url && typeof input.url === 'string') return input.url;
+      if (input.content && typeof input.content === 'string') return extractDriveUrl(input.content);
+    }
+    if (typeof input === 'string') {
+      const driveMatch = input.match(/https?:\/\/[^\s]*(?:drive|docs)\.google\.com\/[^\s]+/i) ||
+                         input.match(/https?:\/\/[^\s]+\.(?:mp4|jpg|jpeg|png|3gp|m4a|aac|wav)[^\s]*/i);
+      if (driveMatch) return driveMatch[0].replace(/[.,;)]+$/, '');
+    }
+    return null;
+  };
+
   const renderTelemetryContent = (rawPayload: any) => {
     if (!rawPayload) return null;
 
@@ -39,6 +53,8 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
         payload = payload.content;
       }
     }
+
+    const driveUrl = extractDriveUrl(payload);
 
     // Structured JSON Payload
     if (typeof payload === 'object') {
@@ -94,22 +110,21 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
         );
       }
 
-      if (payload.type === 'media' || payload.url) {
-        const url = payload.url || payload.content;
+      if (driveUrl) {
         return (
           <div style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            padding: '2rem 1rem', textAlign: 'center', backgroundColor: 'rgba(15, 157, 88, 0.15)',
-            borderRadius: '12px', border: '1px solid rgba(15, 157, 88, 0.4)', width: '100%'
+            padding: '1.75rem 1rem', textAlign: 'center', backgroundColor: 'rgba(46, 160, 67, 0.15)',
+            borderRadius: '12px', border: '1px solid rgba(46, 160, 67, 0.5)', width: '100%'
           }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📁</div>
-            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: '#2ea043' }}>Media Saved to Google Drive</h3>
-            <div style={{ display: 'flex', gap: '8px', width: '100%', maxWidth: '340px' }}>
-              <a href={url} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flex: 1, textDecoration: 'none', backgroundColor: '#2ea043', color: '#fff', border: 'none' }}>
-                <span>↗️</span> Open Drive
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📁</div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '0.75rem', color: '#3fb950', fontWeight: 'bold' }}>Media Saved to Google Drive</h3>
+            <div style={{ display: 'flex', gap: '8px', width: '100%', maxWidth: '360px', justifyContent: 'center' }}>
+              <a href={driveUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flex: 1, textDecoration: 'none', backgroundColor: '#238636', color: '#fff', border: 'none', padding: '10px 16px', fontWeight: 'bold', borderRadius: '6px' }}>
+                <span>↗️</span> Open in Google Drive
               </a>
-              <button type="button" onClick={() => handleCopy(url, 'Google Drive URL')} className="btn" style={{ padding: '8px 12px' }}>
-                📋 Copy
+              <button type="button" onClick={() => handleCopy(driveUrl, 'Google Drive URL')} className="btn" style={{ padding: '10px 14px', background: '#21262d', color: '#f0f6fc', border: '1px solid #30363d' }}>
+                📋 Copy URL
               </button>
             </div>
           </div>
@@ -155,6 +170,30 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
     }
 
     const text = `${payload}`;
+
+    if (driveUrl) {
+      return (
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          padding: '2.5rem 1rem', textAlign: 'center', backgroundColor: 'rgba(46, 160, 67, 0.15)',
+          borderRadius: '12px', border: '1px solid rgba(46, 160, 67, 0.5)', width: '100%'
+        }}>
+          <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>📁</div>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: '#3fb950', fontWeight: 'bold' }}>
+            Media Saved to Google Drive
+          </h3>
+          <div style={{ display: 'flex', gap: '10px', width: '100%', maxWidth: '380px', justifyContent: 'center' }}>
+            <a href={driveUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flex: 1, textDecoration: 'none', backgroundColor: '#238636', color: '#fff', border: 'none', padding: '12px 18px', fontWeight: 'bold', borderRadius: '8px', fontSize: '0.95rem' }}>
+              <span>↗️</span> Open in Google Drive
+            </a>
+            <button type="button" onClick={() => handleCopy(driveUrl, 'Google Drive URL')} className="btn" style={{ padding: '12px 16px', background: '#21262d', color: '#f0f6fc', border: '1px solid #30363d', borderRadius: '8px' }}>
+              📋 Copy URL
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     let lat: number | null = null;
     let lon: number | null = null;
 
