@@ -1,10 +1,8 @@
 package com.neubofy.veto.commands
 
 import android.content.Context
-import android.content.Intent
 import com.neubofy.veto.R
 import com.neubofy.veto.data.Settings
-import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.permissions.LocationPermission
 import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.utils.log
@@ -18,9 +16,6 @@ class TheftCommand(context: Context) : Command(context) {
     override val requiredPermissions = listOf(LocationPermission())
 
     override internal suspend fun <T> executeInternal(args: List<String>, transport: Transport<T>) {
-        val context = context
-        val settings = SettingsRepository.getInstance(context)
-        
         settings.set(Settings.SET_THEFT_MODE_ACTIVE, true)
 
         // 1. Enable GPS explicitly
@@ -34,12 +29,12 @@ class TheftCommand(context: Context) : Command(context) {
         // 2. Trigger Location Update
         try {
             val locateCommand = LocateCommand(context)
-            locateCommand.execute(listOf("gps"), transport)
+            locateCommand.execute(emptyList(), transport)
         } catch (e: Exception) {
             context.log().w("TheftCommand", "LocateCommand in TheftMode failed: ${e.message}")
         }
 
-        // 2. Enable Bluetooth
+        // 3. Enable Bluetooth
         try {
             val bluetoothCommand = BluetoothCommand(context)
             bluetoothCommand.execute(listOf("on"), transport)
@@ -47,7 +42,7 @@ class TheftCommand(context: Context) : Command(context) {
             context.log().w("TheftCommand", "BluetoothCommand in TheftMode failed: ${e.message}")
         }
 
-        // 3. Disable DND
+        // 4. Disable DND
         try {
             val dndCommand = NoDisturbCommand(context)
             dndCommand.execute(listOf("off"), transport)
@@ -55,7 +50,7 @@ class TheftCommand(context: Context) : Command(context) {
             context.log().w("TheftCommand", "NoDisturbCommand in TheftMode failed: ${e.message}")
         }
 
-        // 4. Trigger Ring Command (Alarm Siren + Lock + 100% Volume Loop)
+        // 5. Trigger Ring Command (Alarm Siren + Lock + 100% Volume Loop)
         try {
             val ringCommand = RingCommand(context)
             ringCommand.execute(listOf("long"), transport)

@@ -5,7 +5,6 @@ import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.neubofy.veto.R
-import com.neubofy.veto.data.Settings
 import com.neubofy.veto.permissions.CameraPermission
 import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.ui.DummyCameraxActivity
@@ -58,7 +57,7 @@ class CameraCommand(context: Context) : Command(context) {
                 DummyCameraxActivity.CAMERA_BACK
             )
         }
-        if (args.getOrNull(1) == "flash") {
+        if (args.contains("flash")) {
             dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_FLASH, true)
         }
         context.log().d(TAG, "Starting camera activity")

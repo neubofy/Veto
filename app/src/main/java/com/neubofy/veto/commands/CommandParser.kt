@@ -93,8 +93,8 @@ class CommandParser(
             commandKeyword = secondToken
         }
 
-        // All remaining tokens are the arguments for the command
-        val args = iter.asSequence().map { it.lowercase() }.toList()
+        // All remaining tokens are the arguments for the command (preserving original case)
+        val args = iter.asSequence().toList()
 
         for (command in availableCommands) {
             if (command.keyword.lowercase() == commandKeyword.lowercase()) {

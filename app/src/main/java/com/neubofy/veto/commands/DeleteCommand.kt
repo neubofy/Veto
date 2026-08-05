@@ -13,7 +13,6 @@ import com.neubofy.veto.utils.log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import java.security.MessageDigest
 
 
 class DeleteCommand(context: Context) : Command(context) {

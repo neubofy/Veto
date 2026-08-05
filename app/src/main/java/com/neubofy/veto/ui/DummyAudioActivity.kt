@@ -98,8 +98,9 @@ class DummyAudioActivity : AppCompatActivity() {
                     recorder.prepare()
                     recorder.start()
 
-                    ctx.log().i(TAG, "Started recording audio in transparent activity...")
-                    delay(30000L) // 30 seconds
+                    val durationSecs = intent.getLongExtra(com.neubofy.veto.commands.AudioCommand.EXTRA_DURATION_SECS, 30L)
+                    ctx.log().i(TAG, "Started recording audio (${durationSecs}s) in transparent activity...")
+                    delay(durationSecs * 1000L)
 
                     recorder.stop()
                     recorder.release()

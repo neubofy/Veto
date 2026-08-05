@@ -172,43 +172,7 @@ object CypherUtils {
         }
     }
 
-    private val OAEP_PARAMS = OAEPParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT)
 
-    @JvmStatic
-    fun encryptWithKey(pub: PublicKey, msg: String): ByteArray? {
-        val sessionKey = generateSecureRandom(AES_GCM_KEY_SIZE_BYTES)
-        return try {
-            val msgBytes = msg.toByteArray(StandardCharsets.UTF_8)
-            val ivAndAesCiphertext = encryptWithAes(msgBytes, sessionKey) ?: return null
-
-            val cipher = Cipher.getInstance("RSA/ECB/OAEPPadding")
-            cipher.init(Cipher.ENCRYPT_MODE, pub, OAEP_PARAMS)
-            val sessionKeyPacket = cipher.doFinal(sessionKey)
-
-            concatByteArrays(sessionKeyPacket, ivAndAesCiphertext)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    @JvmStatic
-    fun decryptWithKey(priv: PrivateKey, encryptedMsg: ByteArray): String? {
-        val sessionKeyPacket = encryptedMsg.copyOfRange(0, RSA_KEY_SIZE_BITS / 8)
-        val ivAndAesCiphertext = encryptedMsg.copyOfRange(RSA_KEY_SIZE_BITS / 8, encryptedMsg.size)
-
-        return try {
-            val cipher = Cipher.getInstance("RSA/ECB/OAEPPadding")
-            cipher.init(Cipher.DECRYPT_MODE, priv, OAEP_PARAMS)
-            val sessionKey = cipher.doFinal(sessionKeyPacket)
-
-            val msg = decryptWithAes(ivAndAesCiphertext, sessionKey) ?: return null
-            String(msg, StandardCharsets.UTF_8)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
 
     @JvmStatic
     fun encryptPrivateKeyWithPassword(priv: PrivateKey, password: String): String {
@@ -293,23 +257,7 @@ object CypherUtils {
         }
     }
 
-    @JvmStatic
-    fun verifySig(publicKeyBase64: String, msg: String, sigBase64: String): Boolean {
-        val pubKey = decodeRsaPublicKey(publicKeyBase64) ?: return false
-        val msgBytes = msg.toByteArray(StandardCharsets.UTF_8)
-        val sigBytes = Base64.decode(sigBase64, Base64.DEFAULT)
 
-        return try {
-            val sig = Signature.getInstance("SHA256withRSA/PSS")
-            sig.setParameter(PSSParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, 32, 1))
-            sig.initVerify(pubKey)
-            sig.update(msgBytes)
-            sig.verify(sigBytes)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
-    }
 
     @JvmStatic
     fun encryptWithAes(msgBytes: ByteArray, aesKey: ByteArray): ByteArray? {

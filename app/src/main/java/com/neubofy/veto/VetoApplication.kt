@@ -31,18 +31,10 @@ class VetoApplication : Application() {
         initUncaughtExceptionHandler(this)
 
         doUpdateMigrations(this)
-
-        restartServices()
     }
 
     private fun doUpdateMigrations(context: Context) {
         val settings = SettingsRepository.getInstance(context)
         settings.migrateSettings()
-    }
-
-    fun restartServices() {
-        val settings = SettingsRepository.getInstance(this)
-        if (settings.serverAccountExists()) {
-        }
     }
 }

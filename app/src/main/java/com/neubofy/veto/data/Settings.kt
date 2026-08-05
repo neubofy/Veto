@@ -59,9 +59,6 @@ class Settings : HashMap<Int, Any>() {
             SET_THEFT_MODE_ACTIVE,
             SET_DYNAMIC_COLORS -> false
 
-            SET_THEFT_MODE_PIN,
-            SET_VetoSERVER_PUSH_URL -> ""
-
             SET_Veto_COMMAND -> "veto"
             SET_VetoSERVER_UPDATE_TIME -> 60
             SET_SET_VERSION,
@@ -70,10 +67,15 @@ class Settings : HashMap<Int, Any>() {
             SET_RINGER_TONE -> RingerUtils.getDefaultRingtoneAsString()
 
             SET_PIN,
+            SET_LOCKSCREEN_MESSAGE,
             SET_VetoSERVER_ID,
+            SET_SYNCED_FCM_TOKEN,
             SET_Veto_CRYPT_HPW,
             SET_Veto_CRYPT_PRIVKEY,
             SET_Veto_CRYPT_PUBKEY,
+            SET_THEFT_MODE_PIN,
+            SET_VetoSERVER_PUSH_URL -> ""
+
             SET_VetoSERVER_URL -> "https://veto.neubofy.in"
 
             SET_THEME -> VAL_THEME_FOLLOW_SYSTEM

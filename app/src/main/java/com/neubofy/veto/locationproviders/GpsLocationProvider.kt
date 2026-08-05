@@ -39,9 +39,6 @@ const val MAX_GPS_DURATION_MILLIS = 2 * 60 * 1000L
 
 private const val UPDATE_INTERVAL_MILLIS = 2 * 1000L
 
-// LocationManager.FUSED_PROVIDER was only added in SDK 31
-const val FUSED_PROVIDER = "fused"
-
 /**
  * Only call this provider via the LocateCommand!
  * (because it handles things like LocationAutoOnOff centrally)

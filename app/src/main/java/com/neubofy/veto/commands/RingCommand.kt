@@ -5,19 +5,18 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.neubofy.veto.R
 import com.neubofy.veto.permissions.DoNotDisturbAccessPermission
-import com.neubofy.veto.services.RingerService
 import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.utils.log
 
 
 const val RING_DURATION_DEFAULT_SECS = 30
 const val RING_DURATION_LONG_SECS = 3 * 60
-const val RING_DURATION_MAX_SECS = 5 * 60
+const val RING_DURATION_MAX_SECS = 2 * 60 * 60 // 2 hours cap
 
 class RingCommand(context: Context) : Command(context) {
 
     override val keyword = "ring"
-    override val usage = "ring [long]"
+    override val usage = "ring [long | seconds]"
 
     @get:DrawableRes
     override val icon = R.drawable.ic_volume_up
@@ -40,7 +39,7 @@ class RingCommand(context: Context) : Command(context) {
             duration = RING_DURATION_LONG_SECS
         } else if (firstArg.isNotEmpty()) {
             firstArg.toIntOrNull()?.let {
-                duration = it
+                duration = it.coerceIn(5, RING_DURATION_MAX_SECS)
             }
         }
 

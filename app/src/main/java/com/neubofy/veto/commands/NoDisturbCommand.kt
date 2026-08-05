@@ -30,7 +30,16 @@ class NoDisturbCommand(context: Context) : Command(context) {
     ) {
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (args.contains("on")) {
+        if (args.isEmpty()) {
+            val currentFilter = nm.currentInterruptionFilter
+            val isOn = currentFilter != NotificationManager.INTERRUPTION_FILTER_ALL
+            val msg = if (isOn) {
+                context.getString(R.string.cmd_nodisturb_response_on)
+            } else {
+                context.getString(R.string.cmd_nodisturb_response_off)
+            }
+            transport.send(context, msg, keyword)
+        } else if (args.contains("on")) {
             nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE)
             transport.send(context, context.getString(R.string.cmd_nodisturb_response_on), keyword)
         } else if (args.contains("off")) {
