@@ -84,7 +84,7 @@ class DeleteCommand(context: Context) : Command(context) {
         }
 
         // Be defensive, match anything that might look right
-        if (args.getOrNull(1)?.contains("dry") == true) {
+        if (args.getOrNull(1)?.contains("dryrun") == true || args.getOrNull(1)?.contains("dry") == true) {
             val msg = context.getString(R.string.cmd_delete_response_dry_run)
             context.log().i(TAG, msg)
             transport.send(context, msg, keyword)
