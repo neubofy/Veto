@@ -47,8 +47,8 @@ export default function ConsolePage() {
       if (currentUser) {
         setUser(currentUser);
 
-        const historyQuery = query(collection(db, 'users', currentUser.uid, 'command_history'), orderBy('timestamp', 'desc'), limit(50));
-        unsubHistory = onSnapshot(historyQuery, (snapshot: any) => {
+        const historyRef = collection(db, 'users', currentUser.uid, 'command_history');
+        unsubHistory = onSnapshot(historyRef, (snapshot: any) => {
           const newHistory: any[] = [];
           snapshot.forEach((d: any) => { newHistory.push({ id: d.id, ...d.data() }); });
           setHistory(newHistory);

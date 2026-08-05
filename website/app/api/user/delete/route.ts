@@ -9,8 +9,7 @@ export async function POST(req: Request) {
 
     const authHeader = req.headers.get('Authorization');
     const body = await req.json().catch(() => ({}));
-    
-    // Extract token from either Authorization header or request body
+
     let token = body.token;
     if (!token && authHeader?.startsWith('Bearer ')) {
       token = authHeader.split('Bearer ')[1];
@@ -30,43 +29,19 @@ export async function POST(req: Request) {
     const userId = decodedToken.uid;
     const userRef = adminDb.collection('users').doc(userId);
 
-    const resultsSnap = await userRef.collection('results').get();
-    const photosSnap = await userRef.collection('photos').get();
-    const locationsSnap = await userRef.collection('locations').get();
+    // 1. Recursively delete entire user document tree & all subcollections in Firebase
+    try {
+      await adminDb.recursiveDelete(userRef);
+    } catch (e) {
+      await userRef.delete();
+    }
 
-    const batch = adminDb.batch();
-
-    // Clear results
-    resultsSnap.forEach((doc: any) => {
-      batch.delete(doc.ref);
-    });
-
-    // Clear photos
-    photosSnap.forEach((doc: any) => {
-      batch.delete(doc.ref);
-    });
-
-    // Clear locations
-    locationsSnap.forEach((doc: any) => {
-      batch.delete(doc.ref);
-    });
-
-    // Delete the user document
-    batch.delete(userRef);
-    
-    // Commit all Firestore deletions
-    await batch.commit();
-
-    // Finally, delete the Firebase Auth user
+    // 2. Delete the Firebase Auth user account
     await adminAuth.deleteUser(userId);
 
-    return NextResponse.json({ success: true, message: 'Account and all data deleted successfully.' });
-
+    return NextResponse.json({ success: true, message: 'Account and all data permanently deleted' });
   } catch (error: any) {
-    console.error('Error deleting account:', error);
-    return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('Error deleting user account:', error);
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
 }

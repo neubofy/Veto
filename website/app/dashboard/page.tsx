@@ -58,8 +58,8 @@ export default function DashboardPage() {
           }
         });
 
-        const historyQuery = query(collection(db, 'users', currentUser.uid, 'command_history'), orderBy('timestamp', 'desc'), limit(50));
-        unsubHistory = onSnapshot(historyQuery, (snapshot: any) => {
+        const historyRef = collection(db, 'users', currentUser.uid, 'command_history');
+        unsubHistory = onSnapshot(historyRef, (snapshot: any) => {
           const newHistory: any[] = [];
           snapshot.forEach((d: any) => { newHistory.push({ id: d.id, ...d.data() }); });
           setHistory(newHistory);
@@ -223,15 +223,7 @@ export default function DashboardPage() {
           <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Device control & telemetry</p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <Link
-            href="/dashboard/location"
-            className="btn"
-            style={{ padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', backgroundColor: '#21262d', border: '1px solid #30363d', color: '#58a6ff' }}
-          >
-            <span>📍</span> Location History ↗
-          </Link>
-
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <Link
             href="/dashboard/console"
             className="btn btn-primary"

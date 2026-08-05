@@ -41,31 +41,38 @@ export async function POST(req: Request) {
     }
 
     const timestamp = new Date().toISOString();
-
-    // 1. REPLACE latest result doc per command (0 history buildup to save Firestore quota)
     const commandDocRef = adminDb.collection('users').doc(userId).collection('command_history').doc(baseCommandName);
-    await commandDocRef.set({
-      command: fullCommandName,
-      payload: payload,
-      timestamp: timestamp
-    });
 
-    // 2. Special case for LOCATE command: store history HARD CAPPED TO 5 ENTRIES MAX
     if (baseCommandName === 'locate') {
-      const locRef = adminDb.collection('users').doc(userId).collection('location_history');
-      await locRef.add({
+      // For locate command: store array of last 5 entries inside users/{userId}/command_history/locate doc
+      const existingDoc = await commandDocRef.get();
+      let existingHistory: any[] = [];
+      if (existingDoc.exists && Array.isArray(existingDoc.data()?.history)) {
+        existingHistory = existingDoc.data()?.history;
+      }
+
+      const newEntry = {
+        id: `loc_${Date.now()}`,
+        command: fullCommandName,
+        payload: payload,
+        timestamp: timestamp
+      };
+
+      const updatedHistory = [newEntry, ...existingHistory].slice(0, 5);
+
+      await commandDocRef.set({
+        command: fullCommandName,
+        payload: payload,
+        timestamp: timestamp,
+        history: updatedHistory
+      });
+    } else {
+      // For all other commands: REPLACE latest result doc (0 history buildup)
+      await commandDocRef.set({
         command: fullCommandName,
         payload: payload,
         timestamp: timestamp
       });
-
-      const locSnap = await locRef.orderBy('timestamp', 'desc').get();
-      if (locSnap.docs.length > 5) {
-        const docsToDelete = locSnap.docs.slice(5);
-        const batch = adminDb.batch();
-        docsToDelete.forEach((d: any) => batch.delete(d.ref));
-        await batch.commit();
-      }
     }
 
     return NextResponse.json({ success: true });

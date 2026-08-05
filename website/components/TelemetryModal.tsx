@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 interface TelemetryModalProps {
   selectedOutput: string;
@@ -10,9 +10,17 @@ interface TelemetryModalProps {
 }
 
 export default function TelemetryModal({ selectedOutput, history, onClose, onDeleteData }: TelemetryModalProps) {
-  const matchingEntries = history.filter(h => h.command === selectedOutput || h.command.startsWith(selectedOutput));
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const matchingEntries = history.filter(h => h.command === selectedOutput || h.command.startsWith(selectedOutput) || h.id === selectedOutput);
   if (matchingEntries.length === 0) return null;
-  const res = matchingEntries[0];
+
+  const mainDoc = matchingEntries[0];
+  const historyList = Array.isArray(mainDoc.history) && mainDoc.history.length > 0
+    ? mainDoc.history
+    : [mainDoc];
+
+  const currentItem = historyList[currentIndex] || historyList[0];
 
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -34,16 +42,18 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
 
     // Structured JSON Payload
     if (typeof payload === 'object') {
-      if (payload.type === 'location') {
+      if (payload.type === 'location' || payload.lat || payload.lon) {
         const { lat, lon, provider, accuracy, battery, batteryLevel, speed, altitude } = payload;
-        const googleEmbedUrl = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+        const googleEmbedUrl = (lat && lon) ? `https://maps.google.com/maps?q=${lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed` : null;
         const battText = battery || (batteryLevel !== undefined ? `${batteryLevel}%` : null);
 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-            <div style={{ width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #30363d', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
-              <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={googleEmbedUrl} style={{ border: 'none' }}></iframe>
-            </div>
+            {googleEmbedUrl && (
+              <div style={{ width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #30363d', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+                <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={googleEmbedUrl} style={{ border: 'none' }}></iframe>
+              </div>
+            )}
             <div style={{
               fontSize: '0.85rem',
               backgroundColor: '#0d1117',
@@ -57,12 +67,12 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
               color: '#f0f6fc'
             }}>
               <div style={{ wordBreak: 'break-all' }}>
-                <strong>Latitude:</strong> {lat}
-                <button type="button" onClick={() => handleCopy(`${lat}`, 'Latitude')} style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '6px' }}>📋</button>
+                <strong>Latitude:</strong> {lat || 'N/A'}
+                {lat && <button type="button" onClick={() => handleCopy(`${lat}`, 'Latitude')} style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '6px' }}>📋</button>}
               </div>
               <div style={{ wordBreak: 'break-all' }}>
-                <strong>Longitude:</strong> {lon}
-                <button type="button" onClick={() => handleCopy(`${lon}`, 'Longitude')} style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '6px' }}>📋</button>
+                <strong>Longitude:</strong> {lon || 'N/A'}
+                {lon && <button type="button" onClick={() => handleCopy(`${lon}`, 'Longitude')} style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '6px' }}>📋</button>}
               </div>
               <div><strong>Provider:</strong> {provider || 'GPS'}</div>
               {accuracy && <div><strong>Accuracy:</strong> {accuracy}</div>}
@@ -70,14 +80,16 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
               {speed && <div><strong>Speed:</strong> {speed}</div>}
               {altitude && <div><strong>Altitude:</strong> {altitude}</div>}
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <a href={`https://maps.google.com/?q=${lat},${lon}`} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', flex: 1, padding: '0.75rem' }}>
-                Open in Google Maps ↗
-              </a>
-              <button type="button" onClick={() => handleCopy(`https://maps.google.com/?q=${lat},${lon}`, 'Maps Link')} className="btn" style={{ padding: '0.75rem 12px' }}>
-                📋 Copy Link
-              </button>
-            </div>
+            {lat && lon && (
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <a href={`https://maps.google.com/?q=${lat},${lon}`} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ textAlign: 'center', textDecoration: 'none', flex: 1, padding: '0.75rem' }}>
+                  Open in Google Maps ↗
+                </a>
+                <button type="button" onClick={() => handleCopy(`https://maps.google.com/?q=${lat},${lon}`, 'Maps Link')} className="btn" style={{ padding: '0.75rem 12px' }}>
+                  📋 Copy Link
+                </button>
+              </div>
+            )}
           </div>
         );
       }
@@ -230,15 +242,47 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
             Delete Entry
           </button>
         </h2>
+
+        {/* Multi-item History Navigation Bar (Forward / Backward Array Pager) */}
+        {historyList.length > 1 && (
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            backgroundColor: '#0d1117', border: '1px solid #30363d', padding: '8px 12px',
+            borderRadius: '8px', marginBottom: '1rem'
+          }}>
+            <button
+              type="button"
+              disabled={currentIndex === 0}
+              onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
+              className="btn"
+              style={{ padding: '4px 10px', fontSize: '0.8rem', opacity: currentIndex === 0 ? 0.4 : 1 }}
+            >
+              ◄ Newer
+            </button>
+            <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#58a6ff' }}>
+              Entry {currentIndex + 1} of {historyList.length} {currentIndex === 0 ? '(Latest)' : ''}
+            </span>
+            <button
+              type="button"
+              disabled={currentIndex === historyList.length - 1}
+              onClick={() => setCurrentIndex(prev => Math.min(historyList.length - 1, prev + 1))}
+              className="btn"
+              style={{ padding: '4px 10px', fontSize: '0.8rem', opacity: currentIndex === historyList.length - 1 ? 0.4 : 1 }}
+            >
+              Older ►
+            </button>
+          </div>
+        )}
+
         <div style={{ color: '#8b949e', marginBottom: '1rem', fontSize: '0.85rem' }}>
-          Received: {new Date(res.timestamp).toLocaleString()}
+          Recorded: {currentItem.timestamp ? new Date(currentItem.timestamp).toLocaleString() : 'N/A'}
         </div>
 
         <div style={{
           backgroundColor: '#0d1117', padding: '1.25rem 1rem', borderRadius: '12px',
           border: '1px solid #30363d', color: '#f0f6fc', width: '100%', overflowX: 'hidden'
         }}>
-          {renderTelemetryContent(res.payload)}
+          {renderTelemetryContent(currentItem.payload)}
         </div>
       </div>
     </div>

@@ -9,8 +9,7 @@ export async function POST(req: Request) {
 
     const authHeader = req.headers.get('Authorization');
     const body = await req.json().catch(() => ({}));
-    
-    // Support token from either Authorization header or request body
+
     let token = body.token;
     if (!token && authHeader?.startsWith('Bearer ')) {
       token = authHeader.split('Bearer ')[1];
@@ -30,40 +29,51 @@ export async function POST(req: Request) {
     const userId = decodedToken.uid;
     const { commandName, all } = body;
     const userRef = adminDb.collection('users').doc(userId);
-    const batch = adminDb.batch();
 
     if (all) {
-      // Delete all history documents
-      const historySnap = await userRef.collection('command_history').get();
-      historySnap.docs.forEach((doc: any) => {
-        batch.delete(doc.ref);
-      });
-      // also cleanup legacy
-      const resultsSnap = await userRef.collection('results').get();
-      resultsSnap.docs.forEach((doc: any) => batch.delete(doc.ref));
-      const photosSnap = await userRef.collection('photos').get();
-      photosSnap.docs.forEach((doc: any) => batch.delete(doc.ref));
-      const locationsSnap = await userRef.collection('locations').get();
-      locationsSnap.docs.forEach((doc: any) => batch.delete(doc.ref));
+      // 1. Preserve FCM Token so paired device stays connected
+      const userDoc = await userRef.get();
+      const fcmToken = userDoc.exists ? userDoc.data()?.fcmToken : null;
 
+      // 2. Recursively delete entire user document tree & all subcollections in Firebase
+      try {
+        await adminDb.recursiveDelete(userRef);
+      } catch (e) {
+        // Fallback if recursiveDelete fails: delete command_history collection directly
+        const historySnap = await userRef.collection('command_history').get();
+        const batch = adminDb.batch();
+        historySnap.docs.forEach((doc: any) => batch.delete(doc.ref));
+        await batch.commit();
+      }
+
+      // 3. Restore paired FCM Token doc if it existed
+      if (fcmToken) {
+        await userRef.set({
+          fcmToken: fcmToken,
+          updatedAt: new Date().toISOString()
+        });
+      }
+
+      return NextResponse.json({ success: true, message: 'All user cloud data recursively deleted from Firebase' });
     } else if (commandName) {
-      // Delete specific command history
+      const baseCmd = commandName.split(' ')[0].toLowerCase();
+      const commandDocRef = userRef.collection('command_history').doc(baseCmd);
+      await commandDocRef.delete();
+
+      // Legacy query cleanup if any
       const historySnap = await userRef.collection('command_history').where('command', '==', commandName).get();
-      historySnap.docs.forEach((doc: any) => {
-        batch.delete(doc.ref);
-      });
-      // legacy cleanup
-      batch.delete(userRef.collection('results').doc(commandName));
-      batch.delete(userRef.collection('photos').doc(commandName));
+      if (!historySnap.empty) {
+        const batch = adminDb.batch();
+        historySnap.docs.forEach((doc: any) => batch.delete(doc.ref));
+        await batch.commit();
+      }
+
+      return NextResponse.json({ success: true, message: `Deleted ${commandName} data` });
     } else {
       return NextResponse.json({ error: 'Must specify commandName or all=true' }, { status: 400 });
     }
-
-    await batch.commit();
-
-    return NextResponse.json({ success: true, message: 'Data deleted successfully from Firestore.' });
   } catch (error: any) {
-    console.error('Error deleting data from Firestore:', error);
+    console.error('Error deleting data:', error);
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
 }
