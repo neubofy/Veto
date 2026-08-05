@@ -18,9 +18,13 @@ export default function Home() {
   const [isCommandPending, setIsCommandPending] = useState<boolean>(false);
   const [deviceLinked, setDeviceLinked] = useState<boolean>(false);
   
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [history, setHistory] = useState<any[]>([]);
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
   const [selectedOutput, setSelectedOutput] = useState<string | null>(null);
+
+  // Command configuration modal state
+  const [commandModal, setCommandModal] = useState<{ type: string; baseCommand?: string } | null>(null);
 
   // Auto-resolve pending state when a new result arrives for the active command
   useEffect(() => {
@@ -28,6 +32,7 @@ export default function Home() {
        const baseCmd = activeCmd.split(' ')[0];
        const latestResult = history.find(h => h.command === baseCmd || h.command.startsWith(baseCmd));
        if (latestResult && new Date(latestResult.timestamp).getTime() > commandStartTime) {
+         // eslint-disable-next-line react-hooks/set-state-in-effect
          setIsCommandPending(false);
          setActiveCmd(null);
          setFeedback({ type: 'success', text: 'Device response received!' });
@@ -53,6 +58,7 @@ export default function Home() {
 
         const historyQuery = query(collection(db, 'users', currentUser.uid, 'command_history'), orderBy('timestamp', 'desc'), limit(50));
         unsubHistory = onSnapshot(historyQuery, (snapshot) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const newHistory: any[] = [];
           snapshot.forEach(d => { newHistory.push({ id: d.id, ...d.data() }); });
           setHistory(newHistory);
@@ -127,9 +133,10 @@ export default function Home() {
           return prev;
         });
       }, 30000);
-    } catch (error: any) {
-      setFeedback({ type: 'error', text: `Failed: ${error.message}` });
-      setIsCommandPending(false);
+    } catch (error: unknown) {
+      setFeedback({ type: 'error', text: `Failed: ${(error as Error).message}` });
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+         setIsCommandPending(false);
       setActiveCmd(null);
       setTimeout(() => setFeedback(null), 5000);
     }
@@ -161,8 +168,8 @@ export default function Home() {
       } else if (commandName) {
         setSelectedOutput(null);
       }
-    } catch (error: any) {
-      setFeedback({ type: 'error', text: `Delete failed: ${error.message}` });
+    } catch (error: unknown) {
+      setFeedback({ type: 'error', text: `Delete failed: ${(error as Error).message}` });
       setTimeout(() => setFeedback(null), 5000);
     }
   };
@@ -192,8 +199,8 @@ export default function Home() {
       setHistory([]);
       await signOut(auth);
       router.push('/login');
-    } catch (error: any) {
-      setFeedback({ type: 'error', text: `Account deletion failed: ${error.message}` });
+    } catch (error: unknown) {
+      setFeedback({ type: 'error', text: `Account deletion failed: ${(error as Error).message}` });
       setTimeout(() => setFeedback(null), 5000);
     }
   };
@@ -205,6 +212,7 @@ export default function Home() {
     return {};
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderTelemetryContent = (rawPayload: any) => {
     if (!rawPayload) return null;
 
@@ -545,7 +553,7 @@ export default function Home() {
         <div className="glass-panel" style={{ padding: '1.25rem' }}>
           <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🔊</div>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Ring Alarm</h3>
-          <button disabled={activeCmd === 'ring'} onClick={() => sendCommand('ring')} className="btn" style={{ width: '100%', ...getBtnStyle('ring') }}>
+          <button disabled={activeCmd === 'ring'} onClick={() => setCommandModal({ type: 'ring' })} className="btn" style={{ width: '100%', ...getBtnStyle('ring') }}>
             {activeCmd === 'ring' ? 'Sending...' : 'Trigger Siren'}
           </button>
           {renderResult('ring')}
@@ -554,7 +562,7 @@ export default function Home() {
         <div className="glass-panel" style={{ padding: '1.25rem' }}>
           <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>🔒</div>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Lock Device</h3>
-          <button disabled={activeCmd === 'lock'} onClick={() => sendCommand('lock')} className="btn" style={{ width: '100%', ...getBtnStyle('lock') }}>
+          <button disabled={activeCmd === 'lock'} onClick={() => setCommandModal({ type: 'lock' })} className="btn" style={{ width: '100%', ...getBtnStyle('lock') }}>
             {activeCmd === 'lock' ? 'Locking...' : 'Lock Screen'}
           </button>
           {renderResult('lock')}
@@ -613,6 +621,17 @@ export default function Home() {
           </div>
           {renderResult('nodisturb')}
         </div>
+        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>📳</div>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Ringer Mode</h3>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '0.75rem' }}>
+            <button disabled={activeCmd === 'ringermode normal'} onClick={() => sendCommand('ringermode normal')} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('ringermode normal') }}>Normal</button>
+            <button disabled={activeCmd === 'ringermode vibrate'} onClick={() => sendCommand('ringermode vibrate')} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('ringermode vibrate') }}>Vibrate</button>
+            <button disabled={activeCmd === 'ringermode silent'} onClick={() => sendCommand('ringermode silent')} className="btn" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('ringermode silent') }}>Silent</button>
+          </div>
+          {renderResult('ringermode')}
+        </div>
+
       </div>
 
       {/* Surveillance & Security */}
@@ -622,8 +641,8 @@ export default function Home() {
           <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>📷</div>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Take Photo</h3>
           <div style={{ display: 'flex', gap: '8px', marginBottom: '0.75rem' }}>
-            <button disabled={activeCmd === 'photo front'} onClick={() => sendCommand('photo front')} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('photo front') }}>Front</button>
-            <button disabled={activeCmd === 'photo back'} onClick={() => sendCommand('photo back')} className="btn" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('photo back') }}>Back</button>
+            <button disabled={activeCmd === 'photo front'} onClick={() => setCommandModal({ type: 'photo', baseCommand: 'photo front' })} className="btn btn-primary" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('photo front') }}>Front</button>
+            <button disabled={activeCmd === 'photo back'} onClick={() => setCommandModal({ type: 'photo', baseCommand: 'photo back' })} className="btn" style={{ flex: 1, padding: '8px 10px', fontSize: '0.85rem', ...getBtnStyle('photo back') }}>Back</button>
           </div>
           {renderResult('photo')}
         </div>
@@ -664,14 +683,7 @@ export default function Home() {
           <div style={{ fontSize: '1.8rem', marginBottom: '0.75rem' }}>⚠️</div>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>Factory Reset</h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Permanently wipe all data from your device.</p>
-          <button disabled={activeCmd === 'delete'} onClick={() => {
-            const password = window.prompt('WARNING: This will PERMANENTLY WIPE all data from your phone!\n\nTo proceed, please enter your Veto app password:');
-            if (password) {
-              sendCommand(`delete ${password}`);
-            } else if (password !== null) {
-              alert('Wipe cancelled. Password cannot be empty.');
-            }
-          }} className="btn btn-danger" style={{ width: '100%', ...getBtnStyle('delete') }}>
+          <button disabled={activeCmd === 'delete'} onClick={() => setCommandModal({ type: 'delete' })} className="btn btn-danger" style={{ width: '100%', ...getBtnStyle('delete') }}>
             {activeCmd === 'delete' ? 'Wiping...' : 'Wipe Device'}
           </button>
         </div>
@@ -695,7 +707,132 @@ export default function Home() {
         </div>
       </div>
 
+
+      {/* Command Configuration Modal */}
+      {commandModal && (() => {
+        const type = commandModal.type;
+        const close = () => setCommandModal(null);
+
+        const onSubmit = (e: React.FormEvent) => {
+          e.preventDefault();
+          const form = e.target as HTMLFormElement;
+          const formData = new FormData(form);
+
+          let cmd = '';
+          if (type === 'ring') {
+            const duration = formData.get('duration') as string;
+            if (duration === 'custom') {
+              const seconds = formData.get('seconds') as string;
+              cmd = `ring ${seconds}`;
+            } else if (duration === 'long') {
+              cmd = 'ring long';
+            } else {
+              cmd = 'ring';
+            }
+          } else if (type === 'lock') {
+            const msg = formData.get('message') as string;
+            cmd = msg.trim() ? `lock ${msg.trim()}` : 'lock';
+          } else if (type === 'photo') {
+            const flash = formData.get('flash') ? 'flash' : '';
+            cmd = flash ? `${commandModal.baseCommand} flash` : commandModal.baseCommand!;
+          } else if (type === 'delete') {
+            const password = formData.get('password') as string;
+            const dryrun = formData.get('dryrun') ? 'dryrun' : '';
+            if (!password) {
+              alert('Password is required.');
+              return;
+            }
+            cmd = dryrun ? `delete ${password} dryrun` : `delete ${password}`;
+          }
+
+          if (cmd) {
+            sendCommand(cmd);
+          }
+          close();
+        };
+
+        return (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'var(--overlay-bg)', zIndex: 1000,
+            display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0.75rem'
+          }} onClick={close}>
+            <div className="glass-panel" style={{
+              width: '100%', maxWidth: '400px',
+              padding: '1.5rem 1.25rem', position: 'relative', border: '1px solid var(--glass-border)'
+            }} onClick={e => e.stopPropagation()}>
+              <button type="button" onClick={close} style={{
+                position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none',
+                color: 'var(--text-primary)', fontSize: '1.5rem', cursor: 'pointer', lineHeight: '1'
+              }}>×</button>
+
+              <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', textTransform: 'capitalize' }}>
+                Configure {type}
+              </h2>
+
+              <form onSubmit={onSubmit}>
+                {type === 'ring' && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Duration</label>
+                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                        <input type="radio" name="duration" value="short" defaultChecked />
+                        <span>Short (30s)</span>
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                        <input type="radio" name="duration" value="long" />
+                        <span>Long (3m)</span>
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                        <input type="radio" name="duration" value="custom" />
+                        <span>Custom</span>
+                      </label>
+                    </div>
+                    <input type="number" name="seconds" placeholder="Seconds (if custom selected)" className="input" style={{ width: '100%' }} />
+                  </div>
+                )}
+
+                {type === 'lock' && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Lockscreen Message (Optional)</label>
+                    <input type="text" name="message" placeholder="e.g. Please return this phone" className="input" style={{ width: '100%' }} />
+                  </div>
+                )}
+
+                {type === 'photo' && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                      <input type="checkbox" name="flash" />
+                      <span>Enable Flash</span>
+                    </label>
+                  </div>
+                )}
+
+                {type === 'delete' && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <p style={{ color: 'var(--danger-color)', fontSize: '0.85rem', marginBottom: '1rem' }}>
+                      WARNING: This action is permanent and will wipe all data!
+                    </p>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Veto Password</label>
+                    <input type="password" name="password" required placeholder="Enter app password" className="input" style={{ width: '100%', marginBottom: '1rem' }} />
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                      <input type="checkbox" name="dryrun" />
+                      <span>Dry run (Test mode - does not wipe data)</span>
+                    </label>
+                  </div>
+                )}
+
+                <button type="submit" className={`btn ${type === 'delete' ? 'btn-danger' : 'btn-primary'}`} style={{ width: '100%', marginTop: '1rem' }}>
+                  Send Command
+                </button>
+              </form>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Reusable Output Modal */}
+
       {selectedOutput && (() => {
         const matchingEntries = history.filter(h => h.command === selectedOutput || h.command.startsWith(selectedOutput));
         if (matchingEntries.length === 0) return null;
