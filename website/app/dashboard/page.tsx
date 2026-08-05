@@ -223,11 +223,19 @@ export default function DashboardPage() {
           <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Device control & telemetry</p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <Link
+            href="/dashboard/location"
+            className="btn"
+            style={{ padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', backgroundColor: '#21262d', border: '1px solid #30363d', color: '#58a6ff' }}
+          >
+            <span>📍</span> Location History ↗
+          </Link>
+
           <Link
             href="/dashboard/console"
             className="btn btn-primary"
-            style={{ padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', backgroundColor: '#238636', border: 'none' }}
+            style={{ padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', backgroundColor: '#238636', border: 'none' }}
           >
             <span>💻</span> Terminal Console ↗
           </Link>

@@ -28,36 +28,44 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing result data' }, { status: 400 });
     }
 
-    const commandName = command || 'unknown';
+    const fullCommandName = command || 'unknown';
+    const baseCommandName = fullCommandName.split(' ')[0].toLowerCase();
 
-
-
-    // Save ALL results into a unified command_history collection
-    const historyRef = adminDb.collection('users').doc(userId).collection('command_history');
-    
-    // Check if result is already a JSON object (new app version) or a string (old app version)
     let payload = result;
     if (typeof result === 'string') {
-        try {
-            payload = JSON.parse(result);
-        } catch(e) {
-            payload = { type: 'text', content: result };
-        }
+      try {
+        payload = JSON.parse(result);
+      } catch (e) {
+        payload = { type: 'text', content: result };
+      }
     }
 
-    await historyRef.add({
-      command: commandName,
+    const timestamp = new Date().toISOString();
+
+    // 1. REPLACE latest result doc per command (0 history buildup to save Firestore quota)
+    const commandDocRef = adminDb.collection('users').doc(userId).collection('command_history').doc(baseCommandName);
+    await commandDocRef.set({
+      command: fullCommandName,
       payload: payload,
-      timestamp: new Date().toISOString()
+      timestamp: timestamp
     });
 
-    // We can limit history to last 50 items to save space
-    const historySnap = await historyRef.orderBy('timestamp', 'desc').get();
-    if (historySnap.docs.length > 50) {
-      const docsToDelete = historySnap.docs.slice(50);
-      const batch = adminDb.batch();
-      docsToDelete.forEach((doc: any) => batch.delete(doc.ref));
-      await batch.commit();
+    // 2. Special case for LOCATE command: store history HARD CAPPED TO 5 ENTRIES MAX
+    if (baseCommandName === 'locate') {
+      const locRef = adminDb.collection('users').doc(userId).collection('location_history');
+      await locRef.add({
+        command: fullCommandName,
+        payload: payload,
+        timestamp: timestamp
+      });
+
+      const locSnap = await locRef.orderBy('timestamp', 'desc').get();
+      if (locSnap.docs.length > 5) {
+        const docsToDelete = locSnap.docs.slice(5);
+        const batch = adminDb.batch();
+        docsToDelete.forEach((d: any) => batch.delete(d.ref));
+        await batch.commit();
+      }
     }
 
     return NextResponse.json({ success: true });
