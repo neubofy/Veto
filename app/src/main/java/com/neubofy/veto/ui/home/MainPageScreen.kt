@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -41,13 +41,16 @@ fun MainPageScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Veto", fontWeight = FontWeight.Bold) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            Column {
+                TopAppBar(
+                    title = { Text("Veto", fontWeight = FontWeight.Bold) },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 )
-            )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+            }
         }
     ) { paddingValues ->
         Column(
@@ -62,14 +65,14 @@ fun MainPageScreen(
 
             ActionCard(
                 title = "Commands",
-                icon = Icons.Default.List,
+                icon = Icons.AutoMirrored.Filled.List,
                 description = "View and manage available remote commands",
                 onClick = onOpenCommands
             )
 
             ActionCard(
                 title = "Transport Channels",
-                icon = Icons.Default.Send,
+                icon = Icons.AutoMirrored.Filled.Send,
                 description = "Configure SMS, Notification, and Web transports",
                 onClick = onOpenTransports
             )

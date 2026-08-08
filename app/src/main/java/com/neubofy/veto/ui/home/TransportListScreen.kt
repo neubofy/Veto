@@ -23,18 +23,36 @@ import com.neubofy.veto.transports.NotificationReplyTransport
 import com.neubofy.veto.transports.NextJsServerTransport
 import com.neubofy.veto.ui.theme.glassmorphism
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransportListScreen(
     transports: List<Transport<*>>,
     activity: AppCompatActivity
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(transports, key = { it.getDestinationString() }) { transport ->
-            TransportItem(transport = transport, activity = activity)
+    Scaffold(
+        topBar = {
+            Column {
+                TopAppBar(
+                    title = { Text("Transport Channels", fontWeight = FontWeight.Bold) },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+            }
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(transports, key = { it.getDestinationString() }) { transport ->
+                TransportItem(transport = transport, activity = activity)
+            }
         }
     }
 }
