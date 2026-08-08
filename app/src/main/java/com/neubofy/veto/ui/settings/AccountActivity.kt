@@ -171,7 +171,7 @@ class AccountActivity : VetoActivity() {
             tvStatus.text = "Re-syncing FCM Token..."
             DashboardSync.uploadTokenIfPaired(this) { statusMsg, _ ->
                 runOnUiThread {
-                    tvStatus.text = statusMsg
+                    Snackbar.make(findViewById(android.R.id.content), statusMsg, Snackbar.LENGTH_LONG).show()
                     updateUI()
                 }
             }
@@ -182,13 +182,13 @@ class AccountActivity : VetoActivity() {
             GoogleDriveUploader.setupDrive(this,
                 onSuccess = {
                     runOnUiThread {
-                        tvStatus.text = "Drive Setup Complete!"
+                        Snackbar.make(findViewById(android.R.id.content), "Drive Setup Complete!", Snackbar.LENGTH_LONG).show()
                         updateUI()
                     }
                 },
                 onError = { err ->
                     runOnUiThread {
-                        tvStatus.text = "Drive Error: $err"
+                        Snackbar.make(findViewById(android.R.id.content), "Drive Error: $err", Snackbar.LENGTH_LONG).show()
                         updateUI()
                     }
                 }
@@ -274,7 +274,7 @@ class AccountActivity : VetoActivity() {
                         tvStatus.text = "Drive Setup Complete. Syncing FCM Token..."
                         DashboardSync.uploadTokenIfPaired(this) { statusMsg, _ ->
                             runOnUiThread {
-                                tvStatus.text = statusMsg
+                                Snackbar.make(findViewById(android.R.id.content), statusMsg, Snackbar.LENGTH_LONG).show()
                                 updateUI()
                             }
                         }
