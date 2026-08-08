@@ -15,6 +15,9 @@ import androidx.compose.animation.core.tween
 import com.neubofy.veto.permissions.Permission
 import com.neubofy.veto.ui.theme.glassmorphism
 
+import androidx.compose.ui.text.font.FontWeight
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionManagerScreen(
     permissions: List<Permission>,
@@ -32,13 +35,24 @@ fun PermissionManagerScreen(
         }
     }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        state = listState,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(permissions, key = { it.name }) { permission ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Permission Manager", fontWeight = FontWeight.Bold) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            state = listState,
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(permissions, key = { it.name }) { permission ->
             val isHighlighted = permission.name == highlightName
             var startHighlight by remember { mutableStateOf(false) }
 
@@ -72,5 +86,6 @@ fun PermissionManagerScreen(
                 }
             }
         }
+    }
     }
 }

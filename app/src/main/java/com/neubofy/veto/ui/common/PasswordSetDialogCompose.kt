@@ -25,16 +25,16 @@ fun PasswordSetDialogCompose(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    // Removing AlertDialog wrapping to prevent "double dialog" when hosted inside MaterialAlertDialogBuilder.
-    // Instead we render just the content which will be displayed perfectly within the View framework's dialog container.
-    Surface(color = MaterialTheme.colorScheme.surface) {
-        Column(modifier = Modifier.padding(24.dp)) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 16.dp)
+                color = MaterialTheme.colorScheme.onSurface
             )
+        },
+        text = {
             Column {
                 if (!message.isNullOrEmpty()) {
                     Text(text = message, modifier = Modifier.padding(bottom = 16.dp))
@@ -63,19 +63,16 @@ fun PasswordSetDialogCompose(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextButton(onClick = onDismiss) {
-                    Text("Cancel")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                TextButton(onClick = { onConfirm(password) }) {
-                    Text(positiveButtonText)
-                }
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(password) }) {
+                Text(positiveButtonText)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
             }
         }
-    }
+    )
 }

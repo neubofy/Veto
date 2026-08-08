@@ -15,6 +15,7 @@ fun availableTransports(context: Context): List<Transport<*>> = listOf(
     SmsTransport(context, "42", -1),
     NotificationReplyTransport(context, null),
     InAppTransport(context),
+    NextJsServerTransport(context),
 )
 
 

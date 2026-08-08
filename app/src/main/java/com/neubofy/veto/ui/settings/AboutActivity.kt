@@ -14,8 +14,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -274,9 +277,9 @@ fun AboutScreen(
                         Divider(modifier = Modifier.padding(vertical = 16.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
 
                         Column {
-                            ActionRow("GitHub Profile", { openUrl(context, AboutActivity.GITHUB_PROFILE) })
-                            ActionRow("Website", { openUrl(context, AboutActivity.WEBSITE) })
-                            ActionRow("Email Support", { sendEmail(context) })
+                            ActionRow("GitHub Profile", Icons.Default.Person, { openUrl(context, AboutActivity.GITHUB_PROFILE) })
+                            ActionRow("Website", Icons.Default.Info, { openUrl(context, AboutActivity.WEBSITE) })
+                            ActionRow("Email Support", Icons.Default.Email, { sendEmail(context) })
                         }
                     }
                 }
@@ -296,7 +299,7 @@ fun AboutScreen(
 }
 
 @Composable
-fun ActionRow(text: String, onClick: () -> Unit) {
+fun ActionRow(text: String, icon: ImageVector, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -305,7 +308,7 @@ fun ActionRow(text: String, onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = Icons.Default.Email, // Placeholder icon for actions
+            imageVector = icon,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface
         )

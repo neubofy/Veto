@@ -23,18 +23,31 @@ import com.neubofy.veto.commands.Command
 import com.neubofy.veto.permissions.Permission
 import com.neubofy.veto.ui.theme.glassmorphism
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommandListScreen(
     commands: List<Command>,
     activity: AppCompatActivity
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(commands, key = { it.keyword }) { command ->
-            CommandItem(command = command, activity = activity)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Available Commands", fontWeight = FontWeight.Bold) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(commands, key = { it.keyword }) { command ->
+                CommandItem(command = command, activity = activity)
+            }
         }
     }
 }
