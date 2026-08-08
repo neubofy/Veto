@@ -4,19 +4,26 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.checkbox.MaterialCheckBox
-import com.neubofy.veto.R
-import com.neubofy.veto.data.EncryptedSettingsRepository
-import com.neubofy.veto.ui.UiUtil.Companion.setupEdgeToEdgeAppBar
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import com.neubofy.veto.ui.VetoActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
+import com.neubofy.veto.data.EncryptedSettingsRepository
+import com.neubofy.veto.ui.theme.VetoTheme
+import com.neubofy.veto.ui.theme.glassmorphism
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,35 +38,38 @@ data class AppItem(
 class MessagingAppPickerActivity : VetoActivity() {
 
     private lateinit var encRepo: EncryptedSettingsRepository
-    private val appList = mutableListOf<AppItem>()
-    private lateinit var adapter: MessagingAppAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_messaging_app_picker)
-
-        setupEdgeToEdgeAppBar(findViewById(R.id.appBar))
 
         encRepo = EncryptedSettingsRepository.getInstance(this)
-        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        val tvEmptyState = findViewById<TextView>(R.id.tvEmptyState)
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_apps)
 
-        adapter = MessagingAppAdapter(appList) { updatedItem ->
-            val currentAllowed = encRepo.getAllowedNotificationPackages().toMutableSet()
-            if (updatedItem.isSelected) {
-                currentAllowed.add(updatedItem.packageName)
-            } else {
-                currentAllowed.remove(updatedItem.packageName)
+        setContent {
+            VetoTheme {
+                MessagingAppPickerScreen(
+                    encRepo = encRepo,
+                    pm = packageManager,
+                    onBackClick = { finish() }
+                )
             }
-            encRepo.setAllowedNotificationPackages(currentAllowed)
         }
-        recyclerView.adapter = adapter
+    }
+}
 
-        // Load apps asynchronously on IO thread to prevent UI freezing
-        lifecycleScope.launch(Dispatchers.IO) {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MessagingAppPickerScreen(
+    encRepo: EncryptedSettingsRepository,
+    pm: PackageManager,
+    onBackClick: () -> Unit
+) {
+    var isLoading by remember { mutableStateOf(true) }
+    var apps by remember { mutableStateOf<List<AppItem>>(emptyList()) }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        coroutineScope.launch(Dispatchers.IO) {
             val allowedPackages = encRepo.getAllowedNotificationPackages()
-            val pm = packageManager
             val seenPackages = mutableSetOf<String>()
             val items = mutableListOf<AppItem>()
 
@@ -96,105 +106,162 @@ class MessagingAppPickerActivity : VetoActivity() {
             items.sortBy { it.appName.lowercase() }
 
             withContext(Dispatchers.Main) {
-                progressBar.visibility = View.GONE
-                appList.clear()
-                appList.addAll(items)
-                adapter.notifyDataSetChanged()
+                apps = items
+                isLoading = false
+            }
+        }
+    }
 
-                if (items.isEmpty()) {
-                    tvEmptyState.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
-                } else {
-                    tvEmptyState.visibility = View.GONE
-                    recyclerView.visibility = View.VISIBLE
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Allowed Messaging Apps", fontWeight = FontWeight.Bold) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.surfaceVariant
+            ) {
+                Text(
+                    text = "Select which messaging apps Veto is allowed to listen to and reply from.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
+            if (isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (apps.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "No supported messaging apps (WhatsApp, Telegram, Signal, Messenger, etc.) found on device.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(apps, key = { it.packageName }) { appItem ->
+                        var isSelected by remember { mutableStateOf(appItem.isSelected) }
+
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .glassmorphism()
+                                .clickable {
+                                    isSelected = !isSelected
+                                    appItem.isSelected = isSelected
+
+                                    val currentAllowed = encRepo.getAllowedNotificationPackages().toMutableSet()
+                                    if (isSelected) {
+                                        currentAllowed.add(appItem.packageName)
+                                    } else {
+                                        currentAllowed.remove(appItem.packageName)
+                                    }
+                                    encRepo.setAllowedNotificationPackages(currentAllowed)
+                                },
+                            colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.Transparent)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    bitmap = appItem.icon.toBitmap(config = android.graphics.Bitmap.Config.ARGB_8888).asImageBitmap(),
+                                    contentDescription = "App Icon",
+                                    modifier = Modifier.size(40.dp)
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Text(
+                                    text = appItem.appName,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Checkbox(
+                                    checked = isSelected,
+                                    onCheckedChange = { checked ->
+                                        isSelected = checked
+                                        appItem.isSelected = checked
+
+                                        val currentAllowed = encRepo.getAllowedNotificationPackages().toMutableSet()
+                                        if (checked) {
+                                            currentAllowed.add(appItem.packageName)
+                                        } else {
+                                            currentAllowed.remove(appItem.packageName)
+                                        }
+                                        encRepo.setAllowedNotificationPackages(currentAllowed)
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+}
 
-    private fun isMessagingPackage(pkg: String): Boolean {
-        val lower = pkg.lowercase()
+private fun isMessagingPackage(pkg: String): Boolean {
+    val lower = pkg.lowercase()
 
-        // Exclude system overlays, framework, telephony providers, and vendor packages
-        if (lower.contains("overlay") ||
-            lower.startsWith("android") ||
-            lower.startsWith("com.android.internal") ||
-            lower.startsWith("com.android.providers") ||
-            lower.contains("vendor") ||
-            lower.contains("systemui")
-        ) {
-            return false
-        }
-
-        // Known messaging application package identifiers
-        val knownMessagingPackages = setOf(
-            "com.whatsapp", "com.whatsapp.w4b",
-            "org.telegram.messenger", "org.telegram.messenger.web", "org.telegram.plus",
-            "org.thoughtcrime.securesms",
-            "com.facebook.orca",
-            "com.instagram.android",
-            "com.discord",
-            "com.viber.voip",
-            "com.skype.raider",
-            "com.tencent.mm",
-            "jp.naver.line.android",
-            "com.slack",
-            "com.microsoft.teams",
-            "com.snapchat.android",
-            "chat.schildi.app",
-            "im.vector.app",
-            "org.session.session",
-            "ch.threema.app"
-        )
-
-        if (knownMessagingPackages.contains(lower)) return true
-
-        return lower.endsWith(".whatsapp") ||
-                lower.endsWith(".telegram") ||
-                lower.endsWith(".signal") ||
-                lower.endsWith(".messenger")
+    // Exclude system overlays, framework, telephony providers, and vendor packages
+    if (lower.contains("overlay") ||
+        lower.startsWith("android") ||
+        lower.startsWith("com.android.internal") ||
+        lower.startsWith("com.android.providers") ||
+        lower.contains("vendor") ||
+        lower.contains("systemui")
+    ) {
+        return false
     }
 
-    inner class MessagingAppAdapter(
-        private val items: List<AppItem>,
-        private val onSelectionChanged: (AppItem) -> Unit
-    ) : RecyclerView.Adapter<MessagingAppAdapter.ViewHolder>() {
+    // Known messaging application package identifiers
+    val knownMessagingPackages = setOf(
+        "com.whatsapp", "com.whatsapp.w4b",
+        "org.telegram.messenger", "org.telegram.messenger.web", "org.telegram.plus",
+        "org.thoughtcrime.securesms",
+        "com.facebook.orca",
+        "com.instagram.android",
+        "com.discord",
+        "com.viber.voip",
+        "com.skype.raider",
+        "com.tencent.mm",
+        "jp.naver.line.android",
+        "com.slack",
+        "com.microsoft.teams",
+        "com.snapchat.android",
+        "chat.schildi.app",
+        "im.vector.app",
+        "org.session.session",
+        "ch.threema.app"
+    )
 
-        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val imgIcon: ImageView = view.findViewById(R.id.imgAppIcon)
-            val tvName: TextView = view.findViewById(R.id.tvAppName)
-            val tvPackage: TextView = view.findViewById(R.id.tvPackageName)
-            val tvBadge: TextView = view.findViewById(R.id.tvBadge)
-            val cbSelected: MaterialCheckBox = view.findViewById(R.id.cbAppSelected)
-        }
+    if (knownMessagingPackages.contains(lower)) return true
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_messaging_app, parent, false)
-            return ViewHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val item = items[position]
-            holder.tvName.text = item.appName
-            holder.imgIcon.setImageDrawable(item.icon)
-
-            // Hide unnecessary package name and badge clutter
-            holder.tvPackage.visibility = View.GONE
-            holder.tvBadge.visibility = View.GONE
-
-            holder.cbSelected.setOnCheckedChangeListener(null)
-            holder.cbSelected.isChecked = item.isSelected
-
-            holder.cbSelected.setOnCheckedChangeListener { _, isChecked ->
-                item.isSelected = isChecked
-                onSelectionChanged(item)
-            }
-
-            holder.itemView.setOnClickListener {
-                holder.cbSelected.isChecked = !holder.cbSelected.isChecked
-            }
-        }
-
-        override fun getItemCount() = items.size
-    }
+    return lower.endsWith(".whatsapp") ||
+            lower.endsWith(".telegram") ||
+            lower.endsWith(".signal") ||
+            lower.endsWith(".messenger")
 }

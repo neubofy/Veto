@@ -82,7 +82,7 @@ class CommandsActivity : VetoActivity() {
                         ).show()
                         val intent = android.content.Intent(this@CommandsActivity, com.neubofy.veto.ui.MainActivity::class.java).apply {
                             putExtra(com.neubofy.veto.ui.MainActivity.EXTRA_OPEN_FRAGMENT, "PERMISSIONS")
-                            putExtra(com.neubofy.veto.ui.home.PermissionManagerFragment.ARG_HIGHLIGHT_PERMISSION_NAME, firstMissing.name)
+                            putExtra("ARG_HIGHLIGHT_PERMISSION_NAME", firstMissing.name)
                             flags = android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP or android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
                         }
                         startActivity(intent)

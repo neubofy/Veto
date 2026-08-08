@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
     id 'com.mikepenz.aboutlibraries.plugin.android'
     id "org.sonarqube" version "6.2.0.5505"
     id 'com.google.gms.google-services'
@@ -109,10 +110,33 @@ android {
     buildFeatures {
         buildConfig true
         viewBinding true
+        compose true
     }
 }
 
 dependencies {
+    def composeBom = platform('androidx.compose:compose-bom:2024.12.01')
+    implementation composeBom
+    androidTestImplementation composeBom
+
+    // Material Design 3
+    implementation 'androidx.compose.material3:material3'
+
+    // Android Studio Preview support
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+
+    // UI Tests
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    // Optional - Integration with activities
+    implementation 'androidx.activity:activity-compose:1.10.0'
+    // Optional - Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7'
+    // Compose Navigation
+    implementation("androidx.navigation:navigation-compose:2.8.5")
+
     // AndroidX
     implementation 'androidx.activity:activity-ktx:1.12.4'
     implementation 'androidx.annotation:annotation:1.9.1'
