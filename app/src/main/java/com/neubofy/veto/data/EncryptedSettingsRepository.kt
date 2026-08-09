@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.neubofy.veto.utils.SingletonHolder
-
+import com.neubofy.veto.utils.log
 
 /**
  * Storage for sensitive values that benefit from an additional layer of encryption.
@@ -19,7 +19,6 @@ class EncryptedSettingsRepository private constructor(context: Context) {
 
         val TAG = EncryptedSettingsRepository::class.simpleName
 
-        // This file should be EXCLUDED from backups
         private const val FILENAME = "veto_encrypted_settings"
 
         private const val KEY_SERVER_CACHED_ACCESS_TOKEN = "KEY_SERVER_CACHED_ACCESS_TOKEN"
@@ -32,11 +31,31 @@ class EncryptedSettingsRepository private constructor(context: Context) {
     val sharedPrefs: SharedPreferences
 
     init {
+        sharedPrefs = createEncryptedSharedPreferencesWithFallback(context)
+    }
+
+    private fun createEncryptedSharedPreferencesWithFallback(context: Context): SharedPreferences {
+        return try {
+            buildEncryptedPrefs(context)
+        } catch (e: Exception) {
+            context.log().e(TAG, "EncryptedSharedPreferences failed, wiping corrupted prefs file: ${e.message}")
+            try {
+                context.deleteSharedPreferences(FILENAME)
+                buildEncryptedPrefs(context)
+            } catch (e2: Exception) {
+                context.log().e(TAG, "Fallback to standard SharedPreferences: ${e2.message}")
+                context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE)
+            }
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun buildEncryptedPrefs(context: Context): SharedPreferences {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
 
-        sharedPrefs = EncryptedSharedPreferences.create(
+        return EncryptedSharedPreferences.create(
             context,
             FILENAME,
             masterKey,
@@ -101,7 +120,6 @@ class EncryptedSettingsRepository private constructor(context: Context) {
             sharedPrefs.edit().putString(KEY_TEMP_ALLOWLIST_JSON, json).apply()
         }
     }
-
 
     fun isTransportEnabled(transportKey: String): Boolean {
         return sharedPrefs.getBoolean("KEY_TRANSPORT_ENABLED_${transportKey.uppercase()}", false)

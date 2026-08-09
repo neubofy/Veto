@@ -11,25 +11,26 @@ import com.neubofy.veto.R
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 
-
 abstract class VetoActivity : AppCompatActivity() {
 
-    private lateinit var settings: SettingsRepository
+    private lateinit var baseSettings: SettingsRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        settings = SettingsRepository.getInstance(this)
+        baseSettings = SettingsRepository.getInstance(this)
+        try {
+            baseSettings.load()
+        } catch (_: Exception) {}
 
         applyTheme()
         applyDynamicColors()
 
-        // Needs to be called before setContentView.
-        // Thus children need to call super.onCreate before setContentView.
-        // Needs to be after dynamic colors.
         enableEdgeToEdge()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            @Suppress("DEPRECATION")
             window.isNavigationBarContrastEnforced = false
+            @Suppress("DEPRECATION")
             window.isStatusBarContrastEnforced = false
         }
     }
@@ -44,25 +45,29 @@ abstract class VetoActivity : AppCompatActivity() {
     }
 
     fun applyTheme() {
-        val theme = settings.get(Settings.SET_THEME) as String
+        try {
+            val theme = baseSettings.get(Settings.SET_THEME) as? String ?: Settings.VAL_THEME_FOLLOW_SYSTEM
 
-        val nightMode = if (theme == Settings.VAL_THEME_LIGHT) {
-            AppCompatDelegate.MODE_NIGHT_NO
-        } else if (theme == Settings.VAL_THEME_DARK) {
-            AppCompatDelegate.MODE_NIGHT_YES
-        } else {
-            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        }
-        AppCompatDelegate.setDefaultNightMode(nightMode)
+            val nightMode = if (theme == Settings.VAL_THEME_LIGHT) {
+                AppCompatDelegate.MODE_NIGHT_NO
+            } else if (theme == Settings.VAL_THEME_DARK) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+            AppCompatDelegate.setDefaultNightMode(nightMode)
+        } catch (_: Exception) {}
     }
 
     fun applyDynamicColors() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             return
         }
-        val isEnabled = settings.get(Settings.SET_DYNAMIC_COLORS) as Boolean
-        if (isEnabled) {
-            DynamicColors.applyToActivityIfAvailable(this)
-        }
+        try {
+            val isEnabled = baseSettings.get(Settings.SET_DYNAMIC_COLORS) as? Boolean ?: false
+            if (isEnabled) {
+                DynamicColors.applyToActivityIfAvailable(this)
+            }
+        } catch (_: Exception) {}
     }
 }
