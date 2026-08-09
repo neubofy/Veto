@@ -1,6 +1,6 @@
 <resources>
     <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:windowBackground">@drawable/bg</item>
+        <item name="android:windowBackground">@color/md_theme_background</item>
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
@@ -34,14 +34,14 @@
     </style>
 
     <style name="Widget.LCLD.GlassCard" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardBackgroundColor">@color/glass_white</item>
-        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">@color/md_theme_surfaceVariant</item>
+        <item name="cardElevation">2dp</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.LCLD.GlassCard</item>
         <item name="strokeColor">@color/glass_stroke</item>
         <item name="strokeWidth">1dp</item>
     </style>
 
     <style name="ShapeAppearance.LCLD.GlassCard" parent="ShapeAppearance.Material3.MediumComponent">
-        <item name="cornerSize">20dp</item>
+        <item name="cornerSize">16dp</item>
     </style>
 </resources>

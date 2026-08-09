@@ -4,13 +4,14 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="false">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="?android:attr/colorBackground"
         app:elevation="0dp"
         android:fitsSystemWindows="false">
 
@@ -19,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            android:background="@android:color/transparent"
+            android:background="?android:attr/colorBackground"
             app:title="@string/app_name"
             app:titleTextColor="?attr/colorPrimary"
             android:fitsSystemWindows="true" />
@@ -30,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:background="@android:color/transparent"
+        android:background="?android:attr/colorBackground"
         android:fitsSystemWindows="false" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

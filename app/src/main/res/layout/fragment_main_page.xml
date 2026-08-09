@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
+    android:background="?android:attr/colorBackground"
     android:paddingBottom="16dp">
 
     <GridLayout
@@ -20,7 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_columnSpan="2"
             android:layout_margin="8dp"
-            app:cardElevation="3dp"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant"
+            app:cardElevation="2dp"
             app:cardCornerRadius="16dp">
 
             <LinearLayout
@@ -69,7 +71,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,6 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="Commands"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -100,7 +106,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -120,11 +129,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="Transports"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
 
         <!-- Auto Theft Card -->
         <com.google.android.material.card.MaterialCardView
@@ -133,8 +142,9 @@
             android:layout_height="wrap_content"
             android:layout_columnSpan="2"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant"
             app:cardElevation="2dp"
-            app:cardCornerRadius="12dp">
+            app:cardCornerRadius="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -157,14 +167,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Auto Theft Detection (BETA)"
+                        android:text="Auto Theft Protection"
                         android:textSize="18sp"
                         android:textColor="?attr/colorError"
                         android:textStyle="bold" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Configure automatic security responses.\nNote: May not work properly on all devices; works best on stock Android OEMs."
+                        android:text="Active 2-phase defense, custom announcements, and emergency exfiltration."
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:alpha="0.8"
                         android:textSize="14sp" />
@@ -172,14 +182,16 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-
         <!-- Permission Manager Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_permission_manager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_columnSpan="2"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -202,13 +214,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Permissions"
+                        android:text="Permissions Manager"
+                        android:textColor="?attr/colorOnSurfaceVariant"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Manage device &amp; app permissions"
+                        android:text="Manage device &amp; app security permissions"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:alpha="0.8"
                         android:textSize="14sp" />
@@ -223,7 +236,9 @@
             android:layout_height="wrap_content"
             android:layout_columnSpan="2"
             android:layout_margin="8dp"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant">
+            app:cardBackgroundColor="?attr/colorSurfaceVariant"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
