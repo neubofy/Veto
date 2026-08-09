@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { auth, db } from '@/lib/firebaseClient';
-import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { doc, collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 import CommandConsole from '@/components/CommandConsole';
 import TelemetryModal from '@/components/TelemetryModal';
@@ -51,6 +51,7 @@ export default function ConsolePage() {
         unsubHistory = onSnapshot(historyRef, (snapshot: any) => {
           const newHistory: any[] = [];
           snapshot.forEach((d: any) => { newHistory.push({ id: d.id, ...d.data() }); });
+          newHistory.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
           setHistory(newHistory);
         });
 

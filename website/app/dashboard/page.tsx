@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { auth, db } from '@/lib/firebaseClient';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { doc, collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { doc, collection, onSnapshot } from 'firebase/firestore';
 
 import CommandCard from '@/components/CommandCard';
 import CommandRunnerModal from '@/components/CommandRunnerModal';
@@ -62,6 +62,7 @@ export default function DashboardPage() {
         unsubHistory = onSnapshot(historyRef, (snapshot: any) => {
           const newHistory: any[] = [];
           snapshot.forEach((d: any) => { newHistory.push({ id: d.id, ...d.data() }); });
+          newHistory.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
           setHistory(newHistory);
         });
 
@@ -253,9 +254,7 @@ export default function DashboardPage() {
 
       {/* Auto Theft Alert Banner */}
       {(() => {
-        const theftHistory = history.filter(h => h.command === 'theft_warning' || h.command === 'theft_warning_cancelled')
-          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-        
+        const theftHistory = history.filter(h => h.command === 'theft_warning' || h.command === 'theft_warning_cancelled');
         if (theftHistory.length > 0) {
           const latest = theftHistory[0];
           if (latest.command === 'theft_warning') {
@@ -299,6 +298,12 @@ export default function DashboardPage() {
         <CommandCard
           icon="🔊" title="Ring Alarm" command="ring"
           onOpenRunnerModal={setModalCmd}
+          onSendCommand={sendCommand} isPending={isCommandPending}
+          activeCmd={activeCmd} history={history} onSelectOutput={setSelectedOutput}
+        />
+        <CommandCard
+          icon="🛑" title="Stop Alarm & Warning" command="stop"
+          description="Stop alarm siren, vibration, and auto theft warning overlay"
           onSendCommand={sendCommand} isPending={isCommandPending}
           activeCmd={activeCmd} history={history} onSelectOutput={setSelectedOutput}
         />

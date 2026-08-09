@@ -8,9 +8,8 @@ import com.neubofy.veto.R
 import com.neubofy.veto.permissions.CameraPermission
 import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.ui.DummyCameraxActivity
+import com.neubofy.veto.utils.CommandQueueManager
 import com.neubofy.veto.utils.log
-
-
 
 class CameraCommand(context: Context) : Command(context) {
     companion object {
@@ -34,35 +33,37 @@ class CameraCommand(context: Context) : Command(context) {
         args: List<String>,
         transport: Transport<T>,
     ) {
-        val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "photo")
-        if (error != null) {
-            context.log().w(TAG, error)
-            transport.send(context, error, keyword)
-            return
-        }
+        CommandQueueManager.runMediaCommandInQueue {
+            val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "photo")
+            if (error != null) {
+                context.log().w(TAG, error)
+                transport.send(context, error, keyword)
+                return@runMediaCommandInQueue
+            }
 
-        val dummyCameraActivity = Intent(context, DummyCameraxActivity::class.java)
-        dummyCameraActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_COMMAND, keyword)
-        com.neubofy.veto.transports.TransportHelper.attachTransportToIntent(dummyCameraActivity, transport)
+            val dummyCameraActivity = Intent(context, DummyCameraxActivity::class.java)
+            dummyCameraActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_COMMAND, keyword)
+            com.neubofy.veto.transports.TransportHelper.attachTransportToIntent(dummyCameraActivity, transport)
 
-        if (args.getOrNull(0) == "front") {
-            dummyCameraActivity.putExtra(
-                DummyCameraxActivity.EXTRA_CAMERA,
-                DummyCameraxActivity.CAMERA_FRONT
-            )
-        } else {
-            dummyCameraActivity.putExtra(
-                DummyCameraxActivity.EXTRA_CAMERA,
-                DummyCameraxActivity.CAMERA_BACK
-            )
-        }
-        if (args.contains("flash")) {
-            dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_FLASH, true)
-        }
-        context.log().d(TAG, "Starting camera activity")
-        context.startActivity(dummyCameraActivity)
+            if (args.getOrNull(0) == "front") {
+                dummyCameraActivity.putExtra(
+                    DummyCameraxActivity.EXTRA_CAMERA,
+                    DummyCameraxActivity.CAMERA_FRONT
+                )
+            } else {
+                dummyCameraActivity.putExtra(
+                    DummyCameraxActivity.EXTRA_CAMERA,
+                    DummyCameraxActivity.CAMERA_BACK
+                )
+            }
+            if (args.contains("flash")) {
+                dummyCameraActivity.putExtra(DummyCameraxActivity.EXTRA_FLASH, true)
+            }
+            context.log().d(TAG, "Starting camera activity under hardware queue")
+            context.startActivity(dummyCameraActivity)
 
-        transport.send(context, "Capturing photo...", keyword)
+            transport.send(context, "Capturing photo...", keyword)
+        }
     }
 }

@@ -6,8 +6,8 @@ import androidx.annotation.StringRes
 import com.neubofy.veto.R
 import com.neubofy.veto.permissions.RecordAudioPermission
 import com.neubofy.veto.transports.Transport
+import com.neubofy.veto.utils.CommandQueueManager
 import com.neubofy.veto.utils.log
-
 
 class AudioCommand(context: Context) : Command(context) {
     companion object {
@@ -29,20 +29,22 @@ class AudioCommand(context: Context) : Command(context) {
     override val requiredPermissions = listOf(RecordAudioPermission())
 
     override suspend fun <T> executeInternal(args: List<String>, transport: Transport<T>) {
-        val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "audio")
-        if (error != null) {
-            transport.send(context, error, keyword)
-            return
+        CommandQueueManager.runMediaCommandInQueue {
+            val error = com.neubofy.veto.utils.MediaStorageManager.verifyPreconditions(context, "audio")
+            if (error != null) {
+                transport.send(context, error, keyword)
+                return@runMediaCommandInQueue
+            }
+
+            val durationSecs = args.getOrNull(0)?.toLongOrNull()?.coerceIn(5L, 300L) ?: 30L
+
+            val dummyAudioActivity = android.content.Intent(context, com.neubofy.veto.ui.DummyAudioActivity::class.java)
+            dummyAudioActivity.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+            dummyAudioActivity.putExtra(EXTRA_DURATION_SECS, durationSecs)
+            com.neubofy.veto.transports.TransportHelper.attachTransportToIntent(dummyAudioActivity, transport)
+            context.startActivity(dummyAudioActivity)
+
+            transport.send(context, "Capturing ${durationSecs}s audio...", keyword)
         }
-
-        val durationSecs = args.getOrNull(0)?.toLongOrNull()?.coerceIn(5L, 300L) ?: 30L
-
-        val dummyAudioActivity = android.content.Intent(context, com.neubofy.veto.ui.DummyAudioActivity::class.java)
-        dummyAudioActivity.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-        dummyAudioActivity.putExtra(EXTRA_DURATION_SECS, durationSecs)
-        com.neubofy.veto.transports.TransportHelper.attachTransportToIntent(dummyAudioActivity, transport)
-        context.startActivity(dummyAudioActivity)
-
-        transport.send(context, "Capturing ${durationSecs}s audio...", keyword)
     }
 }

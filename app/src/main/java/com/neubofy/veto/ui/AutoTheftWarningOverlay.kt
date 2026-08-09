@@ -24,11 +24,16 @@ class AutoTheftWarningOverlay : VetoActivity() {
 
     companion object {
         const val REASON_TEXT = "REASON_TEXT"
+        const val LOCK_MSG_TEXT = "LOCK_MSG_TEXT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        }
         @Suppress("DEPRECATION")
         window.addFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
@@ -49,22 +54,21 @@ class AutoTheftWarningOverlay : VetoActivity() {
         })
 
         val reasonText = intent.getStringExtra(REASON_TEXT)
+        val lockMsgText = intent.getStringExtra(LOCK_MSG_TEXT)
+
         val textViewWarning = findViewById<TextView>(R.id.textViewWarningMessage)
         if (!reasonText.isNullOrEmpty()) {
-            textViewWarning.text = "Theft suspected: $reasonText"
+            var msg = "Theft suspected: $reasonText"
+            if (!lockMsgText.isNullOrEmpty()) {
+                msg += "\n\nMessage: \"$lockMsgText\""
+            }
+            textViewWarning.text = msg
+        } else if (!lockMsgText.isNullOrEmpty()) {
+            textViewWarning.text = "Message: \"$lockMsgText\""
         }
 
         val textViewInstructions = findViewById<TextView>(R.id.textViewInstructions)
-        val proofs = mutableListOf<String>()
-        if (settings.get(Settings.SET_AUTO_THEFT_PROOF_UNLOCK) as Boolean) proofs.add("• Unlock this device")
-        if (settings.get(Settings.SET_AUTO_THEFT_PROOF_CHARGE) as Boolean) proofs.add("• Plug into a charger")
-        if (settings.get(Settings.SET_AUTO_THEFT_PROOF_SIM) as Boolean) proofs.add("• Reinsert the owner SIM")
-
-        if (proofs.isNotEmpty()) {
-            textViewInstructions.text = "To prove you are the legitimate owner, please do one of the following:\n\n${proofs.joinToString("\n")}"
-        } else {
-            textViewInstructions.text = "Please verify your ownership."
-        }
+        textViewInstructions.text = "To prove you are the legitimate owner, please unlock this device."
 
         val buttonUnlock = findViewById<Button>(R.id.buttonUnlock)
         buttonUnlock.setOnClickListener {

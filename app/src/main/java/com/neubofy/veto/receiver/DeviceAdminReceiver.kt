@@ -16,8 +16,9 @@ import kotlinx.coroutines.launch
 
 class DeviceAdminReceiver : DeviceAdminReceiver() {
 
-    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
     override fun onPasswordFailed(context: Context, intent: Intent) {
+        @Suppress("DEPRECATION")
         super.onPasswordFailed(context, intent)
         context.log().w("DeviceAdminReceiver", "Password attempt failed on device!")
 
@@ -28,9 +29,7 @@ class DeviceAdminReceiver : DeviceAdminReceiver() {
         // Master toggle must be on
         if (!autoTheftEnabled) return
 
-        // Note: On some OEM Android versions (e.g. Vivo OriginOS, Xiaomi MIUI), ACTION_PASSWORD_FAILED
-        // may not be broadcasted properly unless it's a completely secure lock.
-        context.log().w("DeviceAdminReceiver", "ACTION_PASSWORD_FAILED triggered. OEM custom lockscreens (Vivo/OriginOS, MIUI) sometimes suppress this event.")
+        context.log().w("DeviceAdminReceiver", "ACTION_PASSWORD_FAILED triggered.")
 
         // 1. Calculate failed attempts & remaining attempts
         val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as? android.app.admin.DevicePolicyManager
@@ -85,15 +84,15 @@ class DeviceAdminReceiver : DeviceAdminReceiver() {
         }
     }
 
-    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
     override fun onPasswordSucceeded(context: Context, intent: Intent) {
+        @Suppress("DEPRECATION")
         super.onPasswordSucceeded(context, intent)
         context.log().i("DeviceAdminReceiver", "Password succeeded on device.")
         val settings = SettingsRepository.getInstance(context)
         settings.set(Settings.SET_AUTO_THEFT_FAILED_COUNTER, 0)
 
-        if (settings.get(Settings.SET_AUTO_THEFT_PROOF_UNLOCK) as Boolean) {
-            AutoTheftManager.cancelSuspectedMode(context)
-        }
+        // Device unlock is the sole way to cancel auto theft warning
+        AutoTheftManager.cancelSuspectedMode(context)
     }
 }
