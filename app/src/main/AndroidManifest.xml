@@ -158,6 +158,7 @@
 
         <receiver
             android:name=".receiver.DeviceAdminReceiver"
+            android:directBootAware="true"
             android:exported="true"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
@@ -166,6 +167,8 @@
 
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+                <action android:name="android.app.action.ACTION_PASSWORD_FAILED" />
+                <action android:name="android.app.action.ACTION_PASSWORD_SUCCEEDED" />
             </intent-filter>
         </receiver>
 

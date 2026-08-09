@@ -16,23 +16,39 @@ class SimStateReceiver : BroadcastReceiver() {
             val settings = SettingsRepository.getInstance(context)
             val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val simState = telephonyManager.simState
+            val simStateExtra = intent.getStringExtra("ss") ?: ""
 
-            if (simState == TelephonyManager.SIM_STATE_ABSENT) {
+            val isAbsent = simState == TelephonyManager.SIM_STATE_ABSENT || simStateExtra == "ABSENT"
+            val isPinLocked = simState == TelephonyManager.SIM_STATE_PIN_REQUIRED || 
+                              simState == TelephonyManager.SIM_STATE_PUK_REQUIRED || 
+                              simStateExtra == "PIN_REQUIRED" || 
+                              simStateExtra == "PUK_REQUIRED" || 
+                              simStateExtra == "LOCKED"
+            val isReady = simState == TelephonyManager.SIM_STATE_READY || simStateExtra == "READY" || simStateExtra == "LOADED"
+
+            if (isAbsent) {
                 if (settings.get(Settings.SET_AUTO_THEFT_SIM_REMOVED) as Boolean) {
                     AutoTheftManager.triggerSuspectedMode(context, "SIM card removed")
                 }
-            } else if (simState == TelephonyManager.SIM_STATE_READY) {
+            } else if (isReady || isPinLocked) {
                 if (settings.get(Settings.SET_AUTO_THEFT_PROOF_SIM) as Boolean) {
-                    // Check if the loaded SIM matches the owner SIM
                     val ownerSimString = settings.get(Settings.SET_AUTO_THEFT_OWNER_SIM) as String
                     val ownerSims = ownerSimString.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
+                    // Scenario 1: If no specific owner SIM number is configured, any SIM re-insertion cancels suspected mode
                     if (ownerSims.isEmpty()) {
-                        // If no owner SIM is setup, any SIM re-insertion cancels it
                         AutoTheftManager.cancelSuspectedMode(context)
                         return
                     }
 
+                    // Scenario 2: If SIM PIN Lock is active (PIN_REQUIRED), a physical SIM was inserted into the tray!
+                    // Since SIM PIN hides phone numbers from API until unlocked, treat re-insertion as proof of physical SIM tray access
+                    if (isPinLocked) {
+                        AutoTheftManager.cancelSuspectedMode(context)
+                        return
+                    }
+
+                    // Scenario 3: Verify SIM details against owner SIM numbers/IDs
                     try {
                         val subManager = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
                         val activeSubscriptionInfoList = subManager.activeSubscriptionInfoList
@@ -41,19 +57,34 @@ class SimStateReceiver : BroadcastReceiver() {
                         activeSubscriptionInfoList?.forEach { subInfo ->
                             @Suppress("DEPRECATION")
                             val number = subInfo.number
-                            if (number != null && ownerSims.contains(number)) {
+                            val iccId = subInfo.iccId
+                            val cardId = subInfo.cardId.toString()
+                            val subId = subInfo.subscriptionId.toString()
+
+                            if ((number != null && ownerSims.contains(number)) ||
+                                (iccId != null && ownerSims.contains(iccId)) ||
+                                ownerSims.contains(cardId) ||
+                                ownerSims.contains(subId)) {
                                 isOwnerSim = true
                             }
                         }
 
+                        val line1 = try { telephonyManager.line1Number } catch (_: Exception) { null }
+                        val simSerial = try { @Suppress("DEPRECATION") telephonyManager.simSerialNumber } catch (_: Exception) { null }
+                        val simOperator = telephonyManager.simOperator
+
+                        if (ownerSims.contains(line1) || ownerSims.contains(simSerial) || ownerSims.contains(simOperator)) {
+                            isOwnerSim = true
+                        }
+
                         if (isOwnerSim) {
                             AutoTheftManager.cancelSuspectedMode(context)
-                        } else if (settings.get(Settings.SET_AUTO_THEFT_SIM_REMOVED) as Boolean) {
-                            // Non-owner SIM inserted -> trigger again just in case
+                        } else if (isReady && settings.get(Settings.SET_AUTO_THEFT_SIM_REMOVED) as Boolean) {
+                            // Non-owner SIM inserted -> trigger unauthorized SIM warning
                             AutoTheftManager.triggerSuspectedMode(context, "Unauthorized SIM card inserted")
                         }
                     } catch (e: SecurityException) {
-                        // Fallback if no permission
+                        // Fallback if permission not granted: cancel suspected mode when SIM is physically re-inserted
                         AutoTheftManager.cancelSuspectedMode(context)
                     }
                 }
