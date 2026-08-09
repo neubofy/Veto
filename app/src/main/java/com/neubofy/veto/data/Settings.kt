@@ -57,6 +57,7 @@ class Settings : HashMap<Int, Any>() {
         
         const val SET_AUTO_THEFT_WARNING_ACTIVE = 712
         const val SET_RING_LOCK_ENABLED = 713
+        const val SET_AUTO_THEFT_FAILED_COUNTER = 714
     }
 
     override fun get(key: Int): Any {
@@ -86,7 +87,8 @@ class Settings : HashMap<Int, Any>() {
             SET_Veto_COMMAND -> "veto"
             SET_VetoSERVER_UPDATE_TIME -> 60
             SET_SET_VERSION,
-            SET_APP_CRASHED_LOG_ENTRY -> 0
+            SET_APP_CRASHED_LOG_ENTRY,
+            SET_AUTO_THEFT_FAILED_COUNTER -> 0
 
             SET_AUTO_THEFT_MAX_ATTEMPTS -> 3
 

@@ -89,7 +89,11 @@ class RingerService : Service() {
             .build()
 
         val notifId = 88192
-        startForeground(notifId, notification)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            startForeground(notifId, notification, android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+        } else {
+            startForeground(notifId, notification)
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -137,10 +141,12 @@ class RingerService : Service() {
             val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
             audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0)
 
-            if (oldInterruptionFilter == null) oldInterruptionFilter = notificationManager.currentInterruptionFilter
-            if (oldNotificationPolicy == null) oldNotificationPolicy = notificationManager.notificationPolicy
+            if (notificationManager.isNotificationPolicyAccessGranted) {
+                if (oldInterruptionFilter == null) oldInterruptionFilter = notificationManager.currentInterruptionFilter
+                if (oldNotificationPolicy == null) oldNotificationPolicy = notificationManager.notificationPolicy
 
-            notificationManager.setInterruptionFilter(INTERRUPTION_FILTER_ALL)
+                notificationManager.setInterruptionFilter(INTERRUPTION_FILTER_ALL)
+            }
         } catch (e: Exception) {
             this.log().e(TAG, "Error in raiseVolumeToMax: ${e.message}")
         }
@@ -153,8 +159,11 @@ class RingerService : Service() {
 
             oldRingerMode?.let { audioManager.ringerMode = it }
             oldAlarmVolume?.let { audioManager.setStreamVolume(AudioManager.STREAM_ALARM, it, 0) }
-            oldInterruptionFilter?.let { notificationManager.setInterruptionFilter(it) }
-            oldNotificationPolicy?.let { notificationManager.notificationPolicy = it }
+
+            if (notificationManager.isNotificationPolicyAccessGranted) {
+                oldInterruptionFilter?.let { notificationManager.setInterruptionFilter(it) }
+                oldNotificationPolicy?.let { notificationManager.notificationPolicy = it }
+            }
         } catch (e: Exception) {
             this.log().e(TAG, "Error in resetVolume: ${e.message}")
         }
