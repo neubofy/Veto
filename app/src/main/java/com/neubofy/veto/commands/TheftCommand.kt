@@ -36,13 +36,6 @@ class TheftCommand(context: Context) : Command(context) {
             context.log().w("TheftCommand", "LocateCommand in TheftMode failed: ${e.message}")
         }
 
-        // 3. Enable Bluetooth
-        try {
-            val bluetoothCommand = BluetoothCommand(context)
-            bluetoothCommand.execute(listOf("on"), transport)
-        } catch (e: Exception) {
-            context.log().w("TheftCommand", "BluetoothCommand in TheftMode failed: ${e.message}")
-        }
 
         // 4. Disable DND
         try {

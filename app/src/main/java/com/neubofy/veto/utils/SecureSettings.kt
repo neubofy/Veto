@@ -24,16 +24,4 @@ object SecureSettings {
         context.log().d(TAG, "Turned GPS on/off using SecureSettings: $enable")
     }
 
-    @JvmStatic
-    fun setBluetooth(context: Context, enable: Boolean): Boolean {
-        return try {
-            val value = if (enable) 1 else 0
-            Settings.Global.putInt(context.contentResolver, "bluetooth_on", value)
-            context.log().d(TAG, "Turned Bluetooth on/off using SecureSettings: $enable")
-            true
-        } catch (e: Exception) {
-            context.log().e(TAG, "Failed to toggle bluetooth via SecureSettings: ${e.message}")
-            false
-        }
-    }
 }

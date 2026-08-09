@@ -36,24 +36,6 @@ class MainPageFragment : TaggedFragment() {
         val isCharging = status == android.os.BatteryManager.BATTERY_STATUS_CHARGING || status == android.os.BatteryManager.BATTERY_STATUS_FULL
         val batteryStr = "$batteryLevel% ${if (isCharging) "⚡ (Charging)" else ""}"
 
-        // 3. Bluetooth Status (Safe Permission Handling)
-        var btStr = "Unavailable"
-        try {
-            val hasBtPerm = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                androidx.core.content.ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.BLUETOOTH_CONNECT) == android.content.pm.PackageManager.PERMISSION_GRANTED
-            } else {
-                androidx.core.content.ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.BLUETOOTH) == android.content.pm.PackageManager.PERMISSION_GRANTED
-            }
-
-            if (hasBtPerm) {
-                val btAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
-                btStr = if (btAdapter != null && btAdapter.isEnabled) "🔷 Enabled" else "⚪ Disabled"
-            } else {
-                btStr = "⚠️ Permission Required"
-            }
-        } catch (e: Exception) {
-            btStr = "Unavailable"
-        }
 
         // 4. DND Mode
         var dndStr = "Off"
@@ -88,7 +70,7 @@ class MainPageFragment : TaggedFragment() {
         val hasFlash = ctx.packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_CAMERA_FLASH)
         val flashStr = if (hasFlash) "🔦 Available" else "N/A"
 
-        tvDeviceDetails.text = "📱 Model: $model (Android $osVersion)\n🔋 Battery: $batteryStr\n🔷 Bluetooth: $btStr\n🌙 DND Mode: $dndStr\n🔊 Sound Mode: $soundStr\n🔦 Flashlight: $flashStr"
+        tvDeviceDetails.text = "📱 Model: $model (Android $osVersion)\n🔋 Battery: $batteryStr\n🌙 DND Mode: $dndStr\n🔊 Sound Mode: $soundStr\n🔦 Flashlight: $flashStr"
 
 
         view.findViewById<MaterialCardView>(R.id.card_auto_theft).setOnClickListener {

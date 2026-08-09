@@ -13,7 +13,7 @@ plugins {
 android {
     compileSdk 36
     namespace 'com.neubofy.veto'
-    packagingOptions {
+    packaging {
         resources {
             excludes += ['META-INF/LICENSE.md', 'META-INF/NOTICE.md', 'META-INF/versions/9/OSGI-INF/MANIFEST.MF']
         }
@@ -21,27 +21,15 @@ android {
 
     lint {
         baseline = file("lint-baseline.xml")
-        lintOptions {
-            // There may be extra translations (strings in other languages that don't exist
-            // in strings.xml anymore) temporarily, until Weblate automatically deletes them.
-            disable 'ExtraTranslation'
-            disable 'MissingTranslation'
-        }
+        disable += ['ExtraTranslation', 'MissingTranslation']
     }
 
     defaultConfig {
         applicationId "com.neubofy.veto"
         minSdkVersion 24
-        // TODO: raise targetSdk again.
-        // We supported targetSdk 34 until BluetoothCommand was added, which requires max 32 to work:
-        // https://developer.android.com/reference/android/bluetooth/BluetoothAdapter#enable()
-        // We should implement becoming a Device Owner, and then raise the targetSdk again.
-        // https://gitlab.com/Neubofy/veto/-/issues/220
-        // noinspection ExpiredTargetSdkVersion
-        targetSdkVersion 32
+        targetSdk 36
         versionCode 1
         versionName "1.0.0"
-        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -76,17 +64,8 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            // WARNING: Compile and test the release flavor before publishing!!!
-            // This is because minification may strip things that are not explicitly referenced
-            // but are actually needed (e.g., objects being serialised by Gson).
-            // https://stackoverflow.com/questions/35853593/minify-android-app-but-do-not-obfuscate-it
-            // minifyEnabled true
-            postprocessing {
-                removeUnusedCode true
-                removeUnusedResources true
-                optimizeCode true
-                obfuscate false
-            }
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -150,7 +129,6 @@ dependencies {
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
 
     implementation 'com.android.volley:volley:1.2.1'
-    implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.android.material:material:1.13.0'
     implementation 'com.google.code.gson:gson:2.13.2'
 
@@ -175,7 +153,7 @@ dependencies {
     // Professional App Updater
 
     // Compose
-    def composeBom = platform('androidx.compose:compose-bom:2024.12.01')
+    def composeBom = platform('androidx.compose:compose-bom:2026.05.00')
     implementation composeBom
     androidTestImplementation composeBom
 
@@ -192,11 +170,11 @@ dependencies {
     implementation("io.noties.markwon:image-coil:4.6.2")
     implementation("io.coil-kt:coil:2.6.0")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
 
 sonar {
-    androidVariant "devDebug"
+    androidVariant "debug"
     properties {
         property "sonar.projectName", "Veto Android"
         property "sonar.projectKey", "neubofy_veto-android"

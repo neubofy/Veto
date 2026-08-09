@@ -7,7 +7,7 @@ fun globalAppPermissions() = listOf(
     PostNotificationsPermission(),
     BatteryOptimizationsPermission(),
     UnusedAppRestrictionsPermission(),
-    BluetoothConnectPermission(),
+
     CameraPermission(),
     DeviceAdminPermission(),
     DoNotDisturbAccessPermission(),

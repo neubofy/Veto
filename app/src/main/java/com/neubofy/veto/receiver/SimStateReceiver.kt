@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.telephony.SubscriptionManager
+import android.telephony.TelephonyManager
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.utils.AutoTheftManager
@@ -12,14 +13,15 @@ class SimStateReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == "android.intent.action.SIM_STATE_CHANGED") {
-            val state = intent.getStringExtra("ss")
             val settings = SettingsRepository.getInstance(context)
+            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val simState = telephonyManager.simState
 
-            if (state == "ABSENT") {
+            if (simState == TelephonyManager.SIM_STATE_ABSENT) {
                 if (settings.get(Settings.SET_AUTO_THEFT_SIM_REMOVED) as Boolean) {
                     AutoTheftManager.triggerSuspectedMode(context, "SIM card removed")
                 }
-            } else if (state == "LOADED") {
+            } else if (simState == TelephonyManager.SIM_STATE_READY) {
                 if (settings.get(Settings.SET_AUTO_THEFT_PROOF_SIM) as Boolean) {
                     // Check if the loaded SIM matches the owner SIM
                     val ownerSimString = settings.get(Settings.SET_AUTO_THEFT_OWNER_SIM) as String
@@ -37,6 +39,7 @@ class SimStateReceiver : BroadcastReceiver() {
 
                         var isOwnerSim = false
                         activeSubscriptionInfoList?.forEach { subInfo ->
+                            @Suppress("DEPRECATION")
                             val number = subInfo.number
                             if (number != null && ownerSims.contains(number)) {
                                 isOwnerSim = true

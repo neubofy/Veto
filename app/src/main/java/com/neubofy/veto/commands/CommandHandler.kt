@@ -15,7 +15,7 @@ import kotlinx.coroutines.job
 // Order matters for the home screen
 fun availableCommands(context: Context): List<Command> {
     val commands = mutableListOf(
-        BluetoothCommand(context),
+
         CameraCommand(context),
         DeleteCommand(context),
         FlashCommand(context),
@@ -27,6 +27,7 @@ fun availableCommands(context: Context): List<Command> {
         RingCommand(context),
         RingerModeCommand(context),
         StatsCommand(context),
+        StopCommand(context),
         TheftCommand(context),
 
         AudioCommand(context),

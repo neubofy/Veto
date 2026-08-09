@@ -31,6 +31,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
 
     private lateinit var switchDeviceWipe: MaterialSwitch
     private lateinit var switchVetoviaPin: MaterialSwitch
+    private lateinit var switchRingLock: MaterialSwitch
 
     private lateinit var textStatusWipe: TextView
     private lateinit var textStatusPin: TextView
@@ -72,6 +73,10 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         switchVetoviaPin.isChecked = settings.get(Settings.SET_ACCESS_VIA_PIN) as Boolean
         switchVetoviaPin.setOnCheckedChangeListener(this)
 
+        switchRingLock = findViewById(R.id.switchRingLock)
+        switchRingLock.isChecked = settings.get(Settings.SET_RING_LOCK_ENABLED) as Boolean
+        switchRingLock.setOnCheckedChangeListener(this)
+
         textStatusWipe = findViewById(R.id.textStatusWipe)
         textStatusPin = findViewById(R.id.textStatusPin)
         textStatusLockMsg = findViewById(R.id.textStatusLockMsg)
@@ -90,6 +95,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         setupInfoButton(R.id.btnInfoPin, "Veto PIN", getString(R.string.Settings_LCLD_via_Pin_Description))
         setupInfoButton(R.id.btnInfoLockMsg, "Lock Screen Message", getString(R.string.Settings_Lockscreenmessage_Description))
         setupInfoButton(R.id.btnInfoCommand, "Trigger Command", getString(R.string.Settings_LCLDCommand_Description))
+        setupInfoButton(R.id.btnInfoRingLock, "Lock Device on Ring", "When enabled, the device screen will lock when the ring command is triggered.")
 
         btnEditWipe.setOnClickListener { onEnterDeletePasswordClicked() }
         btnRemoveWipe.setOnClickListener {
@@ -184,6 +190,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         when (buttonView.id) {
             R.id.switchDeviceWipe -> settings.set(Settings.SET_WIPE_ENABLED, isChecked)
             R.id.switchVetoviaPin -> settings.set(Settings.SET_ACCESS_VIA_PIN, isChecked)
+            R.id.switchRingLock -> settings.set(Settings.SET_RING_LOCK_ENABLED, isChecked)
         }
     }
 

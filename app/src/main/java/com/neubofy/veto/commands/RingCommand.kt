@@ -7,6 +7,7 @@ import com.neubofy.veto.R
 import com.neubofy.veto.permissions.DoNotDisturbAccessPermission
 import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.utils.log
+import com.neubofy.veto.data.Settings
 
 
 const val RING_DURATION_DEFAULT_SECS = 30
@@ -40,12 +41,14 @@ class RingCommand(context: Context) : Command(context) {
             }
         }
 
-        // 1. Lock screen using LockCommand (which handles system lock & custom lockscreen message overlay)
-        val lockCommand = LockCommand(context)
-        try {
-            lockCommand.execute(emptyList(), transport)
-        } catch (e: Exception) {
-            context.log().w("RingCommand", "LockCommand execution failed: ${e.message}")
+        // 1. Lock screen using LockCommand if setting is enabled
+        if (settings.get(Settings.SET_RING_LOCK_ENABLED) as Boolean) {
+            val lockCommand = LockCommand(context)
+            try {
+                lockCommand.execute(emptyList(), transport)
+            } catch (e: Exception) {
+                context.log().w("RingCommand", "LockCommand execution failed: ${e.message}")
+            }
         }
 
         // 2. Start persistent RingerService (single, sole source of alarm ringing & 100% volume loop)

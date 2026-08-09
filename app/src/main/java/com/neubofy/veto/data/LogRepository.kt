@@ -125,11 +125,12 @@ class LogRepository private constructor(private val context: Context) {
             return
         }
         synchronized(list) {
-            while (list.size > MAX_LOG_ENTRIES) {
-                list.removeFirst()
+            val diff = list.size - MAX_LOG_ENTRIES
+            if (diff > 0) {
+                list.subList(0, diff).clear()
+                dirty = true
+                save()
             }
-            dirty = true
-            save()
         }
     }
 

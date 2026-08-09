@@ -54,6 +54,9 @@ class Settings : HashMap<Int, Any>() {
         const val SET_AUTO_THEFT_PROOF_SIM = 709
         const val SET_AUTO_THEFT_LOCK_MSG = 710
         const val SET_AUTO_THEFT_OWNER_SIM = 711
+        
+        const val SET_AUTO_THEFT_WARNING_ACTIVE = 712
+        const val SET_RING_LOCK_ENABLED = 713
     }
 
     override fun get(key: Int): Any {
@@ -73,7 +76,9 @@ class Settings : HashMap<Int, Any>() {
             SET_AUTO_THEFT_ENABLED,
             SET_AUTO_THEFT_SIM_REMOVED,
             SET_AUTO_THEFT_FAILED_UNLOCK,
-            SET_AUTO_THEFT_PROOF_CHARGE -> false
+            SET_AUTO_THEFT_PROOF_CHARGE,
+            SET_AUTO_THEFT_WARNING_ACTIVE,
+            SET_RING_LOCK_ENABLED -> false
 
             SET_AUTO_THEFT_PROOF_UNLOCK,
             SET_AUTO_THEFT_PROOF_SIM -> true // Defaults
