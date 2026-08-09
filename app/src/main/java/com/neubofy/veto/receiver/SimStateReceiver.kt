@@ -55,8 +55,16 @@ class SimStateReceiver : BroadcastReceiver() {
 
                         var isOwnerSim = false
                         activeSubscriptionInfoList?.forEach { subInfo ->
-                            @Suppress("DEPRECATION")
-                            val number = subInfo.number
+                            var number: String? = null
+                            @Suppress("MissingPermission")
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                                number = subManager.getPhoneNumber(subInfo.subscriptionId)
+                            }
+                            if (number.isNullOrBlank()) {
+                                @Suppress("DEPRECATION")
+                                number = subInfo.number
+                            }
+                            
                             val iccId = subInfo.iccId
                             val cardId = subInfo.cardId.toString()
                             val subId = subInfo.subscriptionId.toString()

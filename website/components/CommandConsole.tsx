@@ -22,7 +22,6 @@ const PRESETS = [
   { label: '🔕 Ringer Silent', cmd: 'ringermode silent' },
   { label: '🔦 Flashlight On', cmd: 'flash on' },
   { label: '🛰️ GPS On', cmd: 'gps on' },
-  { label: '🔵 Bluetooth On', cmd: 'bluetooth on' },
   { label: '🌙 DND Off', cmd: 'nodisturb off' },
 ];
 
@@ -80,6 +79,15 @@ export default function CommandConsole({ onSendCommand, isPending }: CommandCons
           style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', backgroundColor: '#238636', border: 'none' }}
         >
           <span>▶</span> Run Command
+        </button>
+        <button
+          type="button"
+          disabled={isPending}
+          onClick={() => onSendCommand('stop')}
+          className="btn btn-danger"
+          style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', backgroundColor: '#da3633', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}
+        >
+          <span>🛑</span> Emergency Stop
         </button>
       </form>
 

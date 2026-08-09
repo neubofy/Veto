@@ -192,7 +192,7 @@ export default function LandingPage() {
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>💬</div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#58a6ff' }}>2. Offline SMS Control</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                Execute commands remotely without an internet connection, including toggling Bluetooth and GPS. If calling from an untrusted number, use your PIN: <code style={{ color: '#58a6ff' }}>VETO &lt;PIN&gt; LOCATE</code>. This temporarily whitelists you. Allowed contacts can simply use: <code style={{ color: '#58a6ff' }}>VETO LOCATE</code>.
+                Execute commands remotely without an internet connection, including toggling GPS. If calling from an untrusted number, use your PIN: <code style={{ color: '#58a6ff' }}>VETO &lt;PIN&gt; LOCATE</code>. This temporarily whitelists you. Allowed contacts can simply use: <code style={{ color: '#58a6ff' }}>VETO LOCATE</code>.
               </p>
             </div>
 
@@ -249,7 +249,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(235, 163, 54, 0.15)', color: '#eba336', padding: '2px 8px', borderRadius: '4px' }}>Macro</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth, turns off DND, and blares a siren alarm.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto theft</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
+                Master security macro. Activates Theft Mode, fetches GPS coordinates, turns off DND, and blares a siren alarm.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto theft</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 
@@ -332,16 +332,6 @@ export default function LandingPage() {
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
                 Constant-time password-verified emergency factory reset with a transmission buffer to deliver confirmation.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto delete &lt;password&gt; [dryrun]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DeviceAdminPermission</code>
-              </p>
-            </div>
-
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📡 veto bluetooth</span>
-                <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
-              </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Toggles bluetooth hardware ON/OFF.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto bluetooth [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>BluetoothConnectPermission</code>
               </p>
             </div>
 
@@ -432,7 +422,7 @@ export default function LandingPage() {
             <div id="faq-write-secure-settings" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: How do I grant Write Secure Settings permission?</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                A: The <code>WriteSecureSettingsPermission</code> is required for powerful hardware toggles like GPS and Bluetooth. Because Android restricts this for normal apps, you must grant it manually using a computer via ADB (Android Debug Bridge) with the command: <br/><code style={{ display: 'block', marginTop: '8px', padding: '8px', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>adb shell pm grant com.neubofy.veto android.permission.WRITE_SECURE_SETTINGS</code>
+                A: The <code>WriteSecureSettingsPermission</code> is required for powerful hardware toggles like GPS. Because Android restricts this for normal apps, you must grant it manually using a computer via ADB (Android Debug Bridge) with the command: <br/><code style={{ display: 'block', marginTop: '8px', padding: '8px', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>adb shell pm grant com.neubofy.veto android.permission.WRITE_SECURE_SETTINGS</code>
               </p>
             </div>
 
@@ -563,7 +553,7 @@ export default function LandingPage() {
                 "name": "How do I grant Write Secure Settings permission?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "The WriteSecureSettingsPermission is required for powerful hardware toggles like GPS and Bluetooth. Because Android restricts this for normal apps, you must grant it manually using a computer via ADB with the command: adb shell pm grant com.neubofy.veto android.permission.WRITE_SECURE_SETTINGS"
+                  "text": "The WriteSecureSettingsPermission is required for powerful hardware toggles like GPS. Because Android restricts this for normal apps, you must grant it manually using a computer via ADB with the command: adb shell pm grant com.neubofy.veto android.permission.WRITE_SECURE_SETTINGS"
                 }
               },
               {

@@ -10,6 +10,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         router.push('/dashboard');
@@ -63,14 +64,32 @@ export default function LoginPage() {
           </div>
         )}
 
-        <button 
-          onClick={handleGoogleSignIn}
-          className="btn" 
-          style={{ width: '100%', padding: '14px', background: '#fff', color: '#000', fontWeight: 'bold' }}
-        >
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '20px', height: '20px', marginRight: '10px', verticalAlign: 'middle' }} />
-          Sign in with Google
-        </button>
+        {!auth ? (
+          <div style={{
+            padding: '16px',
+            backgroundColor: 'rgba(218, 54, 51, 0.1)',
+            border: '1px solid #da3633',
+            borderRadius: '8px',
+            color: '#ff7b72',
+            textAlign: 'left',
+            fontSize: '0.9rem',
+            lineHeight: 1.5
+          }}>
+            <strong>⚠️ Firebase Not Configured</strong>
+            <p style={{ marginTop: '8px', marginBottom: 0 }}>
+              You need to create a <code>.env.local</code> file in the <code>website/</code> directory and add your Firebase credentials before you can log in.
+            </p>
+          </div>
+        ) : (
+          <button 
+            onClick={handleGoogleSignIn}
+            className="btn" 
+            style={{ width: '100%', padding: '14px', background: '#fff', color: '#000', fontWeight: 'bold' }}
+          >
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '20px', height: '20px', marginRight: '10px', verticalAlign: 'middle' }} />
+            Sign in with Google
+          </button>
+        )}
       </div>
     </main>
   );

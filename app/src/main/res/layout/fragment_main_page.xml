@@ -157,14 +157,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Auto Theft Detection"
+                        android:text="Auto Theft Detection (BETA)"
                         android:textSize="18sp"
                         android:textColor="?attr/colorError"
                         android:textStyle="bold" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Configure automatic security responses"
+                        android:text="Configure automatic security responses.\nNote: May not work properly on all devices; works best on stock Android OEMs."
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:alpha="0.8"
                         android:textSize="14sp" />

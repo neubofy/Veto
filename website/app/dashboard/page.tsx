@@ -251,6 +251,43 @@ export default function DashboardPage() {
         </div>
       </header>
 
+      {/* Auto Theft Alert Banner */}
+      {(() => {
+        const theftHistory = history.filter(h => h.command === 'theft_warning' || h.command === 'theft_warning_cancelled')
+          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        
+        if (theftHistory.length > 0) {
+          const latest = theftHistory[0];
+          if (latest.command === 'theft_warning') {
+            return (
+              <div style={{
+                backgroundColor: 'rgba(218, 54, 51, 0.15)',
+                border: '2px solid #da3633',
+                borderRadius: '12px',
+                padding: '1.5rem',
+                marginBottom: '2rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                animation: 'pulse 2s infinite'
+              }}>
+                <span style={{ fontSize: '2.5rem' }}>🚨</span>
+                <div>
+                  <h3 style={{ color: '#ff7b72', margin: '0 0 0.5rem 0', fontSize: '1.3rem' }}>AUTO-THEFT WARNING ACTIVE</h3>
+                  <p style={{ margin: 0, color: 'white', fontWeight: 'bold' }}>
+                    {typeof latest.payload === 'string' ? latest.payload : latest.payload?.content || 'Unknown reason'}
+                  </p>
+                  <p style={{ margin: '0.25rem 0 0 0', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                    Triggered at: {new Date(latest.timestamp).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            );
+          }
+        }
+        return null;
+      })()}
+
       {/* Core Commands */}
       <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem' }}>Core Commands</h2>
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
@@ -301,15 +338,7 @@ export default function DashboardPage() {
           onSendCommand={sendCommand} isPending={isCommandPending}
           activeCmd={activeCmd} history={history} onSelectOutput={setSelectedOutput}
         />
-        <CommandCard
-          icon="🔵" title="Bluetooth" command="bluetooth"
-          buttons={[
-            { label: 'On', cmd: 'bluetooth on', primary: true },
-            { label: 'Off', cmd: 'bluetooth off' }
-          ]}
-          onSendCommand={sendCommand} isPending={isCommandPending}
-          activeCmd={activeCmd} history={history} onSelectOutput={setSelectedOutput}
-        />
+
         <CommandCard
           icon="🛰️" title="GPS Toggle" command="gps"
           buttons={[
