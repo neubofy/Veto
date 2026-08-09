@@ -4,9 +4,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -32,6 +35,7 @@ class MessagingAppPickerActivity : VetoActivity() {
 
     private lateinit var encRepo: EncryptedSettingsRepository
     private val appList = mutableListOf<AppItem>()
+    private val filteredAppList = mutableListOf<AppItem>()
     private lateinit var adapter: MessagingAppAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +48,9 @@ class MessagingAppPickerActivity : VetoActivity() {
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val tvEmptyState = findViewById<TextView>(R.id.tvEmptyState)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_apps)
+        val searchEditText = findViewById<EditText>(R.id.searchEditText)
 
-        adapter = MessagingAppAdapter(appList) { updatedItem ->
+        adapter = MessagingAppAdapter(filteredAppList) { updatedItem ->
             val currentAllowed = encRepo.getAllowedNotificationPackages().toMutableSet()
             if (updatedItem.isSelected) {
                 currentAllowed.add(updatedItem.packageName)
@@ -53,8 +58,21 @@ class MessagingAppPickerActivity : VetoActivity() {
                 currentAllowed.remove(updatedItem.packageName)
             }
             encRepo.setAllowedNotificationPackages(currentAllowed)
+
+            // Sync with main list
+            appList.find { it.packageName == updatedItem.packageName }?.isSelected = updatedItem.isSelected
         }
         recyclerView.adapter = adapter
+
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filter(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         // Load apps asynchronously on IO thread to prevent UI freezing
         lifecycleScope.launch(Dispatchers.IO) {
@@ -63,7 +81,7 @@ class MessagingAppPickerActivity : VetoActivity() {
             val seenPackages = mutableSetOf<String>()
             val items = mutableListOf<AppItem>()
 
-            // Query launcher intent activities
+            // Query launcher intent activities (user installed apps)
             val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
                 addCategory(Intent.CATEGORY_LAUNCHER)
             }
@@ -80,17 +98,23 @@ class MessagingAppPickerActivity : VetoActivity() {
                 }
             }
 
-            // Also check installed applications for messaging packages
+            // Adding search functionality allows showing more apps
             val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
             installedApps.forEach { appInfo ->
-                val pkgName = appInfo.packageName
-                if (!seenPackages.contains(pkgName) && isMessagingPackage(pkgName)) {
-                    seenPackages.add(pkgName)
-                    val appName = pm.getApplicationLabel(appInfo).toString()
-                    val icon = pm.getApplicationIcon(appInfo)
-                    val isSelected = allowedPackages.contains(pkgName)
-                    items.add(AppItem(appName, pkgName, icon, isSelected))
-                }
+                 // Check if it's not a system app or is updated system app
+                 val isSystem = (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0
+                 val isUpdatedSystem = (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+
+                 if (!isSystem || isUpdatedSystem) {
+                    val pkgName = appInfo.packageName
+                    if (!seenPackages.contains(pkgName)) {
+                        seenPackages.add(pkgName)
+                        val appName = pm.getApplicationLabel(appInfo).toString()
+                        val icon = pm.getApplicationIcon(appInfo)
+                        val isSelected = allowedPackages.contains(pkgName)
+                        items.add(AppItem(appName, pkgName, icon, isSelected))
+                    }
+                 }
             }
 
             items.sortBy { it.appName.lowercase() }
@@ -99,6 +123,10 @@ class MessagingAppPickerActivity : VetoActivity() {
                 progressBar.visibility = View.GONE
                 appList.clear()
                 appList.addAll(items)
+
+                filteredAppList.clear()
+                filteredAppList.addAll(items)
+
                 adapter.notifyDataSetChanged()
 
                 if (items.isEmpty()) {
@@ -110,6 +138,21 @@ class MessagingAppPickerActivity : VetoActivity() {
                 }
             }
         }
+    }
+
+    private fun filter(text: String) {
+        filteredAppList.clear()
+        if (text.isEmpty()) {
+            filteredAppList.addAll(appList)
+        } else {
+            val query = text.lowercase()
+            for (item in appList) {
+                if (item.appName.lowercase().contains(query) || item.packageName.lowercase().contains(query)) {
+                    filteredAppList.add(item)
+                }
+            }
+        }
+        adapter.notifyDataSetChanged()
     }
 
     private fun isMessagingPackage(pkg: String): Boolean {
@@ -126,33 +169,7 @@ class MessagingAppPickerActivity : VetoActivity() {
             return false
         }
 
-        // Known messaging application package identifiers
-        val knownMessagingPackages = setOf(
-            "com.whatsapp", "com.whatsapp.w4b",
-            "org.telegram.messenger", "org.telegram.messenger.web", "org.telegram.plus",
-            "org.thoughtcrime.securesms",
-            "com.facebook.orca",
-            "com.instagram.android",
-            "com.discord",
-            "com.viber.voip",
-            "com.skype.raider",
-            "com.tencent.mm",
-            "jp.naver.line.android",
-            "com.slack",
-            "com.microsoft.teams",
-            "com.snapchat.android",
-            "chat.schildi.app",
-            "im.vector.app",
-            "org.session.session",
-            "ch.threema.app"
-        )
-
-        if (knownMessagingPackages.contains(lower)) return true
-
-        return lower.endsWith(".whatsapp") ||
-                lower.endsWith(".telegram") ||
-                lower.endsWith(".signal") ||
-                lower.endsWith(".messenger")
+        return true // Allowing all user apps to be selected now since we have search
     }
 
     inner class MessagingAppAdapter(
@@ -178,8 +195,8 @@ class MessagingAppPickerActivity : VetoActivity() {
             holder.tvName.text = item.appName
             holder.imgIcon.setImageDrawable(item.icon)
 
-            // Hide unnecessary package name and badge clutter
-            holder.tvPackage.visibility = View.GONE
+            holder.tvPackage.text = item.packageName
+            holder.tvPackage.visibility = View.VISIBLE
             holder.tvBadge.visibility = View.GONE
 
             holder.cbSelected.setOnCheckedChangeListener(null)

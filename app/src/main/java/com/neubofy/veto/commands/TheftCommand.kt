@@ -6,6 +6,8 @@ import com.neubofy.veto.data.Settings
 import com.neubofy.veto.permissions.LocationPermission
 import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.utils.log
+import com.neubofy.veto.transports.NextJsServerTransport
+import com.neubofy.veto.transports.InAppTransport
 
 class TheftCommand(context: Context) : Command(context) {
 
@@ -59,5 +61,10 @@ class TheftCommand(context: Context) : Command(context) {
         }
         
         transport.send(context, context.getString(R.string.command_theft_description), keyword)
+
+        if (transport is InAppTransport) {
+             val nextJsServerTransport = NextJsServerTransport(context)
+             nextJsServerTransport.send(context, context.getString(R.string.command_theft_description), keyword)
+        }
     }
 }

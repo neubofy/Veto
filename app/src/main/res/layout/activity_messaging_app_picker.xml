@@ -31,6 +31,17 @@
             android:text="Select which messaging apps Veto is allowed to listen to and reply from."
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant" />
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Search apps by name or package"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background" />
     </LinearLayout>
 
     <ProgressBar
@@ -46,7 +57,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="32dp"
-        android:text="No supported messaging apps (WhatsApp, Telegram, Signal, Messenger, etc.) found on device."
+        android:text="No supported apps found on device."
         android:textColor="?attr/colorOnSurfaceVariant"
         android:textSize="14sp"
         android:visibility="gone" />
