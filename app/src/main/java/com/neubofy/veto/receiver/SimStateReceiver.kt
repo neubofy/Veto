@@ -3,61 +3,57 @@ package com.neubofy.veto.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.telephony.TelephonyManager
-import android.os.Vibrator
-import android.os.VibrationEffect
-import android.speech.tts.TextToSpeech
+import android.telephony.SubscriptionManager
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
-import java.util.Locale
+import com.neubofy.veto.utils.AutoTheftManager
 
-class SimStateReceiver : BroadcastReceiver(), TextToSpeech.OnInitListener {
-
-    private var tts: TextToSpeech? = null
-    private var isTtsInitialized = false
-    private var pendingMessage: String? = null
+class SimStateReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == "android.intent.action.SIM_STATE_CHANGED") {
             val state = intent.getStringExtra("ss")
+            val settings = SettingsRepository.getInstance(context)
+
             if (state == "ABSENT") {
-                // Sim card removed
-                val settings = SettingsRepository.getInstance(context)
-
-                // Vibrate
-                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                if (vibrator.hasVibrator()) {
-                    val pattern = longArrayOf(0, 1000, 1000)
-                    vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0))
+                if (settings.get(Settings.SET_AUTO_THEFT_SIM_REMOVED) as Boolean) {
+                    AutoTheftManager.triggerSuspectedMode(context, "SIM card removed")
                 }
+            } else if (state == "LOADED") {
+                if (settings.get(Settings.SET_AUTO_THEFT_PROOF_SIM) as Boolean) {
+                    // Check if the loaded SIM matches the owner SIM
+                    val ownerSimString = settings.get(Settings.SET_AUTO_THEFT_OWNER_SIM) as String
+                    val ownerSims = ownerSimString.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
-                // Lock phone
-                val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as android.app.admin.DevicePolicyManager
-                if (dpm.isAdminActive(android.content.ComponentName(context, DeviceAdminReceiver::class.java))) {
-                    dpm.lockNow()
+                    if (ownerSims.isEmpty()) {
+                        // If no owner SIM is setup, any SIM re-insertion cancels it
+                        AutoTheftManager.cancelSuspectedMode(context)
+                        return
+                    }
+
+                    try {
+                        val subManager = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+                        val activeSubscriptionInfoList = subManager.activeSubscriptionInfoList
+
+                        var isOwnerSim = false
+                        activeSubscriptionInfoList?.forEach { subInfo ->
+                            val number = subInfo.number
+                            if (number != null && ownerSims.contains(number)) {
+                                isOwnerSim = true
+                            }
+                        }
+
+                        if (isOwnerSim) {
+                            AutoTheftManager.cancelSuspectedMode(context)
+                        } else if (settings.get(Settings.SET_AUTO_THEFT_SIM_REMOVED) as Boolean) {
+                            // Non-owner SIM inserted -> trigger again just in case
+                            AutoTheftManager.triggerSuspectedMode(context, "Unauthorized SIM card inserted")
+                        }
+                    } catch (e: SecurityException) {
+                        // Fallback if no permission
+                        AutoTheftManager.cancelSuspectedMode(context)
+                    }
                 }
-
-                speakWarning(context, "Theft suspected. Please unlock to verify you are the owner.")
-            }
-        }
-    }
-
-    private fun speakWarning(context: Context, message: String) {
-        pendingMessage = message
-        if (tts == null) {
-            tts = TextToSpeech(context, this)
-        } else if (isTtsInitialized) {
-            tts?.speak(message, TextToSpeech.QUEUE_FLUSH, null, "WarningTTS")
-        }
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            tts?.language = Locale.US
-            isTtsInitialized = true
-            pendingMessage?.let {
-                tts?.speak(it, TextToSpeech.QUEUE_FLUSH, null, "WarningTTS")
-                pendingMessage = null
             }
         }
     }

@@ -246,6 +246,15 @@
                 <action android:name="android.intent.action.SIM_STATE_CHANGED" />
             </intent-filter>
         </receiver>
-</application>
+
+        <receiver android:name=".receiver.PowerConnectionReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".ui.settings.AutoTheftSetupActivity" android:label="Auto Theft Detection Setup" />
+
+    </application>
 
 </manifest>

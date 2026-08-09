@@ -90,6 +90,11 @@ class MainPageFragment : TaggedFragment() {
 
         tvDeviceDetails.text = "📱 Model: $model (Android $osVersion)\n🔋 Battery: $batteryStr\n🔷 Bluetooth: $btStr\n🌙 DND Mode: $dndStr\n🔊 Sound Mode: $soundStr\n🔦 Flashlight: $flashStr"
 
+
+        view.findViewById<MaterialCardView>(R.id.card_auto_theft).setOnClickListener {
+            startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.AutoTheftSetupActivity::class.java))
+        }
+
         view.findViewById<MaterialCardView>(R.id.card_commands).setOnClickListener {
             startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.CommandsActivity::class.java))
         }

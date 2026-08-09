@@ -40,8 +40,20 @@ class Settings : HashMap<Int, Any>() {
         const val VAL_THEME_DARK = "dark"
         const val SET_DYNAMIC_COLORS = 602
         const val SET_CUSTOM_COLOR = 603
+
+        // Auto Theft Settings
         const val SET_THEFT_MODE_ACTIVE = 701
         const val SET_THEFT_MODE_PIN = 702
+
+        const val SET_AUTO_THEFT_ENABLED = 703
+        const val SET_AUTO_THEFT_SIM_REMOVED = 704
+        const val SET_AUTO_THEFT_FAILED_UNLOCK = 705
+        const val SET_AUTO_THEFT_MAX_ATTEMPTS = 706
+        const val SET_AUTO_THEFT_PROOF_UNLOCK = 707
+        const val SET_AUTO_THEFT_PROOF_CHARGE = 708
+        const val SET_AUTO_THEFT_PROOF_SIM = 709
+        const val SET_AUTO_THEFT_LOCK_MSG = 710
+        const val SET_AUTO_THEFT_OWNER_SIM = 711
     }
 
     override fun get(key: Int): Any {
@@ -57,12 +69,21 @@ class Settings : HashMap<Int, Any>() {
             SET_UPDATEBOARDING_MODERN_CRYPTO_COMPLETED,
             SET_Veto_EDGE_INFO_SHOWN,
             SET_THEFT_MODE_ACTIVE,
-            SET_DYNAMIC_COLORS -> false
+            SET_DYNAMIC_COLORS,
+            SET_AUTO_THEFT_ENABLED,
+            SET_AUTO_THEFT_SIM_REMOVED,
+            SET_AUTO_THEFT_FAILED_UNLOCK,
+            SET_AUTO_THEFT_PROOF_CHARGE -> false
+
+            SET_AUTO_THEFT_PROOF_UNLOCK,
+            SET_AUTO_THEFT_PROOF_SIM -> true // Defaults
 
             SET_Veto_COMMAND -> "veto"
             SET_VetoSERVER_UPDATE_TIME -> 60
             SET_SET_VERSION,
             SET_APP_CRASHED_LOG_ENTRY -> 0
+
+            SET_AUTO_THEFT_MAX_ATTEMPTS -> 3
 
             SET_RINGER_TONE -> RingerUtils.getDefaultRingtoneAsString()
 
@@ -74,7 +95,9 @@ class Settings : HashMap<Int, Any>() {
             SET_Veto_CRYPT_PRIVKEY,
             SET_Veto_CRYPT_PUBKEY,
             SET_THEFT_MODE_PIN,
-            SET_VetoSERVER_PUSH_URL -> ""
+            SET_VetoSERVER_PUSH_URL,
+            SET_AUTO_THEFT_LOCK_MSG,
+            SET_AUTO_THEFT_OWNER_SIM -> ""
 
             SET_VetoSERVER_URL -> "https://veto.neubofy.in"
 
