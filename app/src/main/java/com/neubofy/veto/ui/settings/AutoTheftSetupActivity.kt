@@ -136,6 +136,42 @@ fun AutoTheftSetupScreen(
         ) {
             Spacer(modifier = Modifier.height(4.dp))
 
+            // Device Admin Permission Warning Card
+            val isDeviceAdminGranted = remember { com.neubofy.veto.permissions.DeviceAdminPermission().isGranted(context) }
+            if (!isDeviceAdminGranted) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.AdminPanelSettings, contentDescription = null, tint = MaterialTheme.colorScheme.onErrorContainer)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Device Admin Permission Required", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onErrorContainer)
+                        }
+                        Text(
+                            text = "Android OS requires Device Administrator permission to monitor failed PIN/Password unlock attempts. Please activate Device Admin.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                        Button(
+                            onClick = {
+                                (context as? android.app.Activity)?.let {
+                                    com.neubofy.veto.permissions.DeviceAdminPermission().request(it)
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                        ) {
+                            Text("Activate Device Admin")
+                        }
+                    }
+                }
+            }
+
             // Master Switch Card
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
@@ -252,6 +288,26 @@ fun AutoTheftSetupScreen(
                                     enabled = maxAttempts < 10
                                 ) {
                                     Icon(Icons.Default.Add, contentDescription = "Increase")
+                                }
+                            }
+
+                            // Info tip for testing password attempts
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                                modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(16.dp))
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "Notifications will alert you on every failed PIN/Password attempt with remaining attempts. (Note: Android OS monitors incorrect PIN, Password, or Pattern. Fingerprint/Face biometric failures are excluded by Android system security).",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    )
                                 }
                             }
                         }
