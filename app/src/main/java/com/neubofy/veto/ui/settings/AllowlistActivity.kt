@@ -32,7 +32,10 @@ class AllowlistActivity : VetoActivity() {
         allowlistRepository = AllowlistRepository.getInstance(this)
         settings = SettingsRepository.getInstance(this)
 
-        allowlistAdapter = AllowlistAdapter { phoneNumber -> onDeleteContact(phoneNumber) }
+        allowlistAdapter = AllowlistAdapter(
+            onDeleteClicked = { phoneNumber -> onDeleteContact(phoneNumber) },
+            onStarClicked = { phoneNumber -> onToggleStarContact(phoneNumber) }
+        )
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_allowlist)
         recyclerView.adapter = allowlistAdapter
 
@@ -94,6 +97,11 @@ class AllowlistActivity : VetoActivity() {
                 Toast.makeText(this, R.string.Toast_Duplicate_contact, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun onToggleStarContact(phoneNumber: String) {
+        allowlistRepository.toggleStarred(phoneNumber)
+        updateScreen()
     }
 
     private fun onDeleteContact(phoneNumber: String) {

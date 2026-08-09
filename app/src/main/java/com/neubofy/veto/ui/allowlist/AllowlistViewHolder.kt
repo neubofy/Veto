@@ -10,6 +10,7 @@ import com.neubofy.veto.utils.Utils.Companion.copyToClipboard
 class AllowlistViewHolder(
     itemView: View,
     private val onDeleteClicked: (String) -> Unit,
+    private val onStarClicked: (String) -> Unit,
 ) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: AllowlistItem) {
@@ -26,6 +27,10 @@ class AllowlistViewHolder(
                 return@setOnLongClickListener true
             }
         }
+
+        val buttonStar = itemView.findViewById<ImageView>(R.id.button_star)
+        buttonStar.setImageResource(if (item.isStarred) R.drawable.ic_star else R.drawable.ic_star_outline)
+        buttonStar.setOnClickListener { onStarClicked(item.number) }
 
         itemView.findViewById<ImageView>(R.id.button_delete)
             .setOnClickListener { onDeleteClicked(item.number) }

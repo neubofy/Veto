@@ -4,11 +4,21 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingHorizontal="@dimen/margin_normal"
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
+
+    <ImageView
+        android:id="@+id/button_star"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="Star contact for emergency auto SMS"
+        android:padding="4dp"
+        android:src="@drawable/ic_star_outline" />
 
     <TextView
         android:id="@+id/text_name"
@@ -16,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
         android:textAlignment="textStart"
-        android:textSize="21sp"
+        android:textSize="18sp"
         tools:text="John Doe" />
 
     <TextView
@@ -25,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
         android:textAlignment="textEnd"
-        android:textSize="21sp"
+        android:textSize="16sp"
         tools:text="+1 234 567 890" />
 
     <ImageView

@@ -5,24 +5,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.media.AudioManager
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
-import android.speech.tts.TextToSpeech
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
+import com.neubofy.veto.services.AutoTheftDefenseService
 import com.neubofy.veto.ui.AutoTheftWarningOverlay
-import kotlinx.coroutines.*
-import java.util.Locale
 
-object AutoTheftManager : TextToSpeech.OnInitListener {
+object AutoTheftManager {
     private const val TAG = "AutoTheftManager"
-    private var tts: TextToSpeech? = null
-    private var isTtsInitialized = false
-    private var pendingMessage: String? = null
-    private var vibrationJob: Job? = null
 
     // BroadcastReceiver for ACTION_USER_PRESENT — sole mechanism to cancel warning on unlock
     private var unlockReceiver: BroadcastReceiver? = null
@@ -31,7 +20,7 @@ object AutoTheftManager : TextToSpeech.OnInitListener {
         val settings = SettingsRepository.getInstance(context)
         if (!(settings.get(Settings.SET_AUTO_THEFT_ENABLED) as Boolean)) return
 
-        // If already in warning state, ignore re-trigger (escalation handles failed logins separately)
+        // If already in warning state, ignore re-trigger
         if (settings.get(Settings.SET_AUTO_THEFT_WARNING_ACTIVE) as Boolean) {
             context.log().w(TAG, "Already in warning state, ignoring re-trigger: $reason")
             return
@@ -39,6 +28,7 @@ object AutoTheftManager : TextToSpeech.OnInitListener {
 
         context.log().w(TAG, "Triggering Auto Theft WARNING mode: $reason")
         settings.set(Settings.SET_AUTO_THEFT_WARNING_ACTIVE, true)
+        AutoTheftDefenseManager.clearTerminal()
 
         // 1. Lock screen via Device Admin
         try {
@@ -48,7 +38,7 @@ object AutoTheftManager : TextToSpeech.OnInitListener {
             context.log().e(TAG, "Failed to lock device: ${e.message}")
         }
 
-        // 2. Launch custom Warning Overlay with lock message
+        // 2. Launch custom Warning Overlay
         try {
             val lockMsg = settings.get(Settings.SET_AUTO_THEFT_LOCK_MSG) as? String ?: ""
             val intent = Intent(context, AutoTheftWarningOverlay::class.java).apply {
@@ -63,36 +53,14 @@ object AutoTheftManager : TextToSpeech.OnInitListener {
             context.log().e(TAG, "Failed to launch AutoTheftWarningOverlay: ${e.message}")
         }
 
-        // 3. Maximize Volume (Music stream for TTS)
+        // 3. Start Persistent AutoTheftDefenseService in Foreground
         try {
-            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume, 0)
+            AutoTheftDefenseService.startDefenseService(context.applicationContext)
         } catch (e: Exception) {
-            context.log().e(TAG, "Failed to set volume: ${e.message}")
+            context.log().e(TAG, "Failed to start AutoTheftDefenseService: ${e.message}")
         }
 
-        // 4. Vibrate for strict 30s limit
-        try {
-            val vibrator = getVibrator(context)
-            if (vibrator.hasVibrator()) {
-                val pattern = longArrayOf(0, 1000, 1000)
-                vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0))
-                vibrationJob?.cancel()
-                vibrationJob = CoroutineScope(Dispatchers.Main).launch {
-                    delay(30000)
-                    vibrator.cancel()
-                }
-            }
-        } catch (e: Exception) {
-            context.log().e(TAG, "Failed to vibrate: ${e.message}")
-        }
-
-        // 5. Build TTS message — only unlock proof
-        val ttsMsg = "Theft suspected: $reason. To verify ownership, please unlock the device."
-        speakWarning(context.applicationContext, ttsMsg)
-
-        // 6. Register ACTION_USER_PRESENT receiver — sole way to cancel via unlock
+        // 4. Register ACTION_USER_PRESENT receiver — sole way to cancel via unlock
         registerUnlockReceiver(context.applicationContext)
     }
 
@@ -103,24 +71,23 @@ object AutoTheftManager : TextToSpeech.OnInitListener {
         context.log().i(TAG, "Cancelling Auto Theft WARNING mode (Device unlocked)")
         settings.set(Settings.SET_AUTO_THEFT_WARNING_ACTIVE, false)
 
-        // 1. Stop vibration
+        // 1. Stop Foreground Service
         try {
-            val vibrator = getVibrator(context)
-            vibrator.cancel()
-            vibrationJob?.cancel()
+            AutoTheftDefenseService.stopDefenseService(context.applicationContext)
         } catch (e: Exception) {
-            context.log().e(TAG, "Failed to cancel vibration: ${e.message}")
+            context.log().e(TAG, "Failed to stop AutoTheftDefenseService: ${e.message}")
         }
 
-        // 2. Stop TTS
-        tts?.stop()
+        // 2. Stop Ringing & TTS
+        com.neubofy.veto.services.RingerService.stopRinging(context)
+        AutoTheftDefenseManager.stopTts()
 
         // 3. Unregister unlock receiver
         unregisterUnlockReceiver(context.applicationContext)
     }
 
     private fun registerUnlockReceiver(appContext: Context) {
-        if (unlockReceiver != null) return // Already registered
+        if (unlockReceiver != null) return
 
         unlockReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -144,41 +111,5 @@ object AutoTheftManager : TextToSpeech.OnInitListener {
             }
             unlockReceiver = null
         }
-    }
-
-    private fun getVibrator(context: Context): Vibrator {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }
-    }
-
-    private fun speakWarning(context: Context, message: String) {
-        pendingMessage = message
-        if (tts == null) {
-            tts = TextToSpeech(context, this)
-        } else if (isTtsInitialized) {
-            speakRepeatedly(message)
-        }
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            tts?.language = Locale.US
-            isTtsInitialized = true
-            pendingMessage?.let {
-                speakRepeatedly(it)
-                pendingMessage = null
-            }
-        }
-    }
-
-    private fun speakRepeatedly(message: String) {
-        tts?.speak(message, TextToSpeech.QUEUE_FLUSH, null, "WarningTTS")
-        tts?.speak(message, TextToSpeech.QUEUE_ADD, null, "WarningTTS")
-        tts?.speak(message, TextToSpeech.QUEUE_ADD, null, "WarningTTS")
     }
 }

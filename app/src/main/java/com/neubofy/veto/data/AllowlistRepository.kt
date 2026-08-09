@@ -68,7 +68,7 @@ class AllowlistRepository private constructor(private val context: Context) {
         }
     }
 
-    private fun saveList() {
+    fun saveList() {
         val copiedList = list.clone()
         val raw = gson.toJson(copiedList)
         encRepo.setAllowlistJson(raw)
@@ -114,6 +114,19 @@ class AllowlistRepository private constructor(private val context: Context) {
         }
         list.removeAll(toRemove)
         saveList()
+    }
+
+    fun toggleStarred(phoneNumber: String) {
+        for (ele in list) {
+            if (PhoneNumberUtils.compare(ele.number, phoneNumber)) {
+                ele.isStarred = !ele.isStarred
+            }
+        }
+        saveList()
+    }
+
+    fun getStarredContacts(): List<Contact> {
+        return list.filter { it.isStarred }
     }
 
     private fun notifyAllowlistReset() {

@@ -6,27 +6,24 @@ import com.neubofy.veto.data.EncryptedSettingsRepository
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.transports.Transport
+import com.neubofy.veto.utils.AutoTheftManager
 import com.neubofy.veto.utils.Notifications
 import com.neubofy.veto.utils.log
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.job
 
+const val TAG = "CommandHandler"
 
-// Order matters for the home screen
-fun availableCommands(context: Context): List<Command> {
+internal fun availableCommands(context: Context): List<Command> {
     val commands = mutableListOf(
-
-        CameraCommand(context),
-        DeleteCommand(context),
-        FlashCommand(context),
-        GpsCommand(context),
-        // HelpCommand(context),
         LocateCommand(context),
-        LockCommand(context),
-        NoDisturbCommand(context),
         RingCommand(context),
+        GpsCommand(context),
+        NoDisturbCommand(context),
         RingerModeCommand(context),
+        LockCommand(context),
+        DeleteCommand(context),
         StatsCommand(context),
+        FlashCommand(context),
+        CameraCommand(context),
         StopCommand(context),
         TheftCommand(context),
 
@@ -76,51 +73,36 @@ class CommandHandler<T>
                     context.log().e(TAG, "Aborting, the transport denied the access.")
                     return
                 }
+
+                // If Auto-Theft Warning is currently running, receiving a valid remote command acts as an explicit override/stop signal!
+                val isAutoTheftActive = settings.get(Settings.SET_AUTO_THEFT_WARNING_ACTIVE) as? Boolean ?: false
+                if (isAutoTheftActive) {
+                    context.log().w(TAG, "Incoming remote command received during Auto-Theft Warning mode — cancelling warning state.")
+                    AutoTheftManager.cancelSuspectedMode(context)
+                }
+
                 if (showUsageNotification) {
                     showUsageNotification(context, rawCommand)
                 }
-
-                // Only call this if we are actually handling the command, and not aborting.
                 onHandlingStarted()
-
-                // Register onStopped handler
-                currentCoroutineContext().job.invokeOnCompletion {
-                    parsed.command.onExecuteStopped()
-                    transport.closeChannel()
-                }
-
                 parsed.command.execute(parsed.args, transport)
-                // Cleanup should be run by the handler above
             }
 
-            is ParserResult.Empty -> {
-                context.log().w(TAG, "Cannot handle: args is empty.")
-            }
-
-            is ParserResult.TriggerWordMismatch -> {
-                context.log().w(
-                    TAG,
-                    "Not handling: '${parsed.actual}' does not match trigger word '${parsed.expected}'"
-                )
-            }
-
-            is ParserResult.UnknownCommand -> {
-                context.log().w(TAG, "No command found that matches '${parsed.commandKeyword}'")
+            else -> {
+                context.log().w(TAG, "Command parsing did not result in execution: $rawCommand")
             }
         }
     }
 
-    private fun showUsageNotification(context: Context, rawCommand: String) {
-        val source = transport.getDestinationString()
+    private fun showUsageNotification(context: Context, command: String) {
+        val title = "Command executed"
+        val msg = "Executed command: $command"
+
         Notifications.notify(
             context,
-            context.getString(R.string.usage_notification_title),
-            context.getString(R.string.usage_notification_text_source, rawCommand, source),
-            Notifications.CHANNEL_USAGE
+            title,
+            msg,
+            Notifications.CHANNEL_IN_APP,
         )
-    }
-
-    companion object {
-        val TAG = CommandHandler::class.simpleName
     }
 }

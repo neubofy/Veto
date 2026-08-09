@@ -1,10 +1,12 @@
 package com.neubofy.veto.transports
 
 import android.content.Context
+import android.telephony.SubscriptionManager
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.neubofy.veto.R
 import com.neubofy.veto.commands.ParserResult
+import com.neubofy.veto.data.AllowlistRepository
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.utils.log
@@ -24,8 +26,8 @@ class NextJsServerTransport(
 ) : Transport<Unit>(Unit) {
 
     override val icon = R.drawable.ic_in_app
-    override val title = R.string.transport_inapp_title // Reuse title or create new
-    override val description = "Sends command results back to the Dashboard"
+    override val title = R.string.transport_inapp_title
+    override val description = "Sends command results back to the Dashboard with Starred Contact SMS Fallback"
     override val requiredPermissions = emptyList<com.neubofy.veto.permissions.Permission>()
     override val actions = emptyList<TransportAction>()
 
@@ -43,61 +45,86 @@ class NextJsServerTransport(
         val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
         val userId = settings.get(Settings.SET_VetoSERVER_ID) as String
 
-        if (dashboardUrl.isEmpty() || userId.isEmpty()) {
-            context.log().i("NextJsServerTransport", "Dashboard not paired. Skipping result upload.")
-            return
-        }
-
         val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
-            context.log().e("NextJsServerTransport", "User not authenticated. Cannot sync result.")
-            return
-        }
 
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                // Using Tasks.await prevents thread deadlocks compared to the old CountDownLatch
-                val tokenResult = Tasks.await(currentUser.getIdToken(false), 30, TimeUnit.SECONDS)
-                val idToken = tokenResult?.token
-                if (idToken == null) {
-                    context.log().e("NextJsServerTransport", "Firebase Auth token is null")
-                    return@launch
+            var serverSyncSuccess = false
+
+            if (dashboardUrl.isNotEmpty() && userId.isNotEmpty() && currentUser != null) {
+                try {
+                    val tokenResult = Tasks.await(currentUser.getIdToken(false), 15, TimeUnit.SECONDS)
+                    val idToken = tokenResult?.token
+
+                    if (idToken != null) {
+                        val apiUrl = if (dashboardUrl.endsWith("/")) "${dashboardUrl}api/command/result" else "$dashboardUrl/api/command/result"
+                        val url = URL(apiUrl)
+                        val connection = url.openConnection() as HttpURLConnection
+                        connection.requestMethod = "POST"
+                        connection.setRequestProperty("Content-Type", "application/json")
+                        connection.setRequestProperty("Authorization", "Bearer $idToken")
+                        connection.connectTimeout = 10000
+                        connection.readTimeout = 10000
+                        connection.doOutput = true
+
+                        val jsonParam = JSONObject()
+                        jsonParam.put("result", msg)
+                        if (commandName != null) {
+                            jsonParam.put("command", commandName)
+                        }
+
+                        val out = OutputStreamWriter(connection.outputStream)
+                        out.write(jsonParam.toString())
+                        out.close()
+
+                        val responseCode = connection.responseCode
+                        if (responseCode in 200..299) {
+                            context.log().i("NextJsServerTransport", "Successfully synced command result to Dashboard")
+                            serverSyncSuccess = true
+                        } else {
+                            context.log().e("NextJsServerTransport", "Failed to sync result. Server returned $responseCode")
+                        }
+                    }
+                } catch (e: Exception) {
+                    context.log().e("NextJsServerTransport", "Server upload failed/offline: ${e.message}")
                 }
-
-                val apiUrl = if (dashboardUrl.endsWith("/")) "${dashboardUrl}api/command/result" else "$dashboardUrl/api/command/result"
-                val url = URL(apiUrl)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "POST"
-                connection.setRequestProperty("Content-Type", "application/json")
-                connection.setRequestProperty("Authorization", "Bearer $idToken")
-                connection.doOutput = true
-
-                val jsonParam = JSONObject()
-                // Send the raw string. The Next.js server will parse it if it is JSON.
-                jsonParam.put("result", msg)
-                if (commandName != null) {
-                    jsonParam.put("command", commandName)
-                }
-
-                val out = OutputStreamWriter(connection.outputStream)
-                out.write(jsonParam.toString())
-                out.close()
-
-                val responseCode = connection.responseCode
-                if (responseCode in 200..299) {
-                    context.log().i("NextJsServerTransport", "Successfully synced command result to Dashboard")
-                } else {
-                    context.log().e("NextJsServerTransport", "Failed to sync result. Server returned $responseCode")
-                }
-            } catch (e: ExecutionException) {
-                context.log().e("NextJsServerTransport", "ExecutionException: ${e.message}")
-            } catch (e: InterruptedException) {
-                context.log().e("NextJsServerTransport", "InterruptedException: ${e.message}")
-            } catch (e: TimeoutException) {
-                context.log().e("NextJsServerTransport", "TimeoutException: ${e.message}")
-            } catch (e: Exception) {
-                context.log().e("NextJsServerTransport", "Error syncing result: ${e.message}")
             }
+
+            // Universal Fallback: If server sync failed or offline, fallback to SMS to Starred Contacts
+            if (!serverSyncSuccess) {
+                fallbackToStarredSms(context, msg, commandName)
+            }
+        }
+    }
+
+    private fun fallbackToStarredSms(context: Context, msg: String, commandName: String?) {
+        try {
+            val allowlistRepo = AllowlistRepository.getInstance(context)
+            val starredContacts = allowlistRepo.getStarredContacts()
+
+            if (starredContacts.isNotEmpty()) {
+                val subManager = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as? SubscriptionManager
+                var subId = -1
+                try {
+                    @Suppress("MissingPermission")
+                    val activeSubs = subManager?.activeSubscriptionInfoList
+                    if (!activeSubs.isNullOrEmpty()) {
+                        subId = activeSubs[0].subscriptionId
+                    }
+                } catch (_: Exception) {}
+
+                val shortCmd = commandName ?: "cmd"
+                val smsText = "[Veto $shortCmd] $msg"
+
+                for (contact in starredContacts) {
+                    val smsTransport = SmsTransport(context, contact.number, subId)
+                    smsTransport.send(context, smsText, commandName)
+                    context.log().i("NextJsServerTransport", "Fallback SMS sent to starred contact ${contact.name}")
+                }
+            } else {
+                context.log().i("NextJsServerTransport", "Server offline and no Starred Contacts set for SMS fallback.")
+            }
+        } catch (e: Exception) {
+            context.log().e("NextJsServerTransport", "Failed to send fallback SMS: ${e.message}")
         }
     }
 
@@ -114,7 +141,10 @@ class NextJsServerTransport(
         if (location.altitude != null) json.put("altitude", "${location.altitude.toInt()}m")
         json.put("timestamp", java.util.Date(location.timeMillis).toString())
 
-        // Send structured JSON
+        // Also add Google Maps URL for easy SMS reading
+        val mapsUrl = "https://maps.google.com/?q=${location.lat},${location.lon}"
+        json.put("mapsUrl", mapsUrl)
+
         send(context, json.toString(), commandName)
     }
 }

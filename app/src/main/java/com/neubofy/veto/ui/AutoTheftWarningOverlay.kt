@@ -11,16 +11,23 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import com.neubofy.veto.R
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
+import com.neubofy.veto.utils.AutoTheftDefenseManager
 import com.neubofy.veto.utils.AutoTheftManager
+import kotlinx.coroutines.*
 
 class AutoTheftWarningOverlay : VetoActivity() {
 
     private lateinit var settings: SettingsRepository
+    private val overlayScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private var countdownJob: Job? = null
 
     companion object {
         const val REASON_TEXT = "REASON_TEXT"
@@ -67,8 +74,40 @@ class AutoTheftWarningOverlay : VetoActivity() {
             textViewWarning.text = "Message: \"$lockMsgText\""
         }
 
-        val textViewInstructions = findViewById<TextView>(R.id.textViewInstructions)
-        textViewInstructions.text = "To prove you are the legitimate owner, please unlock this device."
+        // Setup Owner Contact Card if details exist
+        val phone = settings.get(Settings.SET_AUTO_THEFT_CONTACT_PHONE) as? String ?: ""
+        val email = settings.get(Settings.SET_AUTO_THEFT_CONTACT_EMAIL) as? String ?: ""
+        val social = settings.get(Settings.SET_AUTO_THEFT_CONTACT_SOCIAL) as? String ?: ""
+
+        val cardOwnerContact = findViewById<LinearLayout>(R.id.cardOwnerContact)
+        val tvContactDetails = findViewById<TextView>(R.id.tvContactDetails)
+
+        if (phone.isNotEmpty() || email.isNotEmpty() || social.isNotEmpty()) {
+            cardOwnerContact.visibility = View.VISIBLE
+            val sb = StringBuilder("If found, please contact owner or submit to police station:\n")
+            if (phone.isNotEmpty()) sb.append("• Phone: $phone\n")
+            if (email.isNotEmpty()) sb.append("• Email: $email\n")
+            if (social.isNotEmpty()) sb.append("• Social ID: $social")
+            tvContactDetails.text = sb.toString().trim()
+        }
+
+        // Setup Live Terminal Console Stream
+        val tvTerminalLogs = findViewById<TextView>(R.id.tvTerminalLogs)
+        val scrollViewTerminal = findViewById<ScrollView>(R.id.scrollViewTerminal)
+
+        AutoTheftDefenseManager.setLogListener {
+            runOnUiThread {
+                val logs = AutoTheftDefenseManager.getLogs()
+                tvTerminalLogs.text = logs.joinToString("\n")
+                scrollViewTerminal.post { scrollViewTerminal.fullScroll(View.FOCUS_DOWN) }
+            }
+        }
+
+        // Start 3-minute Grace Countdown & Progress Bar (180 seconds)
+        val tvGraceCountdown = findViewById<TextView>(R.id.tvGraceCountdown)
+        val progressBarGraceTimer = findViewById<ProgressBar>(R.id.progressBarGraceTimer)
+
+        startCountdownTimer(tvGraceCountdown, progressBarGraceTimer)
 
         val buttonUnlock = findViewById<Button>(R.id.buttonUnlock)
         buttonUnlock.setOnClickListener {
@@ -77,7 +116,6 @@ class AutoTheftWarningOverlay : VetoActivity() {
                 km.requestDismissKeyguard(this, object : KeyguardManager.KeyguardDismissCallback() {
                     override fun onDismissSucceeded() {
                         super.onDismissSucceeded()
-                        // Proof by unlock successful!
                         AutoTheftManager.cancelSuspectedMode(this@AutoTheftWarningOverlay)
                         finish()
                     }
@@ -93,6 +131,31 @@ class AutoTheftWarningOverlay : VetoActivity() {
         }
 
         hideSystemUI()
+    }
+
+    private fun startCountdownTimer(tvCountdown: TextView, progressBar: ProgressBar) {
+        countdownJob?.cancel()
+        countdownJob = overlayScope.launch {
+            for (secs in 0..180) {
+                val remaining = 180 - secs
+                val minutes = remaining / 60
+                val seconds = remaining % 60
+                tvCountdown.text = String.format("Theft Confirmation in: %02d:%02d", minutes, seconds)
+                progressBar.progress = secs
+
+                if (remaining == 0) {
+                    tvCountdown.text = "🚨 THEFT CONFIRMED! ACTIVE DEFENSE ENGAGED"
+                    tvCountdown.setTextColor(android.graphics.Color.parseColor("#ff7b72"))
+                }
+                delay(1000L)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        overlayScope.cancel()
+        AutoTheftDefenseManager.setLogListener(null)
     }
 
     override fun onUserLeaveHint() {

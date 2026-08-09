@@ -1,47 +1,44 @@
 package com.neubofy.veto.data
 
-import androidx.annotation.Keep
 import com.neubofy.veto.utils.RingerUtils
 
-@Keep
 class Settings : HashMap<Int, Any>() {
 
     companion object {
-        const val SETTINGS_VERSION = 3
+        const val SET_Veto_COMMAND = 1
+        const val SET_PIN = 2
+        const val SET_WIPE_ENABLED = 3
+        const val SET_ACCESS_VIA_PIN = 4
+        const val SET_FIRST_TIME_WHITELIST = 5
+        const val SET_FIRST_TIME_CONTACT_ADDED = 6
+        const val SET_VetoSERVER_ID = 8
+        const val SET_VetoSERVER_PASSWORD_SET = 9
+        const val SET_VetoSERVER_URL = 10
+        const val SET_VetoSERVER_PUSH_URL = 11
+        const val SET_VetoSERVER_UPDATE_TIME = 13
+        const val SET_SYNCED_FCM_TOKEN = 14
+        const val SET_LOCKSCREEN_MESSAGE = 15
 
-        const val SET_WIPE_ENABLED = 0
-        const val SET_ACCESS_VIA_PIN = 1
-        const val SET_LOCKSCREEN_MESSAGE = 2
-        const val SET_PIN = 3
-        const val SET_Veto_COMMAND = 4
-        const val SET_RINGER_TONE = 7
-        const val SET_SET_VERSION = 8
-
-        const val SET_VetoSERVER_URL = 102
-        const val SET_VetoSERVER_UPDATE_TIME = 103
-        const val SET_VetoSERVER_ID = 104
-        const val SET_SYNCED_FCM_TOKEN = 1041
-        const val SET_VetoSERVER_PASSWORD_SET = 105
-        const val SET_Veto_CRYPT_PUBKEY = 108
-        const val SET_Veto_CRYPT_PRIVKEY = 109
-        const val SET_Veto_CRYPT_HPW = 110
-        const val SET_UPDATEBOARDING_MODERN_CRYPTO_COMPLETED = 113
-        const val SET_VetoSERVER_PUSH_URL = 114
-        const val SET_Veto_EDGE_INFO_SHOWN = 117
-
-        const val SET_FIRST_TIME_WHITELIST = 301
-        const val SET_FIRST_TIME_CONTACT_ADDED = 302
-
-        const val SET_APP_CRASHED_LOG_ENTRY = 401
-
-        const val SET_THEME = 601
+        const val SET_THEME = 18
         const val VAL_THEME_FOLLOW_SYSTEM = "follow_system"
-        const val VAL_THEME_LIGHT = "light"
         const val VAL_THEME_DARK = "dark"
-        const val SET_DYNAMIC_COLORS = 602
-        const val SET_CUSTOM_COLOR = 603
+        const val VAL_THEME_LIGHT = "light"
+        const val VAL_THEME_BATTERY_SAVER = "battery_saver"
 
-        // Auto Theft Settings
+        const val SET_RINGER_TONE = 19
+
+        const val SET_UPDATEBOARDING_MODERN_CRYPTO_COMPLETED = 22
+        const val SET_Veto_EDGE_INFO_SHOWN = 23
+        const val SET_Veto_CRYPT_HPW = 24
+        const val SET_Veto_CRYPT_PRIVKEY = 25
+        const val SET_Veto_CRYPT_PUBKEY = 26
+
+        const val SET_DYNAMIC_COLORS = 27
+        const val SET_CUSTOM_COLOR = 28
+
+        const val SET_SET_VERSION = 500
+        const val SET_APP_CRASHED_LOG_ENTRY = 501
+
         const val SET_THEFT_MODE_ACTIVE = 701
         const val SET_THEFT_MODE_PIN = 702
 
@@ -58,6 +55,14 @@ class Settings : HashMap<Int, Any>() {
         const val SET_AUTO_THEFT_WARNING_ACTIVE = 712
         const val SET_RING_LOCK_ENABLED = 713
         const val SET_AUTO_THEFT_FAILED_COUNTER = 714
+
+        // New Beta & Defense keys
+        const val SET_AUTO_THEFT_BETA_FAILED_UNLOCK = 715
+        const val SET_AUTO_THEFT_CUSTOM_TTS = 716
+        const val SET_AUTO_THEFT_CONTACT_PHONE = 717
+        const val SET_AUTO_THEFT_CONTACT_EMAIL = 718
+        const val SET_AUTO_THEFT_CONTACT_SOCIAL = 719
+        const val SET_AUTO_THEFT_LAST_BAD_EVENT_TIME = 720
     }
 
     override fun get(key: Int): Any {
@@ -79,20 +84,24 @@ class Settings : HashMap<Int, Any>() {
             SET_AUTO_THEFT_FAILED_UNLOCK,
             SET_AUTO_THEFT_PROOF_CHARGE,
             SET_AUTO_THEFT_WARNING_ACTIVE,
+            SET_AUTO_THEFT_BETA_FAILED_UNLOCK,
             SET_RING_LOCK_ENABLED -> false
 
             SET_AUTO_THEFT_PROOF_UNLOCK,
-            SET_AUTO_THEFT_PROOF_SIM -> true // Defaults
+            SET_AUTO_THEFT_PROOF_SIM -> true
 
             SET_Veto_COMMAND -> "veto"
             SET_VetoSERVER_UPDATE_TIME -> 60
             SET_SET_VERSION,
             SET_APP_CRASHED_LOG_ENTRY,
             SET_AUTO_THEFT_FAILED_COUNTER -> 0
+            SET_AUTO_THEFT_LAST_BAD_EVENT_TIME -> 0L
 
             SET_AUTO_THEFT_MAX_ATTEMPTS -> 3
 
             SET_RINGER_TONE -> RingerUtils.getDefaultRingtoneAsString()
+
+            SET_AUTO_THEFT_CUSTOM_TTS -> "Theft suspected. Please unlock device to verify ownership."
 
             SET_PIN,
             SET_LOCKSCREEN_MESSAGE,
@@ -104,7 +113,10 @@ class Settings : HashMap<Int, Any>() {
             SET_THEFT_MODE_PIN,
             SET_VetoSERVER_PUSH_URL,
             SET_AUTO_THEFT_LOCK_MSG,
-            SET_AUTO_THEFT_OWNER_SIM -> ""
+            SET_AUTO_THEFT_OWNER_SIM,
+            SET_AUTO_THEFT_CONTACT_PHONE,
+            SET_AUTO_THEFT_CONTACT_EMAIL,
+            SET_AUTO_THEFT_CONTACT_SOCIAL -> ""
 
             SET_VetoSERVER_URL -> "https://veto.neubofy.in"
 

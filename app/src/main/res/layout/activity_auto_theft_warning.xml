@@ -4,66 +4,141 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_errorContainer"
+    android:background="#120202"
     tools:context=".ui.AutoTheftWarningOverlay">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="16dp"
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/ic_security"
-            app:tint="@color/md_theme_onErrorContainer"
-            android:layout_marginTop="48dp"
-            android:layout_marginBottom="16dp"/>
+            app:tint="#ff7b72"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/titleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="THEFT SUSPECTED"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/md_theme_onErrorContainer"/>
+            android:textColor="#ff7b72"/>
 
         <TextView
             android:id="@+id/textViewWarningMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Device lockdown imminent due to unauthorized activity."
-            android:padding="8dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:text="Device lockdown active due to SIM removal."
+            android:textSize="14sp"
             android:textAlignment="center"
-            android:textColor="@color/md_theme_onErrorContainer"/>
-            
+            android:textColor="#f0f6fc"/>
+
+        <!-- 3-Min Suspicion Progress & Countdown -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#21262d"
+            android:padding="10dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tvGraceCountdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Theft Confirmation in: 03:00"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#58a6ff"
+                android:textAlignment="center"/>
+
+            <ProgressBar
+                android:id="@+id/progressBarGraceTimer"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="6dp"
+                android:max="180"
+                android:progress="0"
+                android:progressDrawable="@drawable/custom_progress_drawable" />
+        </LinearLayout>
+
+        <!-- Owner Contact Info Card -->
+        <LinearLayout
+            android:id="@+id/cardOwnerContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#161b22"
+            android:padding="10dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📍 OWNER CONTACT DETAILS"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#3fb950"/>
+
+            <TextView
+                android:id="@+id/tvContactDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#8b949e"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- Live Scary Matrix Terminal Log Box -->
         <TextView
-            android:id="@+id/textViewInstructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💻 SYSTEM LIVE TELEMETRY &amp; BLE MESH STREAM"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#58a6ff"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="4dp"/>
+
+        <ScrollView
+            android:id="@+id/scrollViewTerminal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="16dp"
-            android:text="To prove you are the legitimate owner, please do one of the following:\n\n• Unlock this device\n• Plug into a charger\n• Reinsert the owner SIM"
-            android:padding="16dp"
-            android:textSize="18sp"
-            android:textAlignment="center"
-            android:textColor="@color/md_theme_onErrorContainer"/>
+            android:background="#000000"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/tvTerminalLogs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:textColor="#39ff14"
+                android:lineSpacingExtra="2dp"
+                android:text="[00:00:00] INITIALIZING SYSTEM DEFENSE MESH..."/>
+        </ScrollView>
 
         <Button
             android:id="@+id/buttonUnlock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="UNLOCK DEVICE TO VERIFY"
-            android:backgroundTint="@color/md_theme_error"
-            android:textColor="@color/md_theme_onError"
-            android:layout_marginBottom="32dp"/>
+            android:backgroundTint="#da3633"
+            android:textColor="#ffffff"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="16dp"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -164,7 +164,7 @@ class SettingsRepository private constructor(private val context: Context) {
             migrateDeletePassword()
         }
 
-        set(Settings.SET_SET_VERSION, Settings.SETTINGS_VERSION)
+        set(Settings.SET_SET_VERSION, 3)
     }
 
 

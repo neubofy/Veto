@@ -8,11 +8,12 @@ import androidx.annotation.Keep
 @Keep
 data class Contact(
     var name: String,
-    var number: String
+    var number: String,
+    var isStarred: Boolean = false
 ) {
     companion object {
         @JvmStatic
-        fun from(context: Context, name: String, number: String): Contact? {
+        fun from(context: Context, name: String, number: String, isStarred: Boolean = false): Contact? {
             val tm = context.getSystemService(TelephonyManager::class.java)
             val iso = tm?.networkCountryIso ?: ""
 
@@ -27,7 +28,7 @@ data class Contact(
                 return null
             }
 
-            return Contact(name, numberFormatted)
+            return Contact(name, numberFormatted, isStarred)
         }
     }
 
