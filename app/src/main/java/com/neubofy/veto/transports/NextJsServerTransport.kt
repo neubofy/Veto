@@ -23,6 +23,16 @@ class NextJsServerTransport(
     private val context: Context,
 ) : Transport<Unit>(Unit) {
 
+    companion object {
+        fun isConnected(context: Context): Boolean {
+            val settings = SettingsRepository.getInstance(context)
+            val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
+            val userId = settings.get(Settings.SET_VetoSERVER_ID) as String
+            if (dashboardUrl.isEmpty() || userId.isEmpty()) return false
+            return FirebaseAuth.getInstance().currentUser != null
+        }
+    }
+
     override val icon = R.drawable.ic_in_app
     override val title = R.string.transport_inapp_title // Reuse title or create new
     override val description = "Sends command results back to the Dashboard"
@@ -88,16 +98,64 @@ class NextJsServerTransport(
                     context.log().i("NextJsServerTransport", "Successfully synced command result to Dashboard")
                 } else {
                     context.log().e("NextJsServerTransport", "Failed to sync result. Server returned $responseCode")
+                    triggerFallbackSms(msg, commandName)
                 }
             } catch (e: ExecutionException) {
                 context.log().e("NextJsServerTransport", "ExecutionException: ${e.message}")
+                triggerFallbackSms(msg, commandName)
             } catch (e: InterruptedException) {
                 context.log().e("NextJsServerTransport", "InterruptedException: ${e.message}")
+                triggerFallbackSms(msg, commandName)
             } catch (e: TimeoutException) {
                 context.log().e("NextJsServerTransport", "TimeoutException: ${e.message}")
+                triggerFallbackSms(msg, commandName)
             } catch (e: Exception) {
                 context.log().e("NextJsServerTransport", "Error syncing result: ${e.message}")
+                triggerFallbackSms(msg, commandName)
             }
+        }
+    }
+
+    private fun triggerFallbackSms(msg: String, commandName: String?) {
+        val allowlistRepo = com.neubofy.veto.data.AllowlistRepository.getInstance(context)
+        val starredContact = allowlistRepo.list.find { it.isStarred }
+        if (starredContact == null) {
+            context.log().w("NextJsServerTransport", "Fallback SMS aborted: No starred contact found.")
+            return
+        }
+
+        context.log().i("NextJsServerTransport", "Triggering fallback SMS to starred contact: ${starredContact.name}")
+
+        val sm = context.getSystemService(android.telephony.SubscriptionManager::class.java)
+        
+        if (androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_STATE) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            val activeSubscriptionInfoList = sm?.activeSubscriptionInfoList
+            if (!activeSubscriptionInfoList.isNullOrEmpty()) {
+                // To guarantee delivery, we iterate through all active SIMs and attempt to send.
+                // In a perfect system we would use a broadcast receiver to wait for RESULT_OK or failure,
+                // but for fallback, sending from all available SIMs provides the highest chance of success.
+                for (subInfo in activeSubscriptionInfoList) {
+                    try {
+                        val smsTransport = SmsTransport(context, starredContact.number, subInfo.subscriptionId)
+                        val fallbackMsg = "[Fallback from Server] " + msg
+                        smsTransport.send(context, fallbackMsg, commandName)
+                        context.log().i("NextJsServerTransport", "Fallback SMS sent via SIM: ${subInfo.subscriptionId}")
+                    } catch (e: Exception) {
+                        context.log().e("NextJsServerTransport", "Fallback SMS failed for SIM ${subInfo.subscriptionId}: ${e.message}")
+                    }
+                }
+                return
+            }
+        }
+        
+        // If no READ_PHONE_STATE permission or no active subs found, try default SmsManager
+        try {
+            val smsTransport = SmsTransport(context, starredContact.number, -1)
+            val fallbackMsg = "[Fallback from Server] " + msg
+            smsTransport.send(context, fallbackMsg, commandName)
+            context.log().i("NextJsServerTransport", "Fallback SMS sent via default SIM.")
+        } catch (e: Exception) {
+            context.log().e("NextJsServerTransport", "Fallback SMS via default SIM failed: ${e.message}")
         }
     }
 

@@ -34,6 +34,7 @@ class AccountActivity : VetoActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
     private lateinit var tvStatus: TextView
+    private lateinit var pbSpinner: android.widget.ProgressBar
     private lateinit var etDashboardUrl: TextInputEditText
 
     private lateinit var layoutLogin: LinearLayout
@@ -65,6 +66,7 @@ class AccountActivity : VetoActivity() {
         // Bind Views
         etDashboardUrl = findViewById(R.id.etDashboardUrl)
         tvStatus = findViewById(R.id.tvConnectionStatus)
+        pbSpinner = findViewById(R.id.pbConnectionSpinner)
         
         layoutLogin = findViewById(R.id.layoutLogin)
         layoutLoggedIn = findViewById(R.id.layoutLoggedIn)
@@ -123,9 +125,11 @@ class AccountActivity : VetoActivity() {
                     log().e(TAG, "Google sign in failed: ${e.message}")
                     Snackbar.make(btnGoogleSignIn, "Google sign in failed: ${e.message}", Snackbar.LENGTH_LONG).show()
                     tvStatus.text = "Sign in failed"
+                    pbSpinner.visibility = View.GONE
                 }
             } else {
                 tvStatus.text = "Sign in cancelled"
+                pbSpinner.visibility = View.GONE
             }
         }
 
@@ -133,6 +137,7 @@ class AccountActivity : VetoActivity() {
         btnGoogleSignIn.setOnClickListener {
             if (!validateUrl(settings)) return@setOnClickListener
             tvStatus.text = "Signing in with Google & Setting up Drive..."
+            pbSpinner.visibility = View.VISIBLE
             val signInIntent = googleSignInClient.signInIntent
             googleSignInLauncher.launch(signInIntent)
         }
@@ -169,6 +174,7 @@ class AccountActivity : VetoActivity() {
 
         btnFixFcm.setOnClickListener {
             tvStatus.text = "Re-syncing FCM Token..."
+            pbSpinner.visibility = View.VISIBLE
             DashboardSync.uploadTokenIfPaired(this) { statusMsg, _ ->
                 runOnUiThread {
                     Snackbar.make(findViewById(android.R.id.content), statusMsg, Snackbar.LENGTH_LONG).show()
@@ -179,6 +185,7 @@ class AccountActivity : VetoActivity() {
 
         btnFixDrive.setOnClickListener {
             tvStatus.text = "Re-creating Drive folders..."
+            pbSpinner.visibility = View.VISIBLE
             GoogleDriveUploader.setupDrive(this,
                 onSuccess = {
                     runOnUiThread {
@@ -253,11 +260,13 @@ class AccountActivity : VetoActivity() {
 
 
             tvStatus.text = "Device Paired with Web Dashboard"
+            pbSpinner.visibility = View.GONE
         } else {
             // Logged Out State
             layoutLogin.visibility = View.VISIBLE
             layoutLoggedIn.visibility = View.GONE
             tvStatus.text = "Device Not Connected"
+            pbSpinner.visibility = View.GONE
         }
     }
 
@@ -304,6 +313,7 @@ class AccountActivity : VetoActivity() {
                     log().w(TAG, "Firebase sign in failed: ${e?.message}")
                     Snackbar.make(btnGoogleSignIn, "Firebase Authentication Failed: ${e?.message}", Snackbar.LENGTH_LONG).show()
                     tvStatus.text = "Firebase Auth Failed"
+                    pbSpinner.visibility = View.GONE
                 }
             }
     }

@@ -30,12 +30,60 @@ class HelpCommand(
         args: List<String>,
         transport: Transport<T>,
     ) {
+        val settings = com.neubofy.veto.data.SettingsRepository.getInstance(context)
+        val kw = settings.get(com.neubofy.veto.data.Settings.SET_Veto_COMMAND) as String
+
         val reply = StringBuilder()
-        reply.appendLine(context.getString(R.string.cmd_help_message_start))
-        reply.appendLine()
+        reply.appendLine("Veto Command Guide:")
+        reply.appendLine("-------------------")
+        
         for (cmd in availableCommands) {
-            reply.appendLine("${cmd.usage} - ${context.getString(cmd.shortDescription)}")
+            when (cmd.keyword) {
+                "theft" -> {
+                    reply.appendLine("🚨 ${context.getString(cmd.shortDescription)}")
+                    reply.appendLine("  Start: $kw theft")
+                    reply.appendLine("  Stop:  $kw theft end")
+                }
+                "lock" -> {
+                    reply.appendLine("🔒 ${context.getString(cmd.shortDescription)}")
+                    reply.appendLine("  Lock with message: $kw lock Please call 911")
+                }
+                "ring" -> {
+                    reply.appendLine("🔊 ${context.getString(cmd.shortDescription)}")
+                    reply.appendLine("  Ring normally: $kw ring")
+                    reply.appendLine("  Ring for 60s:  $kw ring 60")
+                    reply.appendLine("  Stop ringing:  $kw ring stop")
+                }
+                "location" -> {
+                    reply.appendLine("📍 ${context.getString(cmd.shortDescription)}")
+                    reply.appendLine("  Get location: $kw location")
+                }
+                "flash" -> {
+                    reply.appendLine("🔦 ${context.getString(cmd.shortDescription)}")
+                    reply.appendLine("  Turn on:     $kw flash")
+                    reply.appendLine("  Turn on 30s: $kw flash 30")
+                    reply.appendLine("  Turn off:    $kw flash stop")
+                }
+                "battery" -> {
+                    reply.appendLine("🔋 ${context.getString(cmd.shortDescription)}")
+                    reply.appendLine("  Get status: $kw battery")
+                }
+                "info" -> {
+                    reply.appendLine("📱 ${context.getString(cmd.shortDescription)}")
+                    reply.appendLine("  Get info: $kw info")
+                }
+                "help" -> {
+                    reply.appendLine("ℹ️ ${context.getString(cmd.shortDescription)}")
+                    reply.appendLine("  Show this: $kw help")
+                }
+                else -> {
+                    reply.appendLine("✨ ${context.getString(cmd.shortDescription)}")
+                    reply.appendLine("  Run: $kw ${cmd.keyword}")
+                }
+            }
+            reply.appendLine()
         }
-        transport.send(context, reply.toString(), keyword)
+        
+        transport.send(context, reply.toString().trim(), keyword)
     }
 }

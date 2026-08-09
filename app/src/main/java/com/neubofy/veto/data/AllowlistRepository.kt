@@ -116,6 +116,26 @@ class AllowlistRepository private constructor(private val context: Context) {
         saveList()
     }
 
+    fun starContact(phoneNumber: String) {
+        var modified = false
+        for (ele in list) {
+            if (PhoneNumberUtils.compare(ele.number, phoneNumber)) {
+                if (!ele.isStarred) {
+                    ele.isStarred = true
+                    modified = true
+                }
+            } else {
+                if (ele.isStarred) {
+                    ele.isStarred = false
+                    modified = true
+                }
+            }
+        }
+        if (modified) {
+            saveList()
+        }
+    }
+
     private fun notifyAllowlistReset() {
         val title = context.getString(R.string.allowlist_reset_title)
         val text = context.getString(R.string.allowlist_reset_text)

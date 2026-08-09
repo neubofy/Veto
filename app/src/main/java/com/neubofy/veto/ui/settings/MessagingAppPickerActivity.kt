@@ -25,7 +25,8 @@ data class AppItem(
     val appName: String,
     val packageName: String,
     val icon: Drawable,
-    var isSelected: Boolean
+    var isSelected: Boolean,
+    val category: String
 )
 
 class MessagingAppPickerActivity : VetoActivity() {
@@ -44,8 +45,9 @@ class MessagingAppPickerActivity : VetoActivity() {
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val tvEmptyState = findViewById<TextView>(R.id.tvEmptyState)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_apps)
+        val etSearchApp = findViewById<android.widget.EditText>(R.id.etSearchApp)
 
-        adapter = MessagingAppAdapter(appList) { updatedItem ->
+        adapter = MessagingAppAdapter(filteredList) { updatedItem ->
             val currentAllowed = encRepo.getAllowedNotificationPackages().toMutableSet()
             if (updatedItem.isSelected) {
                 currentAllowed.add(updatedItem.packageName)
@@ -55,6 +57,14 @@ class MessagingAppPickerActivity : VetoActivity() {
             encRepo.setAllowedNotificationPackages(currentAllowed)
         }
         recyclerView.adapter = adapter
+
+        etSearchApp.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {
+                filterList(s.toString())
+            }
+        })
 
         // Load apps asynchronously on IO thread to prevent UI freezing
         lifecycleScope.launch(Dispatchers.IO) {
@@ -71,12 +81,14 @@ class MessagingAppPickerActivity : VetoActivity() {
 
             launcherApps.forEach { resolveInfo ->
                 val pkgName = resolveInfo.activityInfo.packageName
-                if (!seenPackages.contains(pkgName) && isMessagingPackage(pkgName)) {
+                if (!seenPackages.contains(pkgName) && isValidApp(pkgName)) {
                     seenPackages.add(pkgName)
                     val appName = resolveInfo.loadLabel(pm).toString()
                     val icon = resolveInfo.loadIcon(pm)
                     val isSelected = allowedPackages.contains(pkgName)
-                    items.add(AppItem(appName, pkgName, icon, isSelected))
+                    val isSystem = (resolveInfo.activityInfo.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0
+                    val category = if (isMessagingPackage(pkgName)) "💬 Messaging" else if (isSystem) "⚙️ System" else "📱 User"
+                    items.add(AppItem(appName, pkgName, icon, isSelected, category))
                 }
             }
 
@@ -84,47 +96,69 @@ class MessagingAppPickerActivity : VetoActivity() {
             val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
             installedApps.forEach { appInfo ->
                 val pkgName = appInfo.packageName
-                if (!seenPackages.contains(pkgName) && isMessagingPackage(pkgName)) {
+                if (!seenPackages.contains(pkgName) && isValidApp(pkgName)) {
                     seenPackages.add(pkgName)
                     val appName = pm.getApplicationLabel(appInfo).toString()
                     val icon = pm.getApplicationIcon(appInfo)
                     val isSelected = allowedPackages.contains(pkgName)
-                    items.add(AppItem(appName, pkgName, icon, isSelected))
+                    val isSystem = (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0
+                    val category = if (isMessagingPackage(pkgName)) "💬 Messaging" else if (isSystem) "⚙️ System" else "📱 User"
+                    items.add(AppItem(appName, pkgName, icon, isSelected, category))
                 }
             }
 
-            items.sortBy { it.appName.lowercase() }
+            // Sort: Messaging apps first, then alphabetically
+            items.sortBy { if (it.category.contains("Messaging")) "0_${it.appName.lowercase()}" else "1_${it.appName.lowercase()}" }
 
             withContext(Dispatchers.Main) {
                 progressBar.visibility = View.GONE
                 appList.clear()
                 appList.addAll(items)
-                adapter.notifyDataSetChanged()
-
-                if (items.isEmpty()) {
-                    tvEmptyState.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
-                } else {
-                    tvEmptyState.visibility = View.GONE
-                    recyclerView.visibility = View.VISIBLE
-                }
+                filterList(etSearchApp.text.toString())
             }
         }
     }
 
-    private fun isMessagingPackage(pkg: String): Boolean {
+    private val filteredList = mutableListOf<AppItem>()
+
+    private fun filterList(query: String) {
+        filteredList.clear()
+        if (query.isBlank()) {
+            filteredList.addAll(appList)
+        } else {
+            val lowerQuery = query.lowercase()
+            filteredList.addAll(appList.filter {
+                it.appName.lowercase().contains(lowerQuery) || it.packageName.lowercase().contains(lowerQuery)
+            })
+        }
+        adapter.notifyDataSetChanged()
+
+        val tvEmptyState = findViewById<TextView>(R.id.tvEmptyState)
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_apps)
+        if (filteredList.isEmpty()) {
+            tvEmptyState.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        } else {
+            tvEmptyState.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun isValidApp(pkg: String): Boolean {
         val lower = pkg.lowercase()
 
-        // Exclude system overlays, framework, telephony providers, and vendor packages
+        // Exclude system overlays and base framework
         if (lower.contains("overlay") ||
-            lower.startsWith("android") ||
-            lower.startsWith("com.android.internal") ||
-            lower.startsWith("com.android.providers") ||
-            lower.contains("vendor") ||
-            lower.contains("systemui")
+            lower == "android" ||
+            lower.startsWith("com.android.internal")
         ) {
             return false
         }
+        return true
+    }
+
+    private fun isMessagingPackage(pkg: String): Boolean {
+        val lower = pkg.lowercase()
 
         // Known messaging application package identifiers
         val knownMessagingPackages = setOf(
@@ -178,9 +212,11 @@ class MessagingAppPickerActivity : VetoActivity() {
             holder.tvName.text = item.appName
             holder.imgIcon.setImageDrawable(item.icon)
 
-            // Hide unnecessary package name and badge clutter
-            holder.tvPackage.visibility = View.GONE
-            holder.tvBadge.visibility = View.GONE
+            holder.tvPackage.text = item.packageName
+            holder.tvPackage.visibility = View.VISIBLE
+            
+            holder.tvBadge.text = item.category
+            holder.tvBadge.visibility = View.VISIBLE
 
             holder.cbSelected.setOnCheckedChangeListener(null)
             holder.cbSelected.isChecked = item.isSelected

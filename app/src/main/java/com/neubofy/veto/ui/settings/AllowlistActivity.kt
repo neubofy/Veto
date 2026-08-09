@@ -32,7 +32,10 @@ class AllowlistActivity : VetoActivity() {
         allowlistRepository = AllowlistRepository.getInstance(this)
         settings = SettingsRepository.getInstance(this)
 
-        allowlistAdapter = AllowlistAdapter { phoneNumber -> onDeleteContact(phoneNumber) }
+        allowlistAdapter = AllowlistAdapter(
+            onDeleteClicked = { phoneNumber -> onDeleteContact(phoneNumber) },
+            onStarClicked = { phoneNumber -> onStarContact(phoneNumber) }
+        )
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_allowlist)
         recyclerView.adapter = allowlistAdapter
 
@@ -98,6 +101,11 @@ class AllowlistActivity : VetoActivity() {
 
     private fun onDeleteContact(phoneNumber: String) {
         allowlistRepository.remove(phoneNumber)
+        updateScreen()
+    }
+
+    private fun onStarContact(phoneNumber: String) {
+        allowlistRepository.starContact(phoneNumber)
         updateScreen()
     }
 }

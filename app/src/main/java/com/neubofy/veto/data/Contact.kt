@@ -8,7 +8,8 @@ import androidx.annotation.Keep
 @Keep
 data class Contact(
     var name: String,
-    var number: String
+    var number: String,
+    var isStarred: Boolean = false
 ) {
     companion object {
         @JvmStatic

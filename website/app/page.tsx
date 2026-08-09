@@ -249,7 +249,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(235, 163, 54, 0.15)', color: '#eba336', padding: '2px 8px', borderRadius: '4px' }}>Macro</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth, turns off DND, and blares a siren alarm.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto theft</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
+                Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth, turns off DND, and blares a siren alarm. Use the "end" argument to stop the alarm.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto theft [end]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 

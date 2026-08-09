@@ -10,12 +10,25 @@ import com.neubofy.veto.utils.log
 class TheftCommand(context: Context) : Command(context) {
 
     override val keyword = "theft"
-    override val usage = "theft"
+    override val usage = "theft [end]"
     override val icon = R.drawable.ic_security
     override val shortDescription = R.string.command_theft_description
     override val requiredPermissions = listOf(LocationPermission())
 
     override internal suspend fun <T> executeInternal(args: List<String>, transport: Transport<T>) {
+        val firstArg = args.firstOrNull()?.lowercase()
+        if (firstArg == "end" || firstArg == "stop") {
+            settings.set(Settings.SET_THEFT_MODE_ACTIVE, false)
+            com.neubofy.veto.services.RingerService.stopRinging(context)
+            
+            // Send broadcast to finish LockScreenActivity if it's active
+            val intent = android.content.Intent("com.neubofy.veto.ACTION_FINISH_LOCK_SCREEN")
+            context.sendBroadcast(intent)
+            
+            transport.send(context, "Theft mode deactivated and alarm stopped.", keyword)
+            return
+        }
+        
         settings.set(Settings.SET_THEFT_MODE_ACTIVE, true)
 
         // 1. Enable GPS explicitly

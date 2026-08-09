@@ -64,7 +64,30 @@ class TransportListViewHolder(
         switchMaster.setOnCheckedChangeListener(null)
         switchMaster.isChecked = encRepo.isTransportEnabled(transportKey)
 
-        switchMaster.setOnCheckedChangeListener { _, isChecked ->
+        switchMaster.setOnCheckedChangeListener { compoundButton, isChecked ->
+            if (isChecked) {
+                if (transportKey == "sms") {
+                    val allowlistRepo = com.neubofy.veto.data.AllowlistRepository.getInstance(context)
+                    if (allowlistRepo.list.none { it.isStarred }) {
+                        compoundButton.isChecked = false
+                        android.widget.Toast.makeText(context, "Must have a starred contact in Allowlist to enable SMS", android.widget.Toast.LENGTH_LONG).show()
+                        return@setOnCheckedChangeListener
+                    }
+                } else if (transportKey == "notification_reply") {
+                    if (encRepo.getAllowedNotificationPackages().isEmpty()) {
+                        compoundButton.isChecked = false
+                        android.widget.Toast.makeText(context, "Must add a messaging app in settings first", android.widget.Toast.LENGTH_LONG).show()
+                        return@setOnCheckedChangeListener
+                    }
+                } else if (transportKey == "cloud") {
+                    if (!com.neubofy.veto.transports.NextJsServerTransport.isConnected(context)) {
+                        compoundButton.isChecked = false
+                        android.widget.Toast.makeText(context, "Must connect to server in Account Settings first", android.widget.Toast.LENGTH_LONG).show()
+                        return@setOnCheckedChangeListener
+                    }
+                }
+            }
+
             encRepo.setTransportEnabled(transportKey, isChecked)
             if (isChecked) {
                 val missing = item.missingRequiredPermissions(context)

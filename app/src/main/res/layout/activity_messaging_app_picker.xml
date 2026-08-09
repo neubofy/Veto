@@ -33,12 +33,24 @@
             android:textColor="?attr/colorOnSurfaceVariant" />
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/etSearchApp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/editbox_background"
+        android:hint="Search by name or package"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="12dp" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/tvEmptyState"

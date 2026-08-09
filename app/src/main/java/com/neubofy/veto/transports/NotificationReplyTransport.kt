@@ -92,7 +92,16 @@ class NotificationReplyTransport(
         }
 
         try {
-            sendQuickReply(context, destination.notification, msg)
+            if (NextJsServerTransport.isConnected(context)) {
+                // Forward to server
+                val serverTransport = NextJsServerTransport(context)
+                serverTransport.send(context, msg, commandName)
+                
+                // Reply with short message
+                sendQuickReply(context, destination.notification, "Command executed. View response on Dashboard: https://veto.neubofy.in/dashboard")
+            } else {
+                sendQuickReply(context, destination.notification, msg)
+            }
         } catch (e: CanceledException) {
             context.log().e(TAG, "Failed to send message via notification reply")
             e.printStackTrace()

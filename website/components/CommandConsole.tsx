@@ -17,6 +17,7 @@ const PRESETS = [
   { label: '🔒 Lock with Custom Msg', cmd: 'lock Emergency Contact: 911' },
   { label: '📊 Device Stats', cmd: 'stats' },
   { label: '🚨 Theft Mode', cmd: 'theft' },
+  { label: '🛑 End Theft Mode', cmd: 'theft end' },
   { label: '🔔 Ringer Normal', cmd: 'ringermode normal' },
   { label: '📳 Ringer Vibrate', cmd: 'ringermode vibrate' },
   { label: '🔕 Ringer Silent', cmd: 'ringermode silent' },

@@ -362,6 +362,10 @@ export default function DashboardPage() {
         <CommandCard
           icon="🚨" title="Theft Mode" command="theft"
           description="GPS + Locate + Ring Siren + Lock + Disable DND"
+          buttons={[
+            { label: 'Start', cmd: 'theft', primary: true },
+            { label: 'End', cmd: 'theft end' }
+          ]}
           onSendCommand={sendCommand} isPending={isCommandPending}
           activeCmd={activeCmd} history={history} onSelectOutput={setSelectedOutput}
         />

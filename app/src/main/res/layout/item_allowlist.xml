@@ -29,6 +29,16 @@
         tools:text="+1 234 567 890" />
 
     <ImageView
+        android:id="@+id/button_star"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="Star"
+        android:padding="8dp"
+        android:src="@drawable/ic_star_outline" />
+
+    <ImageView
         android:id="@+id/button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

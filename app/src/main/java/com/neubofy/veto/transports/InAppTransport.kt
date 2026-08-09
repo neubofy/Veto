@@ -51,7 +51,21 @@ class InAppTransport(
 
         val title = context.getString(R.string.transport_inapp_title)
 
-        Notifications.notify(context, title, msg, Notifications.CHANNEL_IN_APP)
+        if (NextJsServerTransport.isConnected(context)) {
+            // Forward to server
+            val serverTransport = NextJsServerTransport(context)
+            serverTransport.send(context, msg, commandName)
+            
+            // Send short local notification
+            Notifications.notify(
+                context, 
+                title, 
+                "Command executed. View response on Dashboard:\nhttps://veto.neubofy.in/dashboard", 
+                Notifications.CHANNEL_IN_APP
+            )
+        } else {
+            Notifications.notify(context, title, msg, Notifications.CHANNEL_IN_APP)
+        }
     }
 }
 

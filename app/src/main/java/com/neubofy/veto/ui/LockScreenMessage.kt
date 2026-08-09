@@ -76,6 +76,20 @@ class LockScreenMessage : VetoActivity() {
         }
 
         hideSystemUI()
+
+        val filter = android.content.IntentFilter("com.neubofy.veto.ACTION_FINISH_LOCK_SCREEN")
+        val receiver = object : android.content.BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: android.content.Intent?) {
+                if (intent?.action == "com.neubofy.veto.ACTION_FINISH_LOCK_SCREEN") {
+                    finish()
+                }
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(receiver, filter)
+        }
     }
 
     override fun onUserLeaveHint() {
