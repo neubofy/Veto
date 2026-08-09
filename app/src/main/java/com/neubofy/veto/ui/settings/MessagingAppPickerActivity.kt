@@ -87,8 +87,10 @@ class MessagingAppPickerActivity : VetoActivity() {
                     val icon = resolveInfo.loadIcon(pm)
                     val isSelected = allowedPackages.contains(pkgName)
                     val isSystem = (resolveInfo.activityInfo.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0
-                    val category = if (isMessagingPackage(pkgName)) "💬 Messaging" else if (isSystem) "⚙️ System" else "📱 User"
-                    items.add(AppItem(appName, pkgName, icon, isSelected, category))
+                    if (!isSystem || isMessagingPackage(pkgName) || isSelected) {
+                        val category = if (isMessagingPackage(pkgName)) "💬 Messaging" else if (isSystem) "⚙️ System" else "📱 User"
+                        items.add(AppItem(appName, pkgName, icon, isSelected, category))
+                    }
                 }
             }
 
@@ -102,8 +104,10 @@ class MessagingAppPickerActivity : VetoActivity() {
                     val icon = pm.getApplicationIcon(appInfo)
                     val isSelected = allowedPackages.contains(pkgName)
                     val isSystem = (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0
-                    val category = if (isMessagingPackage(pkgName)) "💬 Messaging" else if (isSystem) "⚙️ System" else "📱 User"
-                    items.add(AppItem(appName, pkgName, icon, isSelected, category))
+                    if (!isSystem || isMessagingPackage(pkgName) || isSelected) {
+                        val category = if (isMessagingPackage(pkgName)) "💬 Messaging" else if (isSystem) "⚙️ System" else "📱 User"
+                        items.add(AppItem(appName, pkgName, icon, isSelected, category))
+                    }
                 }
             }
 
@@ -163,6 +167,7 @@ class MessagingAppPickerActivity : VetoActivity() {
         // Known messaging application package identifiers
         val knownMessagingPackages = setOf(
             "com.whatsapp", "com.whatsapp.w4b",
+            "com.google.android.apps.messaging", "com.samsung.android.messaging",
             "org.telegram.messenger", "org.telegram.messenger.web", "org.telegram.plus",
             "org.thoughtcrime.securesms",
             "com.facebook.orca",

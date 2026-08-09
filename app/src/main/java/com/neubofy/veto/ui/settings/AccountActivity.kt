@@ -277,6 +277,7 @@ class AccountActivity : VetoActivity() {
             settings.set(Settings.SET_VetoSERVER_ID, user.uid)
 
             tvStatus.text = "Setting up Google Drive folders..."
+            pbSpinner.visibility = View.VISIBLE
             GoogleDriveUploader.setupDrive(this, 
                 onSuccess = {
                     runOnUiThread {
