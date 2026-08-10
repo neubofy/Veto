@@ -98,7 +98,7 @@ class NotificationReplyTransport(
                 serverTransport.send(context, msg, commandName)
                 
                 // Reply with short message
-                sendQuickReply(context, destination.notification, "Command executed. View response on Dashboard: https://veto.neubofy.in/dashboard")
+                sendQuickReply(context, destination.notification, "Command executed. View response on Dashboard: https://veto.neubofy.in/dashboard/console#logs")
             } else {
                 sendQuickReply(context, destination.notification, msg)
             }

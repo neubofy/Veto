@@ -247,8 +247,8 @@ export default function DashboardPage() {
               </span>
             </div>
           </div>
-          <Link href="/dashboard/console" className="btn" style={{ padding: '8px 14px', fontSize: '0.85rem', textDecoration: 'none', backgroundColor: 'rgba(88, 166, 255, 0.1)', color: '#58a6ff', border: '1px solid rgba(88, 166, 255, 0.3)' }}>
-            Terminal
+          <Link href="/dashboard/console#logs" className="btn" style={{ padding: '8px 14px', fontSize: '0.85rem', textDecoration: 'none', backgroundColor: 'rgba(88, 166, 255, 0.1)', color: '#58a6ff', border: '1px solid rgba(88, 166, 255, 0.3)' }}>
+            Recent Execution Logs
           </Link>
           <button onClick={handleLogout} className="btn btn-danger" style={{ padding: '8px 14px', fontSize: '0.85rem' }}>Logout</button>
         </div>
