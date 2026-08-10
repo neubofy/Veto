@@ -32,6 +32,7 @@ class TheftCommand(context: Context) : Command(context) {
         val firstArg = args.firstOrNull()?.lowercase()
         if (firstArg == "end" || firstArg == "stop") {
             settings.set(Settings.SET_THEFT_MODE_ACTIVE, false)
+            settings.set(Settings.SET_THEFT_MODE_CONFIRMED, false)
             
             // 1. Cancel Alarm
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -54,14 +55,23 @@ class TheftCommand(context: Context) : Command(context) {
             return
         }
 
-        // Anti-duplication guard
+        // Anti-duplication guard & Re-trigger logic
         if (settings.get(Settings.SET_THEFT_MODE_ACTIVE) as Boolean) {
-            context.log().w("TheftCommand", "Theft mode is already active. Ignoring trigger.")
-            transport.send(context, "Theft mode is already active.", keyword)
+            context.log().w("TheftCommand", "Theft mode is already active. Re-triggering as a bad event.")
+            
+            // Confirm theft and trigger bad event if re-triggered
+            settings.set(Settings.SET_THEFT_MODE_CONFIRMED, true)
+            val badEventIntent = Intent(context, TheftModeService::class.java).apply {
+                action = "ACTION_BAD_EVENT_RE_TRIGGER"
+            }
+            androidx.core.content.ContextCompat.startForegroundService(context, badEventIntent)
+            
+            transport.send(context, "Theft mode is already active. Treated as a bad event (Theft Confirmed).", keyword)
             return
         }
         
         settings.set(Settings.SET_THEFT_MODE_ACTIVE, true)
+        settings.set(Settings.SET_THEFT_MODE_CONFIRMED, false)
 
         // Enforce device state once
         enforceDeviceState()
@@ -106,7 +116,16 @@ class TheftCommand(context: Context) : Command(context) {
             context.log().e("TheftCommand", "Failed to schedule alarm: ${e.message}")
         }
         
-        transport.send(context, "Theft mode activated. Device locked, 3-minute suspected phase started.", keyword)
+        // Execute Locate Command in sequence
+        try {
+            val locateCmd = LocateCommand(context)
+            val dummyTransport = com.neubofy.veto.transports.InAppTransport(context)
+            locateCmd.executeInternal(emptyList(), dummyTransport)
+        } catch (e: Exception) {
+            context.log().e("TheftCommand", "Failed to trigger locate command: ${e.message}")
+        }
+        
+        transport.send(context, "Theft mode activated. Device locked, 3-minute suspected phase started. Location requested.", keyword)
     }
     
     // Made public so it can be called from SimStateReceiver without needing Transport

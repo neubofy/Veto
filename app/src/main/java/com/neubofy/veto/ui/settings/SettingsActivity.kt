@@ -32,6 +32,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
     private lateinit var switchDeviceWipe: MaterialSwitch
     private lateinit var switchVetoviaPin: MaterialSwitch
     private lateinit var switchTheftAutoDetect: MaterialSwitch
+    private lateinit var switchTheftWrongPass: MaterialSwitch
 
     private lateinit var textStatusWipe: TextView
     private lateinit var textStatusPin: TextView
@@ -39,6 +40,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
     private lateinit var textStatusTheftContact: TextView
     private lateinit var textStatusCommand: TextView
     private lateinit var textSelectedRingtone: TextView
+    private lateinit var textStatusWrongPass: TextView
 
     private lateinit var btnEditWipe: Button
     private lateinit var btnRemoveWipe: Button
@@ -49,6 +51,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
     private lateinit var btnEditTheftContact: Button
     private lateinit var btnRemoveTheftContact: Button
     private lateinit var btnEditCommand: Button
+    private lateinit var btnEditWrongPass: Button
 
     private lateinit var buttonSelectRingtone: Button
     private lateinit var btnViewLogs: Button
@@ -79,6 +82,10 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         switchTheftAutoDetect = findViewById(R.id.switchTheftAutoDetect)
         switchTheftAutoDetect.isChecked = settings.get(Settings.SET_THEFT_AUTO_DETECT_ENABLED) as Boolean
         switchTheftAutoDetect.setOnCheckedChangeListener(this)
+        
+        switchTheftWrongPass = findViewById(R.id.switchTheftWrongPass)
+        switchTheftWrongPass.isChecked = settings.get(Settings.SET_THEFT_WRONG_PASS_ENABLED) as Boolean
+        switchTheftWrongPass.setOnCheckedChangeListener(this)
 
         textStatusWipe = findViewById(R.id.textStatusWipe)
         textStatusPin = findViewById(R.id.textStatusPin)
@@ -86,6 +93,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         textStatusTheftContact = findViewById(R.id.textStatusTheftContact)
         textStatusCommand = findViewById(R.id.textStatusCommand)
         textSelectedRingtone = findViewById(R.id.textSelectedRingtone)
+        textStatusWrongPass = findViewById(R.id.textStatusWrongPass)
 
         btnEditWipe = findViewById(R.id.btnEditWipe)
         btnRemoveWipe = findViewById(R.id.btnRemoveWipe)
@@ -96,6 +104,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         btnEditTheftContact = findViewById(R.id.btnEditTheftContact)
         btnRemoveTheftContact = findViewById(R.id.btnRemoveTheftContact)
         btnEditCommand = findViewById(R.id.btnEditCommand)
+        btnEditWrongPass = findViewById(R.id.btnEditWrongPass)
 
         setupInfoButton(R.id.btnInfoWipe, "Remote Wipe", getString(R.string.delete_pw_warning_no_backup) + "\n\n" + getString(R.string.Settings_VetoCommand_Description))
         setupInfoButton(R.id.btnInfoPin, "Veto PIN", getString(R.string.Settings_Veto_via_Pin_Description))
@@ -103,6 +112,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         setupInfoButton(R.id.btnInfoTheftContact, "Theft Contact Info", "Enter an alternate phone number or email address to display on the screen when theft mode is active, so the device can be returned to you.")
         setupInfoButton(R.id.btnInfoTheftAutoDetect, "Auto Theft Detection", "If enabled, theft mode will automatically activate if someone removes your SIM card.")
         setupInfoButton(R.id.btnInfoCommand, "Trigger Command", getString(R.string.Settings_VetoCommand_Description))
+        setupInfoButton(R.id.btnInfoWrongPass, "Wrong Password Detection", "If enabled, entering the wrong lock screen password multiple times will trigger theft mode.")
 
         btnEditWipe.setOnClickListener { onEnterDeletePasswordClicked() }
         btnRemoveWipe.setOnClickListener {
@@ -129,6 +139,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         }
 
         btnEditCommand.setOnClickListener { onEditCommandClicked() }
+        btnEditWrongPass.setOnClickListener { onEditWrongPassClicked() }
 
         buttonSelectRingtone = findViewById(R.id.buttonSelectRingTone)
         buttonSelectRingtone.setOnClickListener { onSelectRingtoneClicked() }
@@ -223,6 +234,9 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         } else {
             textSelectedRingtone.text = "Default"
         }
+        
+        val wrongPassAttempts = settings.get(Settings.SET_THEFT_WRONG_PASS_ATTEMPTS) as Int
+        textStatusWrongPass.text = "$wrongPassAttempts attempts allowed"
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
@@ -230,6 +244,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
             R.id.switchDeviceWipe -> settings.set(Settings.SET_WIPE_ENABLED, isChecked)
             R.id.switchVetoviaPin -> settings.set(Settings.SET_ACCESS_VIA_PIN, isChecked)
             R.id.switchTheftAutoDetect -> settings.set(Settings.SET_THEFT_AUTO_DETECT_ENABLED, isChecked)
+            R.id.switchTheftWrongPass -> settings.set(Settings.SET_THEFT_WRONG_PASS_ENABLED, isChecked)
         }
     }
 
@@ -315,6 +330,28 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
                     settings.set(Settings.SET_Veto_COMMAND, edited.lowercase(Locale.ROOT))
                 }
                 updateUI()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun onEditWrongPassClicked() {
+        val input = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            setText((settings.get(Settings.SET_THEFT_WRONG_PASS_ATTEMPTS) as Int).toString())
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Set Maximum Wrong Attempts")
+            .setView(input)
+            .setPositiveButton("Save") { _, _ ->
+                val edited = input.text.toString().toIntOrNull()
+                if (edited != null && edited > 0) {
+                    settings.set(Settings.SET_THEFT_WRONG_PASS_ATTEMPTS, edited)
+                    updateUI()
+                } else {
+                    Toast.makeText(this, "Please enter a valid number greater than 0", Toast.LENGTH_SHORT).show()
+                }
             }
             .setNegativeButton("Cancel", null)
             .show()

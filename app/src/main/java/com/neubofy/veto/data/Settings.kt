@@ -37,6 +37,10 @@ class Settings : HashMap<Int, Any>() {
         const val SET_THEFT_CONTACT_INFO = 703
         const val SET_THEFT_AUTO_DETECT_ENABLED = 704
         const val SET_VOLUME_ENFORCE_INTERVAL = 705
+        const val SET_THEFT_WRONG_PASS_ENABLED = 706
+        const val SET_THEFT_WRONG_PASS_ATTEMPTS = 707
+        const val SET_THEFT_WRONG_PASS_COUNT = 708
+        const val SET_THEFT_MODE_CONFIRMED = 709
     }
 
     override fun get(key: Int): Any {
@@ -50,13 +54,17 @@ class Settings : HashMap<Int, Any>() {
             SET_FIRST_TIME_CONTACT_ADDED,
             SET_Veto_EDGE_INFO_SHOWN,
             SET_THEFT_MODE_ACTIVE,
+            SET_THEFT_MODE_CONFIRMED,
             SET_THEFT_AUTO_DETECT_ENABLED,
+            SET_THEFT_WRONG_PASS_ENABLED,
             SET_DYNAMIC_COLORS -> false
 
             SET_Veto_COMMAND -> "veto"
             SET_VOLUME_ENFORCE_INTERVAL -> 2
+            SET_THEFT_WRONG_PASS_ATTEMPTS -> 3
             SET_SET_VERSION,
-            SET_APP_CRASHED_LOG_ENTRY -> 0
+            SET_APP_CRASHED_LOG_ENTRY,
+            SET_THEFT_WRONG_PASS_COUNT -> 0
 
             SET_RINGER_TONE -> RingerUtils.getDefaultRingtoneAsString()
 

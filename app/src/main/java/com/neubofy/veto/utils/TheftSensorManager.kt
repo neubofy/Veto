@@ -24,6 +24,7 @@ class TheftSensorManager(private val context: Context, private val listener: The
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val sigMotionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION)
     private val accelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    private val proxSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -92,6 +93,28 @@ class TheftSensorManager(private val context: Context, private val listener: The
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
     }
 
+    private var wasNear = false
+    private val proxListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent?) {
+            if (event == null || !isRegistered) return
+            
+            val distance = event.values[0]
+            val maxRange = proxSensor?.maximumRange ?: 5.0f
+            
+            // Typical proximity: near is usually 0.0 or < maxRange/2
+            val isNear = distance < (maxRange / 2.0f)
+            
+            if (wasNear && !isNear) {
+                // Device was near (in pocket/covered), and now is far (taken out/uncovered)
+                triggerBadEvent("proximity")
+            }
+            
+            wasNear = isNear
+        }
+        
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
+
     fun register() {
         if (isRegistered) return
         isRegistered = true
@@ -102,6 +125,10 @@ class TheftSensorManager(private val context: Context, private val listener: The
         
         accelSensor?.let {
             sensorManager.registerListener(accelListener, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+        
+        proxSensor?.let {
+            sensorManager.registerListener(proxListener, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
 
         val filter = IntentFilter().apply {
@@ -117,6 +144,7 @@ class TheftSensorManager(private val context: Context, private val listener: The
 
         sensorManager.cancelTriggerSensor(sigMotionListener, sigMotionSensor)
         sensorManager.unregisterListener(accelListener)
+        sensorManager.unregisterListener(proxListener)
         
         handler.removeCallbacks(relaxRunnable)
         

@@ -179,6 +179,60 @@
                                 app:strokeColor="?attr/colorError" />
                         </LinearLayout>
                     </LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider" android:layout_marginVertical="16dp"/>
+
+                    <!-- Wrong Password Detection -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/switchTheftWrongPass"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="Auto Theft Detection (Wrong Password)"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                            <ImageButton
+                                android:id="@+id/btnInfoWrongPass"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_info"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                app:tint="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginStart="8dp">
+                            <TextView
+                                android:id="@+id/textStatusWrongPass"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="3 attempts allowed"
+                                android:textColor="?attr/colorPrimary"
+                                android:textStyle="bold" />
+                            <Button
+                                android:id="@+id/btnEditWrongPass"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Change"
+                                android:layout_marginEnd="8dp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

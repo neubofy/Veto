@@ -326,6 +326,9 @@
     
     <string name="MH_Pin_Accepted">Pin accepted!</string>
 
+    <string name="perm_dnd_name">Do Not Disturb access</string>
+
+
     <string name="perm_contacts_name">Contacts</string>
     <string name="perm_contacts_desc">Required to select contacts for your allowlist.</string>
     

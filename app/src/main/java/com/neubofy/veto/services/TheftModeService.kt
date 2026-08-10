@@ -61,6 +61,8 @@ class TheftModeService : Service(), TheftEventListener {
         if (intent?.action == ACTION_GOOD_EVENT) {
             val type = intent.getStringExtra("type") ?: "unknown"
             onGoodEvent(type)
+        } else if (intent?.action == "ACTION_BAD_EVENT_WRONG_PASS") {
+            onBadEvent("wrong_password")
         }
         
         // If theft mode was disabled while we were starting up
