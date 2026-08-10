@@ -23,6 +23,7 @@ import com.neubofy.veto.data.SettingsRepository
 class TheftSuspectedActivity : VetoActivity() {
 
     private lateinit var settings: SettingsRepository
+    private var countDownTimer: android.os.CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +60,16 @@ class TheftSuspectedActivity : VetoActivity() {
         } else {
             textViewContact.visibility = View.GONE
         }
+
+        countDownTimer = object : android.os.CountDownTimer(3 * 60 * 1000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                // UI shows radar animation, no explicit text update needed
+            }
+
+            override fun onFinish() {
+                confirmTheftMode()
+            }
+        }.start()
 
         val buttonUnlock = findViewById<Button>(R.id.buttonUnlock)
         buttonUnlock.setOnClickListener {
@@ -106,12 +117,28 @@ class TheftSuspectedActivity : VetoActivity() {
             }
         }
         registerReceiver(unlockReceiver, unlockFilter)
+
+        if (intent.getBooleanExtra("isConfirmed", false)) {
+            countDownTimer?.cancel()
+            confirmTheftMode()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent.getBooleanExtra("isConfirmed", false)) {
+            countDownTimer?.cancel()
+            confirmTheftMode()
+        }
     }
 
     private fun endTheftMode() {
         settings.set(Settings.SET_THEFT_MODE_ACTIVE, false)
         
-        // Cancel the alarm if it hasn't fired yet
+        countDownTimer?.cancel()
+
+        // Cancel the backup alarm if it hasn't fired yet
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, com.neubofy.veto.receiver.TheftConfirmedReceiver::class.java)
         val pendingIntent = android.app.PendingIntent.getBroadcast(
@@ -121,6 +148,36 @@ class TheftSuspectedActivity : VetoActivity() {
         alarmManager.cancel(pendingIntent)
         
         finish()
+    }
+
+    private fun confirmTheftMode() {
+        if (settings.get(Settings.SET_THEFT_MODE_ACTIVE) as Boolean) {
+            val serviceIntent = Intent(this, com.neubofy.veto.services.TheftModeService::class.java)
+            androidx.core.content.ContextCompat.startForegroundService(this, serviceIntent)
+
+            // Transition UI to confirmed state in-place
+            val mainLayout = findViewById<View>(android.R.id.content)
+            mainLayout.setBackgroundColor(android.graphics.Color.parseColor("#CC0000"))
+            
+            val titleText = findViewById<TextView>(R.id.titleText)
+            titleText.text = "VETO: THEFT CONFIRMED"
+            titleText.setTextColor(android.graphics.Color.WHITE)
+
+            val radarStatusText = findViewById<TextView>(R.id.radarStatusText)
+            radarStatusText.text = "Connected via Mesh Network"
+            radarStatusText.setTextColor(android.graphics.Color.WHITE)
+            
+            val lockMessage = findViewById<TextView>(R.id.textViewLockScreenMessage)
+            lockMessage.setTextColor(android.graphics.Color.WHITE)
+            
+            val contactInfo = findViewById<TextView>(R.id.textViewTheftContact)
+            contactInfo.setTextColor(android.graphics.Color.WHITE)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        countDownTimer?.cancel()
     }
 
     override fun onUserLeaveHint() {

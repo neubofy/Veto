@@ -13,7 +13,7 @@ import com.neubofy.veto.R
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.services.TheftModeService
-import com.neubofy.veto.ui.TheftConfirmedActivity
+import com.neubofy.veto.ui.TheftSuspectedActivity
 
 class TheftConfirmedReceiver : BroadcastReceiver() {
 
@@ -32,9 +32,10 @@ class TheftConfirmedReceiver : BroadcastReceiver() {
             val serviceIntent = Intent(context, TheftModeService::class.java)
             ContextCompat.startForegroundService(context, serviceIntent)
 
-            // 2. Bring the app to the foreground by launching the confirmed activity via a high priority notification intent
-            val activityIntent = Intent(context, TheftConfirmedActivity::class.java).apply {
+            // 2. Bring the app to the foreground by launching the activity via a high priority notification intent
+            val activityIntent = Intent(context, TheftSuspectedActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                putExtra("isConfirmed", true)
             }
             
             val pendingIntent = PendingIntent.getActivity(

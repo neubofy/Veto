@@ -149,15 +149,6 @@
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:turnScreenOn="true" />
-            
-        <activity
-            android:name=".ui.TheftConfirmedActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:showOnLockScreen="true"
-            android:showWhenLocked="true"
-            android:turnScreenOn="true" />
-
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">

@@ -32,6 +32,30 @@
             android:textAlignment="center"
             android:textColor="?attr/colorPrimary"/>
 
+        <!-- Radar Animation -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
+            
+            <com.neubofy.veto.ui.RadarScanView
+                android:id="@+id/radarScanView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+                
+            <TextView
+                android:id="@+id/radarStatusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:text="Detecting unauthorized access..."
+                android:textColor="?attr/colorError"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+        </FrameLayout>
+
         <TextView
             android:id="@+id/textViewLockScreenMessage"
             android:layout_width="match_parent"

@@ -98,9 +98,9 @@ class TheftCommand(context: Context) : Command(context) {
             val triggerTime = System.currentTimeMillis() + (3 * 60 * 1000) // 3 minutes
             
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
             } else {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+                alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
             }
         } catch (e: Exception) {
             context.log().e("TheftCommand", "Failed to schedule alarm: ${e.message}")
