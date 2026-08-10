@@ -40,6 +40,7 @@ class Settings : HashMap<Int, Any>() {
         const val SET_THEFT_WRONG_PASS_ENABLED = 706
         const val SET_THEFT_WRONG_PASS_ATTEMPTS = 707
         const val SET_THEFT_WRONG_PASS_COUNT = 708
+        const val SET_THEFT_MODE_CONFIRMED = 709
     }
 
     override fun get(key: Int): Any {
@@ -53,6 +54,7 @@ class Settings : HashMap<Int, Any>() {
             SET_FIRST_TIME_CONTACT_ADDED,
             SET_Veto_EDGE_INFO_SHOWN,
             SET_THEFT_MODE_ACTIVE,
+            SET_THEFT_MODE_CONFIRMED,
             SET_THEFT_AUTO_DETECT_ENABLED,
             SET_THEFT_WRONG_PASS_ENABLED,
             SET_DYNAMIC_COLORS -> false

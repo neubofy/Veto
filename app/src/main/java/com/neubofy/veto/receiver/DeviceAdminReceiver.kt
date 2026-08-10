@@ -15,14 +15,9 @@ class DeviceAdminReceiver : DeviceAdminReceiver() {
         val settings = SettingsRepository.getInstance(context)
         
         val isTheftActive = settings.get(Settings.SET_THEFT_MODE_ACTIVE) as Boolean
-        if (isTheftActive) {
-            // Already active, just broadcast bad event
-            val broadcastIntent = Intent(context, TheftModeService::class.java).apply {
-                action = TheftModeService.ACTION_GOOD_EVENT // Actually wait, there is no ACTION_BAD_EVENT handled via intent. 
-                // The service listens to TheftSensorManager. But we can just use intent to trigger it or we can bind.
-                // Let's send a broadcast and the service can register a receiver.
-            }
-            // Better yet, just start the service with a specific action
+        val isConfirmed = settings.get(Settings.SET_THEFT_MODE_CONFIRMED) as Boolean
+        
+        if (isTheftActive && isConfirmed) {
             val badEventIntent = Intent(context, TheftModeService::class.java).apply {
                 action = "ACTION_BAD_EVENT_WRONG_PASS"
             }
@@ -37,9 +32,19 @@ class DeviceAdminReceiver : DeviceAdminReceiver() {
             currentCount++
             
             if (currentCount >= limit) {
-                // Trigger theft mode
                 settings.set(Settings.SET_THEFT_WRONG_PASS_COUNT, 0)
-                TheftCommand(context).executeInternal(context)
+                
+                if (isTheftActive) {
+                    // Already triggered, so this event confirms theft
+                    settings.set(Settings.SET_THEFT_MODE_CONFIRMED, true)
+                    val badEventIntent = Intent(context, TheftModeService::class.java).apply {
+                        action = "ACTION_BAD_EVENT_WRONG_PASS_LIMIT"
+                    }
+                    androidx.core.content.ContextCompat.startForegroundService(context, badEventIntent)
+                } else {
+                    // Trigger theft mode normally
+                    TheftCommand(context).executeInternal(context)
+                }
             } else {
                 settings.set(Settings.SET_THEFT_WRONG_PASS_COUNT, currentCount)
             }
@@ -49,6 +54,12 @@ class DeviceAdminReceiver : DeviceAdminReceiver() {
     override fun onPasswordSucceeded(context: Context, intent: Intent) {
         super.onPasswordSucceeded(context, intent)
         val settings = SettingsRepository.getInstance(context)
-        settings.set(Settings.SET_THEFT_WRONG_PASS_COUNT, 0)
+        
+        // Only write to database if the count is greater than 0
+        // This avoids writing to disk 200-500 times a day on normal unlocks
+        val currentCount = settings.get(Settings.SET_THEFT_WRONG_PASS_COUNT) as Int
+        if (currentCount > 0) {
+            settings.set(Settings.SET_THEFT_WRONG_PASS_COUNT, 0)
+        }
     }
 }

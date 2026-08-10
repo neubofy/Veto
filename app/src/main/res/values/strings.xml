@@ -327,8 +327,7 @@
     <string name="MH_Pin_Accepted">Pin accepted!</string>
 
     <string name="perm_dnd_name">Do Not Disturb access</string>
-    <string name="perm_write_settings_name">Modify System Settings</string>
-    <string name="perm_write_settings_desc">Required to adjust screen brightness to 30% when theft is suspected and revert it back.</string>
+
 
     <string name="perm_contacts_name">Contacts</string>
     <string name="perm_contacts_desc">Required to select contacts for your allowlist.</string>

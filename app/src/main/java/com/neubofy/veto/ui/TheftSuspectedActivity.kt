@@ -162,6 +162,7 @@ class TheftSuspectedActivity : VetoActivity() {
 
     private fun endTheftMode() {
         settings.set(Settings.SET_THEFT_MODE_ACTIVE, false)
+        settings.set(Settings.SET_THEFT_MODE_CONFIRMED, false)
         
         countDownTimer?.cancel()
 
@@ -179,6 +180,7 @@ class TheftSuspectedActivity : VetoActivity() {
 
     private fun confirmTheftMode() {
         if (settings.get(Settings.SET_THEFT_MODE_ACTIVE) as Boolean) {
+            settings.set(Settings.SET_THEFT_MODE_CONFIRMED, true)
             val serviceIntent = Intent(this, com.neubofy.veto.services.TheftModeService::class.java)
             androidx.core.content.ContextCompat.startForegroundService(this, serviceIntent)
 
@@ -189,10 +191,6 @@ class TheftSuspectedActivity : VetoActivity() {
             val titleText = findViewById<TextView>(R.id.titleText)
             titleText.text = "VETO: THEFT CONFIRMED"
             titleText.setTextColor(android.graphics.Color.parseColor("#FF0000"))
-
-            val radarStatusText = findViewById<TextView>(R.id.radarStatusText)
-            radarStatusText.text = "Connected via Mesh Network"
-            radarStatusText.setTextColor(android.graphics.Color.parseColor("#00FF00"))
             
             val lockMessage = findViewById<TextView>(R.id.textViewLockScreenMessage)
             lockMessage.setTextColor(android.graphics.Color.WHITE)
@@ -202,13 +200,6 @@ class TheftSuspectedActivity : VetoActivity() {
             
             val foundPhoneLayout = findViewById<View>(R.id.layoutFoundPhoneInstructions)
             foundPhoneLayout?.visibility = View.VISIBLE
-            
-            // Swap radar for network diagram
-            val radarScanView = findViewById<View>(R.id.radarScanView)
-            radarScanView.visibility = View.GONE
-            
-            val networkIcon = findViewById<ImageView>(R.id.networkIcon)
-            networkIcon.visibility = View.VISIBLE
             
             // Show terminal
             val terminalScrollView = findViewById<ScrollView>(R.id.terminalScrollView)
@@ -221,14 +212,14 @@ class TheftSuspectedActivity : VetoActivity() {
 
     private fun startFakeTerminalLogs(textView: TextView, scrollView: ScrollView) {
         lifecycleScope.launch {
-            val sb = java.lang.StringBuilder()
+            val logs = mutableListOf<String>()
 
             fun appendLog(msg: String) {
-                sb.append("[${java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US).format(java.util.Date())}] $msg\n")
-                if (sb.length > 2500) {
-                    sb.delete(0, sb.length - 2000)
+                logs.add("[${java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US).format(java.util.Date())}] $msg")
+                if (logs.size > 15) {
+                    logs.removeAt(0)
                 }
-                textView.text = sb.toString()
+                textView.text = logs.joinToString("\n")
                 scrollView.post { scrollView.fullScroll(View.FOCUS_DOWN) }
             }
 

@@ -65,18 +65,7 @@ class DisturbThief(private val context: Context) {
             Log.e("DisturbThief", "Failed to play sound", e)
         }
 
-        // Adjust Brightness
-        if (android.provider.Settings.System.canWrite(context)) {
-            try {
-                android.provider.Settings.System.putInt(
-                    context.contentResolver,
-                    android.provider.Settings.System.SCREEN_BRIGHTNESS,
-                    76 // ~30% of 255
-                )
-            } catch (e: Exception) {
-                Log.e("DisturbThief", "Failed to set brightness", e)
-            }
-        }
+
 
         // Notify UI
         context.sendBroadcast(Intent("com.neubofy.veto.ACTION_DISTURB_START"))
@@ -152,18 +141,7 @@ class DisturbThief(private val context: Context) {
             Log.e("DisturbThief", "Failed to stop media player", e)
         }
 
-        // Revert Brightness
-        if (android.provider.Settings.System.canWrite(context)) {
-            try {
-                android.provider.Settings.System.putInt(
-                    context.contentResolver,
-                    android.provider.Settings.System.SCREEN_BRIGHTNESS,
-                    25 // ~10% of 255
-                )
-            } catch (e: Exception) {
-                Log.e("DisturbThief", "Failed to revert brightness", e)
-            }
-        }
+
 
         // Notify UI
         context.sendBroadcast(Intent("com.neubofy.veto.ACTION_DISTURB_STOP"))

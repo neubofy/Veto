@@ -32,39 +32,6 @@
             android:textAlignment="center"
             android:textColor="?attr/colorPrimary"/>
 
-        <!-- Radar Animation -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp">
-            
-            <com.neubofy.veto.ui.RadarScanView
-                android:id="@+id/radarScanView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-                
-            <ImageView
-                android:id="@+id/networkIcon"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_cloud"
-                android:visibility="gone"
-                android:layout_marginBottom="16dp"
-                app:tint="#00FF00"/>
-                
-            <TextView
-                android:id="@+id/radarStatusText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:text="Connecting to Veto Mesh Network..."
-                android:textColor="?attr/colorError"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-        </FrameLayout>
 
         <TextView
             android:id="@+id/textViewLockScreenMessage"
@@ -86,38 +53,47 @@
             android:textAlignment="center"/>
 
         <!-- Found Phone Instructions -->
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/layoutFoundPhoneInstructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
+            android:layout_margin="16dp"
             android:visibility="gone"
-            android:layout_marginBottom="16dp">
-            
-            <TextView
+            app:cardBackgroundColor="#22000000"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorPrimary">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="IF YOU FOUND THIS PHONE:"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp"/>
+                android:orientation="vertical"
+                android:padding="16dp">
                 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1. Put the phone to charging.\n2. Do NOT try to unlock the phone.\n3. Do NOT come near the phone, do NOT move the phone.\n4. Contact the given contact info above, or call 112 and submit it to the police."
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp"/>
-                
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="We will not put allegations on you that you are a thief. We will take responsibility. If you give us our device back, we will praise you and you may get a reward."
-                android:textSize="14sp"
-                android:textStyle="italic"/>
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="IF YOU FOUND THIS PHONE:"
+                    android:textColor="?attr/colorPrimary"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="8dp"/>
+                    
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1. Put the phone to charging.\n2. Do NOT try to unlock the phone.\n3. Do NOT come near the phone, do NOT move the phone.\n4. Contact the given contact info above, or call 112 and submit it to the police."
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp"/>
+                    
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="We will not put allegations on you that you are a thief. We will take responsibility. If you give us our device back, we will praise you and you may get a reward."
+                    android:textSize="13sp"
+                    android:textStyle="italic"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Terminal Logs (Shown in Confirmed Mode) -->
         <ScrollView

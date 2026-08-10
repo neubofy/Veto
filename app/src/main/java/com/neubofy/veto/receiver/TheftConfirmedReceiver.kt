@@ -27,6 +27,7 @@ class TheftConfirmedReceiver : BroadcastReceiver() {
         settings.load()
 
         if (settings.get(Settings.SET_THEFT_MODE_ACTIVE) as Boolean) {
+            settings.set(Settings.SET_THEFT_MODE_CONFIRMED, true)
             
             // 1. Start the Foreground Service for sensor monitoring
             val serviceIntent = Intent(context, TheftModeService::class.java)
