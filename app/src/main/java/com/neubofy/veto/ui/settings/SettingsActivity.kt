@@ -31,10 +31,12 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
 
     private lateinit var switchDeviceWipe: MaterialSwitch
     private lateinit var switchVetoviaPin: MaterialSwitch
+    private lateinit var switchTheftAutoDetect: MaterialSwitch
 
     private lateinit var textStatusWipe: TextView
     private lateinit var textStatusPin: TextView
     private lateinit var textStatusLockMsg: TextView
+    private lateinit var textStatusTheftContact: TextView
     private lateinit var textStatusCommand: TextView
     private lateinit var textSelectedRingtone: TextView
 
@@ -44,6 +46,8 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
     private lateinit var btnRemovePin: Button
     private lateinit var btnEditLockMsg: Button
     private lateinit var btnRemoveLockMsg: Button
+    private lateinit var btnEditTheftContact: Button
+    private lateinit var btnRemoveTheftContact: Button
     private lateinit var btnEditCommand: Button
 
     private lateinit var buttonSelectRingtone: Button
@@ -72,9 +76,14 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         switchVetoviaPin.isChecked = settings.get(Settings.SET_ACCESS_VIA_PIN) as Boolean
         switchVetoviaPin.setOnCheckedChangeListener(this)
 
+        switchTheftAutoDetect = findViewById(R.id.switchTheftAutoDetect)
+        switchTheftAutoDetect.isChecked = settings.get(Settings.SET_THEFT_AUTO_DETECT_ENABLED) as Boolean
+        switchTheftAutoDetect.setOnCheckedChangeListener(this)
+
         textStatusWipe = findViewById(R.id.textStatusWipe)
         textStatusPin = findViewById(R.id.textStatusPin)
         textStatusLockMsg = findViewById(R.id.textStatusLockMsg)
+        textStatusTheftContact = findViewById(R.id.textStatusTheftContact)
         textStatusCommand = findViewById(R.id.textStatusCommand)
         textSelectedRingtone = findViewById(R.id.textSelectedRingtone)
 
@@ -84,11 +93,15 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         btnRemovePin = findViewById(R.id.btnRemovePin)
         btnEditLockMsg = findViewById(R.id.btnEditLockMsg)
         btnRemoveLockMsg = findViewById(R.id.btnRemoveLockMsg)
+        btnEditTheftContact = findViewById(R.id.btnEditTheftContact)
+        btnRemoveTheftContact = findViewById(R.id.btnRemoveTheftContact)
         btnEditCommand = findViewById(R.id.btnEditCommand)
 
         setupInfoButton(R.id.btnInfoWipe, "Remote Wipe", getString(R.string.delete_pw_warning_no_backup) + "\n\n" + getString(R.string.Settings_LCLDCommand_Description))
         setupInfoButton(R.id.btnInfoPin, "Veto PIN", getString(R.string.Settings_LCLD_via_Pin_Description))
         setupInfoButton(R.id.btnInfoLockMsg, "Lock Screen Message", getString(R.string.Settings_Lockscreenmessage_Description))
+        setupInfoButton(R.id.btnInfoTheftContact, "Theft Contact Info", "Enter an alternate phone number or email address to display on the screen when theft mode is active, so the device can be returned to you.")
+        setupInfoButton(R.id.btnInfoTheftAutoDetect, "Auto Theft Detection", "If enabled, theft mode will automatically activate if someone removes your SIM card.")
         setupInfoButton(R.id.btnInfoCommand, "Trigger Command", getString(R.string.Settings_LCLDCommand_Description))
 
         btnEditWipe.setOnClickListener { onEnterDeletePasswordClicked() }
@@ -109,6 +122,12 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
             updateUI()
         }
 
+        btnEditTheftContact.setOnClickListener { onEditTheftContactClicked() }
+        btnRemoveTheftContact.setOnClickListener {
+            settings.set(Settings.SET_THEFT_CONTACT_INFO, "")
+            updateUI()
+        }
+
         btnEditCommand.setOnClickListener { onEditCommandClicked() }
 
         buttonSelectRingtone = findViewById(R.id.buttonSelectRingTone)
@@ -121,6 +140,21 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         btnAboutVeto.setOnClickListener { startActivity(Intent(this, AboutActivity::class.java)) }
 
         updateUI()
+
+        val sliderVolumeInterval = findViewById<com.google.android.material.slider.Slider>(R.id.sliderVolumeInterval)
+        val textVolumeIntervalValue = findViewById<TextView>(R.id.textVolumeIntervalValue)
+        
+        val currentInterval = settings.get(Settings.SET_VOLUME_ENFORCE_INTERVAL) as Int
+        sliderVolumeInterval.value = currentInterval.toFloat()
+        textVolumeIntervalValue.text = "${currentInterval}s"
+        
+        sliderVolumeInterval.addOnChangeListener { slider, value, fromUser ->
+            if (fromUser) {
+                val interval = value.toInt()
+                settings.set(Settings.SET_VOLUME_ENFORCE_INTERVAL, interval)
+                textVolumeIntervalValue.text = "${interval}s"
+            }
+        }
     }
 
     private fun setupInfoButton(id: Int, title: String, message: String) {
@@ -168,6 +202,17 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
             btnRemoveLockMsg.visibility = View.GONE
         }
 
+        val theftContact = settings.get(Settings.SET_THEFT_CONTACT_INFO) as String
+        if (theftContact.isNotEmpty()) {
+            textStatusTheftContact.text = "\"$theftContact\""
+            btnEditTheftContact.text = "Change"
+            btnRemoveTheftContact.visibility = View.VISIBLE
+        } else {
+            textStatusTheftContact.text = "Not set"
+            btnEditTheftContact.text = "Set Contact Info"
+            btnRemoveTheftContact.visibility = View.GONE
+        }
+
         val cmd = settings.get(Settings.SET_Veto_COMMAND) as String
         textStatusCommand.text = cmd
 
@@ -184,6 +229,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         when (buttonView.id) {
             R.id.switchDeviceWipe -> settings.set(Settings.SET_WIPE_ENABLED, isChecked)
             R.id.switchVetoviaPin -> settings.set(Settings.SET_ACCESS_VIA_PIN, isChecked)
+            R.id.switchTheftAutoDetect -> settings.set(Settings.SET_THEFT_AUTO_DETECT_ENABLED, isChecked)
         }
     }
 
@@ -227,6 +273,24 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
             .setPositiveButton("Save") { _, _ ->
                 val edited = input.text.toString()
                 settings.set(Settings.SET_LOCKSCREEN_MESSAGE, edited)
+                updateUI()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun onEditTheftContactClicked() {
+        val input = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_TEXT
+            setText(settings.get(Settings.SET_THEFT_CONTACT_INFO) as String)
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Set Theft Contact Info")
+            .setView(input)
+            .setPositiveButton("Save") { _, _ ->
+                val edited = input.text.toString()
+                settings.set(Settings.SET_THEFT_CONTACT_INFO, edited)
                 updateUI()
             }
             .setNegativeButton("Cancel", null)

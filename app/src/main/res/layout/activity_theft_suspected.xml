@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_background"
+    tools:context=".ui.TheftSuspectedActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_security"
+            app:tint="?attr/colorPrimary"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VETO: DEVICE LOCKED"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="?attr/colorPrimary"/>
+
+        <TextView
+            android:id="@+id/textViewLockScreenMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This device is locked."
+            android:padding="16dp"
+            android:textSize="18sp"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:id="@+id/textViewTheftContact"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="16dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"
+            android:textAlignment="center"/>
+
+        <Button
+            android:id="@+id/buttonUnlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="UNLOCK DEVICE"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="@color/md_theme_onPrimary"
+            android:layout_marginBottom="32dp"/>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -94,14 +94,6 @@ class MainPageFragment : TaggedFragment() {
             startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.CommandsActivity::class.java))
         }
 
-        view.findViewById<MaterialCardView>(R.id.card_auto_theft).setOnClickListener {
-            android.widget.Toast.makeText(requireContext(), "Coming Soon", android.widget.Toast.LENGTH_SHORT).show()
-        }
-
-
-
-
-
         view.findViewById<MaterialCardView>(R.id.card_transport_channels).setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, TransportListFragment())

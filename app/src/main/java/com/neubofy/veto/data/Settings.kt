@@ -42,6 +42,9 @@ class Settings : HashMap<Int, Any>() {
         const val SET_CUSTOM_COLOR = 603
         const val SET_THEFT_MODE_ACTIVE = 701
         const val SET_THEFT_MODE_PIN = 702
+        const val SET_THEFT_CONTACT_INFO = 703
+        const val SET_THEFT_AUTO_DETECT_ENABLED = 704
+        const val SET_VOLUME_ENFORCE_INTERVAL = 705
     }
 
     override fun get(key: Int): Any {
@@ -57,10 +60,12 @@ class Settings : HashMap<Int, Any>() {
             SET_UPDATEBOARDING_MODERN_CRYPTO_COMPLETED,
             SET_Veto_EDGE_INFO_SHOWN,
             SET_THEFT_MODE_ACTIVE,
+            SET_THEFT_AUTO_DETECT_ENABLED,
             SET_DYNAMIC_COLORS -> false
 
             SET_Veto_COMMAND -> "veto"
             SET_VetoSERVER_UPDATE_TIME -> 60
+            SET_VOLUME_ENFORCE_INTERVAL -> 2
             SET_SET_VERSION,
             SET_APP_CRASHED_LOG_ENTRY -> 0
 
@@ -74,6 +79,7 @@ class Settings : HashMap<Int, Any>() {
             SET_Veto_CRYPT_PRIVKEY,
             SET_Veto_CRYPT_PUBKEY,
             SET_THEFT_MODE_PIN,
+            SET_THEFT_CONTACT_INFO,
             SET_VetoSERVER_PUSH_URL -> ""
 
             SET_VetoSERVER_URL -> "https://veto.neubofy.in"

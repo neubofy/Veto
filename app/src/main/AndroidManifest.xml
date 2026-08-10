@@ -142,6 +142,21 @@
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:turnScreenOn="true" />
+        <activity
+            android:name=".ui.TheftSuspectedActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true" />
+            
+        <activity
+            android:name=".ui.TheftConfirmedActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true" />
 
         <activity
             android:name=".ui.MainActivity"
@@ -177,6 +192,17 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".receiver.SimStateReceiver"
+            android:exported="true"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SIM_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.TheftConfirmedReceiver"
+            android:exported="false" />
+        <receiver
             android:name=".receiver.CopyInAppTextReceiver"
             android:exported="false" />
         <receiver
@@ -199,6 +225,11 @@
         <service
             android:name=".services.RingerService"
             android:exported="false" />
+
+        <service
+            android:name=".services.TheftModeService"
+            android:exported="false"
+            android:foregroundServiceType="location|camera|microphone" />
 
         <service
             android:name=".services.VetoFirebaseMessagingService"

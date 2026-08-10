@@ -269,6 +269,101 @@
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider" android:layout_marginBottom="16dp"/>
 
+                    <!-- Theft Contact Info -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="16dp">
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="Theft Contact Info"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                            <ImageButton
+                                android:id="@+id/btnInfoTheftContact"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_info"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                app:tint="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:id="@+id/textStatusTheftContact"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="🔴 Not Set"
+                            android:textColor="?attr/colorError"
+                            android:textStyle="bold" />
+                            
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="end"
+                            android:layout_marginTop="8dp">
+                            <Button
+                                android:id="@+id/btnEditTheftContact"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Set"
+                                android:layout_marginEnd="8dp" />
+                            <Button
+                                android:id="@+id/btnRemoveTheftContact"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Remove"
+                                android:textColor="?attr/colorError"
+                                app:strokeColor="?attr/colorError" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider" android:layout_marginBottom="16dp"/>
+
+                    <!-- Auto Theft Detection -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="16dp">
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/switchTheftAutoDetect"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="Auto Theft Detection (SIM)"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                            <ImageButton
+                                android:id="@+id/btnInfoTheftAutoDetect"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_info"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                app:tint="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider" android:layout_marginBottom="16dp"/>
+
                     <!-- Ringtone -->
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -300,6 +395,56 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Select" />
+                    </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider" android:layout_marginVertical="16dp"/>
+
+                    <!-- Volume Enforce Interval -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="Volume Enforce Interval"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/textVolumeIntervalValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2s"
+                                android:textSize="14sp"
+                                android:textColor="?attr/colorPrimary"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="How often the alarm forces volume back to 100%"
+                            android:textSize="12sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/sliderVolumeInterval"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:valueFrom="1.0"
+                            android:valueTo="10.0"
+                            android:stepSize="1.0"
+                            android:value="2.0" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
