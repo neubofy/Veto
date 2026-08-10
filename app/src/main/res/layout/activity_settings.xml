@@ -396,7 +396,6 @@
                             android:layout_height="wrap_content"
                             android:text="Select" />
                     </LinearLayout>
-                    </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider" android:layout_marginVertical="16dp"/>
 
