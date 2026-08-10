@@ -161,7 +161,7 @@ object UpdateManager {
                 val manager = DownloadManager.Builder(context).apply {
                     apkUrl(url)
                     apkName("Veto-v$version.apk")
-                    smallIcon(R.mipmap.ic_launcher)
+                    smallIcon(R.drawable.veto_logo)
                     apkVersionName(version)
                     apkDescription(notes)
                     // The library automatically handles REQUEST_INSTALL_PACKAGES flow

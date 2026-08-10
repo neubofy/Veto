@@ -62,7 +62,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sign in with Google to pair this device with the Web Dashboard and setup Google Drive cloud backup."
+                        android:text="Sign in with Google to pair this device with the Web Dashboard and setup Google Drive cloud backup.\n\nNOTE: One account can only be used for ONE Android device only."
                         android:gravity="center"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:layout_marginBottom="16dp" />
@@ -130,6 +130,14 @@
                             android:text="user@gmail.com"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="You can communicate with Veto from any device via the Dashboard (https://veto.neubofy.in/dashboard) by logging in with this same Google account."
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="12sp"
+                            android:layout_marginTop="12dp" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -193,22 +201,6 @@
                         android:visibility="gone"
                         android:layout_marginBottom="8dp" />
 
-                    <!-- Local Storage Folders Status -->
-                    <TextView
-                        android:id="@+id/tvLocalMediaStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🟢 Local Storage (Veto/): Ready"
-                        android:textSize="14sp" />
-
-                    <Button
-                        android:id="@+id/btnFixLocalDirs"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Fix Local Storage Folders"
-                        android:visibility="gone"
-                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -262,39 +254,5 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <!-- Advanced Server URL -->
-        <TextView
-            android:id="@+id/tvAdvancedToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Server URL Settings ⚙️"
-            android:textColor="?attr/colorPrimary"
-            android:padding="8dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:focusable="true"/>
-
-        <LinearLayout
-            android:id="@+id/advancedLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:layout_marginTop="8dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Dashboard Server URL">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDashboardUrl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textUri"
-                    android:text="https://veto-anti-theft.vercel.app" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

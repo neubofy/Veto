@@ -1,21 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="Settings_Select_Ringtone">रिंगटोन चुनें</string>
     <string name="Settings_Veto_Server_General">सामान्य</string>
     <string name="Settings_Veto_Server_Server_URL">सर्वर URL:</string>
     <string name="Settings_Ringer_Tone_Description">एक रिंगटोन चुनें जो veto ring भेजे जाने पर बजेगी।</string>
-    <string name="Settings_VetoServer_Change_Password_Button">पासवर्ड बदलें</string>
-    <string name="Settings_VetoServer_Logout_Button">लॉग आउट</string>
-    <string name="Settings_VetoServer_Update_Interval_Title">अपडेट अंतराल</string>
-    <string name="Settings_VetoServer_Update_Interval_Description">Veto हर X मिनट में डिवाइस का स्थान अपलोड करता है।</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Title">कम बैटरी पर अपलोड करें</string>
-    <string name="Settings_VetoServer_Location_Type_Title">स्थान स्रोत</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Description">बैटरी का स्तर कम होने पर इस डिवाइस का स्थान अपलोड करें। इसके लिए नोटिफिकेशन पहुंच की आवश्यकता है।</string>
-    <string name="password_new">नया पासवर्ड</string>
-    <string name="password_new_repeat">नया पासवर्ड दोहराएं</string>
-    <string name="server_version_error">सर्वर संस्करण प्राप्त करने में त्रुटि</string>
-    <string name="Settings_VetoServer_AddAccount">Veto सर्वर: लॉगिन/रजिस्टर</string>
-    <string name="Settings_VetoServer_open_website">Veto सर्वर वेबसाइट खोलें</string>
     <string name="WhiteList_Add_Contact">संपर्क जोड़ें</string>
     <string name="OpenCellId_test_no_connection">कोई सेल कनेक्शन नहीं</string>
     <string name="about">ऐप के बारे में</string>
@@ -54,21 +42,10 @@
     <string name="Settings_Lockscreenmessage_Description">लॉक स्क्रीन संदेश: \nडिवाइस को लॉक करते समय यह संदेश लॉक स्क्रीन पर दिखाई देगा।</string>
     <string name="Settings_Veto_Server_User_ID">उपयोक्ता ID:</string>
     <string name="Settings_Veto_Server_ID_Desc">Veto सर्वर के साथ अपना डिवाइस खोजने के लिए आपको उपयोक्ता ID की आवश्यकता है। इसे लिख कर सुरक्षित रख लें।</string>
-    <string name="server_version_error_low_version">कम से कम सर्वर संस्करण {MIN} आवश्यक है, लेकिन चयनित सर्वर का संस्करण {CURRENT} है। स्वयं के जोखिम पर आगे बढ़ें।</string>
-    <string name="password_old">पुराना पासवर्ड</string>
-    <string name="server_version">सर्वर संस्करण</string>
-    <string name="Settings_VetoServer_Info">Veto सर्वर से आप इंटरनेट पर सर्वर से ऐप तक कमांड भेज सकते हैं। आप मानचित्र पर डिवाइस का स्थान भी देख सकते हैं या डिवाइस द्वारा ली गई तस्वीरें भी देख सकते हैं। स्व-होस्टिंग निर्देशों के लिए वेबसाइट देखें।</string>
-    <string name="Settings_VetoServer_use_default_server">Neubofy के सार्वजनिक सर्वर का उपयोग करें</string>
-    <string name="Settings_VetoServer_Register">रजिस्टर</string>
-    <string name="Settings_VetoServer_Login">लॉगिन</string>
-    <string name="Settings_VetoServer_Alert_PrivacyPolicy_Title">गोपनीयता नीति</string>
-    <string name="password">पासवर्ड</string>
-    <string name="registration_token">रजिस्ट्रेशन टोकन</string>
     <string name="loading">लोड हो रहा है…</string>
     <string name="accept">स्वीकारें</string>
     <string name="Settings_VetoConfig">Veto-विन्यास</string>
     <string name="Whitelist_help">इस सूची के संपर्कों को SMS के माध्यम से Veto कमांड भेजने की अनुमति है। बाकी सभी के आदेशों को नजरअंदाज कर दिया जाएगा।</string>
-    <string name="registration_token_hint">निजी इंस्टैंस के लिए गुप्त टोकन की आवश्यकता हो सकती है। यदि इंस्टैंस सार्वजनिक है तो इसे खाली छोड़ दें।</string>
     <string name="Whitelist_empty">कोई अनुमत संपर्क नहीं। कुछ जोड़ने के लिए बटन पर क्लिक करें!</string>
     <string name="OpenCellId_privacy">गोपनीयता: ध्यान रखें कि OpenCeliD आपके वर्तमान सेल टॉवर और इस प्रकार प्रत्येक API क्वेरी के साथ आपके लोकेशन को जानता है।</string>
     <string name="OpenCellId_open_website">OpenCeliD वेबसाइट खोलें</string>
@@ -90,9 +67,6 @@
     <string name="Toast_Empty_VetoCommand">खाली कमांड की अनुमति नहीं है\n डिफ़ॉल्ट पर लौट रहा है।[veto]</string>
     <string name="Cell">सेल</string>
     <string name="Settings_Veto_via_Pin_Description">आपको PIN के माध्यम से Veto के साथ संचार करने की अनुमति देता है। यह आपको ऐसे फोन नंबर से आदेश भेजने की अनुमति देता है जो अनुमत संपर्क सूची में नहीं है।</string>
-    <string name="Settings_VetoServer_Alert_DeleteData_Desc">इससे सर्वर से सारा डेटा मिट जाएगा! क्या आप निश्चित हैं?</string>
-    <string name="Settings_VetoServer_Location_Type_Description">वह स्रोत जिससे पृष्ठभूमि में नियमित अंतराल पर स्थान डेटा अपलोड किया जाता है।
-\nयदि कोई भी चयनित नहीं है, तो कोई भी स्थान नियमित रूप से अपलोड नहीं किया जाता है। (आप किसी अपलोड को बाध्य करने के लिए अभी भी वेब इंटरफ़ेस का उपयोग कर सकते हैं। इसके लिए पुश की आवश्यकता होती है।)</string>
     <string name="OpenCellId_help">डिवाइस जिस सेल टावर से जुड़ा है, उसके आधार पर अनुमानित स्थान प्राप्त करने के लिए Veto OpenCeliD सेवा का उपयोग कर सकता है। प्रत्येक स्थान क्वेरी के लिए इंटरनेट कनेक्शन आवश्यक है। आपको OpenCeliD पर एक खाता बनाना होगा और अपना स्वयं का API एक्सेस टोकन प्राप्त करना होगा।</string>
     <string name="cmd_locate_last_known_location_text">अंतिम ज्ञात स्थान</string>
     <string name="cmd_locate_last_known_location_not_available">कोई अंतिम ज्ञात स्थान नहीं है। स्थान अपडेट करने के लिए नवीनतम स्थान का अनुरोध करें।</string>
@@ -101,7 +75,6 @@
     <string name="request_failed_response_body">प्रतिक्रिया निकाय</string>
     <string name="request_failed_exception">अपवाद</string>
     <string name="Notification_Server_Description">Veto सर्वर से संबंधित अधिसूचनाएं</string>
-    <string name="Settings_VetoServer_Server_Url">सर्वर URL</string>
     <string name="cmd_camera_description_short">एक तस्वीर लें</string>
     <string name="cmd_missing_permissions">कमांड %1$s नहीं चला सकता: %2$s अनुमतियां गायब हैं।</string>
     <string name="cmd_camera_description_long">फ्रंट/बैक कैमरे से तस्वीर लेता है और उसे Veto सर्वर पर अपलोड करता है। वर्तमान में केवल Veto सर्वर पर अपलोड करना समर्थित है। आप इस कमांड को अन्य ट्रांसपोर्ट चैनलों के माध्यम से भी भेज सकते हैं, और तस्वीर Veto सर्वर पर अपलोड हो जाएगी (यदि कोई खाता मौजूद है)।</string>

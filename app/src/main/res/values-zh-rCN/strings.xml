@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="loading">加载中…</string>
     <string name="help">帮助</string>
@@ -19,25 +19,6 @@
     <string name="Settings_Veto_Server_Server_URL">服务器 URL：</string>
     <string name="Settings_Veto_Server_User_ID">用户 ID：</string>
     <string name="Settings_Veto_Server_ID_Desc">您需要用户 ID 才能通过 Veto 服务器查找设备。请记录并妥善保管 ID。</string>
-    <string name="Settings_VetoServer_Change_Password_Button">更改密码</string>
-    <string name="Settings_VetoServer_Logout_Button">登出</string>
-    <string name="Settings_VetoServer_Alert_DeleteData_Desc">这将会删除服务器上所有数据！您确定要这么做吗？</string>
-    <string name="Settings_VetoServer_Update_Interval_Title">后台位置上传间隔</string>
-    <string name="Settings_VetoServer_Update_Interval_Description">Veto 每 X 分钟上传一次设备的地理位置信息。</string>
-    <string name="Settings_VetoServer_Location_Type_Title">位置来源</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Title">低电量时仍上传</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Description">此设备低电量时仍然更新位置信息。需要通知访问权限。</string>
-    <string name="password_old">旧密码</string>
-    <string name="password_new">新密码</string>
-    <string name="password_new_repeat">重复新密码</string>
-    <string name="Settings_VetoServer_AddAccount">Veto 服务器：登录</string>
-    <string name="Settings_VetoServer_Info">通过Veto服务器，您可经互联网从服务器向应用程序发送指令，同时支持在地图上查看设备位置或访问设备拍摄的图片。自主托管配置指南详见官方网站。</string>
-    <string name="Settings_VetoServer_use_default_server">使用公共服务器</string>
-    <string name="Settings_VetoServer_Login">登录</string>
-    <string name="Settings_VetoServer_Alert_PrivacyPolicy_Title">隐私政策</string>
-    <string name="password">密码</string>
-    <string name="registration_token">注册密钥</string>
-    <string name="registration_token_hint">私有实例可能需要一个私有密钥。如果为公有实例请留空。</string>
     <string name="OpenCellId_privacy">隐私：请记住 OpenCelliD 了解您现在链接的信号塔，因此您的位置会随着每次 API 查询更新。</string>
     <string name="OpenCellId_open_website">打开 OpenCelliD 网站</string>
     <string name="OpenCellId_test_opencellid">测试 OpenCelliD 链接</string>
@@ -47,12 +28,6 @@
     <string name="Settings_WhiteList">授权联系人</string>
     <string name="Settings_Veto_via_Pin_Description">允许您通过 PIN 与 Veto 交流。使可以您从“授权联系人”列表以外的电话号码发送命令。</string>
     <string name="Settings_VetoCommand_Description">用于与 Veto 通信的命令。</string>
-    <string name="Settings_VetoServer_Location_Type_Description">后台定时上传位置数据的数据源配置项。\n若未选择任何数据源，系统将不会自动上传定位信息。（此时仍可通过网页端强制上传，但该操作需依赖推送功能支持。）</string>
-    <string name="server_version">服务端版本</string>
-    <string name="server_version_error">获取服务端版本时出现错误</string>
-    <string name="server_version_error_low_version">最低需要 {MIN} 版本的服务端，但是当前已选服务端版本为 {CURRENT}。继续操作可能存在风险，请谨慎决定。</string>
-    <string name="Settings_VetoServer_open_website">打开 Veto 服务端网站</string>
-    <string name="Settings_VetoServer_Register">注册</string>
     <string name="Whitelist_help">本名单中的联系人具有通过短信发送Veto指令的权限。其余号码发送的指令系统将不予响应。</string>
     <string name="Whitelist_empty">无授权联系人。请点击这个按钮添加！</string>
     <string name="WhiteList_Add_Contact">添加联系人</string>
@@ -80,44 +55,23 @@
     <string name="Permission_IGNORE_BATTERY_OPTIMIZATION">此应用可以在后台运行。若想确保它在设备休眠期间也能运行，您需要关闭此应用的电池优化选项。</string>
     <string name="Notification_Fail_Description">有关于失败信息的通知，比如与 Veto 服务器的连接</string>
     <string name="Settings_no_ringtone_picker">未找到铃声选择器！</string>
-    <string name="Settings_VetoServer_Server_Url">服务器 URL</string>
-    <string name="Settings_VetoServer_Check_Notify_After_Description">若距离上一次成功连接 Veto 服务器已超过 X 小时，系统将向您发出通知。若连接检查功能已禁用，该通知机制无效。</string>
     <string name="request_failed_title">网络请求失败</string>
     <string name="request_failed_status_code">状态代码</string>
     <string name="request_failed_response_body">响应主体</string>
     <string name="request_failed_exception">异常</string>
     <string name="Enable">启用</string>
-    <string name="pw_change_success">密码已更改</string>
-    <string name="Settings_VetoServer_Error_id_or_pw_empty">Veto 的 ID 和密码均不能为空。</string>
-    <string name="pw_change_network_failed">由于网络错误，密码更改失败。</string>
     <string name="temporary_allowlist_expired">您的 Veto 临时访问权限已过期。要继续使用 Veto，请再次发送 PIN。</string>
     <string name="export_success">导出成功</string>
     <string name="export_failed">导出失败</string>
     <string name="Settings_Appearance">外观</string>
     <string name="Settings_Veto_Server_Connection_Status">连接状态：</string>
     <string name="Settings_Veto_Server_Connection_Status_Success">成功</string>
-    <string name="server_version_upgrade_required_title">Veto 服务器需要升级</string>
-    <string name="server_version_upgrade_required_text">您当前使用的 Veto 服务器版本为 {CURRENT}，但此应用程序要求最低版本为 {MIN}。通过Veto服务器控制设备的功能可能已失效，请升级服务器版本。</string>
     <string name="allowlist_phone_number_name">名称</string>
     <string name="allowlist_phone_number">电话号码</string>
-    <string name="Settings_VetoServer_Check_Interval_Title">连接检查间隔</string>
-    <string name="Settings_VetoServer_Check_Interval_Description">Veto 每 X 小时检查一次与 Veto 服务器的连接。设置为 0 以禁用连接检查。</string>
-    <string name="Settings_VetoServer_Check_Notify_After_Title">无连接的最大允许时间</string>
-    <string name="pw_change_mismatch">两次输入密码不匹配。</string>
-    <string name="pw_change_wrong_password">密码错误</string>
-    <string name="server_login_attempts_title">登录Veto服务器失败</string>
-    <string name="server_login_attempts_text">有人试图登录您的 Veto 服务器账户“%s”。由于多次密码错误，此账户现已被锁定 10 分钟。</string>
-    <string name="server_connectivity_lost_title">Veto 服务器连接丢失</string>
-    <string name="server_connectivity_lost_text">无法访问 Veto 服务器 %1$s。最后一次成功连接是在 %2$s。</string>
-    <string name="server_registration_token_error">网络请求失败，返回 HTTP 401 错误。此错误通常因身份验证失败导致，可能由于服务器要求提供注册令牌而您提交的令牌无效所致。</string>
     <string name="Delete">删除</string>
     <string name="Toast_Duplicate_contact">此联系人已存在。</string>
-    <string name="Settings_VetoServer_Logout_Text">您真的想登出您的 Veto 服务器账户吗？</string>
     <string name="WhiteList_no_contact_picker">未找到联系人选择程序！</string>
     <string name="pin_match_command_keyword">PIN 不得与命令之一相同！</string>
-    <string name="Settings_VetoServer_Delete_Account">删除账户</string>
-    <string name="Settings_VetoServer_Unregister_Success">成功注销并删除数据！</string>
-    <string name="pw_change_empty">密码不能为空。</string>
     <string name="bottom_nav_commands">命令</string>
     <string name="bottom_nav_transports">传送通道</string>
     <string name="Toast_Empty_VetoCommand">不允许使用空命令，正在使用默认值。</string>
@@ -238,12 +192,6 @@
     <string name="missing_permissions_title">缺少权限</string>
     <string name="crashed_text">Veto 崩溃了！以下是日志：</string>
     <string name="crashed_copy_log">复制日志</string>
-    <string name="server_veto_id_hint">Veto ID 用于标识您在 Veto 服务器上的账户。若留空此项，服务器将自动为您分配 ID。服务器管理员可查看 Veto ID。</string>
-    <string name="Settings_VetoServer_Push_Distributor">分发服务器：%s</string>
-    <string name="Settings_VetoServer_Push_Url">推送 URL: %s</string>
-    <string name="Settings_VetoServer_Push_Register">注册</string>
-    <string name="Settings_VetoServer_Push_Register_Again">重新注册</string>
-    <string name="Settings_VetoServer_Push_Description">通过 Veto 服务器向设备发送指令，必须借助 UnifiedPush 分发器应用。</string>
     <string name="update_pin_hash_change_text">应用更新期间重置了 Veto PIN。想继续使用带 PIN 的 Veto，请重新设置。</string>
     <string name="allowlist_reset_title">重置授权联系人</string>
     <string name="Settings_Pin_Not_Backed_Up">警告：应用备份中未包含 PIN。</string>
@@ -257,10 +205,6 @@
     <string name="pin_min_length">PIN 必须至少包含 8 个字符，建议至少包含 16 个字符。</string>
     <string name="delete_pw_warning_no_backup">警告：应用备份中未包含密码。</string>
     <string name="delete_pw_warning_empty">警告：由于删除密码为空，无法执行删除操作。您必须同时启用该功能并设置密码。</string>
-    <string name="password_match_command_keyword">密码不能与任何命令相同！</string>
-    <string name="server_connectivity_check_not_enabled_title">启用服务器连接检查</string>
-    <string name="server_connectivity_check_not_enabled_text">Veto 可以定期检查 Veto 服务器是否可访问。出于隐私考虑，此功能默认关闭。但出于可用性考虑，我们建议启用此功能。</string>
-    <string name="server_password_hint">请选择一个无法被猜出，但在设备丢失后可以恢复的密码。该密码会授予您在设备上远程运行命令的权限。服务器管理员无法访问或重置你的密码。</string>
     <string name="allowlist_invalid_number">此手机号不可用！</string>
     <string name="veto_edge_info_message">这是 Veto 的测试版本，此版本默认命令关键词为“vetoe”（而非正式版的“veto”）。例如，发送定位命令需使用“vetoe locate”。该设计允许在同一设备中同时安装测试版与正式版，并可向指定版本发送命令。</string>
     <string name="cmd_flash_description_short">开启闪光灯</string>
@@ -274,12 +218,4 @@
     <string name="setup_recommendations_title">建议</string>
     <string name="missing_push_title">缺少 UnifiedPush 支持</string>
     <string name="missing_push_description">未安装 UnifiedPush 分发器应用将无法接收 Veto 服务器命令。</string>
-    <string name="Settings_VetoServer_Push_Install_Sunup">安装 Sunup</string>
-    <string name="password_set">设置密码</string>
-    <string name="password_change">更改密码</string>
-    <string name="password_enter">输入密码</string>
-    <string name="password_min_length">密码至少为 8 个字符，推荐 16 个字符以上。</string>
-    <string name="Settings_VetoServer_Push_Open_Help">关于推送服务的补充说明</string>
-    <string name="Settings_VetoServer_Push_Info_Sunup">推荐使用 Sunup 作为 UnifiedPush 分发器应用。该应用配置简便，且采用 Mozilla 提供的推送服务器。</string>
-    <string name="Settings_VetoServer_Update_Interval_Description_Constraint">不推荐将时间参数设置为低于 15 分钟。</string>
-</resources>
+    </resources>

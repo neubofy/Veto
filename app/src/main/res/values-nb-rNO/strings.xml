@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="loading">Laster inn …</string>
     <string name="help">Hjelp</string>
@@ -19,24 +19,8 @@
     <string name="Settings_Veto_Server_General">Generelt</string>
     <string name="Settings_Veto_Server_Server_URL">Tjener-nettadresse:</string>
     <string name="Settings_Veto_Server_User_ID">Bruker-ID:</string>
-    <string name="Settings_VetoServer_Logout_Button">Logg ut</string>
-    <string name="password_new_repeat">Gjenta nytt passord</string>
-    <string name="server_version">Tjenerversjon</string>
     <string name="Settings_Lockscreenmessage_Description">Låseskjermsmelding. \nVises når enheten er låst.</string>
     <string name="Settings_Veto_Server_ID_Desc">Du trenger bruker-ID-en for å finne din enhet med Veto-tjeneren. Skriv den ned og oppbevar den trygt.</string>
-    <string name="Settings_VetoServer_Change_Password_Button">Endre passord</string>
-    <string name="Settings_VetoServer_Alert_DeleteData_Desc">Fortsett med sletting av all data fra tjeneren?</string>
-    <string name="Settings_VetoServer_Location_Type_Title">Posisjoneringstjeneste</string>
-    <string name="Settings_VetoServer_Update_Interval_Description">Veto laster opp enheten hvert n minutt.</string>
-    <string name="Settings_VetoServer_Location_Type_Description">Kilden posisjoneringsdataen lastes opp fra. Velg minst én.</string>
-    <string name="Settings_VetoServer_Update_Interval_Title">Oppdateringsintervall</string>
-    <string name="Settings_VetoServer_AddAccount">Veto-tjener: Logg inn/registrering</string>
-    <string name="Settings_VetoServer_use_default_server">Bruk Neubofys offentlige tjener</string>
-    <string name="Settings_VetoServer_Login">Logg inn</string>
-    <string name="Settings_VetoServer_Register">Registrering</string>
-    <string name="Settings_VetoServer_Alert_PrivacyPolicy_Title">Personvernspraksis</string>
-    <string name="password">Passord</string>
-    <string name="registration_token">Registreringssymbol</string>
     <string name="about">Om</string>
     <string name="about_source_code">Kildekode</string>
     <string name="about_wiki">Wiki</string>
@@ -64,18 +48,12 @@
     <string name="Delete">Slett</string>
     <string name="Notification_Fail_Description">Merknad når noe går galt, som f.eks. tilkoblingen til Veto-tjeneren.</string>
     <string name="Settings_VetoCommand_Description">Kommando brukt til kommunikasjon med Veto-programmet.</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Title">Last opp ved lav batterikapasitet</string>
-    <string name="password_old">Gammelt passord</string>
-    <string name="server_version_error">Kunne ikke hente tjenerversjon</string>
-    <string name="password_new">Nytt passord</string>
     <string name="Notification_Server_Description">Merknader som har med Veto-tjeneren å gjøre</string>
     <string name="Permission_POST_NOTIFICATIONS">Veto vil sende deg merknader nå og da, for eksempel hvis noen prøver å finne enhten din.</string>
     <string name="LockScreen_Usage_detectd">Låseskjermsmelding: Bruk oppdaget.</string>
-    <string name="Settings_VetoServer_Server_Url">Tjenernettadresse</string>
     <string name="request_failed_title">Nettverksforespørsel mislyktes</string>
     <string name="request_failed_status_code">Statuskode</string>
     <string name="request_failed_response_body">Brødtekst for svaret</string>
-    <string name="registration_token_hint">Det kan hende en privat instans krever et hemmelig symbol. La stå tomt hvis instansen er offentlig.</string>
     <string name="Whitelist_help">Kontaktene i denne listen kan sende Veto-kommandoer via SMS. Kommandoer annensteds fra vil bli ignorert.</string>
     <string name="Permission_IGNORE_BATTERY_OPTIMIZATION">Programmet er ment å kjøre i bakgrunnen. Skru av batterioptimaliseringer for å forsikre at alt fungerer i hvilemodus.</string>
     <string name="request_failed_exception">Unntak</string>
@@ -86,7 +64,6 @@
     <string name="perm_post_notification_name">Posting av merknader</string>
     <string name="perm_sms_name">SMS</string>
     <string name="cmd_stats_description_long">Henter nettverksstatistikk fra enheten. For eksempel dens eksterne IP-adresse og en liste over Wi-Fi-nettverk i nærheten.</string>
-    <string name="server_version_error_low_version">Tjeneren har versjon {CURRENT} og trenger ihvertfall å være {MIN} eller nyere. Fortsett på egen risiko.</string>
     <string name="OpenCellId_privacy">Personvern: Husk at OpenCelliD tar rede på hvilken mobilmast du er tilkoblet, og dermed din plassering ved hver API-spørring.</string>
     <string name="cmd_camera_response_success">Enheten tar et bilde og sender det til Veto-tjeneren. Du kan se det her snart: %s</string>
     <string name="Enable">Skru på</string>
@@ -94,7 +71,6 @@
     <string name="cmd_delete_response_success">Enheten bør nå være slettet. Adjø.</string>
     <string name="cmd_locate_response_gps_will_follow">GPS-koordinater vil bli sendt snart.</string>
     <string name="MH_Pin_Accepted">PIN godtatt.</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Description">Last opp enhetens posisjon når batterinivået blir lavt. Dette krever merknadstilgang.</string>
     <string name="cmd_delete_description_long">Dette fjerner all data. Etterpå vil du ikke kunne kommunisere med enheten. For å forhindre utilsiktet og ondsinnet bruk krever kommandoen et passord, og det må innvilges spesielt i innstillingene.</string>
     <string name="OpenCellId_help">Veto kan bruke OpenCelliD-tjenesten til å hente en omtrentlig posisjon basert på mobilmasten(e) enheten er tilkoblet. Tilkobling til Internett kreves for hver posisjonsspørring. Du må også opprette en konto på OpenCelliD og skaffe ditt eget API-tilgangssymbol.</string>
     <string name="app_description">Veto, Veto (finn enheten min) lar deg finne enheten din annensteds fra. Du kan kommunisere med Veto over SMS, lynmeldinger, eller ved bruk av Veto-tjeneren. Finn enheten din, få den til å ringe, lås den, eller slett den - alt fra der du er.</string>
@@ -143,7 +119,5 @@
 \nMelding fra eieren:</string>
     <string name="LockScreen_Backbutton_pressed">Låseskjermsmelding: «Tilbake»-knapp trykket.</string>
     <string name="Toast_Empty_VetoCommand">Tom kommando er ikke tillatt\n Returnerer til forvalg.[veto]</string>
-    <string name="Settings_VetoServer_open_website">Åpne Veto-tjenernettsiden</string>
-    <string name="Settings_VetoServer_Info">Med Veto-tjeneren kan du sende kommandoer over Internett fra tjeneren til programmet. Du kan også vise enhetsposisjon på kartet, eller vise bilder tatt av enheten. Instruks om egen vertstjening er å finne på nettsiden.</string>
     <string name="Whitelist_empty">Klikk for å legge til tillatte kontakter.</string>
 </resources>

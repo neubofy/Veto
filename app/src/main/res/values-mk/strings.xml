@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="bottom_nav_transports">Канали за пренос</string>
     <string name="accept">Прифати</string>
@@ -23,25 +23,6 @@
     <string name="Settings_Ringer_Tone_Description">Одбери ѕвонка која ќе свири кога е пратена Veto ѕвони наредба.</string>
     <string name="Settings_Lockscreenmessage_Description">Порака при заклучен екран: \nКога ќе се заклучи уредот, оваа порака ќе се појави на заклучениот екран.</string>
     <string name="Settings_Veto_Server_User_ID">Корисничко име:</string>
-    <string name="Settings_VetoServer_Change_Password_Button">Промени лозинка</string>
-    <string name="Settings_VetoServer_Alert_DeleteData_Desc">Ова ќе ги избрише сите податоци од серверот! Дали си сигурен?</string>
-    <string name="Settings_VetoServer_Update_Interval_Title">Интервал на освежување</string>
-    <string name="Settings_VetoServer_Update_Interval_Description">Veto ја испраќа позицијата на уредот секои Х минути.</string>
-    <string name="Settings_VetoServer_Location_Type_Title">Извор на позиција</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Title">Испраќање при слаба батерија</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Description">Испраќај ја позицијата на уредов и кога батеријата е слаба. Ова бара пристап до известувања.</string>
-    <string name="password_old">Стара лозинка</string>
-    <string name="password_new">Нова лозинка</string>
-    <string name="password_new_repeat">Повтори ја новата лозинка</string>
-    <string name="server_version">Верзија на серверот</string>
-    <string name="server_version_error">Грешка при добивање на серверската верзија</string>
-    <string name="Settings_VetoServer_AddAccount">Veto сервер: најави / регистрирај се</string>
-    <string name="Settings_VetoServer_open_website">Интернет страница на Open Veto сервер</string>
-    <string name="Settings_VetoServer_use_default_server">Користи го јавниот сервер на Neubofy</string>
-    <string name="Settings_VetoServer_Server_Url">Серверска Интернет адреса</string>
-    <string name="Settings_VetoServer_Login">Најави се</string>
-    <string name="registration_token">Симбол (токен) за регистрација</string>
-    <string name="registration_token_hint">Приватните инстанци може да изискуваат тајни симболи (токени). Остави го ова празно ако инстанцата е јавна.</string>
     <string name="Whitelist_empty">Нема дозволени контакти. Кликни на копчето за да додадеш нови!</string>
     <string name="WhiteList_Add_Contact">Додај контакт</string>
     <string name="Toast_Duplicate_contact">Веќе постои истиот контакт.</string>
@@ -102,14 +83,6 @@
     <string name="Settings_Select_Ringtone">Одбери ѕвонка</string>
     <string name="Settings_Veto_Server_General">Општо</string>
     <string name="Settings_Veto_Server_ID_Desc">Потребно ти е корисничко име за да го пронајдеш твојот уред со Veto серверот. Запиши го и чувај го на сигурно.</string>
-    <string name="Settings_VetoServer_Logout_Button">Одјави се</string>
-    <string name="Settings_VetoServer_Location_Type_Description">Изворот/ите од кои позиционите податоци се испраќаат при редовни интервали, во позадина.
-\nАко ниту еден извор не е избран, локација не се праќа редовно. (Сѐ уште можеш да го користиш Интернет опкружувањето за да присилиш испраќање на позиција. Ова изискува испраќачки известувања.)</string>
-    <string name="server_version_error_low_version">Потребна е барем серверска верзија {MIN}, но одбраната серверска верзија е {CURRENT}. Продолжи на сопствен ризик.</string>
-    <string name="Settings_VetoServer_Info">Со Veto серверот можеш да праќаш наредби преку Интернет, од серверот до апликацијата. Можеш исто така и да ја гледаш позицијата на уредот на карта или да ги прегледуваш сликите направени со уредот. За сопствено вдомување на серверот, прегледај ја Интернет страницата.</string>
-    <string name="Settings_VetoServer_Register">Регистрирај се</string>
-    <string name="Settings_VetoServer_Alert_PrivacyPolicy_Title">Полиса за приватност</string>
-    <string name="password">Лозинка</string>
     <string name="Whitelist_help">Контактите во оваа листа имаат дозвола да праќаат Veto наредби преку СМС. Командите од сите други ќе бидат игнорирани.</string>
     <string name="allowlist_phone_number">Телефонски број</string>
     <string name="OpenCellId_help">Veto може да ја користи услугата OpenCelliD за да се стекне со приближна позиција базирана на телефонските кули до кои уредо е поврзан. Потребна е Интернет врска за секое барање за позиција. Потребно е, исто така, да создадеш сметка при OpenCelliD и да се стекнеш со свој API Access симбол (токен).</string>

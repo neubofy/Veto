@@ -35,7 +35,6 @@ class AccountActivity : VetoActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var tvStatus: TextView
     private lateinit var pbSpinner: android.widget.ProgressBar
-    private lateinit var etDashboardUrl: TextInputEditText
 
     private lateinit var layoutLogin: LinearLayout
     private lateinit var layoutLoggedIn: LinearLayout
@@ -64,7 +63,6 @@ class AccountActivity : VetoActivity() {
         setContentView(R.layout.activity_account)
 
         // Bind Views
-        etDashboardUrl = findViewById(R.id.etDashboardUrl)
         tvStatus = findViewById(R.id.tvConnectionStatus)
         pbSpinner = findViewById(R.id.pbConnectionSpinner)
         
@@ -88,24 +86,11 @@ class AccountActivity : VetoActivity() {
 
         auth = FirebaseAuth.getInstance()
         val settings = SettingsRepository.getInstance(this)
-        
-        // Advanced Toggle Logic
-        val tvAdvancedToggle = findViewById<TextView>(R.id.tvAdvancedToggle)
-        val advancedLayout = findViewById<LinearLayout>(R.id.advancedLayout)
-        tvAdvancedToggle.setOnClickListener {
-            if (advancedLayout.visibility == View.GONE) {
-                advancedLayout.visibility = View.VISIBLE
-            } else {
-                advancedLayout.visibility = View.GONE
-            }
-        }
-
         var currentUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
         if (currentUrl.isEmpty()) {
             currentUrl = "https://veto.neubofy.in"
             settings.set(Settings.SET_VetoSERVER_URL, currentUrl)
         }
-        etDashboardUrl.setText(currentUrl)
 
         // Google Sign In Setup
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -135,7 +120,6 @@ class AccountActivity : VetoActivity() {
 
         // Listeners
         btnGoogleSignIn.setOnClickListener {
-            if (!validateUrl(settings)) return@setOnClickListener
             tvStatus.text = "Signing in with Google & Setting up Drive..."
             pbSpinner.visibility = View.VISIBLE
             val signInIntent = googleSignInClient.signInIntent
@@ -145,7 +129,6 @@ class AccountActivity : VetoActivity() {
         btnSignOut.setOnClickListener {
             auth.signOut()
             googleSignInClient.signOut()
-            settings.set(Settings.SET_VetoSERVER_ID, "")
             settings.set(Settings.SET_SYNCED_FCM_TOKEN, "")
             updateUI()
             Snackbar.make(btnSignOut, "Signed Out Successfully", Snackbar.LENGTH_SHORT).show()
@@ -165,7 +148,7 @@ class AccountActivity : VetoActivity() {
         }
 
         btnOpenWebsite.setOnClickListener {
-            val url = etDashboardUrl.text.toString().trim()
+            val url = SettingsRepository.getInstance(this).get(Settings.SET_VetoSERVER_URL) as String
             if (url.isNotEmpty()) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(intent)
@@ -206,15 +189,6 @@ class AccountActivity : VetoActivity() {
         updateUI()
     }
 
-    private fun validateUrl(settings: SettingsRepository): Boolean {
-        val url = etDashboardUrl.text.toString().trim()
-        if (url.isEmpty()) {
-            Snackbar.make(btnGoogleSignIn, "Please enter a Dashboard URL in Server Settings.", Snackbar.LENGTH_SHORT).show()
-            return false
-        }
-        settings.set(Settings.SET_VetoSERVER_URL, url)
-        return true
-    }
 
     private fun updateUI() {
         val user = auth.currentUser
@@ -274,7 +248,7 @@ class AccountActivity : VetoActivity() {
         val user = auth.currentUser
         if (user != null) {
             val settings = SettingsRepository.getInstance(this)
-            settings.set(Settings.SET_VetoSERVER_ID, user.uid)
+
 
             tvStatus.text = "Setting up Google Drive folders..."
             pbSpinner.visibility = View.VISIBLE

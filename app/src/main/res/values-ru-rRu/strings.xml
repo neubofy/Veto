@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="Locked_Lock_Screen">Veto \nЭто устройство заблокировано! \nСообщение от его владельца:</string>
     <string name="Enable">Включить</string>
@@ -30,14 +30,9 @@
     <string name="Settings_Select_Ringtone">Выберите рингтон</string>
     <string name="Settings_Veto_Server_User_ID">ID пользователя:</string>
     <string name="Settings_Veto_Server_ID_Desc">Вам необходим ID пользователя для нахождения вашего устройства с помощью Сервера Veto. Запишите его и храните в безопасности.</string>
-    <string name="Settings_VetoServer_Change_Password_Button">Сменить пароль</string>
-    <string name="Settings_VetoServer_Logout_Button">Выйти</string>
-    <string name="Settings_VetoServer_Alert_DeleteData_Desc">Это удалит все данные с сервера. Вы уверены?</string>
-    <string name="password_new_repeat">Повторите новый пароль</string>
     <string name="notify_crypto_update_text">Вам необходимо обновить некоторые настройки для продолжения использования Veto. Нажмите, чтобы открыть их.</string>
     <string name="Whitelist_help">Контактам в этом списке разрешено отправлять Veto команды через SMS сообщения. Команды от всех остальных контактов будут проигнорированы.</string>
     <string name="app_description">Veto (Veto) позволяет вам удалённо находить ваше устройство. Вы можете взаимодействовать с ним с помощью Veto через SMS сообщения, мессенджеры, или используя Veto Сервер. Находите ваше устройство, заставляйте его воспроизводить звук, блокируйте его, или удаляйте хранящиеся на нём данные - всё это можно сделать удалённо.</string>
-    <string name="Settings_VetoServer_Info">С сервером Veto вы можете отправлять команды через интернет, от сервера к приложению. Вы также можете просматривать местоположение устройства на карте, или просматривать фотографии, сделанные устройством. Для инструкций по самостоятельному хостингу сервера, перейдите на сайт.</string>
     <string name="server_unregister_failed_body">Отмена регистрации не удалась из-за следующей ошибки: {ERROR}
 \n
 \nВы всё равно можете продолжить, но ваш аккаунт может быть не удалён с сервера. Если вы продолжите, ваш аккаунт будет удалён лишь локально, с этого устройства.</string>
@@ -45,18 +40,7 @@
     <string name="Settings_Export">Экспортировать настройки</string>
     <string name="Settings_Veto_Server_Server_URL">URL-адрес сервера:</string>
     <string name="Settings_Veto_Server_General">Основные</string>
-    <string name="server_version">Версия сервера</string>
-    <string name="server_version_error">Ошибка получения версии сервера</string>
-    <string name="Settings_VetoServer_AddAccount">Veto Сервер: Подключение</string>
-    <string name="Settings_VetoServer_open_website">Открыть сайт сервера Veto</string>
-    <string name="Settings_VetoServer_use_default_server">Использовать публичный сервер</string>
-    <string name="Settings_VetoServer_Login">Войти</string>
-    <string name="Settings_VetoServer_Alert_PrivacyPolicy_Title">Политика конфиденциальности</string>
-    <string name="password">Пароль</string>
-    <string name="registration_token">Токен регистрации</string>
-    <string name="registration_token_hint">Приватные инстанции могут потребовать секретный токен. Оставьте это поле пустым, если инстанция публичная.</string>
     <string name="server_unregister_continue_anyway">Всё равно продолжить</string>
-    <string name="server_version_error_low_version">Необходима как минимум версия сервера {MIN}, а версия выбранного сервера {CURRENT}. Продолжайте на свой риск.</string>
     <string name="Whitelist_empty">Нет разрешённых контактов. Нажмите на кнопку, чтобы добавить их.</string>
     <string name="server_unregister_failed_title">Отмена регистрации не удалась</string>
     <string name="server_unregister_dont_continue">Не продолжать</string>
@@ -68,14 +52,6 @@
     <string name="Edit">Редактировать</string>
     <string name="GPS">GPS</string>
     <string name="pin">ПИН-код</string>
-    <string name="Settings_VetoServer_Update_Interval_Title">Интервал фоновой выгрузки местоположения</string>
-    <string name="Settings_VetoServer_Update_Interval_Description">Veto выгружает местоположение устройства каждые X минут.</string>
-    <string name="Settings_VetoServer_Location_Type_Title">Источник местоположения</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Title">Выгружать при низком заряде аккумулятора</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Description">Выгружать местоположение этого устройства при низком заряде аккумулятора.</string>
-    <string name="password_old">Старый пароль</string>
-    <string name="password_new">Новый пароль</string>
-    <string name="Settings_VetoServer_Register">Зарегистрироваться</string>
     <string name="OpenCellId_privacy">Приватность: имейте ввиду, что при каждом запросе к API, сервис OpenCelliD узнаёт вашу текущую сотовую вышку, а соответственно и ваше местоположение.</string>
     <string name="OpenCellId_open_website">Открыть вебсайт OpenCelliD</string>
     <string name="OpenCellId_test_opencellid">Проверить соединение с OpenCelliD</string>
@@ -91,13 +67,10 @@
     <string name="Notification_FAIL">Неудачи</string>
     <string name="Permission_IGNORE_BATTERY_OPTIMIZATION">Это приложение предназначено для работы в фоновом режиме. Чтобы убедиться, что оно работает даже когда ваше устройство не используется, вам необходимо отключить оптимизацию батареи для этого приложения.</string>
     <string name="Permission_POST_NOTIFICATIONS">Veto будет периодически отправлять вам уведомления, например, чтобы предупреждать вас о том, что кто-то отслеживает ваше устройство.</string>
-    <string name="Settings_VetoServer_Location_Type_Description">Источник (источники) из которого данные о местоположении выгружаются с регулярными интервалами в фоновом режиме.
-\nЕсли не выбрано ни одного, местоположения не будут регулярно выгружаться (вы всё ещё можете использовать веб-интерфейс чтобы принудительно активировать выгрузку, для чего необходимы настроенные пуш-уведомления).</string>
     <string name="Notification_Server_Description">Уведомления, относящиеся к серверу Veto</string>
     <string name="transport_veto_server_description">Сервер Veto предоставляет веб-интерфейс для взаимодействия с вашим устройством, просмотра его местоположения, и просмотра фотографий, присланных им. Вы можете самостоятельно хостить сервер Veto, или использовать стандартную инстанцию. Данные на сервере хранятся в зашифрованном виде, и защищены вашим паролем.</string>
     <string name="Settings_Import_Success">Импортирование успешно</string>
     <string name="Settings_Import_Failed">Импортирование не удалось</string>
-    <string name="Settings_VetoServer_Server_Url">URL-адрес сервера</string>
     <string name="cmd_camera_description_short">Сделать фотографию</string>
     <string name="cmd_camera_description_long">Делает фотографию с помощью передней/задней камеры и загружает её на сервер Veto. В данный момент поддерживается загрузка лишь на сервер Veto. Вы можете отправить эту команду также и через другие транспортные каналы, после чего фотография будет загружена на сервер Veto (если у вас есть профиль).</string>
     <string name="cmd_delete_description_short">Сброс устройства до заводских настроек (dry run - пробный прогон)</string>
@@ -194,34 +167,23 @@
     <string name="Notification_InApp_Description">Уведомления от транспортного канала \"Из приложения\"</string>
     <string name="Settings_Veto_Server_Connection_Status">Состояние соединения:</string>
     <string name="Settings_Veto_Server_Connection_Status_Success">Успешно</string>
-    <string name="server_login_attempts_title">Неудачные попытки входа на Veto Сервер</string>
-    <string name="server_login_attempts_text">Кто-то пытался войти в ваш аккаунт Veto Сервера \"%s\". В связи с множественными неудачными попытками входа, аккаунт был заблокирован на 10 минут.</string>
     <string name="cmd_locate_response_opencellid_failed">Ошибка получения местоположения с OpenCelliD. Это может произойти, если сотовая вышка не находится в базе данных.
 \n
 \nПожалуйста, попробуйте использовать следующую ссылку: %1$s
 \n
 \n%2$s</string>
-    <string name="server_registration_token_error">Не удалось совершить сетевой запрос из-за ошибки HTTP 401. Это может произойти в случае, если сервер требует токен регистрации, а предоставленный вами токен был неверным.</string>
     <string name="cmd_locate_response_gps_fail">Получение нового местоположения по GPS не удалось. Возможно из-за превышения времени ожидания.</string>
-    <string name="pw_change_network_failed">Смена пароля не удалась из-за ошибки сети.</string>
-    <string name="Settings_VetoServer_Error_id_or_pw_empty">Veto ID и пароль не должны быть пустыми.</string>
     <string name="log_view_title">Логи</string>
     <string name="Settings_no_ringtone_picker">Не найдено приложение для выбора рингтона!</string>
-    <string name="pw_change_empty">Пароль не должен быть пустым.</string>
     <string name="log_view_export">Экспортировать логи</string>
     <string name="perm_bluetooth_connect_name">Подключить Bluetooth</string>
     <string name="export_success">Экспортирование успешно</string>
     <string name="export_failed">Экспортирование не удалось</string>
     <string name="temporary_allowlist_expired">Ваш временный доступ к Veto истёк. Чтобы продолжить использовать Veto, отправьте ПИН-код снова.</string>
-    <string name="pw_change_success">Пароль изменён</string>
-    <string name="pw_change_mismatch">Пароли не совпадают.</string>
-    <string name="pw_change_wrong_password">Неверный пароль</string>
     <string name="cmd_bluetooth_response_off">Bluetooth выключен.</string>
-    <string name="Settings_VetoServer_Delete_Account">Удалить профиль</string>
     <string name="cmd_bluetooth_response_no_bluetooth">Похоже, что данное устройство не имеет Bluetooth.</string>
     <string name="cmd_bluetooth_description_short">Включение и выключение Bluetooth</string>
     <string name="cmd_bluetooth_response_on">Bluetooth включён.</string>
-    <string name="Settings_VetoServer_Unregister_Success">Отмена регистрации и удаление данных успешно завершены!</string>
     <string name="Settings_Appearance">Внешний вид</string>
     <string name="appearance_language_choose">Выберите язык</string>
     <string name="appearance_language_system_default">Как в системе</string>
@@ -233,28 +195,13 @@
     <string name="appearance_theme_choose">Выбрать тему</string>
     <string name="appearance_theme_follow_system">Как в системе</string>
     <string name="appearance_theme_dark">Тёмная</string>
-    <string name="Settings_VetoServer_Logout_Text">Вы действительно хотите выйти из вашего профиля Сервера Veto?</string>
-    <string name="server_version_upgrade_required_title">Необходимо обновить Veto Сервер</string>
-    <string name="server_version_upgrade_required_text">Используемый вами сервер Veto имеет версию {CURRENT}, но это приложение требует как минимум версию {MIN}. Управление вашим устройством через сервер Veto может больше не работать. Пожалуйста, обновите ваш сервер.</string>
     <string name="crashed_title">Отчёт об ошибке</string>
-    <string name="server_connectivity_lost_title">Соединение с Veto Сервером потеряно</string>
-    <string name="server_connectivity_lost_text">Veto Сервер на %1$s больше недоступен. Последнее успешное соединение было в %2$s.</string>
-    <string name="Settings_VetoServer_Check_Interval_Title">Интервал проверки доступности соединения</string>
-    <string name="Settings_VetoServer_Check_Interval_Description">Veto проверяет доступность соединения с Сервером Veto каждые X часов. Установите это на 0 чтобы отключить проверки.</string>
-    <string name="Settings_VetoServer_Check_Notify_After_Description">Veto оповестит вас, если последнее успешное соединение с сервером Veto было больше, чем X часов назад. Это не будет работать, если проверки доступности соединения отключены.</string>
     <string name="cmd_delete_response_dry_run">Пробный запуск прошёл успешно, без фактического удаления устройства.</string>
-    <string name="Settings_VetoServer_Check_Notify_After_Title">Максимально разрешённое время без доступного соединения</string>
     <string name="pin_match_command_keyword">ПИН-код не должен быть таким же, как и одна из команд!</string>
     <string name="log_view_clear">Очистить логи</string>
     <string name="log_view_clear_confirm">Вы действительно хотите удалить все записи лога?</string>
     <string name="usage_notification_pin_title">Был использован ПИН-код Veto</string>
     <string name="usage_notification_pin_text">ПИН-код был использован следующим мобильным номером: \"%s\". Рекомендуется сменить ПИН.</string>
-    <string name="Settings_VetoServer_Push_Distributor">Распространитель: %s</string>
-    <string name="Settings_VetoServer_Push_Url">Пуш ссылка: %s</string>
-    <string name="Settings_VetoServer_Push_Register">Зарегистрировать</string>
-    <string name="Settings_VetoServer_Push_Description">Для отправки команд с Сервера Veto на ваше устройство, требуется приложение распространителя UnifiedPush.</string>
-    <string name="server_veto_id_hint">Veto ID идентифицирует ваш аккаунт на Veto Сервере. Оставьте это поле пустым, чтобы позволить серверу сгенерировать ID самостоятельно. Администратор сервера может видеть Veto ID.</string>
-    <string name="Settings_VetoServer_Push_Register_Again">Зарегистрировать повторно</string>
     <string name="allowlist_reset_title">Сброс разрешённых контактов</string>
     <string name="update_pin_hash_change_text">ПИН-код Veto был сброшен во время обновления приложения. Чтобы продолжить пользоваться Veto с ПИН-кодом, пожалуйста установите ПИН снова.</string>
     <string name="Settings_Pin_Not_Backed_Up">Предупреждение: ПИН-код не включён в резервную копию приложения.</string>
@@ -264,18 +211,10 @@
     <string name="cmd_ringermode_response">Режим звонка был изменён с \"%1$s\" (старый) на \"%2$s\" (новый).</string>
     <string name="Settings_Set_Pin">Установить PIN-код</string>
     <string name="Settings_Change_Pin">Сменить PIN-код</string>
-    <string name="server_connectivity_check_not_enabled_title">Включить проверку подключения к серверу</string>
-    <string name="server_connectivity_check_not_enabled_text">Veto может регулярно проверять, всё ещё ли доступен Veto Server. Ради обеспечения приватности, эта настройка отключена по умолчанию. Но по причинам доступности, мы рекомендуем включить её.</string>
     <string name="cmd_locate_response_beacondb_failed">Ошибка получения местоположения от BeaconDB. Это могло произойти, если сотовая вышка не находится в базе данных.\n\n%s</string>
     <string name="cmd_ringermode_description_long">Имейте ввиду, что \"беззвучный\" также включает режим \"Не беспокоить\". Это ожидаемое поведение, управляемое Android.</string>
     <string name="setup_recommendations_title">Рекомендации</string>
     <string name="pin_min_length">PIN-код должен состоять как минимум из 8 символов. Рекомендуется 16 или более.</string>
-    <string name="Settings_VetoServer_Push_Open_Help">Больше информации о пуш-уведомлениях</string>
-    <string name="Settings_VetoServer_Push_Install_Sunup">Установить Sunup</string>
-    <string name="Settings_VetoServer_Push_Info_Sunup">Рекомендованное приложение распространителя UnifiedPush это Sunup. Sunup легко настроить и он использует пуш-сервера от Mozilla.</string>
-    <string name="Settings_VetoServer_Update_Interval_Description_Constraint">Значения ниже 15 минут не рекомендованы.</string>
-    <string name="password_min_length">Пароль должен состоять как минимум из 8 символов. Рекомендуется 16 или более.</string>
-    <string name="server_password_hint">Выберите пароль, который нельзя угадать, но который вы можете восстановить когда вы потеряете ваше устройство. Пароль предоставляет доступ к удалённо запускаемым командам на вашем устройстве. Администратор сервера не может получить доступ к паролю или сбросить его.</string>
     <string name="allowlist_invalid_number">Этот мобильный номер неверный!</string>
     <string name="cmd_flash_description_short">Зажечь вспышку камеры</string>
     <string name="cmd_locate_provider_disabled">Запрошенный провайдер местоположения \"%s\" отключён.</string>
@@ -288,10 +227,6 @@
     <string name="dont_show_again">Не показывать снова</string>
     <string name="delete_pw_warning_no_backup">Внимание: Пароль не включён в резервную копию приложения.</string>
     <string name="delete_pw_warning_empty">Внимание: Удаление не сработает, потому что пароль удаления пустой. Вы должны включить функцию и установить пароль.</string>
-    <string name="password_set">Установить пароль</string>
-    <string name="password_change">Сменить пароль</string>
-    <string name="password_enter">Введите пароль</string>
-    <string name="password_match_command_keyword">Пароль не должен соответствовать одной из команд!</string>
     <string name="veto_edge_info_message">Это Edge вариант Veto. Здесь стандартное ключевое слово команды это \"vetoe\" (вместо \"veto\"). Например, чтобы отправить команду locate, используйте \"vetoe locate\". Это позволяет одновременно иметь и основную и Edge версию на одном устройстве, направляя команды в одну из них.</string>
     <string name="Fused">Комбинированный</string>
     <string name="tip_first_contact_added">Поздравляем, вы добавили ваш первый контакт! Теперь вы можете взаимодействовать с Veto путём отправки SMS c разрешённого мобильного номера, которые начинаются с \"%1$s\". Например, отправьте \"%2$s help\" или \"%3$s flash\". Когда всё сработает, приложение отправит ответ.</string>

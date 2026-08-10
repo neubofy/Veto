@@ -97,12 +97,12 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         btnRemoveTheftContact = findViewById(R.id.btnRemoveTheftContact)
         btnEditCommand = findViewById(R.id.btnEditCommand)
 
-        setupInfoButton(R.id.btnInfoWipe, "Remote Wipe", getString(R.string.delete_pw_warning_no_backup) + "\n\n" + getString(R.string.Settings_LCLDCommand_Description))
-        setupInfoButton(R.id.btnInfoPin, "Veto PIN", getString(R.string.Settings_LCLD_via_Pin_Description))
+        setupInfoButton(R.id.btnInfoWipe, "Remote Wipe", getString(R.string.delete_pw_warning_no_backup) + "\n\n" + getString(R.string.Settings_VetoCommand_Description))
+        setupInfoButton(R.id.btnInfoPin, "Veto PIN", getString(R.string.Settings_Veto_via_Pin_Description))
         setupInfoButton(R.id.btnInfoLockMsg, "Lock Screen Message", getString(R.string.Settings_Lockscreenmessage_Description))
         setupInfoButton(R.id.btnInfoTheftContact, "Theft Contact Info", "Enter an alternate phone number or email address to display on the screen when theft mode is active, so the device can be returned to you.")
         setupInfoButton(R.id.btnInfoTheftAutoDetect, "Auto Theft Detection", "If enabled, theft mode will automatically activate if someone removes your SIM card.")
-        setupInfoButton(R.id.btnInfoCommand, "Trigger Command", getString(R.string.Settings_LCLDCommand_Description))
+        setupInfoButton(R.id.btnInfoCommand, "Trigger Command", getString(R.string.Settings_VetoCommand_Description))
 
         btnEditWipe.setOnClickListener { onEnterDeletePasswordClicked() }
         btnRemoveWipe.setOnClickListener {
@@ -309,7 +309,7 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
             .setPositiveButton("Save") { _, _ ->
                 val edited = input.text.toString()
                 if (edited.isEmpty()) {
-                    Toast.makeText(this, getString(R.string.Toast_Empty_LCLDCommand), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.Toast_Empty_VetoCommand), Toast.LENGTH_LONG).show()
                     settings.set(Settings.SET_Veto_COMMAND, "veto")
                 } else {
                     settings.set(Settings.SET_Veto_COMMAND, edited.lowercase(Locale.ROOT))

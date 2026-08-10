@@ -23,25 +23,25 @@
         <item name="android:windowShowWallpaper">false</item>
     </style>
 
-    <style name="LCLD.Text.SectionTitle" parent="Widget.AppCompat.TextView">
+    <style name="Veto.Text.SectionTitle" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/md_theme_primary</item>
         <item name="android:textSize">17sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">textStart</item>
     </style>
 
-    <style name="LCLD.Text.Log.Title" parent="TextAppearance.Material3.BodyMedium">
+    <style name="Veto.Text.Log.Title" parent="TextAppearance.Material3.BodyMedium">
         <item name="fontFamily">monospace</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="LCLD.Text.Log.Message" parent="TextAppearance.Material3.BodyMedium">
+    <style name="Veto.Text.Log.Message" parent="TextAppearance.Material3.BodyMedium">
         <item name="fontFamily">monospace</item>
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="LCLD.Text.Log.Date" parent="TextAppearance.Material3.BodySmall">
+    <style name="Veto.Text.Log.Date" parent="TextAppearance.Material3.BodySmall">
         <item name="fontFamily">monospace</item>
         <item name="android:textSize">11sp</item>
     </style>

@@ -101,6 +101,10 @@ class MainPageFragment : TaggedFragment() {
                 .commit()
         }
 
+        view.findViewById<MaterialCardView>(R.id.card_dashboard).setOnClickListener {
+            startActivity(Intent(requireContext(), com.neubofy.veto.ui.DashboardWebViewActivity::class.java))
+        }
+
         view.findViewById<MaterialCardView>(R.id.card_permission_manager).setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, PermissionManagerFragment())

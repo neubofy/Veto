@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="help">مساعدة</string>
     <string name="Settings_Settings">الإعدادات</string>
@@ -11,19 +11,6 @@
     <string name="Settings_Ringer_Tone_Description">حدد نغمة الرنين التي سيتم تشغيلها عند إرسال رنين veto.</string>
     <string name="Settings_Select_Ringtone">حدد نغمة الرنين</string>
     <string name="Settings_Veto_Server_General">عام</string>
-    <string name="Settings_VetoServer_Logout_Button">تسجيل الخروج</string>
-    <string name="Settings_VetoServer_Update_Interval_Description">يقوم Veto بتحميل موقع الجهاز كل X دقيقة.</string>
-    <string name="Settings_VetoServer_Location_Type_Title">مصدر الموقع</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Title">تحميل على بطارية منخفضة</string>
-    <string name="password_old">كلمة المرور القديمة</string>
-    <string name="password_new">كلمة المرور الجديدة</string>
-    <string name="password_new_repeat">كرر كلمة المرور الجديدة</string>
-    <string name="server_version">إصدار الخادم</string>
-    <string name="server_version_error">حدث خطأ أثناء الحصول على إصدار الخادم</string>
-    <string name="Settings_VetoServer_open_website">فتح موقع خادم Veto</string>
-    <string name="Settings_VetoServer_Login">تسجيل الدخول</string>
-    <string name="Settings_VetoServer_Register">التسجيل</string>
-    <string name="Settings_VetoServer_Alert_PrivacyPolicy_Title">سياسة الخصوصية</string>
     <string name="Whitelist_empty">لا توجد جهات اتصال مسموح بها. انقر فوق الزر لإضافة البعض!</string>
     <string name="notify_crypto_update_text">تحتاج إلى تحديث بعض الإعدادات لمواصلة استخدام Veto. انقر للفتح.</string>
     <string name="server_unregister_failed_title">فشل إلغاء التسجيل</string>
@@ -35,13 +22,7 @@
     <string name="loading">تحميل…</string>
     <string name="copied">تم النسخ</string>
     <string name="Edit">تعديل</string>
-    <string name="Settings_VetoServer_Update_Interval_Title">الفاصل الزمني للتحديث</string>
-    <string name="Settings_VetoServer_Info">باستخدام خادم Veto يمكنك إرسال الأوامر عبر الإنترنت، من الخادم إلى التطبيق. يمكنك أيضًا عرض موقع الجهاز على الخريطة أو عرض الصور الملتقطة بواسطة الجهاز. للحصول على تعليمات الاستضافة الذاتية، راجع الموقع.</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Description">قم بتحميل موقع هذا الجهاز عندما ينخفض مستوى البطارية. وهذا يتطلب الوصول إلى الإشعارات.</string>
     <string name="Settings_Lockscreenmessage_Description">رسالة قفل الشاشة: \nعند قفل الجهاز، ستظهر هذه الرسالة على شاشة القفل.</string>
-    <string name="Settings_VetoServer_Change_Password_Button">تغيير كلمة المرور</string>
-    <string name="Settings_VetoServer_Alert_DeleteData_Desc">سيؤدي هذا إلى حذف كافة البيانات من الخادم! هل أنت متأكد؟</string>
-    <string name="password">كلمة المرور</string>
     <string name="Whitelist_help">يُسمح لجهات الاتصال الموجودة في هذه القائمة بإرسال أوامر Veto عبر الرسائل القصيرة. سيتم تجاهل الأوامر من أي شخص آخر.</string>
     <string name="WhiteList_Add_Contact">إضافة جهة اتصال</string>
     <string name="about">نبذة عن</string>
@@ -55,9 +36,6 @@
     <string name="Settings_Veto_Server_ID_Desc">تحتاج إلى معرف المستخدم للعثور على جهازك باستخدام خادم Veto. دوِّنه واحتفظ به في مكان آمن.</string>
     <string name="Settings_Veto_Server_Server_URL">عنوان URL للخادم:</string>
     <string name="Settings_Veto_Server_User_ID">معرف المستخدم:</string>
-    <string name="server_version_error_low_version">مطلوب إصدار الخادم {MIN} على الأقل، ولكن الخادم المحدد لديه إصدار {CURRENT}. تابع على مسؤوليتك الخاصة.</string>
-    <string name="Settings_VetoServer_AddAccount">خادم Veto: تسجيل الدخول/التسجيل</string>
-    <string name="Settings_VetoServer_use_default_server">استخدم خادم Neubofy العام</string>
     <string name="OpenCellId_privacy">الخصوصية: ضع في اعتبارك أن OpenCelliD يتعرف على برجك الخلوي الحالي وبالتالي موقعك مع كل استعلام API.</string>
     <string name="notify_crypto_update_title">الإجراء مطلوب</string>
     <string name="OpenCellId_open_website">فتح موقع OpenCelliD</string>
@@ -83,19 +61,11 @@
     <string name="cmd_help_message_start">أوامر Veto:</string>
     <string name="OpenCellId_help">يمكن لـ Veto استخدام خدمة OpenCelliD للحصول على موقع تقريبي بناءً على البرج الخلوي الذي يتصل به الجهاز. مطلوب اتصال بالإنترنت لكل استعلام عن الموقع. تحتاج أيضًا إلى إنشاء حساب في OpenCelliD والحصول على Token للوصول إلى API الخاص بك.</string>
     <string name="Enable">تفعيل</string>
-    <string name="Settings_VetoServer_Server_Url">رابط الخادم</string>
     <string name="request_failed_title">فشل الاتصال بالشبكة</string>
     <string name="request_failed_exception">استثناء</string>
     <string name="request_failed_status_code">رمز الحالة</string>
     <string name="Settings_VetoConfig">إعدادات Veto</string>
-    <string name="Settings_VetoServer_Delete_Account">مسح الحساب</string>
-    <string name="pw_change_success">تم تغيير كلمة السر</string>
-    <string name="pw_change_empty">يجب أن لا تكون كلمة السر فارغة.</string>
-    <string name="pw_change_wrong_password">كلمة السر الخطأ</string>
-    <string name="pw_change_network_failed">فشل تغيير كلمة السر بسبب خطإٍ في الشبكة.</string>
-    <string name="Settings_VetoServer_Error_id_or_pw_empty">معرّف وكلمة سر Veto يجب أن لاتكون فارغة.</string>
     <string name="cmd_bluetooth_response_on">تم تشغيل البلوتوث.</string>
-    <string name="registration_token">رمز التسجيل</string>
     <string name="export_success">تم التصدير</string>
     <string name="Settings_Import_Success">تم الاستيراد</string>
     <string name="export_failed">فشل التصدير</string>
@@ -111,14 +81,10 @@
     <string name="cmd_bluetooth_response_off">تم إيقاف البلوتوث.</string>
     <string name="Settings_Veto_Server_Connection_Status">وضع الاتصال:</string>
     <string name="Settings_Veto_Server_Connection_Status_Success">تم بنجاح</string>
-    <string name="registration_token_hint">قد تتطلب الخوادم الخاصة رمز تسجيل سري. دع الخانة فارغة إن كان الخادم عامًّا.</string>
-    <string name="server_registration_token_error">فشل طلب الشبكة مع رمز حالة HTTP 401. قد يحدث هذا إن كان الخادم يتطلب رمز تسجيل سري والرمز الذي وفرته خطأ.</string>
     <string name="WhiteList_no_contact_picker">فشل العثور على تطبيق إختيار جهات الإتصال!</string>
     <string name="allowlist_add_phone_number">أضف رقم هاتف</string>
     <string name="allowlist_phone_number">رقم هاتف</string>
     <string name="OpenCellId_tower_collector_download">حمل \"Tower Collector\"</string>
-    <string name="server_login_attempts_text">حاول أحدهم تسجيل الدخول لحساب خادم Veto الخاص بك \"%s\". بسبب تعدّد محاولات تسجيل الدخول الفاشلة، سيتم إغلاق حسابك لعشر دقائق.</string>
-    <string name="server_login_attempts_title">فشل تسجيل الدخول لخادم Veto</string>
     <string name="appearance_theme">سمة</string>
     <string name="appearance_theme_choose">إختر سمة</string>
     <string name="appearance_theme_follow_system">إتبع إعداد النظام</string>
@@ -129,9 +95,6 @@
     <string name="request_failed_response_body">هيئة الإستجابة</string>
     <string name="bottom_nav_transports">قنوات المواصلة</string>
     <string name="Settings_no_ringtone_picker">لا وجود لمختار نغمات الهاتف!</string>
-    <string name="Settings_VetoServer_Unregister_Success">تم مسح الحساب والبيانات بنجاح!</string>
-    <string name="Settings_VetoServer_Location_Type_Description">المصدر أو المصادر التي يتم رفع بيانات الموقع إليها بانتظام في الخلفية.\nإن لم يتم إختيار أحدها، لن يتم رفع بيانات الموقع بانتظام. (بإمكانك استعمال واجهة الويب للقيام برفع إجباري، ما يتطلب إشعارات دفع مفعلة.)</string>
-    <string name="pw_change_mismatch">كلمات السر غير متطابقة.</string>
     <string name="temporary_allowlist_expired">انتهت صلاحية وصولك المؤقت إلى Veto. لمواصلة استخدام Veto، أرسل الرقم السري مرة أخرى.</string>
     <string name="allowlist_phone_number_name">إسم</string>
     <string name="OpenCellId_tower_collector_info">يمكنك المساهمة إلى OpenCelliD بتجميع ورفع معلومات الأبراج الخلوية. تحتاج تطبيقا خاصا لذلك، مثل \"Tower Collector\".</string>
@@ -146,7 +109,6 @@
     <string name="cmd_delete_response_success">من المفترض أن الجهاز ممحي. إلى اللقاء!</string>
     <string name="cmd_delete_response_failed">فشل محو الجهاز بسبب استثناء.</string>
     <string name="crashed_open_issuetracker">افتح متتبع الشكاوي</string>
-    <string name="server_version_upgrade_required_title">يجب تحديث خادم Veto</string>
     <string name="cmd_gps_response_off">تم تعطيل GPS.</string>
     <string name="cmd_help_description_short">اظهار مساعدة</string>
     <string name="crashed_title">تقرير العطل المفاجئ</string>
@@ -157,12 +119,10 @@
     <string name="crashed_text">تعطل Veto بشك مفاجئ! ادناه السجل:</string>
     <string name="cmd_gps_description_short">تفعيل و تعطيل GPS</string>
     <string name="usage_notification_text">تم تنفيذ الامر \"%s\".</string>
-    <string name="server_version_upgrade_required_text">تستخدم خادم Veto اصدار {CURRENT} ، لكن يتطلب التطبيق بالحد الادنى {MIN}. قد لا تستطيع التحكم بجهازك عن طريق خادم Veto بعد الان. رجاءا تحديث الخادم.</string>
     <string name="cmd_camera_description_long">يلتقط صورة بالكاميرا الأمامية أو الخلفية ويحملها إلى خادم Veto. حاليًا، لا يُدعم سوى التحميل إلى خادم Veto. يمكنك أيضًا إرسال هذا الأمر عبر قنوات نقل أخرى، وسيتم تحميل الصورة إلى خادم Veto (إذا كان هناك حساب).</string>
     <string name="cmd_camera_response_no_veto_server">لا يمكن التقاط صورة: عدم وجود حساب خادم Veto.</string>
     <string name="cmd_delete_response_disabled">لا يمكن المحو: امر المحو غير مفعل في الاعدادات.</string>
     <string name="cmd_delete_description_long">يمحو كل البيانات. لن تستطيع التواصل مع الجهاز بعدها. لتفادي التفعيل عن طريق الخطأ او الخبيث، يتطلب هذا الامر كلمة مرور و يجب تفعيله بشكل صريح في الاعدادات.</string>
-    <string name="Settings_VetoServer_Logout_Text">هل تريد بالفعل تسجيل الخروج من حساب خادم Veto؟</string>
     <string name="cmd_camera_response_success">يقوم الجهاز بالتقاط صورة و سترسل لخادم Veto. يمكنك رؤيتها قريبا هنا: %s</string>
     <string name="cmd_gps_response_on">تم تفعيل GPS.</string>
     <string name="crashed_send_log">ارسال السجل</string>

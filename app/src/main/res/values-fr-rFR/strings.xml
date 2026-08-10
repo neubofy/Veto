@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="ringer_stop_ringing">ARRETER DE SONNER</string>
     <string name="MH_Pin_Accepted">Code PIN accepté !</string>
@@ -22,10 +22,7 @@
     <string name="LockScreen_Backbutton_pressed">LockScreenMessage : Bouton retour pressé.</string>
     <string name="Settings_Ringer_Tone_Description">Sélectionnez une sonnerie pour la commande \"ring\".</string>
     <string name="Settings_Select_Ringtone">Sélectionnez une sonnerie</string>
-    <string name="Settings_VetoServer_Update_Interval_Description">Veto envoi la localisation de l\'appareil toutes les X minutes.</string>
     <string name="accept">Accepter</string>
-    <string name="Settings_VetoServer_Location_Type_Description">La ou les sources à partir desquelles les données de localisation sont envoyées à intervalles réguliers en arrière-plan.
-\nSi aucune n\'est sélectionnée, aucune localisation n\'est envoyée régulièrement. (Vous pouvez toujours utiliser l\'interface web pour forcer un envoi. Cela nécessite les notifications push.)</string>
     <string name="Settings_Settings">Paramètres</string>
     <string name="Pin_Usage">Utilisation du code PIN</string>
     <string name="loading">Chargement…</string>
@@ -34,24 +31,9 @@
     <string name="Cell">Mobile</string>
     <string name="Settings_Import">Importer les paramètres</string>
     <string name="Settings_Export">Exporter les paramètres</string>
-    <string name="Settings_VetoServer_Logout_Button">Se déconnecter</string>
     <string name="Settings_Veto_Server_General">Général</string>
     <string name="Settings_Veto_Server_Server_URL">URL du serveur :</string>
-    <string name="Settings_VetoServer_Change_Password_Button">Changer le mot de passe</string>
     <string name="Settings_Veto_Server_ID_Desc">Vous avec besoin de l\'identifiant utilisateur pour trouver votre appareil avec le serveur Veto. Notez-le et gardez-le en lieu sûr.</string>
-    <string name="Settings_VetoServer_Location_Type_Title">Lieu source</string>
-    <string name="Settings_VetoServer_Alert_DeleteData_Desc">Cela supprimera toutes les données du serveur ! Êtes-vous sûr ?</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Title">Envoyer lorsque la batterie est faible</string>
-    <string name="password_old">Ancien mot de passe</string>
-    <string name="password_new">Nouveau mot de passe</string>
-    <string name="password_new_repeat">Répétez le nouveau mot de passe</string>
-    <string name="server_version">Version du serveur</string>
-    <string name="server_version_error">Erreur lors de l\'obtention de la version du serveur</string>
-    <string name="server_version_error_low_version">La version minimale requise du serveur est {MIN}, mais la version du serveur sélectionné est {CURRENT}. Poursuivre à vos risques et périls.</string>
-    <string name="Settings_VetoServer_Register">S\'inscrire</string>
-    <string name="password">Mot de passe</string>
-    <string name="Settings_VetoServer_Alert_PrivacyPolicy_Title">Politique de confidentialité</string>
-    <string name="registration_token">Jeton d\'enregistrement</string>
     <string name="Whitelist_help">Les contacts figurant dans cette liste sont autorisés à envoyer des commandes Veto par SMS. Les commandes provenant d\'autres personnes seront ignorées.</string>
     <string name="Whitelist_empty">Aucun contact autorisé. Cliquez sur le bouton pour en ajouter !</string>
     <string name="about_source_code">Code source</string>
@@ -64,17 +46,11 @@
     <string name="notify_crypto_update_title">Action requise</string>
     <string name="Settings_Veto_Server_User_ID">Identifiant utilisateur :</string>
     <string name="about_wiki">Wiki</string>
-    <string name="Settings_VetoServer_use_default_server">Utiliser le serveur public</string>
     <string name="copied">Copié</string>
     <string name="Settings_Logs">Journaux</string>
-    <string name="Settings_VetoServer_Update_Interval_Title">Intervalle d’envoi de localisation en arrière-plan</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Description">Envoi la localisation de l\'appareil lorsque le niveau de la batterie est faible.</string>
     <string name="help">Aide</string>
     <string name="Settings_WhiteList">Contacts autorisés</string>
     <string name="pin">Code PIN</string>
-    <string name="Settings_VetoServer_Login">Se connecter</string>
-    <string name="Settings_VetoServer_AddAccount">Serveur Veto : Se connecter</string>
-    <string name="Settings_VetoServer_open_website">Ouvrir le site web du serveur Veto</string>
     <string name="OpenCellId_open_website">Ouvrir le site web de OpenCelliD</string>
     <string name="OpenCellId_test_no_connection">Aucune connection mobile</string>
     <string name="about">À propos</string>
@@ -82,7 +58,6 @@
     <string name="request_failed_title">L\'accès au réseau a échoué</string>
     <string name="request_failed_status_code">Code d\'état</string>
     <string name="request_failed_response_body">Corps de la réponse</string>
-    <string name="registration_token_hint">Les instances privées peuvent nécessiter un jeton secret. Laissez-le vide si l\'instance est publique.</string>
     <string name="Settings_VetoConfig">Général</string>
     <string name="OpenCellId_help">OpenCelliD peut être utilisé par Veto pour obtenir une localisation approximative basée sur l\'antenne-relais connectée à l\'appareil. Une connexion internet est nécessaire pour chaque requête de localisation. De plus, il est obligatoire de créer un compte sur OpenCelliD et d\'obtenir son propre jeton d\'accès API.</string>
     <string name="app_description">Veto (Veto) vous permet de localiser à distance votre appareil. Vous pouvez communiquer avec Veto via SMS, des messageries instantanées, ou en utilisant le serveur Veto. Localisez votre appareil, faites-le sonner, verrouillez-le ou effacez son contenu - le tout à distance.</string>
@@ -92,11 +67,9 @@
 \n
 \nVous pouvez continuer quand même, mais votre compte pourrait ne pas avoir été supprimé du serveur. Si vous continuez, votre compte sera supprimé localement de cet appareil.</string>
     <string name="OpenCellId_test_opencellid">Test de connexion à OpenCelliD</string>
-    <string name="Settings_VetoServer_Info">Avec le serveur Veto, vous pouvez envoyer des commandes via Internet, du serveur vers l\'application. Vous pouvez également visualiser la localisation de l\'appareil sur une carte ou consulter les photos prises par l\'appareil. Pour les instructions sur la manière de configurer votre propre serveur, veuillez consulter le site.</string>
     <string name="OpenCellId_privacy">Confidentialité : gardez à l\'esprit qu\'OpenCelliD enregistre votre antenne-relais actuelle et donc votre emplacement à chaque requête API.</string>
     <string name="Permission_IGNORE_BATTERY_OPTIMIZATION">Cette application est censée fonctionner en arrière-plan. Pour garantir son fonctionnement même lorsque votre appareil est en veille, vous devez désactiver l\'optimisation de la batterie pour cette application.</string>
     <string name="Toast_Empty_VetoCommand">Commande vide non autorisée, utilisation de la valeur par défaut.</string>
-    <string name="Settings_VetoServer_Server_Url">URL du serveur</string>
     <string name="cmd_camera_description_short">Prendre une photo</string>
     <string name="cmd_camera_response_no_veto_server">Impossible de prendre une photo : aucun compte Veto n\'existe.</string>
     <string name="cmd_camera_response_success">L\'appareil prend une photo et l\'enverra au serveur Veto. Vous pourrez bientôt la voir ici : %s</string>
@@ -193,23 +166,13 @@
     <string name="transport_inapp_send_command_command_placeholder">Commande</string>
     <string name="export_success">Exportation réussie</string>
     <string name="Settings_no_ringtone_picker">Sélecteur de sonnerie non trouvé !</string>
-    <string name="Settings_VetoServer_Unregister_Success">Désinscription et suppression des données réussis !</string>
-    <string name="pw_change_empty">Le mot de passe ne peut pas être vide.</string>
-    <string name="pw_change_success">Mot de passe changé</string>
-    <string name="pw_change_mismatch">Le mot de passe et sa vérification ne sont pas identiques.</string>
-    <string name="pw_change_wrong_password">Mot de passe invalide</string>
-    <string name="Settings_VetoServer_Delete_Account">Supprimer le compte</string>
-    <string name="pw_change_network_failed">Changement du mot de passe échoué à cause d\'une erreur réseau.</string>
-    <string name="Settings_VetoServer_Error_id_or_pw_empty">L’ID Veto et le mot de passe ne peuvent pas être vides.</string>
     <string name="log_view_export">Exporter les journaux</string>
     <string name="Settings_Appearance">Apparence</string>
     <string name="appearance_language">Langue</string>
     <string name="usage_notification_text_source">La commande « %1$s » a été exécutée par « %2$s ».</string>
     <string name="Settings_Veto_Server_Connection_Status">État de la connexion :</string>
     <string name="Settings_Veto_Server_Connection_Status_Success">Succès</string>
-    <string name="server_version_upgrade_required_title">Mise à jour du Serveur Veto requise</string>
     <string name="temporary_allowlist_expired">Votre accès temporaire à Veto a expiré. Pour continuer à utiliser Veto, renvoyez le code PIN.</string>
-    <string name="server_version_upgrade_required_text">Le Serveur Veto que vous utilisez est en version {CURRENT}, mais cette application nécessite au moins {VERSION}. Le contrôle de cet appareil via le Serveur Veto risque de ne plus fonctionner. Merci de mettre à jour le serveur.</string>
     <string name="appearance_language_system_default">Valeur du système</string>
     <string name="appearance_language_choose">Choisissez la langue</string>
     <string name="cmd_bluetooth_description_short">Activer et désactiver le Bluetooth</string>
@@ -220,12 +183,6 @@
     <string name="appearance_dynamic_colors">Couleurs dynamiques</string>
     <string name="cmd_delete_response_failed">Impossible de réinitialiser l’appareil à cause d’une erreur.</string>
     <string name="perm_bluetooth_connect_name">Se connecter au Bluetooth</string>
-    <string name="Settings_VetoServer_Check_Interval_Title">Intervalle de vérification de connectivité</string>
-    <string name="Settings_VetoServer_Check_Interval_Description">Veto vérifie la connectivité au Serveur Veto toutes les X heures. Le réglage à 0 désactive la vérification de la connectivité.</string>
-    <string name="Settings_VetoServer_Check_Notify_After_Title">Temps maximum autorisé sans connectivité</string>
-    <string name="Settings_VetoServer_Check_Notify_After_Description">Veto enverra une notification si la dernière connexion réussie au Serveur Veto date d’il y a plus de X heures. Ceci n’a pas d’effet si la vérification de la connectivité est désactivée.</string>
-    <string name="server_connectivity_lost_title">Connexion au Serveur Veto perdue</string>
-    <string name="server_connectivity_lost_text">Le Serveur Veto %1$s ne peut plus être contacté. La dernière connexion réussie était à %2$s.</string>
     <string name="log_view_title">Journaux</string>
     <string name="log_view_clear">Supprimer les journaux</string>
     <string name="log_view_clear_confirm">Voulez-vous vraiment supprimer toutes les entrées des journaux ?</string>
@@ -234,8 +191,6 @@
     <string name="Notification_InApp_Description">Notifications intégrées à l’application</string>
     <string name="usage_notification_pin_text">Le code PIN a été utilisé par le numéro « %s ». Il est recommandé de changer le code PIN.</string>
     <string name="usage_notification_pin_title">Code PIN Veto utilisé</string>
-    <string name="Settings_VetoServer_Logout_Text">Voulez-vous vraiment vous déconnecter de cotre compte Serveur Veto ?</string>
-    <string name="server_registration_token_error">Requête réseau échouée avec le code HTTP 401. Cela peut arriver si le serveur nécessite un jeton d’enregistrement et que le jeton que vous avez fourni est incorrect.</string>
     <string name="appearance_theme_follow_system">Suivre le thème système</string>
     <string name="appearance_theme_light">Clair</string>
     <string name="appearance_theme_dark">Sombre</string>
@@ -243,20 +198,12 @@
     <string name="appearance_theme_choose">Choisir le thème</string>
     <string name="pin_match_command_keyword">Le code PIN doit être différent des commandes !</string>
     <string name="cmd_delete_response_dry_run">Essai réussi, on passe la vraie réinitialisation de l’appareil.</string>
-    <string name="server_login_attempts_title">Tentatives échouées de connexion au Serveur Veto</string>
-    <string name="server_login_attempts_text">Quelqu’un a essayé de se connecter à votre compte Serveur Veto « %s ». À cause de plusieurs mauvais mots de passe, le compte est maintenant bloqué pour 10 minutes.</string>
     <string name="cmd_bluetooth_response_off">Bluetooth désactivé.</string>
     <string name="Notification_InApp">Canal d\'envoi intégré à l’application</string>
     <string name="Settings_Pin_Not_Backed_Up">Attention : le code PIN n\'est pas inclus dans la sauvegarde de l\'application.</string>
-    <string name="Settings_VetoServer_Push_Description">Envoyer des commandes depuis le serveur Veto vers votre appareil nécessite une application publiant grâce à UnifiedPush.</string>
     <string name="allowlist_reset_title">Réinitialisation des contacts autorisés</string>
     <string name="allowlist_reset_text">A cause d\'un plantage, les contacts autorisés ont été réinitialisés. Merci de les configurer à nouveau.</string>
     <string name="update_pin_hash_change_text">Le code PIN de Veto a été réinitialisé suite à une mise à jour de l\'appli. Pour continuer à utiliser un code PIN, merci de l\'enregistrer à nouveau.</string>
-    <string name="Settings_VetoServer_Push_Distributor">Publication : %s</string>
-    <string name="Settings_VetoServer_Push_Url">URL de publication : %s</string>
-    <string name="Settings_VetoServer_Push_Register">S\'enregistrer</string>
-    <string name="Settings_VetoServer_Push_Register_Again">S\'enregistrer à nouveau</string>
-    <string name="server_veto_id_hint">L\'identifiant (ID) Veto permet d\'identifier votre compte sur le serveur Veto. Laisser le champ vide pour permettre au serveur de générer un ID. L\'administrateur du serveur peut voir l\'ID Veto.</string>
     <string name="cmd_ringermode_description_short">Changer le mode de sonnerie</string>
     <string name="cmd_ringermode_response_empty">Le mode de sonnerie actuelle est \"%s\".</string>
     <string name="cmd_ringermode_response">Le mode de sonnerie a été modifié de \"%1$s\" (ancien) vers \"%2$s\" (nouveau).</string>
@@ -264,17 +211,9 @@
     <string name="Settings_Change_Pin">Modifier le code PIN</string>
     <string name="cmd_locate_response_beacondb_failed">Erreur de récupération de la localisation depuis BeaconDB. Cela peut arriver si l\'antenne mobile n\'est pas dans la base de données.\n\n%s</string>
     <string name="cmd_ringermode_description_long">A noter que \"Silencieux\" active aussi le mode Ne Pas Déranger. C\'est un comportement normal, défini par Android.</string>
-    <string name="server_connectivity_check_not_enabled_title">Activer la vérification de la connectivité du serveur</string>
-    <string name="server_connectivity_check_not_enabled_text">Veto peut vérifier régulièrement si le serveur Veto est toujours joignable. Pour des raisons de clé privée, cela est désactivé par défaut. Pour des raisons de disponibilité, nous recommandons de l\'activer.</string>
     <string name="setup_recommendations_title">Recommandations</string>
-    <string name="Settings_VetoServer_Push_Open_Help">Plus d\'informations sur les publications</string>
-    <string name="server_password_hint">Choisissez un mot de passe qui ne puisse pas être deviné mais dont vous pourrez vous rappeler si vous perdez votre téléphone. Le mot de passe donne accès au lancement de commande à distance sur votre appareil. L\'administrateur du serveur ne peut pas accéder à votre mot de passe ou le réinitialiser.</string>
     <string name="allowlist_invalid_number">Ce numéro de téléphone est invalide !</string>
     <string name="pin_min_length">Le code PIN doit contenir au moins 8 caractères. Il est recommandé d\'en avoir 16 ou plus.</string>
-    <string name="password_min_length">Le mot de passe doit faire au moins 8 caractères. Il est recommandé d\'en avoir 16 ou plus.</string>
-    <string name="Settings_VetoServer_Push_Info_Sunup">L\'application de distribution UnifiedPush recommandée est Sunup. Sunup se paramètre facilement et utilise les serveurs de notification de Mozilla.</string>
-    <string name="Settings_VetoServer_Push_Install_Sunup">Installer Sunup</string>
-    <string name="Settings_VetoServer_Update_Interval_Description_Constraint">Des valeurs inférieures à 15 minutes ne sont pas recommandées.</string>
     <string name="missing_push_title">UnifiedPush non présent</string>
     <string name="missing_push_description">Sans une application de distribution UnifiedPush, vous ne pouvez pas recevoir de commande depuis Veto Server.</string>
     <string name="cmd_flash_description_short">Allumer le flash de la caméra</string>
@@ -286,10 +225,6 @@
     <string name="dont_show_again">Ne plus afficher</string>
     <string name="delete_pw_warning_no_backup">Avertissement : le mot de passe n\'est pas inclus dans la sauvegarde de l\'application.</string>
     <string name="delete_pw_warning_empty">Avertissement : la réinitialisation ne fonctionnera pas, car le mot de passe de réinitialisation est vide.</string>
-    <string name="password_set">Définir le mot de passe</string>
-    <string name="password_change">Modifier le mot de passe</string>
-    <string name="password_enter">Entrer le mot de passe</string>
-    <string name="password_match_command_keyword">Le mot de passe ne peut pas être identique à une des commandes !</string>
     <string name="veto_edge_info_message">Ceci est la variante \"expérimental\" de Veto. Ici, le mot-clé par défaut pour les commandes est \"vetoe\" (au lieu de \"veto\"). Par exemple, pour envoyer la commande de localisation, utilisez \" vetoe locate\". Cela permet d\'avoir à la fois la variante expérimentale et de production sur le même appareil, et de cibler les commandes pour l\'une des deux.</string>
     <string name="Fused">Fusionné</string>
     <string name="cmd_bluetooth_response_is_on">Le Bluetooth est activé.</string>

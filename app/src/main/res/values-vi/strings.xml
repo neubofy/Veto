@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="cmd_camera_response_success">Thiết bị đang chụp ảnh và sẽ gửi nó đến máy chủ Veto. Bạn có thể xem nó ở đây sớm thôi: %s</string>
     <string name="cmd_delete_description_short">Đặt lại thiết bị về cài đặt gốc</string>
@@ -110,27 +110,6 @@
     <string name="Settings_Veto_Server_ID_Desc">Bạn cần ID người dùng để tìm thiết bị của bạn với máy chủ Veto. Ghi lại và giữ an toàn.</string>
     <string name="Settings_Veto_Server_Connection_Status">Trạng thái kết nối:</string>
     <string name="Settings_Veto_Server_Connection_Status_Success">Thành công</string>
-    <string name="Settings_VetoServer_Alert_DeleteData_Desc">Điều này sẽ xóa tất cả dữ liệu từ máy chủ! Bạn có chắc không?</string>
-    <string name="Settings_VetoServer_Unregister_Success">Hủy đăng ký và xóa dữ liệu thành công!</string>
-    <string name="Settings_VetoServer_Update_Interval_Description">Veto tải lên vị trí của thiết bị mỗi X phút.</string>
-    <string name="Settings_VetoServer_Location_Type_Title">Nguồn vị trí</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Title">Tải lên khi pin yếu</string>
-    <string name="password_old">Mật khẩu cũ</string>
-    <string name="password_new">Mật khẩu mới</string>
-    <string name="password_new_repeat">Nhập lại mật khẩu mới</string>
-    <string name="pw_change_wrong_password">Mật khẩu sai</string>
-    <string name="server_login_attempts_title">Các lần đăng nhập không thành công vào máy chủ Veto</string>
-    <string name="server_version_upgrade_required_title">Cần nâng cấp máy chủ Veto</string>
-    <string name="server_login_attempts_text">Ai đó đã cố gắng đăng nhập vào tài khoản Veto Server của bạn \"%s\". Do nhiều lần nhập sai mật khẩu, tài khoản hiện đã bị khóa trong 10 phút.</string>
-    <string name="server_version">Phiên bản máy chủ</string>
-    <string name="server_version_error">Lỗi khi lấy phiên bản máy chủ</string>
-    <string name="server_version_error_low_version">Cần ít nhất phiên bản máy chủ {MIN}, nhưng máy chủ đã chọn có phiên bản {CURRENT}. Tiếp tục với rủi ro của riêng bạn.</string>
-    <string name="Settings_VetoServer_AddAccount">Máy chủ Veto: Đăng nhập/Đăng ký</string>
-    <string name="Settings_VetoServer_Info">Với máy chủ Veto, bạn có thể gửi lệnh qua internet, từ máy chủ đến ứng dụng. Bạn cũng có thể xem vị trí thiết bị trên bản đồ hoặc xem hình ảnh được chụp bởi thiết bị. Để biết hướng dẫn tự lưu trữ, xem trang web.</string>
-    <string name="Settings_VetoServer_use_default_server">Sử dụng máy chủ công cộng của Neubofy</string>
-    <string name="password">Mật khẩu</string>
-    <string name="registration_token_hint">Các phiên bản riêng tư có thể yêu cầu một mã bí mật. Để trống nếu phiên bản là công khai.</string>
-    <string name="server_registration_token_error">Yêu cầu mạng thất bại với HTTP 401. Điều này có thể xảy ra nếu máy chủ yêu cầu một mã đăng ký và mã bạn cung cấp là sai.</string>
     <string name="Whitelist_empty">Không có liên hệ được phép. Nhấn nút để thêm một vài liên hệ!</string>
     <string name="WhiteList_Add_Contact">Thêm liên hệ</string>
     <string name="WhiteList_no_contact_picker">Không tìm thấy ứng dụng chọn liên hệ!</string>
@@ -177,23 +156,8 @@
     <string name="transport_sms_description_auth">Chỉ những số điện thoại có trong danh sách cho phép mới có thể gửi lệnh. Để gửi lệnh từ một số điện thoại không có trong danh sách cho phép, bạn phải bao gồm mã PIN: \"%s mypin help\". Để tiện lợi, để bạn không phải nhập lại mã PIN mỗi lần, số điện thoại mới này sẽ được thêm vào danh sách cho phép tạm thời trong 10 phút tới.</string>
     <string name="transport_veto_server_description">Máy chủ Veto cung cấp giao diện web để điều khiển thiết bị của bạn, xem vị trí của nó và xem các hình ảnh mà nó gửi. Bạn có thể tự lưu trữ Máy chủ Veto hoặc sử dụng phiên bản được cung cấp. Dữ liệu được lưu trữ mã hóa trên máy chủ, được bảo vệ bằng mật khẩu của bạn.</string>
     <string name="Settings_Export">Xuất cài đặt</string>
-    <string name="Settings_VetoServer_Check_Interval_Title">Khoảng thời gian kiểm tra kết nối</string>
-    <string name="Settings_VetoServer_Check_Interval_Description">Veto kiểm tra kết nối đến máy chủ Veto mỗi X giờ. Đặt giá trị này thành 0 để vô hiệu hóa kiểm tra kết nối.</string>
-    <string name="Settings_VetoServer_Check_Notify_After_Title">Thời gian tối đa cho phép không có kết nối</string>
-    <string name="pw_change_mismatch">Mật khẩu nhập lại không khớp.</string>
-    <string name="Settings_VetoServer_Check_Notify_After_Description">Veto sẽ thông báo cho bạn nếu lần kết nối thành công cuối cùng đến máy chủ Veto đã hơn X giờ. Điều này không có tác dụng nếu kiểm tra kết nối bị vô hiệu hóa.</string>
-    <string name="pw_change_network_failed">Thay đổi mật khẩu không thành công do lỗi mạng.</string>
-    <string name="server_version_upgrade_required_text">Máy chủ Veto bạn đang sử dụng có phiên bản {CURRENT}, nhưng ứng dụng này yêu cầu ít nhất {MIN}. Việc điều khiển thiết bị của bạn qua máy chủ Veto có thể không còn hoạt động nữa. Vui lòng nâng cấp máy chủ của bạn.</string>
-    <string name="Settings_VetoServer_open_website">Mở trang web máy chủ Veto</string>
-    <string name="server_connectivity_lost_title">Mất kết nối với máy chủ Veto</string>
-    <string name="Settings_VetoServer_Server_Url">URL máy chủ</string>
-    <string name="Settings_VetoServer_Login">Đăng nhập</string>
-    <string name="Settings_VetoServer_Register">Đăng kí</string>
-    <string name="Settings_VetoServer_Alert_PrivacyPolicy_Title">Chính sách bảo mật</string>
-    <string name="Settings_VetoServer_Error_id_or_pw_empty">ID Veto và mật khẩu không được để trống.</string>
     <string name="Toast_Duplicate_contact">Liên hệ này đã tồn tại.</string>
     <string name="OpenCellId_help">Veto có thể sử dụng dịch vụ OpenCelliD để lấy vị trí gần đúng dựa trên trạm phát sóng di động mà thiết bị đang kết nối. Cần có kết nối internet cho mỗi truy vấn vị trí. Bạn cũng cần tạo một tài khoản tại OpenCelliD và lấy mã truy cập API của riêng bạn.</string>
-    <string name="registration_token">Mã đăng ký</string>
     <string name="Whitelist_help">Các liên hệ trong danh sách này được phép gửi lệnh Veto qua SMS. Lệnh từ những người khác sẽ bị bỏ qua.</string>
     <string name="OpenCellId_privacy">Quyền riêng tư: hãy nhớ rằng OpenCelliD sẽ biết trạm phát sóng di động hiện tại của bạn và do đó là vị trí của bạn với mỗi truy vấn API.</string>
     <string name="OpenCellId_tower_collector_info">Bạn có thể đóng góp cho OpenCelliD bằng cách thu thập và tải lên thông tin trạm phát sóng di động. Bạn cần một ứng dụng chuyên dụng cho việc này. Một ứng dụng như vậy là Tower Collector.</string>
@@ -226,13 +190,4 @@
     <string name="Toast_Empty_VetoCommand">Lệnh trống không được phép, sử dụng mặc định.</string>
     <string name="Settings_Lockscreenmessage_Description">Tin nhắn màn hình khóa:\nKhi khóa thiết bị, tin nhắn này sẽ xuất hiện trên màn hình khóa.</string>
     <string name="Settings_Veto_Server_General">Chung</string>
-    <string name="Settings_VetoServer_Change_Password_Button">Đổi mật khẩu</string>
-    <string name="Settings_VetoServer_Logout_Button">Đăng xuất</string>
-    <string name="Settings_VetoServer_Logout_Text">Bạn có thực sự muốn đăng xuất khỏi tài khoản máy chủ Veto của mình không?</string>
-    <string name="Settings_VetoServer_Delete_Account">Xóa tài khoản</string>
-    <string name="Settings_VetoServer_Update_Interval_Title">Khoảng thời gian tải lên vị trí nền</string>
-    <string name="Settings_VetoServer_Location_Type_Description">Nguồn dữ liệu vị trí được tải lên định kỳ trong nền.\nNếu không có nguồn nào được chọn, không có vị trí nào được tải lên định kỳ. (Bạn vẫn có thể sử dụng giao diện web để ép buộc tải lên. Điều này yêu cầu có thông báo.)</string>
-    <string name="Settings_VetoServer_LOW_BAT_Upload_Description">Tải lên vị trí của thiết bị này khi mức pin thấp. Điều này yêu cầu quyền truy cập thông báo.</string>
-    <string name="pw_change_success">Mật khẩu đã được thay đổi</string>
-    <string name="pw_change_empty">Mật khẩu không được để trống.</string>
-</resources>
+    </resources>
