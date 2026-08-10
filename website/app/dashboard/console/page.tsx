@@ -37,10 +37,14 @@ export default function ConsolePage() {
         
         // Show native browser notification
         if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification('Veto Alert', {
-            body: `Response received for command: ${baseCmd}`,
+          const notification = new Notification('Veto Alert', {
+            body: `Response received for command: ${baseCmd}. Click here to see response.`,
             icon: '/favicon.ico'
           });
+          notification.onclick = () => {
+            window.focus();
+            setSelectedOutput(baseCmd);
+          };
         }
         
         setTimeout(() => setFeedback(null), 5000);
@@ -65,6 +69,11 @@ export default function ConsolePage() {
         unsubHistory = onSnapshot(historyRef, (snapshot: any) => {
           const newHistory: any[] = [];
           snapshot.forEach((d: any) => { newHistory.push({ id: d.id, ...d.data() }); });
+          newHistory.sort((a, b) => {
+            const timeA = new Date(a.timestamp).getTime();
+            const timeB = new Date(b.timestamp).getTime();
+            return timeB - timeA;
+          });
           setHistory(newHistory);
         });
 
@@ -199,7 +208,6 @@ export default function ConsolePage() {
       <div className="glass-panel" style={{ padding: '1.5rem', border: '1px solid #30363d', backgroundColor: '#161b22' }}>
         <h2 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '1rem', color: '#f0f6fc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>Recent Execution Logs</span>
-          <span style={{ fontSize: '0.75rem', color: '#8b949e', fontWeight: 'normal' }}>Showing last 50 commands</span>
         </h2>
 
         {history.length === 0 ? (

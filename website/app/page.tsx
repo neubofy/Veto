@@ -259,7 +259,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Alarm</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Bypasses DND &amp; silent mode, maxes out alarm stream volume (overriding the volume down button), and loops a high-decibel alert. We suggest using a siren ringtone.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [long]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
+                Bypasses DND &amp; silent mode, maxes out alarm stream volume (overriding the volume down button), and loops a high-decibel alert. We suggest using a siren ringtone.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [seconds]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
               </p>
             </div>
 
@@ -289,7 +289,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Records high-quality AAC ambient audio from microphone in background and uploads to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto audio</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
+                Records high-quality AAC ambient audio from microphone in background and uploads to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto audio [duration_secs]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
               </p>
             </div>
 
@@ -301,7 +301,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Records background video from front or back camera and backs up to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto video [front | back]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>, <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
+                Records background video from front or back camera and backs up to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto video [front | back] [flash]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>, <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
               </p>
             </div>
 
