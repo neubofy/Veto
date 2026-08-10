@@ -44,12 +44,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
                 
+            <ImageView
+                android:id="@+id/networkIcon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_cloud"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp"
+                app:tint="#00FF00"/>
+                
             <TextView
                 android:id="@+id/radarStatusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
-                android:text="Detecting unauthorized access..."
+                android:text="Connecting to Veto Mesh Network..."
                 android:textColor="?attr/colorError"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -68,13 +78,33 @@
         <TextView
             android:id="@+id/textViewTheftContact"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="16dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="?attr/colorPrimary"
             android:textAlignment="center"/>
+
+        <!-- Terminal Logs (Shown in Confirmed Mode) -->
+        <ScrollView
+            android:id="@+id/terminalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#44000000"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp">
+            
+            <TextView
+                android:id="@+id/terminalLogText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#00FF00"
+                android:typeface="monospace"
+                android:textSize="12sp"
+                android:lineSpacingExtra="4dp"/>
+        </ScrollView>
 
         <Button
             android:id="@+id/buttonUnlock"
