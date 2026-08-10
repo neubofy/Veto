@@ -6,8 +6,8 @@ It provides you with the ultimate toolkit to locate, control, and recover your l
 
 ## Features
 - **Real-time location tracking** powered by Firebase and Cloudflare.
-- **Advanced Theft Mode:** Automatically takes photos and blares a max-volume alarm.
-- **SMS Fallback Control:** Remotely trigger actions without an internet connection.
+- **Advanced Theft Mode:** Uniquely designed for maximum deterrence and recovery. When triggered (even offline via SMS), it automatically bypasses Do Not Disturb to blare a max-volume siren, activates a mesh-network-style Radar UI on the device, toggles the flashlight, and begins silently capturing background photos and audio to secure your data.
+- **Offline SMS Control:** Remotely trigger actions without an internet connection using secure, offline SMS commands from trusted emergency contacts.
 - **Self-Hosted Ready:** Easily spin up your own Vercel dashboard and Firebase instance to retain 100% control over your data.
 
 ## License

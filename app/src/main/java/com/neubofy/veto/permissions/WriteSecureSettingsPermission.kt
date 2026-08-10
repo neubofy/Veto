@@ -8,7 +8,7 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.UserHandle
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
+import com.neubofy.veto.utils.WebUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.neubofy.veto.R
 
@@ -40,12 +40,8 @@ class WriteSecureSettingsPermission : Permission() {
         }.show()
     }
 
-    private fun requestManually(activity: Activity) {
-        val intent = Intent(
-            Intent.ACTION_VIEW,
-            "https://veto-foss.org/docs/veto-android/granting-secure-settings-access".toUri()
-        )
-        activity.startActivity(intent)
+    private fun requestManually(context: Context) {
+        WebUtils.openCustomTab(context, "https://veto.neubofy.in/#secure-settings")
     }
 
     private fun getUserId(activity: Activity): Int {

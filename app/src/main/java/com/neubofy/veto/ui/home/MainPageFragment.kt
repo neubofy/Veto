@@ -9,10 +9,8 @@ import android.widget.TextView
 import com.google.android.material.card.MaterialCardView
 import com.neubofy.veto.R
 import com.neubofy.veto.ui.TaggedFragment
-import com.neubofy.veto.ui.settings.AllowlistActivity
 import com.neubofy.veto.ui.settings.AccountActivity
-import androidx.browser.customtabs.CustomTabsIntent
-import android.net.Uri
+import com.neubofy.veto.utils.WebUtils
 class MainPageFragment : TaggedFragment() {
 
     override fun getStaticTag() = "MainPageFragment"
@@ -103,9 +101,7 @@ class MainPageFragment : TaggedFragment() {
         }
 
         view.findViewById<MaterialCardView>(R.id.card_dashboard).setOnClickListener {
-            val url = "https://veto.neubofy.in/dashboard"
-            val customTabsIntent = CustomTabsIntent.Builder().build()
-            customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
+            WebUtils.openCustomTab(requireContext(), "https://veto.neubofy.in/dashboard")
         }
 
         view.findViewById<MaterialCardView>(R.id.card_permission_manager).setOnClickListener {

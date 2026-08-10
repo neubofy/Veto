@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.neubofy.veto.R
 import com.neubofy.veto.transports.Transport
 import com.neubofy.veto.ui.setupPermissionsList
+import com.neubofy.veto.utils.WebUtils
 
 
 class TransportListViewHolder(
@@ -41,8 +42,7 @@ class TransportListViewHolder(
                 .setMessage(fullDescription)
                 .setPositiveButton(android.R.string.ok, null)
                 .setNeutralButton("Read on Website") { _, _ ->
-                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://veto.neubofy.in/#transports"))
-                    context.startActivity(intent)
+                    WebUtils.openCustomTab(context, "https://veto.neubofy.in/#transports")
                 }
                 .show()
         }

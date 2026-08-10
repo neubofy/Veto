@@ -41,12 +41,13 @@ Veto is built on zero-trust cryptography and strict data sovereignty principles,
 
 ## Theft Mode Details
 
-The `veto theft` command is designed for critical situations where a device is known to be compromised. When invoked, it:
-1. Gathers and transmits precise GPS location data.
-2. Overrides device audio settings (disabling Do Not Disturb and silent modes).
-3. Maxes out the system alarm volume.
-4. Activates a persistent, high-decibel siren alarm to draw attention and deter the thief.
-5. Enables Bluetooth (for potential proximity tracking).
+The `veto theft` command is the ultimate, unique security macro designed for critical situations. What makes it completely unique compared to standard device managers is its aggressive, multi-layered approach to deterrence and recovery:
+1. **Unstoppable Siren**: Instantly overrides all system audio settings, bypasses Do Not Disturb and silent modes, maxes out the alarm volume, and blares a persistent high-decibel siren.
+2. **Visual Deterrence & Fake UI**: Forces the device screen on and locks it into a "RadarScanView" that simulates connecting to a mesh network, while showing fake and real terminal logs to intimidate the thief and obscure system access.
+3. **Hardware Activation**: Silently enables Bluetooth (for proximity tracking), turns on the flashlight to draw visual attention, and powers on location hardware.
+4. **Data Capture**: Gathers and transmits precise GPS location data, while silently capturing background photos and ambient audio, immediately syncing them to your secure cloud storage.
+5. **Offline Capability**: The entire sequence can be triggered offline via SMS from a trusted emergency contact, ensuring your device reacts even if the thief disables cellular data or Wi-Fi.
+
 
 This requires the app to be granted a series of high-level permissions during initial setup, including Device Admin, Location, Notification Access, and Audio modification rights, to ensure these actions can be reliably executed regardless of the device's current state.
 
