@@ -152,9 +152,9 @@ export default function LandingPage() {
 
             <div className="glass-panel" style={{ borderRadius: '16px', padding: '2rem' }}>
               <div style={{ marginBottom: '1.25rem', color: '#58a6ff' }}><Lock size={48} /></div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Unbypassable Security</h3>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Advanced Theft Mode</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                Remote locking completely disables biometrics. The Ring mode automatically triggers the lock command, playing a continuous, unbypassable custom siren with device vibration. It includes smart speaker health management, automatically resting and resuming until unlocked.
+                Uniquely designed for maximum deterrence. The `theft` command instantly bypasses Do Not Disturb to blare a max-volume siren, activates a mesh-network Radar UI to intimidate the thief, toggles the flashlight, and begins silently capturing background photos and audio to secure your data.
               </p>
             </div>
 

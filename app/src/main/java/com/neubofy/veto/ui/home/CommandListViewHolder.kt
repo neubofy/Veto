@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.neubofy.veto.R
 import com.neubofy.veto.commands.Command
 import com.neubofy.veto.ui.setupPermissionsList
+import com.neubofy.veto.utils.WebUtils
 
 
 class CommandListViewHolder(
@@ -49,8 +50,7 @@ class CommandListViewHolder(
                 .setMessage(if (item.longDescription != null) context.getString(item.longDescription!!) else context.getString(item.shortDescription))
                 .setPositiveButton(android.R.string.ok, null)
                 .setNeutralButton("Read on Website") { _, _ ->
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://veto.neubofy.in/#cmd-${item.keyword}"))
-                    activity.startActivity(intent)
+                    WebUtils.openCustomTab(context, "https://veto.neubofy.in/#cmd-${item.keyword}")
                 }
                 .show()
         }

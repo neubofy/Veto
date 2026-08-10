@@ -45,13 +45,13 @@ object Notifications {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
 
-        customizeBuilder(builder)
-
         val intent = Intent(context, cls)
         val pendingIntent =
             PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         builder.setAutoCancel(true)
         builder.setContentIntent(pendingIntent)
+
+        customizeBuilder(builder)
 
         val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityCompat.checkSelfPermission(

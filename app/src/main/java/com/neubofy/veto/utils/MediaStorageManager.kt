@@ -48,8 +48,8 @@ object MediaStorageManager {
     }
 
     fun verifyPreconditions(context: Context, type: String): String? {
-        val settings = SettingsRepository.getInstance(context)
-        if (!settings.serverAccountExists()) {
+        val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+        if (currentUser == null) {
             return "Command failed: Web Dashboard pairing required. Please link device in Dashboard."
         }
 

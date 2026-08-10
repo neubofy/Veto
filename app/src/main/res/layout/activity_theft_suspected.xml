@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_background"
+    tools:context=".ui.TheftSuspectedActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_security"
+            app:tint="?attr/colorPrimary"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VETO: DEVICE LOCKED"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="?attr/colorPrimary"/>
+
+        <!-- Radar Animation -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
+            
+            <com.neubofy.veto.ui.RadarScanView
+                android:id="@+id/radarScanView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+                
+            <ImageView
+                android:id="@+id/networkIcon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_cloud"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp"
+                app:tint="#00FF00"/>
+                
+            <TextView
+                android:id="@+id/radarStatusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:text="Connecting to Veto Mesh Network..."
+                android:textColor="?attr/colorError"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/textViewLockScreenMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This device is locked."
+            android:padding="16dp"
+            android:textSize="18sp"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:id="@+id/textViewTheftContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"
+            android:textAlignment="center"/>
+
+        <!-- Terminal Logs (Shown in Confirmed Mode) -->
+        <ScrollView
+            android:id="@+id/terminalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#44000000"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp">
+            
+            <TextView
+                android:id="@+id/terminalLogText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#00FF00"
+                android:typeface="monospace"
+                android:textSize="12sp"
+                android:lineSpacingExtra="4dp"/>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/buttonUnlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="UNLOCK DEVICE"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="@color/md_theme_onPrimary"
+            android:layout_marginBottom="32dp"/>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

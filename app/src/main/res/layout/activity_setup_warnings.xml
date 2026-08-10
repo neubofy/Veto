@@ -35,34 +35,6 @@
             android:layout_margin="@dimen/margin_normal"
             android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_normal"
-                app:cardBackgroundColor="#40FFFFFF"
-                
-                
-                app:strokeWidth="1dp"
-                app:strokeColor="#60FFFFFF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/margin_normal">
-
-                    <TextView
-                        style="@style/LCLD.Text.SectionTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_small"
-                        android:text="@string/setup_recommendations_title" />
-
-                    <include
-                        android:id="@+id/connectivity"
-                        layout="@layout/warning_connectivity_check" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -81,7 +53,7 @@
 
                     <TextView
                         android:id="@+id/permissions_required_title"
-                        style="@style/LCLD.Text.SectionTitle"
+                        style="@style/Veto.Text.SectionTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/missing_permissions_title" />

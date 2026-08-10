@@ -10,14 +10,14 @@
 
     <TextView
         android:id="@+id/log_level_and_tag"
-        style="@style/LCLD.Text.Log.Title"
+        style="@style/Veto.Text.Log.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="WARN - VetoServerApiRepository" />
 
     <TextView
         android:id="@+id/log_msg"
-        style="@style/LCLD.Text.Log.Message"
+        style="@style/Veto.Text.Log.Message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -25,7 +25,7 @@
 
     <TextView
         android:id="@+id/log_time"
-        style="@style/LCLD.Text.Log.Date"
+        style="@style/Veto.Text.Log.Date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"

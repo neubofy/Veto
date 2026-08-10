@@ -9,9 +9,8 @@ import android.widget.TextView
 import com.google.android.material.card.MaterialCardView
 import com.neubofy.veto.R
 import com.neubofy.veto.ui.TaggedFragment
-import com.neubofy.veto.ui.settings.AllowlistActivity
 import com.neubofy.veto.ui.settings.AccountActivity
-
+import com.neubofy.veto.utils.WebUtils
 class MainPageFragment : TaggedFragment() {
 
     override fun getStaticTag() = "MainPageFragment"
@@ -94,19 +93,15 @@ class MainPageFragment : TaggedFragment() {
             startActivity(Intent(requireContext(), com.neubofy.veto.ui.settings.CommandsActivity::class.java))
         }
 
-        view.findViewById<MaterialCardView>(R.id.card_auto_theft).setOnClickListener {
-            android.widget.Toast.makeText(requireContext(), "Coming Soon", android.widget.Toast.LENGTH_SHORT).show()
-        }
-
-
-
-
-
         view.findViewById<MaterialCardView>(R.id.card_transport_channels).setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, TransportListFragment())
                 .addToBackStack(null)
                 .commit()
+        }
+
+        view.findViewById<MaterialCardView>(R.id.card_dashboard).setOnClickListener {
+            WebUtils.openCustomTab(requireContext(), "https://veto.neubofy.in/dashboard")
         }
 
         view.findViewById<MaterialCardView>(R.id.card_permission_manager).setOnClickListener {

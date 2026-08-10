@@ -34,6 +34,15 @@ export default function ConsolePage() {
         setIsCommandPending(false);
         setActiveCmd(null);
         setFeedback({ type: 'success', text: 'Device response received!' });
+        
+        // Show native browser notification
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Veto Alert', {
+            body: `Response received for command: ${baseCmd}`,
+            icon: '/favicon.ico'
+          });
+        }
+        
         setTimeout(() => setFeedback(null), 5000);
       }
     }
@@ -41,6 +50,11 @@ export default function ConsolePage() {
 
   // Real-time Firebase listeners
   useEffect(() => {
+    // Request notification permissions
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+
     let unsubHistory = () => {};
 
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser: User | null) => {

@@ -30,18 +30,18 @@
         <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
         
         <!-- Custom Card Style -->
-        <item name="materialCardViewStyle">@style/Widget.LCLD.GlassCard</item>
+        <item name="materialCardViewStyle">@style/Widget.Veto.GlassCard</item>
     </style>
 
-    <style name="Widget.LCLD.GlassCard" parent="Widget.Material3.CardView.Elevated">
+    <style name="Widget.Veto.GlassCard" parent="Widget.Material3.CardView.Elevated">
         <item name="cardBackgroundColor">@color/glass_white</item>
         <item name="cardElevation">0dp</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.LCLD.GlassCard</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Veto.GlassCard</item>
         <item name="strokeColor">@color/glass_stroke</item>
         <item name="strokeWidth">1dp</item>
     </style>
 
-    <style name="ShapeAppearance.LCLD.GlassCard" parent="ShapeAppearance.Material3.MediumComponent">
+    <style name="ShapeAppearance.Veto.GlassCard" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerSize">20dp</item>
     </style>
 </resources>

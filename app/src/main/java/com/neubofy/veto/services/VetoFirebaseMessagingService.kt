@@ -32,10 +32,10 @@ class VetoFirebaseMessagingService : FirebaseMessagingService() {
             
             if (commandStr != null) {
                 val settings = com.neubofy.veto.data.SettingsRepository.getInstance(this)
-                val localUid = settings.get(com.neubofy.veto.data.Settings.SET_VetoSERVER_ID) as String
+                val localUid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
                 
                 // Security Verification Layer
-                if (incomingUid == null || incomingUid != localUid) {
+                if (incomingUid == null || localUid == null || incomingUid != localUid) {
                     log().e(TAG, "Unverified FCM command received. Mismatched UID. Ignored.")
                     return
                 }

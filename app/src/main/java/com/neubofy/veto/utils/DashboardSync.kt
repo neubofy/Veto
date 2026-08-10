@@ -16,15 +16,13 @@ object DashboardSync {
     fun uploadTokenIfPaired(context: Context, retryCount: Int = 0, callback: ((String, Boolean) -> Unit)? = null) {
         val settings = SettingsRepository.getInstance(context)
         val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
-        val userId = settings.get(Settings.SET_VetoSERVER_ID) as String
+        val currentUser = FirebaseAuth.getInstance().currentUser
 
-        if (dashboardUrl.isEmpty() || userId.isEmpty()) {
-            context.log().i(TAG, "Dashboard not paired. Skipping token upload.")
-            callback?.invoke("Dashboard not paired.", false)
+        if (dashboardUrl.isEmpty() || currentUser == null) {
+            context.log().i(TAG, "Dashboard not paired or user not authenticated. Skipping token upload.")
+            callback?.invoke("Dashboard not paired or user not authenticated.", false)
             return
         }
-
-        val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             context.log().e(TAG, "User not authenticated. Cannot sync token.")
             if (retryCount < 3) {

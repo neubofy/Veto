@@ -41,10 +41,6 @@ class SetupWarningsActivity : VetoActivity() {
     }
 
     private fun setupRecommConnectivity(context: Context) {
-        val shouldNudge = false
-
-        viewBinding.connectivity.icCheck.isVisible = !shouldNudge
-        viewBinding.connectivity.recommendationConnCheckEnableButton.isVisible = shouldNudge
     }
 }
 

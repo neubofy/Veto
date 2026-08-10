@@ -15,8 +15,8 @@ data class SettingsEntry(
         @JvmStatic
         fun getSettingsEntries(context: Context): List<SettingsEntry> {
             return listOf(
-                SettingsEntry(context.getString(R.string.Settings_LCLDConfig), AppCompatResources.getDrawable(context, R.drawable.ic_settings)),
-                SettingsEntry(context.getString(R.string.Settings_LCLDServer_AddAccount), AppCompatResources.getDrawable(context, R.drawable.ic_cloud)),
+                SettingsEntry(context.getString(R.string.Settings_VetoConfig), AppCompatResources.getDrawable(context, R.drawable.ic_settings)),
+                SettingsEntry(context.getString(R.string.Settings_WebDashboard), AppCompatResources.getDrawable(context, R.drawable.ic_cloud)),
                 SettingsEntry(context.getString(R.string.Settings_Appearance), AppCompatResources.getDrawable(context, R.drawable.ic_palette)),
                 SettingsEntry(context.getString(R.string.Settings_Export), AppCompatResources.getDrawable(context, R.drawable.ic_import_export)),
                 SettingsEntry(context.getString(R.string.Settings_Import), AppCompatResources.getDrawable(context, R.drawable.ic_import_export)),

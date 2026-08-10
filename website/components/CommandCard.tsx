@@ -34,14 +34,18 @@ export default function CommandCard({
   history,
   onSelectOutput
 }: CommandCardProps) {
+  const res = history.find(h => h.command === command || h.command.startsWith(command) || h.id === command);
+
   const getBtnStyle = (cmd: string) => {
     if (activeCmd === cmd) {
       return { animation: 'pulseGlow 2s infinite' };
     }
+    // If this command matches the last executed command for this card, highlight it
+    if (res && res.command === cmd) {
+      return { border: '2px solid #58a6ff', backgroundColor: 'rgba(88, 166, 255, 0.15)', boxShadow: '0 0 10px rgba(88,166,255,0.3)' };
+    }
     return {};
   };
-
-  const res = history.find(h => h.command === command || h.command.startsWith(command) || h.id === command);
 
   const getMediaUrl = (payload: any) => {
     if (!payload) return null;
@@ -103,7 +107,7 @@ export default function CommandCard({
                 key={idx}
                 disabled={isPending}
                 onClick={() => onSendCommand(b.cmd)}
-                className={`btn ${b.primary ? 'btn-primary' : b.danger ? 'btn-danger' : ''}`}
+                className={`btn ${res && res.command === b.cmd ? 'btn-primary' : b.danger ? 'btn-danger' : ''}`}
                 style={{ flex: 1, padding: '7px 8px', fontSize: '0.8rem', whiteSpace: 'nowrap', ...getBtnStyle(b.cmd) }}
               >
                 {b.label}

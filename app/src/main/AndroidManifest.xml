@@ -71,11 +71,11 @@
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:memtagMode="async"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Veto"
         android:networkSecurityConfig="@xml/network_security_config"
@@ -84,7 +84,7 @@
         <activity
             android:name=".ui.settings.AccountActivity"
             android:exported="false"
-            android:label="@string/Settings_LCLDServer_AddAccount" />
+            android:label="@string/Settings_WebDashboard" />
         <activity
             android:name=".ui.settings.MessagingAppPickerActivity"
             android:exported="false"
@@ -113,7 +113,7 @@
 
         <activity
             android:name=".ui.settings.SettingsActivity"
-            android:label="@string/Settings_LCLDConfig" />
+            android:label="@string/Settings_VetoConfig" />
         <activity
             android:name="com.mikepenz.aboutlibraries.ui.LibsActivity"
             android:theme="@style/CustomAboutLibrariesStyle" />
@@ -142,7 +142,17 @@
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:turnScreenOn="true" />
-
+        <activity
+            android:name=".ui.TheftSuspectedActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true" />
+        <activity
+            android:name=".ui.DashboardWebViewActivity"
+            android:label="Web Dashboard" />
+            
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
@@ -177,6 +187,17 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".receiver.SimStateReceiver"
+            android:exported="true"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SIM_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.TheftConfirmedReceiver"
+            android:exported="false" />
+        <receiver
             android:name=".receiver.CopyInAppTextReceiver"
             android:exported="false" />
         <receiver
@@ -199,6 +220,11 @@
         <service
             android:name=".services.RingerService"
             android:exported="false" />
+
+        <service
+            android:name=".services.TheftModeService"
+            android:exported="false"
+            android:foregroundServiceType="location|camera|microphone" />
 
         <service
             android:name=".services.VetoFirebaseMessagingService"

@@ -27,9 +27,9 @@ class NextJsServerTransport(
         fun isConnected(context: Context): Boolean {
             val settings = SettingsRepository.getInstance(context)
             val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
-            val userId = settings.get(Settings.SET_VetoSERVER_ID) as String
-            if (dashboardUrl.isEmpty() || userId.isEmpty()) return false
-            return FirebaseAuth.getInstance().currentUser != null
+            val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+            if (dashboardUrl.isEmpty() || currentUser == null) return false
+            return true
         }
     }
 
@@ -51,14 +51,13 @@ class NextJsServerTransport(
 
         val settings = SettingsRepository.getInstance(context)
         val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
-        val userId = settings.get(Settings.SET_VetoSERVER_ID) as String
+        val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
 
-        if (dashboardUrl.isEmpty() || userId.isEmpty()) {
+        if (dashboardUrl.isEmpty() || currentUser == null) {
             context.log().i("NextJsServerTransport", "Dashboard not paired. Skipping result upload.")
             return
         }
 
-        val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             context.log().e("NextJsServerTransport", "User not authenticated. Cannot sync result.")
             return

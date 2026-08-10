@@ -160,7 +160,7 @@ class CommandExecutionWorker(
             .setContentTitle(title)
             .setContentText(text)
             .setOngoing(true)
-            .setSmallIcon(R.drawable.veto_logo)
+            .setSmallIcon(R.drawable.ic_notifications)
             .build()
 
         val notificationId = Random.nextInt(100_000)

@@ -83,7 +83,7 @@ class RingerService : Service() {
         )
             .setContentTitle(title)
             .setContentText(text)
-            .setSmallIcon(com.neubofy.veto.R.drawable.veto_logo)
+            .setSmallIcon(com.neubofy.veto.R.drawable.ic_notifications)
             .setOngoing(true)
             .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
             .build()
@@ -102,13 +102,16 @@ class RingerService : Service() {
         raiseVolumeToMax()
         ringtone?.play()
 
-        // 100% Volume Lock Loop (Resets volume to 100% every 2 seconds if user turns volume down)
+        val intervalSecs = settings.get(Settings.SET_VOLUME_ENFORCE_INTERVAL) as Int
+        val intervalMs = intervalSecs * 1000L
+
+        // Volume Lock Loop
         serviceScope.launch {
             val startTime = System.currentTimeMillis()
             val maxDurationMillis = durationSecs * 1000L
 
             while (true) {
-                delay(2000L)
+                delay(intervalMs)
                 raiseVolumeToMax()
 
                 // Check if duration expired AND theft mode is not active

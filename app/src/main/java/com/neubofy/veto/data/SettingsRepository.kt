@@ -181,46 +181,6 @@ class SettingsRepository private constructor(private val context: Context) {
 
 // ---------- Convenience helpers ----------
 
-    fun serverAccountExists(): Boolean {
-        val id = get(Settings.SET_VetoSERVER_ID) as String
-        return id.isNotEmpty()
-    }
 
-    fun setKeys(keys: VetoKeyPair) {
-        set(Settings.SET_Veto_CRYPT_PRIVKEY, keys.encryptedPrivateKey)
-        set(Settings.SET_Veto_CRYPT_PUBKEY, CypherUtils.encodeBase64(keys.publicKey.encoded))
-    }
-
-    fun getKeys(): VetoKeyPair? {
-        if (get(Settings.SET_Veto_CRYPT_PUBKEY) == "") {
-            return null
-        }
-
-        val pubKeySpec: EncodedKeySpec = X509EncodedKeySpec(
-            CypherUtils.decodeBase64(get(Settings.SET_Veto_CRYPT_PUBKEY) as String)
-        )
-        var publicKey: PublicKey? = null
-        try {
-            val keyFactory = KeyFactory.getInstance("RSA")
-            publicKey = keyFactory.generatePublic(pubKeySpec)
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-        } catch (e: InvalidKeySpecException) {
-            e.printStackTrace()
-        }
-
-        return if (publicKey != null) {
-            VetoKeyPair(publicKey, get(Settings.SET_Veto_CRYPT_PRIVKEY) as String)
-        } else {
-            null
-        }
-    }
-
-    fun removeServerAccount() {
-        set(Settings.SET_VetoSERVER_ID, "")
-        set(Settings.SET_Veto_CRYPT_HPW, "")
-        set(Settings.SET_Veto_CRYPT_PRIVKEY, "")
-        set(Settings.SET_Veto_CRYPT_PUBKEY, "")
-    }
 
 }

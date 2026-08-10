@@ -30,6 +30,6 @@
         <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
 
         <!-- Custom Card Style -->
-        <item name="materialCardViewStyle">@style/Widget.LCLD.GlassCard</item>
+        <item name="materialCardViewStyle">@style/Widget.Veto.GlassCard</item>
     </style>
 </resources>

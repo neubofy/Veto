@@ -168,14 +168,14 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Auto Theft Detection Card (Coming Soon) -->
+        <!-- Dashboard Card -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_auto_theft"
+            android:id="@+id/card_dashboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_columnSpan="2"
             android:layout_margin="8dp"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant">
+            app:cardBackgroundColor="?attr/colorPrimaryContainer">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -187,42 +187,29 @@
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/ic_security"
-                    app:tint="?attr/colorOnSurfaceVariant" />
+                    android:src="@drawable/ic_cloud"
+                    app:tint="?attr/colorOnPrimaryContainer" />
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginStart="16dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Auto Theft Detection"
+                        android:text="Web Dashboard"
                         android:textSize="18sp"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="?attr/colorOnPrimaryContainer"
                         android:textStyle="bold" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Automatically detect and respond to theft"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:text="Open the cloud dashboard to manage this device"
+                        android:textColor="?attr/colorOnPrimaryContainer"
                         android:alpha="0.8"
                         android:textSize="14sp" />
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_rounded_primary"
-                    android:backgroundTint="?attr/colorPrimary"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="4dp"
-                    android:text="Coming Soon"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
