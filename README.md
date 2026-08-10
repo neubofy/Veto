@@ -1,22 +1,28 @@
 # Veto
 
-Veto is an advanced Android remote management and anti-theft application that provides the ultimate toolkit to track, lock, record, and recover your lost or stolen Android device. It operates across offline SMS, messenger auto-replies, and a secure Vercel-hosted Web Dashboard — providing unmatched multi-transport resilience without relying on commercial tracking servers.
+Veto is an advanced, completely free Android remote management and anti-theft application that provides the ultimate toolkit to locate, lock, record, and recover your lost or stolen Android device.
+
+Unlike traditional third-party tracking apps, Veto does not rely on continuous background workers, eliminating battery drain and performance issues—it remains entirely dormant until a command is received or the phone is stolen.
+
+We don't aim to replace Google's Find My Device network; instead, Veto is designed to work *with* it. We don't provide continuous live tracking or the last known location when offline without network access. We provide everything that is missing in Google Find My Device.
+
+Veto operates across offline SMS, messenger auto-replies, and a secure Vercel-hosted Web Dashboard, providing unmatched multi-transport resilience. For power users, you can even integrate it with any offline mesh network-based messaging app to communicate when completely offline.
 
 ## Features
 
-Veto offers a robust set of remote commands to control and locate your device in emergency situations. It utilizes zero-trust cryptography to guarantee absolute privacy and control over your personal data.
+Veto offers a robust set of remote commands to control and locate your device in emergency situations. It utilizes zero-trust cryptography to guarantee absolute privacy and control over your personal data. It is made for the average user, but provides extensive capabilities for power users.
 
 ### Commands
 
 Veto supports a full matrix of commands, accessible via the Web Dashboard, SMS, or Notification Auto-Reply.
 
-*   `veto locate [last|gps]`: Powers on location hardware automatically and fetches accurate GPS/Network/Cell coordinates with Google Maps links.
-*   `veto theft`: Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth, turns off DND, and blares a 3-minute siren alarm.
-*   `veto ring [long|seconds]`: Bypasses DND & silent mode, maxes out alarm stream volume, wakes the screen, and loops a high-decibel alert.
+*   `veto locate`: Powers on location hardware automatically and fetches accurate GPS/Network/Cell coordinates with Google Maps links. **It works even when the GPS toggle is turned off.**
+*   `veto theft [end]`: Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth (which increases the chance to be located by Google Find My Device when completely offline), turns off DND, and blares a 3-minute siren alarm.
+*   `veto ring [seconds]`: Bypasses DND & silent mode, maxes out alarm stream volume (overriding the volume down button), wakes the screen, and loops a high-decibel alert. We suggest using a siren ringtone in the app for maximum effect.
 *   `veto lock [custom message]`: Instantly locks the screen using Device Admin API and optionally renders a full-screen owner contact overlay message.
 *   `veto camera [front|back] [flash]`: Silently captures a photo using the front or rear camera over lock screens and backs up the file to Google Drive.
-*   `veto audio`: Records 30 seconds of high-quality AAC ambient audio from the microphone in the background and uploads it to Google Drive.
-*   `veto video [front|back]`: Records 30 seconds of background video from the front or back camera and backs it up to Google Drive. *(BETA)*
+*   `veto audio [duration_secs]`: Records 30 seconds of high-quality AAC ambient audio from the microphone in the background and uploads it to Google Drive.
+*   `veto video [front|back] [flash]`: Records 30 seconds of background video from the front or back camera and backs it up to Google Drive. *(BETA)*
 *   `veto flash [on|off]`: Toggles the camera flashlight hardware ON/OFF or blinks the torch 10 times for visual location signaling.
 *   `veto stats`: Returns device model, Android release, battery %, SIM carrier, SIM phone number, IP addresses, and Wi-Fi SSID scan results.
 *   `veto delete <password> [dryrun]`: Constant-time password-verified emergency factory reset with a 3-second transmission buffer to deliver confirmation. **(DANGER)**

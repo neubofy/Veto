@@ -95,7 +95,7 @@ export default function LandingPage() {
           </h1>
           
           <p style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.35rem)', color: 'var(--text-secondary)', maxWidth: '750px', margin: '0 auto 3rem auto', lineHeight: 1.6 }}>
-            Veto provides a reliable toolkit to manage, track, and secure your Android device. Introduce new users to our app with next-gen PR management. It uses advanced multi-transport fallbacks, including offline SMS and Web Dashboard access, ensuring you stay connected and protected.
+            Veto provides a completely free, highly reliable toolkit to manage and secure your Android device. Designed to work <i>with</i> Google&apos;s Find My Device, it fills in the missing gaps without the battery drain—remaining entirely dormant until a command is received. With multi-transport fallbacks like offline SMS and mesh networks, you stay connected and protected even without internet. Made simple for the average user, yet endlessly capable for power users.
           </p>
 
           <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -239,7 +239,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Location</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Powers on location hardware automatically and fetches accurate GPS/Network/Cell coordinates with Google Maps links.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto locate</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
+                Powers on location hardware automatically and fetches accurate coordinates with Google Maps links. <strong>Works even if the GPS toggle is turned off!</strong><br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto locate</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 
@@ -249,7 +249,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(235, 163, 54, 0.15)', color: '#eba336', padding: '2px 8px', borderRadius: '4px' }}>Macro</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth, turns off DND, and blares a siren alarm. Use the "end" argument to stop the alarm.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto theft [end]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
+                Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth (increasing visibility to Google Find My Device when offline), turns off DND, and blares a siren. Use the &quot;end&quot; argument to stop.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto theft [end]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 
@@ -259,7 +259,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Alarm</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Bypasses DND &amp; silent mode, maxes out alarm stream volume, wakes the screen, and loops a high-decibel alert.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [long]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
+                Bypasses DND &amp; silent mode, maxes out alarm stream volume (overriding the volume down button), and loops a high-decibel alert. We suggest using a siren ringtone.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [seconds]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
               </p>
             </div>
 
@@ -289,7 +289,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Records high-quality AAC ambient audio from microphone in background and uploads to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto audio</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
+                Records high-quality AAC ambient audio from microphone in background and uploads to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto audio [duration_secs]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
               </p>
             </div>
 
@@ -301,7 +301,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Records background video from front or back camera and backs up to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto video [front | back]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>, <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
+                Records background video from front or back camera and backs up to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto video [front | back] [flash]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>, <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
               </p>
             </div>
 
