@@ -97,14 +97,6 @@
     <string name="cmd_camera_description_long">Tira uma foto da câmara frontal/traseira e a envia para o Veto Server. Atualmente só é possível enviar para o Veto Server. Pode enviar este comando atráves de outros canais de transporte, também e a foto será enviada ao Veto Server (se uma conta existe).</string>
     <string name="cmd_camera_response_no_veto_server">Não foi possível tirar foto: nenhum conta do Veto Server existe.</string>
     <string name="cmd_camera_response_success">O dispositivo tira uma foto e enviará ao Veto Server. Poderá logo ver ela aqui: %s</string>
-    <string name="cmd_delete_description_short">Apagar os dados do dispositivo</string>
-    <string name="cmd_delete_description_long">Apaga todos os dados. Depois, não será mais possível comunicar com o dispositivo. Para prevenir uso malicioso ou acidental, este comando requer uma palavra-passe e precisa estar ativado explicitamente nas configurações.</string>
-    <string name="cmd_delete_response_disabled">Não foi possível executar o apagar: não está ativado nas configurações.</string>
-    <string name="cmd_delete_response_pwd_missing">Não foi possível executar apagar: nenhuma palavra-passe. Uso: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Não foi possível executar apagar: palavra-passe errada.</string>
-    <string name="cmd_delete_response_dry_run">Execução seca bem-sucedida, pulando o apagamento real do dispositivo.</string>
-    <string name="cmd_delete_response_failed">Falha ao apagar o dispositivo devido à uma exceção.</string>
-    <string name="cmd_delete_response_success">O seu dispositivo agora deve ter sido apagado. Adeus!</string>
     <string name="cmd_gps_description_short">Ativar o GPS</string>
     <string name="cmd_gps_response_on">GPS ativado.</string>
     <string name="cmd_gps_response_off">GPS desativado.</string>

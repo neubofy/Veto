@@ -72,7 +72,6 @@
     <string name="Toast_Empty_VetoCommand">Comando vazio não permitido, usando o padrão.</string>
     <string name="cmd_missing_permissions">Não foi possível executar o comando %1$s: Faltando a(s) permissão(ões) %2$s.</string>
     <string name="cmd_camera_description_long">Tira uma foto da câmera frontal/traseira e a envia para o Veto Server. Atualmente só é possível enviar para o Veto Server. Você pode enviar este comando atráves de outros canais de transporte, também, e a foto será enviada ao Veto Server (se uma conta existe).</string>
-    <string name="cmd_delete_description_short">Apagar os dados do dispositivo</string>
     <string name="cmd_gps_description_short">Habilitar os serviços de localização</string>
     <string name="cmd_lock_response">O dispositivo deve estar bloqueado agora.</string>
     <string name="cmd_ring_description_short">Fazer o dispositivo tocar</string>
@@ -84,13 +83,8 @@
     <string name="grant_write_secure_settings_title">Permitir modificação das configurações seguras</string>
     <string name="grant_write_secure_settings_description">Esta permissão só pode ser concedida com a ferramenta \"pm grant\" de terminal do Android. Você pode executar este comando manualmente atráves do Android Debug Bridge (ADB) usando um computador. Você também pode executá-lo diretamente no seu dispositivo usando root ou o Shizuku.\n\nID do usuário: %d</string>
     <string name="cmd_camera_description_short">Tirar uma foto</string>
-    <string name="cmd_delete_response_pwd_wrong">Não foi possível executar o delete: senha errada.</string>
     <string name="cmd_camera_response_no_veto_server">Não foi possível tirar foto: nenhum conta do Veto Server existe.</string>
     <string name="cmd_camera_response_success">O dispositivo está tirando uma foto e enviará ao Veto Server. Você poderá logo ver ela aqui: %s</string>
-    <string name="cmd_delete_description_long">Apaga todos os dados. Depois, não será mais possível se comunicar com o dispositivo. Para prevenir uso malicioso ou acidental, este comando requer uma senha e precisa estar ativado explicitamente nas configurações.</string>
-    <string name="cmd_delete_response_disabled">Não foi possível executar o delete: não está ativado nas configurações.</string>
-    <string name="cmd_delete_response_pwd_missing">Não foi possível executar o delete: nenhuma senha. Uso: %s.</string>
-    <string name="cmd_delete_response_success">Seu dispositivo agora deve ter sido apagado. Adeus!</string>
     <string name="cmd_gps_response_on">Serviços de localização foram ativados.</string>
     <string name="cmd_gps_response_off">Serviços de localização foram desativados.</string>
     <string name="cmd_help_description_short">Mostrar a ajuda</string>
@@ -176,7 +170,6 @@
     <string name="appearance_language">Idioma</string>
     <string name="appearance_language_choose">Selecionar idioma</string>
     <string name="appearance_language_system_default">Padrão do sistema</string>
-    <string name="cmd_delete_response_failed">Falha ao apagar o dispositivo devido à uma exceção.</string>
     <string name="appearance_theme_dark">Escuro</string>
     <string name="appearance_theme">Tema</string>
     <string name="appearance_theme_follow_system">Seguir o sistema</string>
@@ -187,7 +180,6 @@
     <string name="log_view_clear_confirm">Você quer mesmo apagar todos os itens dos registros?</string>
     <string name="log_view_clear">Limpar registros</string>
     <string name="usage_notification_pin_text">O PIN foi usado pelo número: \"%s\". É recomendado alterar o PIN.</string>
-    <string name="cmd_delete_response_dry_run">Execução seca bem-sucedida, pulando o apagamento real do dispositivo.</string>
     <string name="pin_match_command_keyword">O PIN não pode ser igual a um dos comandos!</string>
     <string name="usage_notification_pin_title">PIN do Veto utilizado</string>
     <string name="Settings_Pin_Not_Backed_Up">Alerta: O PIN não é incluso no backup de apps.</string>
@@ -204,8 +196,6 @@
     <string name="setup_recommendations_title">Recomendações</string>
     <string name="allowlist_invalid_number">Este número de telefone é invalido!</string>
     <string name="pin_min_length">O PIN deve ter menos 8 caracteres. São recomendados 16 ou mais.</string>
-    <string name="missing_push_title">UnifiedPush ausente</string>
-    <string name="missing_push_description">Sem um aplicativo distribuidor de UnifiedPush, você não pode receber comandos do Veto Server.</string>
     <string name="cmd_flash_description_short">Ativar o flash da câmera</string>
     <string name="cmd_locate_provider_disabled">O provedor de localização solicitado \"%s\" está desativado.</string>
     <string name="Notification_ExecutionService">Execução de comando</string>
@@ -213,8 +203,6 @@
     <string name="executing_title">Executando comando</string>
     <string name="executing_text">O comando \"%1$s\" está sendo executado por \"%2$s\".</string>
     <string name="dont_show_again">Não mostrar de novo</string>
-    <string name="delete_pw_warning_no_backup">Atenção: A senha não é inclusa no backup de apps.</string>
-    <string name="delete_pw_warning_empty">Atenção: Apagar não funcionará pois a senha de apagar está vazia. Você deve tanto ativar o recurso como configurar uma senha.</string>
     <string name="veto_edge_info_message">Essa é a variante edge do Veto. Aqui, o comando padrão é \"vetoe\" (em vez de \"veto\"). Por exemplo, para enviar um comando de localizar, use \"vetoe locate\". Isso permite ter tanto o edge quanto o prod instalados no mesmo dispositivo, e especificar para qual vão os comandos.</string>
     <string name="Fused">Combinado</string>
     <string name="tip_first_contact_added">Parabéns, você adicionou o seu primeiro contato! Agora você pode comunicar com o Veto enviando um SMS que começa com \"%1$s\" pelo número de telefone permitido. Por exemplo, envie \"%2$s help\" ou \"%3$s flash\". Se tudo funciona, o app será responder.</string>

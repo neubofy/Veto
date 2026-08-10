@@ -88,11 +88,6 @@
     <string name="request_failed_status_code">Statuscode</string>
     <string name="Notification_Server_Description">Benachrichtigungen bzgl. Veto Server</string>
     <string name="cmd_camera_description_short">Bild aufnehmen</string>
-    <string name="cmd_delete_description_short">Gerät auf Werkseinstellungen zurücksetzen</string>
-    <string name="cmd_delete_description_long">Alle Daten werden gelöscht. Danach kannst Du nicht mehr mit dem Gerät kommunizieren. Um versehentliche und böswillige Nutzung zu verhindern, erfordert dieser Befehl ein Kennwort und er muss in den Einstellungen ausdrücklich aktiviert werden.</string>
-    <string name="cmd_delete_response_disabled">Löschen nicht möglich: Der delete-Befehl ist nicht in den Einstellungen aktiviert.</string>
-    <string name="cmd_delete_response_pwd_missing">Löschen nicht möglich: Passwort fehlt. Syntax: %s.</string>
-    <string name="cmd_delete_response_success">Das Gerät sollte nun gelöscht werden. Auf Wiedersehen!</string>
     <string name="cmd_gps_response_on">Die Standortdienste wurden eingeschaltet.</string>
     <string name="cmd_gps_response_off">Die Standortdienste wurden ausgeschaltet.</string>
     <string name="cmd_help_description_short">Hilfe anzeigen</string>
@@ -117,7 +112,6 @@
     <string name="cmd_camera_description_long">Nimmt ein Bild mit der Front-/Rückkamera auf und lädt es zu Veto Server hoch. Derzeit wird nur Hochladen zu Veto Server unterstützt. Du kannst diesen Befehl auch über andere Transportkanäle senden, und das Bild wird dann zu Veto Server hochgeladen (sofern ein Konto existiert).</string>
     <string name="cmd_camera_response_no_veto_server">Bild kann nicht aufgenommen werden: ein Veto Server-Konto fehlt.</string>
     <string name="cmd_camera_response_success">Das Gerät nimmt gerade ein Bild auf und wird es zum Veto Server hochladen. Du kannst es gleich hier anschauen: %s</string>
-    <string name="cmd_delete_response_pwd_wrong">Löschen nicht möglich: falsches Passwort.</string>
     <string name="cmd_locate_description_short">Gerät orten</string>
     <string name="cmd_gps_description_short">Standortdienste ein- und ausschalten</string>
     <string name="cmd_ring_response">Das Gerät sollte nun klingeln.</string>
@@ -203,7 +197,6 @@
     <string name="Settings_Appearance">Erscheinungsbild</string>
     <string name="appearance_language">Sprache</string>
     <string name="appearance_language_choose">Sprache auswählen</string>
-    <string name="cmd_delete_response_failed">Das Löschen des Geräts ist fehlgeschlagen aufgrund eines Ausnahmefehlers.</string>
     <string name="appearance_theme_follow_system">Systemstandard</string>
     <string name="appearance_theme_dark">Dunkel</string>
     <string name="appearance_theme">Designstil</string>
@@ -214,7 +207,6 @@
     <string name="log_view_clear_confirm">Möchtest du wirklich alle Protokolleinträge löschen?</string>
     <string name="log_view_clear">Protokoll löschen</string>
     <string name="pin_match_command_keyword">Die PIN darf nicht mit einem der Befehle übereinstimmen!</string>
-    <string name="cmd_delete_response_dry_run">Testlauf erfolgreich, die eigentliche Gerätelöschung wird übersprungen.</string>
     <string name="usage_notification_pin_title">Veto PIN benutzt</string>
     <string name="usage_notification_pin_text">Der PIN wurde von dieser Nummer verwendet: \"%s\". Wir empfehlen, den PIN zu ändern.</string>
     <string name="Settings_Pin_Not_Backed_Up">Achtung: Der PIN ist nicht im App-Backup enthalten.</string>
@@ -231,8 +223,6 @@
     <string name="setup_recommendations_title">Empfehlungen</string>
     <string name="allowlist_invalid_number">Diese Telefonnummer ist ungültig!</string>
     <string name="pin_min_length">Die PIN muss mindestens 8 Zeichen lang sein. Es werden 16 oder mehr Zeichen empfohlen.</string>
-    <string name="missing_push_title">UnifiedPush fehlt</string>
-    <string name="missing_push_description">Ohne eine UnifiedPush-Verteiler-App kannst du keine Befehle von Veto Server empfangen.</string>
     <string name="Notification_ExecutionService">Befehlsausführung</string>
     <string name="Notification_ExecutionService_Description">Benachrichtigungen für Befehle, die aktuell ausgeführt werden</string>
     <string name="executing_title">Befehl wird ausgeführt</string>
@@ -240,8 +230,6 @@
     <string name="cmd_locate_provider_disabled">Der angefragte Standort-Anbieter \"%s\" ist deaktiviert.</string>
     <string name="cmd_flash_description_short">Kamerablitz blitzen lassen</string>
     <string name="dont_show_again">Nicht mehr anzeigen</string>
-    <string name="delete_pw_warning_no_backup">Achtung: Das Passwort ist nicht im App-Backup enthalten.</string>
-    <string name="delete_pw_warning_empty">Achtung: Löschen wird nicht funktionieren, da das Lösch-Passwort leer ist. Du musst sowohl die Funktion aktivieren als auch ein Passwort setzen.</string>
     <string name="veto_edge_info_message">Dies ist die Edge-Variante von Veto. Hier lautet das Standard-Befehlswort „vetoe“ (anstelle von „veto“). Um beispielsweise den „locate“-Befehl zu senden, verwende „vetoe locate“. Auf diese Weise können sowohl Edge als auch Prod auf demselben Gerät installiert sein und Befehle an eines der beiden gerichtet werden.</string>
     <string name="Fused">Zusammengefasst</string>
     <string name="tip_first_contact_added">Glückwunsch, du hast deinen ersten Kontakt hinzugefügt! Du kannst nun mit Veto kommunizieren, indem du von einer erlaubten Telefonnummer aus eine SMS schickst, die mit \"%1$s\" anfängt. Schick zum Beispiel \"%2$s help\" oder \"%3$s flash\". Falls alles klappt, wird die App antworten.</string>

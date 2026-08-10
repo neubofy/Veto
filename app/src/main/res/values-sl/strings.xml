@@ -118,13 +118,7 @@
     <string name="Settings_Import_Success">Uvoz uspešen</string>
     <string name="WhiteList_no_contact_picker">Najdena ni bila nobena aplikacija za izbor stikov!</string>
     <string name="cmd_camera_response_success">Naprava zajema fotografijo, ki jo bo poslala na Veto strežnik. Kmalu jo boste lahko videli na: %s</string>
-    <string name="cmd_delete_description_long">To izbriše vse podatke na napravi. Po tem postopku z napravo ne boste mogli več komunicirati. Da bi preprečili nenamerno ali zlonamerno uporabo, ta ukaz zahteva geslo, ki mora biti izrecno omogočeno v nastavitvah.</string>
-    <string name="cmd_delete_response_disabled">Brisanje ni mogoče: ukaz za brisanje ni omogočen v nastavitvah.</string>
-    <string name="cmd_delete_response_pwd_missing">Brisanje ni mogoče: manjka geslo. Primer uporabe: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Brisanje ni mogoče: napačno geslo.</string>
-    <string name="cmd_delete_response_success">Naprava bo sedaj pobrisana. Nasvidenje!</string>
     <string name="cmd_camera_response_no_veto_server">Ne morem zajeti fotografije: na Veto strežniku nimate aktivnega računa.</string>
-    <string name="cmd_delete_description_short">Ponastavi napravo na tovarniške nastavitve</string>
     <string name="cmd_locate_last_known_location_text">Zadnja znana lokacija</string>
     <string name="cmd_lock_description_short">Zakleni napravo</string>
     <string name="cmd_ring_description_short">Naj naprava zazvoni</string>
@@ -187,7 +181,6 @@
     <string name="cmd_bluetooth_response_no_bluetooth">Kot kaže ta naprava nima Bluetootha.</string>
     <string name="cmd_bluetooth_response_on">Bluetooth vključen.</string>
     <string name="cmd_bluetooth_response_off">Bluetooth izključen.</string>
-    <string name="cmd_delete_response_failed">Naprave ni bilo mogoče izbrisati zaradi izjeme.</string>
     <string name="Settings_Appearance">Videz</string>
     <string name="Settings_no_ringtone_picker">Ne najdem izbirnika zvonjenja!</string>
     <string name="perm_bluetooth_connect_name">Poveži Bluetooth</string>
@@ -202,7 +195,6 @@
     <string name="log_view_clear_confirm">Ali želite izbrisati vse dnevniške zapise?</string>
     <string name="usage_notification_pin_title">Uporabljena je bil Veto PIN koda</string>
     <string name="usage_notification_pin_text">Kodo PIN je uporabila ta številka: \"%s\". Priporočljivo je, da spremenite PIN.</string>
-    <string name="cmd_delete_response_dry_run">Poskusno izvajanje ukaza je bilo uspešno, naprava ni bila dejansko izbrisana.</string>
     <string name="pin_match_command_keyword">PIN ne sme biti enak kot eden izmed ukazov!</string>
     <string name="allowlist_reset_title">Dovoljena ponastavitev stikov</string>
     <string name="update_pin_hash_change_text">Veto PIN koda je bila med posodobitvijo aplikacije izbrisana. Če želite še naprej uporabljati Veto s kodo PIN, jo znova nastavite.</string>
@@ -218,8 +210,6 @@
     <string name="setup_recommendations_title">Priporočila</string>
     <string name="pin_min_length">PIN mora biti dolg vsaj 8 znakov. Priporočljivo je uporabiti 16 znakov ali več.</string>
     <string name="allowlist_invalid_number">Ta telefonska številka ni veljavna!</string>
-    <string name="missing_push_title">Manjka UnifiedPush</string>
-    <string name="missing_push_description">Brez aplikacije za distribucijo potisnih sporočil UnifiedPush ne morete prejemati ukazov iz strežnika Veto.</string>
     <string name="cmd_flash_description_short">Uporabi bliskavico kamere</string>
     <string name="cmd_locate_provider_disabled">Zahtevani ponudnik lokacije \"%s\" je onemogočen.</string>
     <string name="Notification_ExecutionService">Izvedba ukaza</string>
@@ -227,8 +217,6 @@
     <string name="executing_title">Izvajanje ukaza</string>
     <string name="executing_text">\"%2$s\" izvaja ukaz \"%1$s\".</string>
     <string name="dont_show_again">Ne prikaži ponovno</string>
-    <string name="delete_pw_warning_no_backup">Opozorilo: geslo ni vključeno v varnostno kopijo aplikacije.</string>
-    <string name="delete_pw_warning_empty">Opozorilo: Brisanje ne bo delovalo, ker geslo za brisanje ni nastavljeno. Storiti morate oboje: funkcijo omogočiti in nastaviti geslo.</string>
     <string name="veto_edge_info_message">To je različica Veto Edge. Tu je privzeta ključna beseda ukaza \"vetoe\" (namesto \"veto\"). Na primer, za pošiljanje ukaza locate uporabite »vetoe locate«. To omogoča, da sta tako Edge kot produkcijska različica nameščena na isti napravi, ukazi pa so ločeno usmerjeni na eno od njiju.</string>
     <string name="Fused">Spojen</string>
     <string name="cmd_bluetooth_response_is_on">Bluetooth je vključen.</string>

@@ -138,13 +138,7 @@
     <string name="transport_veto_server_description">Il Server Veto fornisce una interfaccia web per controllare il dispositivo, visualizzare la sua posizione e le immagini inviate. Potete ospitare Server Veto autonomamente o utilizzare l\'istanza fornita. I dati sono memorizzati in modo criptato sul server, protetti dalla vostra password.</string>
     <string name="transport_inapp_title">In - app</string>
     <string name="WhiteList_no_contact_picker">Nessuna app per selezionare contatti trovata!</string>
-    <string name="cmd_delete_description_long">Si cancelleranno tutti i dati. In seguito non sarà più possibile comunicare con il dispositivo. Per evitare l\'utilizzo accidentale e doloso, questo comando richiede una password e deve essere esplicitamente abilitato nelle impostazioni.</string>
     <string name="cmd_camera_response_success">Il dispositivo sta scattando una foto e la invierà al server Veto. Presto sarà possibile visualizzarla qui: %s</string>
-    <string name="cmd_delete_description_short">Ripristino di fabbrica del dispositivo</string>
-    <string name="cmd_delete_response_disabled">Impossibile Cancellare: il comando Cancella non è abilitato nelle impostazioni.</string>
-    <string name="cmd_delete_response_pwd_missing">Impossibile cancellare: password mancante. Utilizzo: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Impossibile cancellare: password errata.</string>
-    <string name="cmd_delete_response_success">A questo punto il dispositivo dovrebbe essere stato cancellato. Addio!</string>
     <string name="perm_post_notification_name">Mostra notifiche</string>
     <string name="perm_sms_name">SMS</string>
     <string name="perm_write_secure_settings_name">Scrivi nelle impostazioni di sicurezza</string>
@@ -178,7 +172,6 @@
     <string name="appearance_language">Lingua</string>
     <string name="appearance_language_choose">Scegli lingua</string>
     <string name="appearance_language_system_default">Predefinita di sistema</string>
-    <string name="cmd_delete_response_failed">Cancellazione del dispositivo fallita a causa di una eccezione.</string>
     <string name="appearance_theme">Tema</string>
     <string name="appearance_theme_dark">Scuro</string>
     <string name="appearance_dynamic_colors">Colori dinamici</string>
@@ -191,7 +184,6 @@
     <string name="usage_notification_pin_title">Utilizzo PIN Veto</string>
     <string name="log_view_clear">Cancella voci</string>
     <string name="log_view_clear_confirm">Vuoi veramente eliminare tutte le voci di registro?</string>
-    <string name="cmd_delete_response_dry_run">Prova riuscita, evitando l\'effettiva cancellazione del dispositivo.</string>
     <string name="allowlist_reset_title">Rimuovi contatti fidati</string>
     <string name="allowlist_reset_text">A causa di un arresto anomalo, i contatti fidati sono stati ripristinati. Si prega di configurarli nuovamente.</string>
     <string name="update_pin_hash_change_text">Il PIN di Veto è stato resettato durante un aggiornamento dell\'app. Per continuare a utilizzare Veto con un PIN, impostare nuovamente il PIN.</string>

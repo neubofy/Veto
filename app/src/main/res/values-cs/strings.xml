@@ -74,11 +74,6 @@
     <string name="Whitelist_empty">Žádné povolené kontakty. Klepněte na tlačítko pro jejich přidání!</string>
     <string name="Notification_Server_Description">Oznámení týkající se Serveru Veto</string>
     <string name="cmd_camera_response_no_veto_server">Nepodařilo se pořídit obrázek: neexistuje účet na Serveru Veto.</string>
-    <string name="cmd_delete_description_short">Tovární reset zařízení</string>
-    <string name="cmd_delete_description_long">Toto vymaže všechna data. Po této akci již nebudete moci komunikovat se zařízením. Pro zabránění nechtěnému a škodlivému použití vyžaduje tento příkaz heslo a je třeba jej explicitně povolit v nastavení.</string>
-    <string name="cmd_delete_response_disabled">Nepodařilo se odstranit: příkaz k odstranění není povolen v nastavení.</string>
-    <string name="cmd_delete_response_pwd_missing">Nepodařilo se odstranit: chybějící heslo. Použití: %s.</string>
-    <string name="cmd_delete_response_success">Zařízení by nyní mělo být vymazáno. Na shledanou!</string>
     <string name="cmd_gps_description_short">Zapnout nebo vypnout polohové služby</string>
     <string name="cmd_gps_response_off">Polohové služby vypnuty.</string>
     <string name="cmd_lock_description_short">Uzamknout zařízení</string>
@@ -105,7 +100,6 @@
     <string name="cmd_camera_description_long">Pořídí obrázek s předním/zadním fotoaparátem a nahraje jej na Server Veto. Momentálně je podporováno pouze nahrání na Server Veto. Tento příkaz můžete poslat také ostatními kanály a obrázek bude nahrán na Server Veto (pokud existuje účet).</string>
     <string name="cmd_camera_description_short">Pořídit obrázek</string>
     <string name="cmd_camera_response_success">Zařízení pořizuje obrázek a nahraje jej na Server Veto. Brzy si jej budete moci prohlédnout zde: %s</string>
-    <string name="cmd_delete_response_pwd_wrong">Nepodařilo se odstranit: nesprávné heslo.</string>
     <string name="grant_write_secure_settings_title">Udělit přístup k zápisu zabezpečených nastavení</string>
     <string name="cmd_gps_response_on">Polohové služby zapnuty.</string>
     <string name="cmd_help_description_short">Zobrazit nápovědu</string>
@@ -176,7 +170,6 @@
     <string name="appearance_language">Jazyk</string>
     <string name="appearance_language_choose">Vybrat jazyk</string>
     <string name="appearance_language_system_default">Podle systému</string>
-    <string name="cmd_delete_response_failed">Nepodařilo se odstranit zařízení z důvodu chyby.</string>
     <string name="appearance_theme_light">Světlý</string>
     <string name="appearance_dynamic_colors">Dynamické barvy</string>
     <string name="appearance_theme">Motiv</string>
@@ -188,7 +181,6 @@
     <string name="log_view_clear">Vymazat protokoly</string>
     <string name="usage_notification_pin_title">Použit PIN Veto</string>
     <string name="usage_notification_pin_text">Následující číslo použilo PIN: „%s“. Je doporučeno PIN změnit.</string>
-    <string name="cmd_delete_response_dry_run">Zkušební běh proběhl úspěšně, překakování skutečného odstranění zařízení.</string>
     <string name="pin_match_command_keyword">PIN se nesmí rovnat jednomu z příkazů!</string>
     <string name="allowlist_reset_text">Kvůli pádu byly resetovány povolené kontakty. Nastavte je prosím znovu.</string>
     <string name="update_pin_hash_change_text">Během aktualizace aplikace byl resetován PIN Veto. Abyste mohli nadále používat Veto s PINem, nastavte jej prosím znovu.</string>
@@ -204,8 +196,6 @@
     <string name="setup_recommendations_title">Doporučení</string>
     <string name="allowlist_invalid_number">Toto telefonní číslo je neplatné!</string>
     <string name="pin_min_length">PIN musí mít alespoň 8 znaků. Je doporučeno 16 nebo více.</string>
-    <string name="missing_push_title">Chybějící UnifiedPush</string>
-    <string name="missing_push_description">Bez distribuční aplikace UnifiedPush nemůžete přijímat příkazy ze serveru Veto.</string>
     <string name="cmd_flash_description_short">Rozsvítit svítilnu fotoaparátu</string>
     <string name="cmd_locate_provider_disabled">Požadovaný poskytovatel polohy „%s“ je zakázaný.</string>
     <string name="Notification_ExecutionService">Vykonání příkazu</string>
@@ -213,8 +203,6 @@
     <string name="executing_title">Vykonávání příkazu</string>
     <string name="executing_text">Příkaz „%1$s“ je vykonáván uživatelem „%2$s“.</string>
     <string name="dont_show_again">Již nezobrazovat</string>
-    <string name="delete_pw_warning_no_backup">Varování: Záloha aplikace neobsahuje heslo.</string>
-    <string name="delete_pw_warning_empty">Varování: Mazání nebude fungovat, protože heslo pro smazání je prázdné. Musíte povolit funkci a nastavit heslo.</string>
     <string name="veto_edge_info_message">Toto je vývojová varianta Veto. Zde je výchozí klíčové slovo příkazu „vetoe“ (namísto „veto“). Chcete-li například odeslat příkaz locate, použijte „vetoe locate“. To umožňuje mít nainstalovanou jak vývojovou, tak produkční verzi na stejném zařízení a směrovat příkazy na jedno z nich.</string>
     <string name="Fused">Sloučené</string>
     <string name="cmd_bluetooth_response_is_on">Bluetooth je zapnutý.</string>

@@ -73,11 +73,6 @@
     <string name="cmd_camera_description_short">Prendre une photo</string>
     <string name="cmd_camera_response_no_veto_server">Impossible de prendre une photo : aucun compte Veto n\'existe.</string>
     <string name="cmd_camera_response_success">L\'appareil prend une photo et l\'enverra au serveur Veto. Vous pourrez bientôt la voir ici : %s</string>
-    <string name="cmd_delete_description_short">Réinitialiser l\'appareil aux paramètres d\'usine</string>
-    <string name="cmd_delete_response_disabled">Réinitialisation impossible : la commande de réinitialisation n\'est pas activée dans les paramètres.</string>
-    <string name="cmd_delete_response_pwd_missing">Réinitialisation impossible : mot de passe manquant. Utilisation : %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Réinitialisation impossible : mot de passe incorrect.</string>
-    <string name="cmd_delete_response_success">L\'appareil devrait maintenant avoir été réinitialisé aux paramètres d\'usine. Au revoir !</string>
     <string name="cmd_gps_description_short">Activer ou désactiver le GPS</string>
     <string name="cmd_gps_response_on">GPS activé.</string>
     <string name="cmd_gps_response_off">GPS désactivé.</string>
@@ -95,7 +90,6 @@
 \n%2$s</string>
     <string name="cmd_missing_permissions">Impossible d\'exécuter la commande %1$s : autorisation(s) manquante(s) %2$s.</string>
     <string name="cmd_camera_description_long">Prend une photo avec la caméra avant/arrière et l\'envoie vers le serveur Veto. Actuellement, seul le transfert vers le serveur Veto est pris en charge. Vous pouvez également envoyer cette commande via d\'autres canaux de communication, et la photo sera téléversée vers le serveur Veto (si un compte existe).</string>
-    <string name="cmd_delete_description_long">Cela efface toutes les données. Par la suite, vous ne pourrez plus communiquer avec l\'appareil. Pour prévenir une utilisation accidentelle et malveillante, cette commande requiert un mot de passe et doit être explicitement activée dans les paramètres.</string>
     <string name="cmd_locate_description_short">Localiser l\'appareil</string>
     <string name="cmd_locate_description_long">Localise l\'appareil en utilisant un ou plusieurs fournisseurs de localisation. Le GPS dispose DD la meilleure précision, mais peut ne pas fonctionner. Le fournisseur \"fused\" (fusionné) est défini par Android, et utilise une combinaison de sources (souvent des antennes relais ou les bornes WiFi). Le fournisseur \"cell\" (cellulaire) appelle les services OpenCelliD et BeaconDB, fournis publiquement, qui utilisent une base de données des emplacements d\'antenne relais.</string>
     <string name="cmd_nodisturb_description_short">Activer ou désactiver le mode Ne pas déranger</string>
@@ -181,7 +175,6 @@
     <string name="crashed_title">Rapport de plantage</string>
     <string name="crashed_open_issuetracker">Ouvrir le gestionnaire d’incidents</string>
     <string name="appearance_dynamic_colors">Couleurs dynamiques</string>
-    <string name="cmd_delete_response_failed">Impossible de réinitialiser l’appareil à cause d’une erreur.</string>
     <string name="perm_bluetooth_connect_name">Se connecter au Bluetooth</string>
     <string name="log_view_title">Journaux</string>
     <string name="log_view_clear">Supprimer les journaux</string>
@@ -197,7 +190,6 @@
     <string name="appearance_theme">Thème</string>
     <string name="appearance_theme_choose">Choisir le thème</string>
     <string name="pin_match_command_keyword">Le code PIN doit être différent des commandes !</string>
-    <string name="cmd_delete_response_dry_run">Essai réussi, on passe la vraie réinitialisation de l’appareil.</string>
     <string name="cmd_bluetooth_response_off">Bluetooth désactivé.</string>
     <string name="Notification_InApp">Canal d\'envoi intégré à l’application</string>
     <string name="Settings_Pin_Not_Backed_Up">Attention : le code PIN n\'est pas inclus dans la sauvegarde de l\'application.</string>
@@ -214,8 +206,6 @@
     <string name="setup_recommendations_title">Recommandations</string>
     <string name="allowlist_invalid_number">Ce numéro de téléphone est invalide !</string>
     <string name="pin_min_length">Le code PIN doit contenir au moins 8 caractères. Il est recommandé d\'en avoir 16 ou plus.</string>
-    <string name="missing_push_title">UnifiedPush non présent</string>
-    <string name="missing_push_description">Sans une application de distribution UnifiedPush, vous ne pouvez pas recevoir de commande depuis Veto Server.</string>
     <string name="cmd_flash_description_short">Allumer le flash de la caméra</string>
     <string name="cmd_locate_provider_disabled">Le fournisseur de localisation demandé \"%s\" est désactivé.</string>
     <string name="Notification_ExecutionService">Exécution de la commande</string>
@@ -223,8 +213,6 @@
     <string name="executing_title">Commande en cours d\'exécution</string>
     <string name="executing_text">La commande \"%1$s\" est actuellement en train d\'être exécutée par \"%2$s\".</string>
     <string name="dont_show_again">Ne plus afficher</string>
-    <string name="delete_pw_warning_no_backup">Avertissement : le mot de passe n\'est pas inclus dans la sauvegarde de l\'application.</string>
-    <string name="delete_pw_warning_empty">Avertissement : la réinitialisation ne fonctionnera pas, car le mot de passe de réinitialisation est vide.</string>
     <string name="veto_edge_info_message">Ceci est la variante \"expérimental\" de Veto. Ici, le mot-clé par défaut pour les commandes est \"vetoe\" (au lieu de \"veto\"). Par exemple, pour envoyer la commande de localisation, utilisez \" vetoe locate\". Cela permet d\'avoir à la fois la variante expérimentale et de production sur le même appareil, et de cibler les commandes pour l\'une des deux.</string>
     <string name="Fused">Fusionné</string>
     <string name="cmd_bluetooth_response_is_on">Le Bluetooth est activé.</string>

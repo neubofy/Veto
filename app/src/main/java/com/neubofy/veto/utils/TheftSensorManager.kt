@@ -45,6 +45,15 @@ class TheftSensorManager(private val context: Context, private val listener: The
                 "android.hardware.usb.action.USB_DEVICE_ATTACHED" -> {
                     triggerBadEvent("usb_attached")
                 }
+                Intent.ACTION_SCREEN_ON -> {
+                    triggerBadEvent("screen_on")
+                }
+                Intent.ACTION_AIRPLANE_MODE_CHANGED -> {
+                    val isAirplaneModeOn = intent.getBooleanExtra("state", false)
+                    if (isAirplaneModeOn) {
+                        triggerBadEvent("airplane_mode_enabled")
+                    }
+                }
             }
         }
     }
@@ -73,6 +82,8 @@ class TheftSensorManager(private val context: Context, private val listener: The
             addAction(Intent.ACTION_POWER_CONNECTED)
             addAction(Intent.ACTION_POWER_DISCONNECTED)
             addAction("android.hardware.usb.action.USB_DEVICE_ATTACHED")
+            addAction(Intent.ACTION_SCREEN_ON)
+            addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
         }
         context.registerReceiver(powerReceiver, filter)
     }

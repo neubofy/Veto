@@ -292,8 +292,6 @@
     <string name="setup_recommendations_title">Recommendations</string>
     <string name="missing_permissions_title">Missing permissions</string>
     <string name="missing_permissions_description">The following permissions are needed for Veto to run.</string>
-    <string name="missing_push_title">Missing UnifiedPush</string>
-    <string name="missing_push_description">Without a UnifiedPush distributor app you cannot receive commands from Veto Server.</string>
 
     
     <string name="Locked_Lock_Screen">Veto\nThis device is locked!\nMessage from the owner:</string>

@@ -26,12 +26,17 @@ class LockScreenMessage : VetoActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        @Suppress("DEPRECATION")
-        getWindow().addFlags(
-            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        } else {
+            @Suppress("DEPRECATION")
+            window.addFlags(
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            )
+        }
 
         setContentView(R.layout.activity_lock_screen_message)
 
@@ -91,29 +96,7 @@ class LockScreenMessage : VetoActivity() {
         }
     }
 
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        val km = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
-        if (km?.isKeyguardLocked == true) {
-            val reorderIntent = android.content.Intent(this, LockScreenMessage::class.java).apply {
-                addFlags(android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            startActivity(reorderIntent)
-        }
-    }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (!hasFocus) {
-            val km = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
-            if (km?.isKeyguardLocked == true) {
-                val reorderIntent = android.content.Intent(this, LockScreenMessage::class.java).apply {
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
-                startActivity(reorderIntent)
-            }
-        }
-    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return true

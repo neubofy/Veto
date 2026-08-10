@@ -13,7 +13,6 @@
     <string name="OpenCellId_open_website">OpenCelliDのウェブサイトを開く</string>
     <string name="server_unregister_continue_anyway">続行する</string>
     <string name="server_unregister_dont_continue">続行しない</string>
-    <string name="cmd_delete_response_pwd_wrong">削除できません：パスワードが正しくありません。</string>
     <string name="log_view_title">ログ</string>
     <string name="appearance_theme">テーマ</string>
     <string name="log_view_export">ログをエクスポート</string>

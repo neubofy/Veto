@@ -36,13 +36,17 @@ class TheftSuspectedActivity : VetoActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        @Suppress("DEPRECATION")
-        window.addFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        } else {
+            @Suppress("DEPRECATION")
+            window.addFlags(
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            )
+        }
 
         setContentView(R.layout.activity_theft_suspected)
 
@@ -181,6 +185,10 @@ class TheftSuspectedActivity : VetoActivity() {
         )
         alarmManager.cancel(pendingIntent)
         
+        // Stop the background service and noisy alarms
+        val serviceIntent = Intent(this, com.neubofy.veto.services.TheftModeService::class.java)
+        stopService(serviceIntent)
+        
         finish()
     }
 
@@ -221,29 +229,7 @@ class TheftSuspectedActivity : VetoActivity() {
         countDownTimer?.cancel()
     }
 
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        val km = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
-        if (km?.isKeyguardLocked == true) {
-            val reorderIntent = Intent(this, TheftSuspectedActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            startActivity(reorderIntent)
-        }
-    }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (!hasFocus) {
-            val km = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
-            if (km?.isKeyguardLocked == true) {
-                val reorderIntent = Intent(this, TheftSuspectedActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
-                startActivity(reorderIntent)
-            }
-        }
-    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return true

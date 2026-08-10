@@ -41,10 +41,6 @@
     <string name="server_unregister_continue_anyway">Сепак продолжи</string>
     <string name="server_unregister_dont_continue">Не продолжувај</string>
     <string name="cmd_camera_response_no_veto_server">Не може да се направи фотографија: не постои сметка на Veto серверот.</string>
-    <string name="cmd_delete_description_short">Фабрички избриши го уредот</string>
-    <string name="cmd_delete_response_disabled">Не може да се избрише: наредбата за бришење не е дозволена во нагодувања.</string>
-    <string name="cmd_delete_response_pwd_missing">Не може да се избрише: нема лозинка. Користење: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Не може да се избрише: погрешна лозинка.</string>
     <string name="cmd_help_message_start">Veto наредби:</string>
     <string name="cmd_locate_description_short">Пронајди го уредот</string>
     <string name="cmd_locate_description_long">Пронајди го уредот преку еден или повеќе давачи на позиција. Системскиот давач на позиција обично е ГПС, понекогаш во комбинација со други извори. Секундарниот давач е OpenCelliD, кој користи база на позиции на телефонски кули.</string>
@@ -97,10 +93,8 @@
     <string name="cmd_camera_description_short">Направи фотографија</string>
     <string name="cmd_camera_description_long">Прави фотографија со предната и задната камера, и ја прикачува на Veto серверот. Моментално поддржано е само прикачување на Veto серверот. Можеш да ја испратиш оваа наредба и по други преносни канали, и сликата ќе се прикачи на Veto серверот (ако постои таква сметка).</string>
     <string name="cmd_camera_response_success">Овој уред моментално прави фотографија и ќе ја испрати до Veto серверот. Наскоро ќе можеш да ја видиш тука: %s</string>
-    <string name="cmd_delete_description_long">Ова ги брише сите податоци. После ова нема да можеш да комуницираш со уредот. За да се оневозможи случајно или злонамерно користење, оваа наредба изискува лозинка и мора изречно да се дозволи во нагодувањата.</string>
     <string name="cmd_gps_response_on">ГПС е вклучен.</string>
     <string name="cmd_gps_description_short">Вклучи / исклучи го ГПС</string>
-    <string name="cmd_delete_response_success">Овој уред сега треба да биде избришан. Поздрав!</string>
     <string name="cmd_gps_response_off">ГПС е исклучен.</string>
     <string name="cmd_help_description_short">Прикажи ја помошта</string>
     <string name="cmd_locate_response_location_off">Не може да се пронајде: позицијата е исклучена.</string>

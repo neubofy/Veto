@@ -97,16 +97,9 @@
     <string name="cmd_bluetooth_response_on">Bluetooth staat aan.</string>
     <string name="cmd_bluetooth_response_off">Bluetooth staat uit.</string>
     <string name="cmd_camera_description_long">Maakt een foto met de camera aan de voor- en achterkant en uploadt deze naar Veto Server. Momenteel wordt alleen uploaden naar Veto Server ondersteund. Je kunt deze opdracht ook via andere transportkanalen sturen en de foto wordt geüpload naar de Veto Server (als er een account bestaat).</string>
-    <string name="cmd_delete_description_short">Apparaat terugzetten naar fabrieksinstellingen</string>
-    <string name="cmd_delete_response_failed">Kan apparaat niet wissen vanwege een uitzondering.</string>
     <string name="cmd_camera_response_success">Het apparaat maakt een foto en stuurt deze naar Veto Server. Je kunt het binnenkort hier bekijken: %s</string>
-    <string name="cmd_delete_description_long">Hiermee worden alle gegevens gewist. Daarna kun je niet meer communiceren met het apparaat. Om onbedoeld en kwaadwillig gebruik te voorkomen, vereist deze opdracht een wachtwoord en moet deze expliciet zijn ingeschakeld in de instellingen.</string>
-    <string name="cmd_delete_response_success">Het apparaat zou nu gewist moeten zijn. Tot ziens!</string>
     <string name="cmd_gps_response_on">Locatieservices aangezet.</string>
     <string name="cmd_gps_response_off">Locatieservices uitgezet.</string>
-    <string name="cmd_delete_response_pwd_missing">Kan niet wissen: wachtwoord ontbreekt. Gebruik: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Kan niet wissen: incorrect wachtwoord.</string>
-    <string name="cmd_delete_response_disabled">Kan niet wissen: de delete-opdracht is niet ingeschakeld in de instellingen.</string>
     <string name="cmd_gps_description_short">Locatieservices aan-/uitzetten</string>
     <string name="cmd_help_description_short">Hulp weergeven</string>
     <string name="cmd_help_message_start">Veto-opdrachten:</string>
@@ -186,7 +179,6 @@
     <string name="crashed_title">Foutrapportage</string>
     <string name="log_view_clear">Logboeken wissen</string>
     <string name="log_view_clear_confirm">Wil je echt alle logboekvermeldingen wissen?</string>
-    <string name="cmd_delete_response_dry_run">Proefdraaien is gelukt en het daadwerkelijke verwijderen van het apparaat wordt overgeslagen.</string>
     <string name="usage_notification_pin_title">Veto-pincode gebruikt</string>
     <string name="usage_notification_pin_text">De pincode werd gebruikt met dit nummer: \"%s\". Het wordt aanbevolen om de pincode te wijzigen.</string>
     <string name="pin_match_command_keyword">De pincode mag niet gelijk zijn aan een van de opdrachten!</string>
@@ -204,8 +196,6 @@
     <string name="setup_recommendations_title">Aanbevelingen</string>
     <string name="allowlist_invalid_number">Dit telefoonnummer is ongeldig!</string>
     <string name="pin_min_length">De pincode moet minimaal 8 tekens lang zijn. 16 of meer wordt aangeraden.</string>
-    <string name="missing_push_description">Zonder UnifiedPush distributie-app kun je geen opdrachten van Veto Server ontvangen.</string>
-    <string name="missing_push_title">UnifiedPush ontbreekt</string>
     <string name="cmd_flash_description_short">Cameraflitser knipperen</string>
     <string name="cmd_locate_provider_disabled">De gevraagde locatieprovider \"%s\" is uitgeschakeld.</string>
     <string name="Notification_ExecutionService">Opdrachtuitvoering</string>
@@ -213,8 +203,6 @@
     <string name="executing_title">Opdracht wordt uitgevoerd</string>
     <string name="executing_text">De opdracht \"%1$s\" wordt uitgevoerd door \"%2$s\".</string>
     <string name="dont_show_again">Niet meer laten zien</string>
-    <string name="delete_pw_warning_no_backup">Waarschuwing: Het wachtwoord wordt niet opgenomen in de back-up van de app.</string>
-    <string name="delete_pw_warning_empty">Waarschuwing: Verwijderen zal niet lukken, omdat het wachtwoord voor verwijdering kreeg is. U moet de functie inschakelen en ook een wachtwoord instellen.</string>
     <string name="veto_edge_info_message">Dit is de Edge-variant variant van Veto. Hier begint een standaard opdracht met \"vetoe\" (i.p.v \"veto\"). Om bijv. de locatie op te vragen, gebruikt u \"vetoe locate\". Zo kunnen beide varianten op een apparaat geïnstalleerd staan en kunnen opdrachten aan de een of de ander worden gericht.</string>
     <string name="Fused">Gefuseerd</string>
     <string name="cmd_bluetooth_response_is_on">Bluetooth is aan.</string>

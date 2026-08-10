@@ -88,7 +88,6 @@
     <string name="Locked_Lock_Screen">Veto\n此设备已锁定！\n来自机主的消息：</string>
     <string name="cmd_camera_response_no_veto_server">无法拍照：不存在 Veto 服务器账户。</string>
     <string name="cmd_ring_description_short">使设备响铃</string>
-    <string name="cmd_delete_response_disabled">无法删除：设置中未启用删除命令。</string>
     <string name="cmd_lock_description_long">锁定设备，并可选择在锁屏上显示消息。在此之后，生物识别解锁将不可用，需要您的设备密码才能解锁设备。</string>
     <string name="transport_inapp_send_command_button_send">发送</string>
     <string name="appearance_language">语言</string>
@@ -99,7 +98,6 @@
     <string name="cmd_locate_response_gps_fail">获取新的 GPS 位置失败，可能是因为超时。</string>
     <string name="perm_bluetooth_connect_name">连接蓝牙</string>
     <string name="transport_sms_title">短信</string>
-    <string name="cmd_delete_description_short">设备恢复出厂设置</string>
     <string name="required_permissions_title">必需权限</string>
     <string name="transport_notification_reply_title">通知回复</string>
     <string name="appearance_dynamic_colors">动态配色</string>
@@ -108,8 +106,6 @@
     <string name="cmd_camera_description_short">拍照</string>
     <string name="cmd_camera_description_long">使用前置/后置摄像头拍摄照片并将其上传到 Veto 服务器，目前仅支持上传到 Veto 服务器。您也可以通过其他传输通道发送此命令，图片将上传到 Veto 服务器（如果存在账户）。</string>
     <string name="cmd_camera_response_success">设备正在拍照，并将其发送到 Veto 服务器。您很快可以在此处查看：%s</string>
-    <string name="cmd_delete_response_failed">由于异常，删除设备失败。</string>
-    <string name="cmd_delete_response_success">该设备现在应该已删除。再见！</string>
     <string name="cmd_locate_response_location_off">无法定位：定位功能已关闭。</string>
     <string name="cmd_help_message_start">Veto 命令：</string>
     <string name="cmd_locate_response_gps_will_follow">很快将发送 GPS 坐标。</string>
@@ -135,9 +131,6 @@
     <string name="appearance_theme_choose">选择主题</string>
     <string name="appearance_theme_follow_system">跟随系统</string>
     <string name="appearance_theme_light">浅色</string>
-    <string name="cmd_delete_response_pwd_missing">无法删除：缺少密码。用途：%s。</string>
-    <string name="cmd_delete_description_long">这将抹除所有数据。之后，您将无法再与设备通信。为了防止意外和恶意使用，此命令需要密码，并且需要在设置中明确启用。</string>
-    <string name="cmd_delete_response_pwd_wrong">无法删除：密码错误。</string>
     <string name="cmd_locate_description_short">定位设备</string>
     <string name="cmd_locate_description_long">通过单/多定位源获取设备位置。GPS 定位‌精度最高，但可能失效；“fused”定位源是 Android 系统级服务，会综合 WiFi/基站等信号源；“cell”定位源会查询 OpenCelliD 与 BeaconDB 公共数据库获取周边基站位置。</string>
     <string name="cmd_lock_description_short">锁定设备</string>
@@ -150,7 +143,6 @@
     <string name="crashed_continue_without">继续而不报告</string>
     <string name="LockScreen_Backbutton_pressed">锁屏消息：按下后退按钮。</string>
     <string name="log_view_clear">清除日志</string>
-    <string name="cmd_delete_response_dry_run">试运行成功，正在跳过实际的设备删除。</string>
     <string name="cmd_gps_response_off">定位服务已关闭。</string>
     <string name="cmd_locate_response_opencellid_failed">从 OpenCelliD 获取位置时出错。如果基站不在数据库中，则可能会发生这种情况。\n\n请尝试以下链接：%1$s\n\n%2$s</string>
     <string name="cmd_stats_description_short">获取网络统计信息</string>
@@ -203,8 +195,6 @@
     <string name="Settings_Set_Pin">设置 PIN</string>
     <string name="Settings_Change_Pin">更改 PIN</string>
     <string name="pin_min_length">PIN 必须至少包含 8 个字符，建议至少包含 16 个字符。</string>
-    <string name="delete_pw_warning_no_backup">警告：应用备份中未包含密码。</string>
-    <string name="delete_pw_warning_empty">警告：由于删除密码为空，无法执行删除操作。您必须同时启用该功能并设置密码。</string>
     <string name="allowlist_invalid_number">此手机号不可用！</string>
     <string name="veto_edge_info_message">这是 Veto 的测试版本，此版本默认命令关键词为“vetoe”（而非正式版的“veto”）。例如，发送定位命令需使用“vetoe locate”。该设计允许在同一设备中同时安装测试版与正式版，并可向指定版本发送命令。</string>
     <string name="cmd_flash_description_short">开启闪光灯</string>
@@ -216,6 +206,4 @@
     <string name="executing_title">正在执行命令</string>
     <string name="executing_text">指令“%1$s”正由“%2$s”执行。</string>
     <string name="setup_recommendations_title">建议</string>
-    <string name="missing_push_title">缺少 UnifiedPush 支持</string>
-    <string name="missing_push_description">未安装 UnifiedPush 分发器应用将无法接收 Veto 服务器命令。</string>
     </resources>

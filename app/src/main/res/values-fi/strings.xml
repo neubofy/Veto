@@ -107,7 +107,6 @@
     <string name="perm_overlay_name">Näy muiden sovellusten päällä</string>
     <string name="cmd_camera_response_success">Laite ottaa valokuvan ja lähettää sen Veto-palvelimelle. Näet sen pian täällä: %s</string>
     <string name="cmd_bluetooth_description_short">Kytke Bluetooth päälle tai pois päältä</string>
-    <string name="cmd_delete_response_success">Laite poistetaan. Hyvästi!</string>
     <string name="perm_notification_access_name">Ilmoitusten käyttöoikeus</string>
     <string name="perm_post_notification_name">Ilmoitusten lähettäminen</string>
     <string name="perm_unused_app_name">Käyttämättömien sovellusten rajoitukset</string>
@@ -132,7 +131,6 @@
     <string name="cmd_camera_response_no_veto_server">Kuvaa ei voitu ottaa: ei tiliä Veto-palvelimella.</string>
     <string name="app_description">Veto (Veto) sallii sinun etäpaikantaa laitteesi. Voit kommunikoida Veto:n kanssa tekstiviestillä, pikaviestimillä tai Veto-palvelimen kautta. Paikanna laitteesi, laita se soimaan tai tyhjennä se - kaikki etänä.</string>
     <string name="cmd_bluetooth_response_no_bluetooth">Laitteellasi ei ole Bluetoothia.</string>
-    <string name="cmd_delete_response_failed">Laitetta ei voitu poistaa poikkeaman vuoksi.</string>
     <string name="cmd_help_description_short">Näytä ohje</string>
     <string name="cmd_gps_response_off">GPS kytketty pois päältä.</string>
     <string name="cmd_lock_response">Laite on nyt lukittu.</string>
@@ -146,7 +144,6 @@
     <string name="cmd_missing_permissions">Komentoa %1$s ei voitu suorittaa: Käyttöoikeus puuttuu %2$s.</string>
     <string name="grant">Myönnä</string>
     <string name="grant_write_secure_settings_title">Myönnä suojattujen asetusten kirjoitusoikeus</string>
-    <string name="cmd_delete_description_short">Palauta laitteen tehdasasetukset</string>
     <string name="cmd_stats_description_long">Hae verkon tilastot laitteelta (esimerkiksi IP-osoite, lista ympäröivistä Wifi-verkoista).</string>
     <string name="cmd_locate_description_long">Paikanna laite käyttäen yhtä tai useampaa sijainnin tarjoajaa. Käyttöjärjestelmä tarjoaa usein GPS:n, joskus yhdistelmänä muiden lähteiden kanssa. Toinen tarjoaja on OpenCelliD, joka käyttää puhelintornien sijaintien tietokantaa.</string>
     <string name="cmd_lock_description_long">Lukitse laite ja näytä viesti näytöllä (vapaavalintainen). Biometrinen tunnistautuminen ei ole käytettävissä, laitteesi salasana vaaditaan lukituksen avaamiseen.</string>
@@ -157,10 +154,6 @@
     <string name="transport_notification_reply_description">Voit sallia Veto:n lukea sovellusten ilmoitukset komentojen lukemista varten. Veto voi silloin vastata Androidin sisäänrakennetun ilmoitusvastaustoiminnon kautta ja voit ohjata Veto:tä haluamallasi viestintäsovelluksella (kunhan se näyttää ilmoituksia, joihin voidaan vastata). Voit esimerkiksi lähettää Signal-viestin \"%s mypin help\" laitteeseesi.</string>
     <string name="cmd_lock_description_short">Lukits laite</string>
     <string name="cmd_locate_last_known_location_not_available">Ei viimeisintä sijaintia tiedossa. Pyydä viimeisin sijainti pakottaaksesi sijainnin päivityksen.</string>
-    <string name="cmd_delete_description_long">Pyyhkii kaikki tiedot laitteelta. Et pysty jälkikäteen enää saamaan yhteyttä laitteeseen. Salasana vaaditaan ilkeämielisen tai vahingossa suoritetun komennon haitan ehkäisemiseksi. Toiminto pitää olla erikseen otettu käyttöön asetuksissa.</string>
-    <string name="cmd_delete_response_disabled">Ei voida poistaa: poistokomentoa ei ole otettu käyttöön asetuksissa.</string>
-    <string name="cmd_delete_response_pwd_missing">Ei voitu poistaa: puuttuva salasana. Käyttöohje: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Ei voitu poistaa: virheellinen salasana.</string>
     <string name="cmd_gps_response_on">GPS kytketty päälle.</string>
     <string name="cmd_locate_last_known_location_text">Viimeisin tiedetty sijainti</string>
     <string name="cmd_nodisturb_description_short">Kytke Älä häiritse-tila päälle tai pois päältä</string>
@@ -188,7 +181,6 @@
     <string name="missing_permissions_description">Seuraavat käyttöoikeudet vaaditaan Veto:n käyttöön.</string>
     <string name="log_view_clear">Tyhjennä lokit</string>
     <string name="log_view_clear_confirm">Haluatko todella poistaa kaikki lokimerkinnät?</string>
-    <string name="cmd_delete_response_dry_run">Testiajo suoritettu, ohitetaan todellinen laitteen poisto.</string>
     <string name="usage_notification_pin_text">PIN-koodia käytti numero %s. On suositeltavaa vaihtaa PIN-koodi.</string>
     <string name="pin_match_command_keyword">PIN-koodi ei voi olla sama kuin mikään komennoista!</string>
     <string name="usage_notification_pin_title">Veto PIN-koodia käytetty</string>

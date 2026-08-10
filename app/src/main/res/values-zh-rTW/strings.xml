@@ -115,14 +115,6 @@
     <string name="cmd_camera_description_long">使用前鏡頭或後鏡頭拍攝照片，並將其上傳至 Veto 伺服器。目前僅支援上傳至 Veto 伺服器。您也可以透過其他傳輸管道傳送此指令，照片仍會上傳至 Veto 伺服器（若已設定帳號）。</string>
     <string name="cmd_camera_response_no_veto_server">無法拍攝照片：尚未設定 Veto 伺服器帳號。</string>
     <string name="cmd_camera_response_success">裝置正在拍攝照片，並將傳送至 Veto 伺服器。您很快就可以在這裡查看：%s</string>
-    <string name="cmd_delete_description_short">將裝置恢復為出廠設定</string>
-    <string name="cmd_delete_description_long">此操作將清除所有資料。完成後，您將無法再與該裝置進行通訊。為防止誤觸或惡意使用，此指令需要輸入密碼，且必須在設定中明確啟用。</string>
-    <string name="cmd_delete_response_disabled">無法刪除：尚未在設定中啟用刪除指令。</string>
-    <string name="cmd_delete_response_pwd_missing">無法刪除：缺少密碼。 用途：%s。</string>
-    <string name="cmd_delete_response_pwd_wrong">無法刪除：密碼錯誤。</string>
-    <string name="cmd_delete_response_dry_run">模擬執行成功，已略過實際的裝置刪除操作。</string>
-    <string name="cmd_delete_response_failed">由於發生例外狀況，裝置刪除失敗。</string>
-    <string name="cmd_delete_response_success">裝置現在應已刪除。再見！</string>
     <string name="cmd_flash_description_short">閃爍相機補光燈</string>
     <string name="cmd_gps_description_short">切換定位服務開啟或關閉</string>
     <string name="cmd_gps_response_on">定位服務已開啟。</string>
@@ -199,8 +191,6 @@
     <string name="setup_recommendations_title">建議事項</string>
     <string name="missing_permissions_title">缺少權限</string>
     <string name="missing_permissions_description">Veto 需要以下權限才能運作。</string>
-    <string name="missing_push_title">缺少 UnifiedPush</string>
-    <string name="missing_push_description">若沒有 UnifiedPush 分發器應用程式，將無法從 Veto 伺服器接收指令。</string>
     <string name="Locked_Lock_Screen">Veto\n此裝置已被鎖定！\n來自裝置擁有者的訊息：</string>
     <string name="LockScreen_Usage_detectd">鎖定畫面訊息：偵測到使用行為。</string>
     <string name="LockScreen_Backbutton_pressed">鎖定畫面訊息：已按下返回鍵。</string>
@@ -213,8 +203,6 @@
     <string name="crashed_continue_without">不回報並繼續</string>
     <string name="Notification_Server_Description">與 Veto 伺服器相關的通知</string>
     <string name="dont_show_again">不再顯示</string>
-    <string name="delete_pw_warning_no_backup">警告：應用程式備份不含密碼。</string>
-    <string name="delete_pw_warning_empty">警告：由於刪除密碼為空，刪除功能將無法運作。您必須同時啟用此功能並設定密碼。</string>
     <string name="veto_edge_info_message">這是 Veto 的 edge 版本。在此版本中，預設指令關鍵字為「vetoe」（而非「veto」）。例如，若要傳送定位（locate）指令，請使用「vetoe locate」。這樣可在同一台裝置上同時安裝 edge 與正式版（prod），並分別將指令傳送至其中之一。</string>
     <string name="Fused">融合位置</string>
     <string name="tip_first_contact_added">恭喜，您已新增第一位聯絡人！您現在可以透過從允許的電話號碼傳送開頭為「%1$s」的簡訊來與 Veto 通訊。例如，傳送「%2$s help」或「%3$s flash」。當一切正常運作時，應用程式會回應。</string>
