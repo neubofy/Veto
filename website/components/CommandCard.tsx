@@ -42,7 +42,11 @@ export default function CommandCard({
     }
     // If this command matches the last executed command for this card, highlight it
     if (res && res.command === cmd) {
-      return { border: '2px solid #58a6ff', backgroundColor: 'rgba(88, 166, 255, 0.15)', boxShadow: '0 0 10px rgba(88,166,255,0.3)' };
+      return { 
+        boxShadow: '0 0 0 3px var(--bg-color), 0 0 0 6px var(--primary-color)',
+        filter: 'brightness(1.15)',
+        fontWeight: 'bold'
+      };
     }
     return {};
   };
@@ -107,7 +111,7 @@ export default function CommandCard({
                 key={idx}
                 disabled={isPending}
                 onClick={() => onSendCommand(b.cmd)}
-                className={`btn ${res && res.command === b.cmd ? 'btn-primary' : b.danger ? 'btn-danger' : ''}`}
+                className={`btn ${b.danger ? 'btn-danger' : 'btn-primary'}`}
                 style={{ flex: 1, padding: '7px 8px', fontSize: '0.8rem', whiteSpace: 'nowrap', ...getBtnStyle(b.cmd) }}
               >
                 {b.label}
