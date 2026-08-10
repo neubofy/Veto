@@ -24,10 +24,8 @@ class BootReceiver : BroadcastReceiver() {
             val settings = SettingsRepository.getInstance(context)
             if (settings.get(com.neubofy.veto.data.Settings.SET_THEFT_MODE_ACTIVE) == true) {
                 try {
-                    context.log().i(TAG, "Theft mode was active before boot, restarting from suspected phase.")
+                    context.log().i(TAG, "Theft mode was active before boot, restarting as confirmed theft.")
                     val theftCommand = com.neubofy.veto.commands.TheftCommand(context)
-                    // We temporarily set it to false so the command doesn't block it as a duplicate
-                    settings.set(com.neubofy.veto.data.Settings.SET_THEFT_MODE_ACTIVE, false)
                     theftCommand.executeInternal(context)
                 } catch (e: Exception) {
                     context.log().e(TAG, "Failed to restart theft recovery on boot: ${e.message}")

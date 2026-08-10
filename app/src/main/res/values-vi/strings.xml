@@ -1,11 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="cmd_camera_response_success">Thiết bị đang chụp ảnh và sẽ gửi nó đến máy chủ Veto. Bạn có thể xem nó ở đây sớm thôi: %s</string>
-    <string name="cmd_delete_description_short">Đặt lại thiết bị về cài đặt gốc</string>
-    <string name="cmd_delete_description_long">Điều này xóa tất cả dữ liệu. Sau đó, bạn sẽ không còn có thể giao tiếp với thiết bị. Để ngăn chặn việc sử dụng ngẫu nhiên và độc hại, lệnh này yêu cầu một mật khẩu và cần được bật rõ ràng trong cài đặt.</string>
-    <string name="cmd_delete_response_disabled">Không thể xóa: lệnh xóa không được bật trong cài đặt.</string>
-    <string name="cmd_delete_response_pwd_wrong">Không thể xóa: mật khẩu sai.</string>
-    <string name="cmd_delete_response_failed">Không thể xóa thiết bị do một ngoại lệ.</string>
     <string name="cmd_gps_description_short">Bật và tắt GPS</string>
     <string name="cmd_gps_response_on">GPS đã được bật.</string>
     <string name="cmd_gps_response_off">GPS đã được tắt.</string>
@@ -143,8 +138,6 @@
     <string name="log_view_clear_confirm">Bạn có thực sự muốn xóa tất cả các mục nhật ký không?</string>
     <string name="notify_crypto_update_title">Cần hành động</string>
     <string name="cmd_camera_description_long">Chụp một bức ảnh bằng camera trước/sau và tải lên Veto Server. Hiện tại chỉ hỗ trợ tải lên Veto Server. Bạn cũng có thể gửi lệnh này qua các kênh vận chuyển khác, và bức ảnh sẽ được tải lên Veto Server (nếu tài khoản tồn tại).</string>
-    <string name="cmd_delete_response_pwd_missing">Không thể xóa: thiếu mật khẩu. Cách sử dụng: %s.</string>
-    <string name="cmd_delete_response_success">Thiết bị bây giờ nên được xóa. Tạm biệt!</string>
     <string name="cmd_locate_description_long">Xác định vị trí thiết bị bằng một hoặc nhiều nhà cung cấp vị trí. Nhà cung cấp hệ điều hành thường là GPS, đôi khi kết hợp với các nguồn khác. Một nhà cung cấp thứ hai là OpenCelliD, sử dụng cơ sở dữ liệu về vị trí của các trạm phát sóng di động.</string>
     <string name="perm_write_secure_settings_name">Ghi Cài Đặt Bảo Mật</string>
     <string name="Permission_IGNORE_BATTERY_OPTIMIZATION">Ứng dụng này được thiết kế để hoạt động trong nền. Để đảm bảo nó hoạt động ngay cả khi thiết bị của bạn ở chế độ chờ, bạn cần tắt tối ưu hóa pin cho ứng dụng này.</string>
@@ -166,7 +159,6 @@
     <string name="app_description">Veto (Tìm Thiết Bị Của Tôi) cho phép bạn định vị thiết bị của mình từ xa. Bạn có thể giao tiếp với Veto qua SMS, ứng dụng nhắn tin tức thì, hoặc sử dụng Veto Server. Định vị thiết bị của bạn, làm cho nó kêu, khóa nó, hoặc xóa nó - tất cả từ xa.</string>
     <string name="notify_crypto_update_text">Bạn cần cập nhật một số cài đặt để tiếp tục sử dụng Veto. Nhấp để mở.</string>
     <string name="server_unregister_continue_anyway">Tiếp tục dù sao</string>
-    <string name="cmd_delete_response_dry_run">Chạy thử thành công, bỏ qua việc xóa thiết bị thực tế.</string>
     <string name="cmd_locate_response_gps_will_follow">Tọa độ GPS sẽ được gửi sớm.</string>
     <string name="cmd_lock_response">Thiết bị bây giờ nên được khóa.</string>
     <string name="cmd_lock_description_long">Khóa thiết bị và tùy chọn hiển thị một thông điệp trên màn hình khóa. Sau đó, mở khóa sinh trắc học sẽ không khả dụng và mật khẩu thiết bị của bạn sẽ được yêu cầu để mở khóa thiết bị.</string>

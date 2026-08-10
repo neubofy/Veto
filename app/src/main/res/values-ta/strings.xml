@@ -14,8 +14,6 @@
     <string name="cmd_camera_description_long">முன்/பின் கேமராவுடன் ஒரு படத்தை எடுத்து Veto சேவையகத்தில் பதிவேற்றுகிறது. தற்போது எஃப்எம்டி சேவையகத்தில் மட்டுமே பதிவேற்றுவது ஆதரிக்கப்படுகிறது. இந்த கட்டளையை பிற போக்குவரத்து சேனல்கள் வழியாகவும் அனுப்பலாம், மேலும் படம் Veto சேவையகத்தில் பதிவேற்றப்படும் (ஒரு கணக்கு இருந்தால்).</string>
     <string name="cmd_camera_response_no_veto_server">படம் எடுக்க முடியாது: எஃப்எம்டி சேவையக கணக்கு எதுவும் இல்லை.</string>
     <string name="cmd_camera_response_success">சாதனம் ஒரு படத்தை எடுத்து எஃப்எம்டி சேவையகத்திற்கு அனுப்பும். நீங்கள் அதை விரைவில் இங்கே காணலாம்: %s</string>
-    <string name="cmd_delete_description_short">தொழிற்சாலை சாதனத்தை மீட்டெடுக்கிறது</string>
-    <string name="cmd_delete_response_success">சாதனம் இப்போது நீக்கப்பட வேண்டும். குட்பை!</string>
     <string name="transport_notification_reply_title">அறிவிப்பு பதில்</string>
     <string name="Notification_InApp">பயன்பாட்டு போக்குவரத்து சேனல்</string>
     <string name="Notification_InApp_Description">பயன்பாட்டு போக்குவரத்து சேனலில் இருந்து அறிவிப்புகள்</string>
@@ -109,12 +107,6 @@
     <string name="cmd_bluetooth_response_no_bluetooth">சாதனத்தில் ஊடலை இருப்பதாகத் தெரியவில்லை.</string>
     <string name="cmd_bluetooth_response_on">ஊடலை இயக்கப்பட்டது.</string>
     <string name="cmd_bluetooth_response_off">ஊடலை அணைக்கப்பட்டது.</string>
-    <string name="cmd_delete_description_long">இது எல்லா தரவையும் துடைக்கிறது. பின்னர் நீங்கள் இனி சாதனத்துடன் தொடர்பு கொள்ள முடியாது. தற்செயலான மற்றும் தீங்கிழைக்கும் பயன்பாட்டைத் தடுக்க, இந்த கட்டளைக்கு கடவுச்சொல் தேவைப்படுகிறது, மேலும் இது அமைப்புகளில் வெளிப்படையாக இயக்கப்பட வேண்டும்.</string>
-    <string name="cmd_delete_response_disabled">நீக்க முடியாது: அமைப்புகளில் நீக்குதல் கட்டளை இயக்கப்படவில்லை.</string>
-    <string name="cmd_delete_response_pwd_missing">நீக்க முடியாது: கடவுச்சொல்லைக் காணவில்லை. பயன்பாடு: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">நீக்க முடியாது: தவறான கடவுச்சொல்.</string>
-    <string name="cmd_delete_response_dry_run">உலர் ரன் வெற்றிகரமாக, உண்மையான சாதன நீக்குதலைத் தவிர்க்கிறது.</string>
-    <string name="cmd_delete_response_failed">விதிவிலக்கு காரணமாக சாதனத்தை நீக்கத் தவறிவிட்டது.</string>
     <string name="cmd_gps_description_short">இருப்பிடச் சேவைகளை இயக்கவும் முடக்கவும்</string>
     <string name="cmd_gps_response_on">இருப்பிடச் சேவைகள் இயக்கப்பட்டன.</string>
     <string name="cmd_gps_response_off">இருப்பிடச் சேவைகள் முடக்கப்பட்டுள்ளன.</string>
@@ -205,8 +197,6 @@
     <string name="Fused">உருகியது</string>
     <string name="dont_show_again">மீண்டும் காட்டாதே</string>
     <string name="pin_min_length">பின்னில் குறைந்தது 8 எழுத்துகள் இருக்க வேண்டும். 16 அல்லது அதற்கு மேற்பட்டவை பரிந்துரைக்கப்படுகின்றன.</string>
-    <string name="delete_pw_warning_no_backup">எச்சரிக்கை: பயன்பாட்டின் காப்புப்பிரதியில் கடவுச்சொல் சேர்க்கப்படவில்லை.</string>
-    <string name="delete_pw_warning_empty">எச்சரிக்கை: நீக்கு கடவுச்சொல் காலியாக இருப்பதால், நீக்குவது வேலை செய்யாது. நீங்கள் இருவரும் அம்சத்தை இயக்க வேண்டும் மற்றும் கடவுச்சொல்லை அமைக்க வேண்டும்.</string>
     <string name="allowlist_invalid_number">இந்த தொலைபேசி எண் தவறானது!</string>
     <string name="veto_edge_info_message">இது எஃப்எம்டியின் விளிம்பு மாறுபாடு ஆகும். இங்கே, முன்னிருப்பு கட்டளை முக்கிய சொல் \"vetoe\" (\"veto\" க்கு பதிலாக). எடுத்துக்காட்டாக, locate கட்டளையை அனுப்ப, \"vetoe locate\" ஐப் பயன்படுத்தவும். இது ஒரே சாதனத்தில் எட்ச் மற்றும் ப்ராட் இரண்டையும் நிறுவி, இரண்டில் ஒன்றை இலக்காகக் கட்டளையிட அனுமதிக்கிறது.</string>
     <string name="cmd_bluetooth_response_is_on">ஊடலை இயக்கத்தில் உள்ளது.</string>
@@ -219,7 +209,5 @@
     <string name="Notification_ExecutionService_Description">தற்போது கட்டளைகளை இயக்குவதற்கான அறிவிப்புகள்</string>
     <string name="executing_title">கட்டளையை செயல்படுத்துதல்</string>
     <string name="executing_text">\"%1$s\" கட்டளை \"%2$s\" ஆல் செயல்படுத்தப்படுகிறது.</string>
-    <string name="missing_push_title">UnifiedPush காணவில்லை</string>
-    <string name="missing_push_description">UnifiedPush விநியோகச்தர் பயன்பாடு இல்லாமல் Veto சேவையகத்திலிருந்து கட்டளைகளைப் பெற முடியாது.</string>
     <string name="tip_first_contact_added">வாழ்த்துகள், உங்கள் முதல் தொடர்பைச் சேர்த்துவிட்டீர்கள்! அனுமதிக்கப்பட்ட ஃபோன் எண்ணிலிருந்து \"%1$s\" எனத் தொடங்கும் குறுஞ்செய்தி அனுப்புவதன் மூலம் நீங்கள் இப்போது veto உடன் தொடர்புகொள்ளலாம். எடுத்துக்காட்டாக, \"%2$s உதவி\" அல்லது \"%3$s ஃபிளாஷ்\" என்பதை அனுப்பவும். எல்லாம் வேலை செய்யும்போது, பயன்பாடு பதிலளிக்கும்.</string>
 </resources>

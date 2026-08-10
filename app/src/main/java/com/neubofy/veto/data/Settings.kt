@@ -9,7 +9,6 @@ class Settings : HashMap<Int, Any>() {
     companion object {
         const val SETTINGS_VERSION = 3
 
-        const val SET_WIPE_ENABLED = 0
         const val SET_ACCESS_VIA_PIN = 1
         const val SET_LOCKSCREEN_MESSAGE = 2
         const val SET_PIN = 3
@@ -41,6 +40,7 @@ class Settings : HashMap<Int, Any>() {
         const val SET_THEFT_WRONG_PASS_ATTEMPTS = 707
         const val SET_THEFT_WRONG_PASS_COUNT = 708
         const val SET_THEFT_MODE_CONFIRMED = 709
+        const val SET_THEFT_SUSPECTED_DURATION = 710
     }
 
     override fun get(key: Int): Any {
@@ -48,7 +48,6 @@ class Settings : HashMap<Int, Any>() {
             return super.get(key)!!
         }
         return when (key) {
-            SET_WIPE_ENABLED,
             SET_ACCESS_VIA_PIN,
             SET_FIRST_TIME_WHITELIST,
             SET_FIRST_TIME_CONTACT_ADDED,
@@ -61,6 +60,7 @@ class Settings : HashMap<Int, Any>() {
 
             SET_Veto_COMMAND -> "veto"
             SET_VOLUME_ENFORCE_INTERVAL -> 2
+            SET_THEFT_SUSPECTED_DURATION -> 3
             SET_THEFT_WRONG_PASS_ATTEMPTS -> 3
             SET_SET_VERSION,
             SET_APP_CRASHED_LOG_ENTRY,

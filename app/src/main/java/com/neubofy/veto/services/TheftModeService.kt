@@ -9,8 +9,10 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.neubofy.veto.R
-import com.neubofy.veto.commands.LocateCommand
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.utils.DisturbThief
@@ -31,7 +33,7 @@ class TheftModeService : Service(), TheftEventListener {
     companion object {
         private const val CHANNEL_ID = "veto_theft_service"
         private const val NOTIFICATION_ID = 702
-        private const val LOCATE_COOLDOWN_MS = 5 * 60 * 1000L // 5 minutes
+        private const val WORK_LOCATE_NAME = "veto_theft_locate_worker"
         
         const val ACTION_GOOD_EVENT = "ACTION_GOOD_EVENT"
     }
@@ -81,6 +83,9 @@ class TheftModeService : Service(), TheftEventListener {
         super.onDestroy()
         sensorManager.unregister()
         disturbThief.stop()
+        
+        // Cancel the background location worker when theft mode stops
+        WorkManager.getInstance(this).cancelUniqueWork(WORK_LOCATE_NAME)
     }
 
     override fun onBadEvent(type: String) {
@@ -94,22 +99,16 @@ class TheftModeService : Service(), TheftEventListener {
         val ringtoneUri = settings.get(Settings.SET_RINGER_TONE) as String
         disturbThief.start(ringtoneUri)
 
-        // Intelligent Locate
-        val now = System.currentTimeMillis()
-        if (now - lastLocateTime > LOCATE_COOLDOWN_MS) {
-            val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
-            val activeNetwork = cm.activeNetworkInfo
-            if (activeNetwork != null && activeNetwork.isConnectedOrConnecting) {
-                lastLocateTime = now
-                Log.d("TheftModeService", "Triggering locate command")
-                
-                CoroutineScope(Dispatchers.IO).launch {
-                    val locateCmd = LocateCommand(this@TheftModeService)
-                    val dummyTransport = com.neubofy.veto.transports.InAppTransport(this@TheftModeService)
-                    locateCmd.execute(emptyList(), dummyTransport)
-                }
-            }
-        }
+        // Intelligent Locate (Background Worker)
+        val locateWork = PeriodicWorkRequestBuilder<com.neubofy.veto.workers.TheftLocateWorker>(
+            15, java.util.concurrent.TimeUnit.MINUTES
+        ).build()
+        
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            WORK_LOCATE_NAME,
+            ExistingPeriodicWorkPolicy.KEEP,
+            locateWork
+        )
     }
 
     override fun onGoodEvent(type: String) {

@@ -43,7 +43,6 @@
     <string name="crashed_open_issuetracker">Ava veahaldus</string>
     <string name="appearance_theme_light">Hele kujundus</string>
     <string name="Notification_FAIL">Vead</string>
-    <string name="cmd_delete_response_pwd_missing">Kustutamine pole võimalik: salasõna on puudu. Kasutusjuhend: %s.</string>
     <string name="perm_camera_name">Kaamera</string>
     <string name="perm_location_name">Asukoht</string>
     <string name="Settings_Veto_Server_Connection_Status_Success">Õnnestus</string>
@@ -84,15 +83,9 @@
     <string name="cmd_camera_description_short">Pildista ümbrust</string>
     <string name="cmd_bluetooth_description_short">Lülita Bluetooth sisse/välja</string>
     <string name="cmd_bluetooth_response_no_bluetooth">Siin nutiseadmes ei tundu olema Bluetoothi.</string>
-    <string name="cmd_delete_response_pwd_wrong">Kustutamine pole võimalik: vale salasõna.</string>
     <string name="cmd_gps_description_short">Lülita asukohateenused sisse/välja</string>
     <string name="cmd_gps_response_on">Asukohateenused on sees.</string>
-    <string name="cmd_delete_description_short">Lähtesta nutiseade tootja algolekusse</string>
     <string name="cmd_camera_response_no_veto_server">Pildistada pole võimalik: ei leidu Veto serveri kasutajakontot.</string>
-    <string name="cmd_delete_response_disabled">Kustutamine pole võimalik: vastav käsk on seadistsutest keelatud.</string>
-    <string name="cmd_delete_response_dry_run">Katse õnnestus, tegelik kustutamine jääb tegemata.</string>
-    <string name="cmd_delete_response_failed">Kustutamine ei õnnestunud vea tõttu.</string>
-    <string name="cmd_delete_response_success">Nutiseadme sisu kustutamine peaks algama nüüd. Nägemist!</string>
     <string name="cmd_gps_response_off">GPS on väljas.</string>
     <string name="cmd_locate_description_short">Tuvasta seadme asukoht</string>
     <string name="cmd_locate_response_gps_will_follow">GPS-koordinaadid on üsna kohe saadaval.</string>
@@ -159,8 +152,6 @@
     <string name="Settings_Set_Pin">Lisa PIN-kood</string>
     <string name="Settings_Change_Pin">Muuda PIN-koodi</string>
     <string name="pin_min_length">PIN-kood peab olema vähemalt 8 märki pikk, aga pigem 16 või enam oleks mõistlik.</string>
-    <string name="missing_push_description">Kui UnifiedPushi tõuketeadete levitaja on paigaldamata, siis siin nutiseadmes ei saa vastu võtta käske Veto serverist.</string>
-    <string name="missing_push_title">UnifiedPush on puudu</string>
     <string name="allowlist_invalid_number">See telefoninumber on vigane!</string>
     <string name="setup_recommendations_title">Soovitused</string>
     <string name="usage_notification_title">Käsk on käivitatud</string>
@@ -192,7 +183,6 @@
     <string name="notify_crypto_update_text">Veto kasutamise jätkamiseks pead mõned seadistused uuendama. Jätkamiseks klõpsa valikut.</string>
     <string name="server_unregister_failed_body">Registreerimise lõpetamisel tekkis järgnev viga: {ERROR}\n\nSa saad jätkata, kuid arvesta, et kasutajakonto võib-olla pole serverist eemaldatud. Kui jätkad, siis kasutajakonto eemaldatakse sellest seadmest.</string>
     <string name="update_pin_hash_change_text">Rakenduse uuendamise ajal nulliti Veto PIN-kood. Kui tahad Veto rakenduse kasutamist jätkata, siis palun sisesta PIN-kood uuesti.</string>
-    <string name="cmd_delete_description_long">Järgnevaga kustuvad kõik andmed ja peale seda pole sul võimalik nutiseadmega enam suhelda. Vältimaks juhuslikku ja pahatahtlikku kasutamist selle võimaluse sisselülitamine eeldab, et kasutad salasõna ja võtad ta teadlikult kasutusele.</string>
     <string name="cmd_locate_response_gps_fail">Viimaste GPS-i koordinaatide tuvastamine ei õnnestunud. Võis vabalt juhtuda, et päring aegus.</string>
     <string name="cmd_locate_response_opencellid_failed">Viga asukoha tuvastamisel OpenCelliD abil. See võib juhtuda, kui antud sidemast ei leidu andmebaasis.\n\nPalun proovi järgnevat linki: %1$s\n\n%2$s</string>
     <string name="cmd_lock_description_long">Võid nutiseadme eemalt lukustada ja soovi korral kuvada lukustusvaates täiendavat teadet. Seejärel biomeetriline lukustuse eemaldamine lülitub välja ja pead selleks kasutama nutiseadme salasõna.</string>
@@ -213,8 +203,6 @@
     <string name="executing_title">Käsk on täitmisel</string>
     <string name="executing_text">„%2$s“ on hetkel täitmas „%1$s“ käsku.</string>
     <string name="dont_show_again">Ära näita enam uuesti</string>
-    <string name="delete_pw_warning_no_backup">Hoiatus: salasõna ei sisaldu rakenduse varukoopias.</string>
-    <string name="delete_pw_warning_empty">Hoiatus: Kuna kustutamise salasõna on tühi, siis kustutamine tegelikult ei toimi. Sa pead lülitama sisse nii antud funktsionaalsuse, kui sellega seotud salasõna.</string>
     <string name="veto_edge_info_message">See on Veto arendusversioon (edge). Sel puhul vaikimisi käsu märksõna on „vetoe“ („veto“ asemel). Näiteks asukoha tuvastamiskäsk on sel puhul „vetoe locate“. Niisugune lahendus võimaldab samas seadmes kasutada nii arendus- kui tavaversiooni ja käsuga saad juhtida kummaga neist soovid suhelda.</string>
     <string name="Fused">Kombineeritud</string>
     <string name="tip_first_contact_added">Õnnitleme, oled oma esimese kontakti lisanud! Saates lubatud telefoninumbrilt SMS-i , mille alguses on „%1$s“ saadki suhelda Veto-ga. Näiteks proovi käske „%2$s help“ või „%3$s flash“. Kui kõik toimib, siis rakendus reageerib vastavalt sinu käsule.</string>

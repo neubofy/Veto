@@ -151,7 +151,6 @@ dependencies {
     implementation 'com.jakewharton:process-phoenix:3.0.0'
     implementation "com.mikepenz:aboutlibraries:13.2.1"
     implementation "org.apache.maven:maven-artifact:3.9.11" // for semantic versions
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.83'
 
     // com.google.crypto.tink uses javax.annotation.concurrent.GuardedBy
     // Without this dependency providing GuardedBy, R8 complains when minifying.

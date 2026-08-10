@@ -46,8 +46,6 @@
     <string name="Settings_Select_Ringtone">Επιλογή ήχου κλήσης</string>
     <string name="Settings_no_ringtone_picker">Δεν βρέθηκε επιλογέας ήχου κλήσης!</string>
     <string name="Settings_Lockscreenmessage_Description">Μήνυμα οθόνης κλειδώματος:\nΌταν κλειδώνετε τη συσκευή, αυτό το μήνυμα θα εμφανίζεται στην οθόνη κλειδώματος.</string>
-    <string name="delete_pw_warning_no_backup">Προειδοποίηση: Ο κωδικός πρόσβασης δεν περιλαμβάνεται στο αντίγραφο ασφαλείας της εφαρμογής.</string>
-    <string name="delete_pw_warning_empty">Προειδοποίηση: Η διαγραφή δεν θα λειτουργήσει επειδή ο κωδικός διαγραφής είναι κενός. Πρέπει να ενεργοποιήσετε τη λειτουργία και να ορίσετε έναν κωδικό πρόσβασης.</string>
     <string name="Settings_Veto_Server_General">Γενικά</string>
     <string name="Settings_Veto_Server_Server_URL">Διεύθυνση URL διακομιστή:</string>
     <string name="Settings_Veto_Server_User_ID">Αναγνωριστικό χρήστη:</string>

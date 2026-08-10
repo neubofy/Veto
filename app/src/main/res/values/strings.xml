@@ -63,8 +63,6 @@
     <string name="Settings_Select_Ringtone">Select ringtone</string>
     <string name="Settings_no_ringtone_picker">No ringtone picker found!</string>
     <string name="Settings_Lockscreenmessage_Description">Lock screen message:\nWhen locking the device, this message will appear on the lock screen.</string>
-    <string name="delete_pw_warning_no_backup">Warning: The password is not included in the app backup.</string>
-    <string name="delete_pw_warning_empty">Warning: Deleting won\'t work because the delete password is empty. You must both enable the feature and set a password.</string>
 
     
     <string name="Settings_Veto_Server_General">General</string>
@@ -167,15 +165,6 @@
 
     <string name="cmd_video_description_short">[BETA] Record stealth video</string>
     <string name="cmd_video_description_long">Records 30 seconds of video from the front or back camera and uploads it directly to your Google Drive. Usage: video [front|back]</string>
-
-    <string name="cmd_delete_description_short">Factory-reset the device</string>
-    <string name="cmd_delete_description_long">This wipes all data. Afterwards you will no longer be able to communicate with the device. To prevent accidental and malicious usage, this command requires a password and it needs to be explicitly enabled in the settings.</string>
-    <string name="cmd_delete_response_disabled">Cannot delete: delete command is not enabled in settings.</string>
-    <string name="cmd_delete_response_pwd_missing">Cannot delete: missing password. Usage: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Cannot delete: wrong password.</string>
-    <string name="cmd_delete_response_dry_run">Dry run successful, skipping the actual device deletion.</string>
-    <string name="cmd_delete_response_failed">Failed to delete device due to an exception.</string>
-    <string name="cmd_delete_response_success">The device should now be deleted. Goodbye!</string>
 
     <string name="cmd_flash_description_short">Flash the camera light</string>
 
@@ -303,8 +292,6 @@
     <string name="setup_recommendations_title">Recommendations</string>
     <string name="missing_permissions_title">Missing permissions</string>
     <string name="missing_permissions_description">The following permissions are needed for Veto to run.</string>
-    <string name="missing_push_title">Missing UnifiedPush</string>
-    <string name="missing_push_description">Without a UnifiedPush distributor app you cannot receive commands from Veto Server.</string>
 
     
     <string name="Locked_Lock_Screen">Veto\nThis device is locked!\nMessage from the owner:</string>
@@ -334,7 +321,7 @@
     
     <string name="perm_bluetooth_connect_desc">Required to control Bluetooth state (e.g., enable/disable Bluetooth remotely).</string>
     <string name="perm_camera_desc">Required to take pictures remotely when you send the Camera command or trigger Theft Mode.</string>
-    <string name="perm_device_admin_desc">Required to lock the screen, wipe data, or prevent the app from being uninstalled easily.</string>
+    <string name="perm_device_admin_desc">Required to lock the screen or prevent the app from being uninstalled easily.</string>
     <string name="perm_dnd_desc">Required to bypass Do Not Disturb mode so the alarm can ring at full volume even when the device is silenced.</string>
     <string name="perm_location_desc">Required to fetch the precise GPS location of your device when requested.</string>
     <string name="perm_notification_access_desc">Required to intercept incoming notifications and reply to them for Notification-based commands.</string>

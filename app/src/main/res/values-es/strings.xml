@@ -82,9 +82,6 @@
     <string name="cmd_camera_description_short">Hacer una foto</string>
     <string name="cmd_camera_response_no_veto_server">No se puede hacer la fotografía: no existe ninguna cuenta del servidor Veto.</string>
     <string name="cmd_camera_response_success">El dispositivo está haciendo una foto y la enviará al servidor Veto. Puede verlo aquí pronto: %s</string>
-    <string name="cmd_delete_response_pwd_missing">No se puede eliminar: falta la contraseña. Usa: %s .</string>
-    <string name="cmd_delete_response_pwd_wrong">No se puede eliminar: contraseña incorrecta.</string>
-    <string name="cmd_delete_response_success">El dispositivo ahora debería eliminarse. ¡Adiós!</string>
     <string name="cmd_gps_description_short">Activar o desactivar el GPS</string>
     <string name="cmd_gps_response_on">GPS activado.</string>
     <string name="cmd_gps_response_off">GPS desactivado.</string>
@@ -121,9 +118,6 @@
     <string name="cmd_camera_description_long">Hacer una fotografía con la cámara frontal o trasera y la carga en el servidor Veto. Actualmente, solo se admite la carga en el servidor Veto. También puedes enviar este comando a través de otros canales de transporte y la fotografía se cargará en el servidor Veto (si existe una cuenta).</string>
     <string name="cmd_locate_description_long">Localice el dispositivo utilizando uno o más proveedores de ubicación. El proveedor del sistema operativo suele ser GPS, a veces con una combinación de otras fuentes. Un segundo proveedor es OpenCelliD, que utiliza una base de datos de ubicaciones de torres de telefonía móvil.</string>
     <string name="cmd_missing_permissions">No se puede ejecutar el comando %1$s: Falta permiso(s) %2$s.</string>
-    <string name="cmd_delete_response_disabled">No se puede eliminar: el comando eliminar no está habilitado en la configuración.</string>
-    <string name="cmd_delete_description_short">Ajuste de fábrica del dispositivo</string>
-    <string name="cmd_delete_description_long">Esto borrará todos los datos. Después de eso, ya no podrá comunicarse con el dispositivo. Para evitar el uso accidental y malintencionado, este comando requiere una contraseña y debe estar habilitado explícitamente en la configuración.</string>
     <string name="cmd_ring_description_short">Hacer que el dispositivo suene</string>
     <string name="perm_camera_name">Cámara</string>
     <string name="cmd_ring_response">El dispositivo ahora debería estar sonando.</string>
@@ -190,7 +184,6 @@
     <string name="appearance_language">Idioma</string>
     <string name="appearance_language_choose">Elegir idioma</string>
     <string name="appearance_language_system_default">Del sistema</string>
-    <string name="cmd_delete_response_failed">No se pudo eliminar el dispositivo debido a una excepción.</string>
     <string name="appearance_theme_choose">Elegir un tema</string>
     <string name="appearance_dynamic_colors">Colores dinámicos</string>
     <string name="appearance_theme">Tema</string>
@@ -203,7 +196,6 @@
     <string name="pin_match_command_keyword">¡El código PIN no debe ser igual a ninguno de los comandos!</string>
     <string name="usage_notification_pin_title">PIN Veto utilizado</string>
     <string name="usage_notification_pin_text">El PIN fue utilizado por este número: \" %s \". Se recomienda cambiar el PIN.</string>
-    <string name="cmd_delete_response_dry_run">La prueba se ha ejecutado correctamente, se omite la eliminación del dispositivo real.</string>
     <string name="allowlist_reset_title">Restablecimiento de contactos permitidos</string>
     <string name="update_pin_hash_change_text">El PIN de Veto se ha restablecido durante una actualización de la aplicación. Para seguir utilizando Veto con un PIN, configúralo de nuevo.</string>
     <string name="Settings_Pin_Not_Backed_Up">Atención: El PIN no se incluye en la copia de seguridad de la aplicación.</string>

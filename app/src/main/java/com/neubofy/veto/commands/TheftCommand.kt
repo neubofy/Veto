@@ -61,6 +61,28 @@ class TheftCommand(context: Context) : Command(context) {
             
             // Confirm theft and trigger bad event if re-triggered
             settings.set(Settings.SET_THEFT_MODE_CONFIRMED, true)
+            
+            enforceDeviceState()
+            
+            try {
+                val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+                if (dpm.isAdminActive(android.content.ComponentName(context, com.neubofy.veto.receiver.DeviceAdminReceiver::class.java))) {
+                    dpm.lockNow()
+                }
+            } catch (e: Exception) {
+                context.log().e("TheftCommand", "Failed to lock device: ${e.message}")
+            }
+
+            try {
+                val activityIntent = Intent(context, TheftSuspectedActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    putExtra("isConfirmed", true)
+                }
+                context.startActivity(activityIntent)
+            } catch (e: Exception) {
+                context.log().e("TheftCommand", "Failed to launch overlay: ${e.message}")
+            }
+
             val badEventIntent = Intent(context, TheftModeService::class.java).apply {
                 action = "ACTION_BAD_EVENT_RE_TRIGGER"
             }
@@ -105,7 +127,8 @@ class TheftCommand(context: Context) : Command(context) {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             
-            val triggerTime = System.currentTimeMillis() + (3 * 60 * 1000) // 3 minutes
+            val durationMins = settings.get(Settings.SET_THEFT_SUSPECTED_DURATION) as Int
+            val triggerTime = System.currentTimeMillis() + (durationMins * 60 * 1000L)
             
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
@@ -125,7 +148,8 @@ class TheftCommand(context: Context) : Command(context) {
             context.log().e("TheftCommand", "Failed to trigger locate command: ${e.message}")
         }
         
-        transport.send(context, "Theft mode activated. Device locked, 3-minute suspected phase started. Location requested.", keyword)
+        val durationMins = settings.get(Settings.SET_THEFT_SUSPECTED_DURATION) as Int
+        transport.send(context, "Theft mode activated. Device locked, ${durationMins}-minute suspected phase started. Location requested.", keyword)
     }
     
     // Made public so it can be called from SimStateReceiver without needing Transport

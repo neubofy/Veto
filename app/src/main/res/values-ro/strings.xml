@@ -99,14 +99,6 @@
     <string name="cmd_camera_description_long">Face o poză cu camera frontală/spate și o încarcă pe serverul Veto. În prezent, este suportată doar încărcarea către serverul Veto. Poți trimite această comandă și prin alte canale de transport, iar poza va fi încărcată pe serverul Veto (dacă există un cont).</string>
     <string name="cmd_camera_response_no_veto_server">Nu se poate face poză: nu există cont de server Veto.</string>
     <string name="cmd_camera_response_success">Dispozitivul face o poză și o va trimite pe serverul Veto. O poți vizualiza aici în curând: %s</string>
-    <string name="cmd_delete_description_short">Resetează dispozitivul la setările din fabrică</string>
-    <string name="cmd_delete_description_long">Aceasta șterge toate datele. Ulterior, nu vei mai putea comunica cu dispozitivul. Pentru a preveni utilizarea accidentală sau malițioasă, această comandă necesită o parolă și trebuie activată explicit în setări.</string>
-    <string name="cmd_delete_response_disabled">Nu se poate șterge: comanda de ștergere nu este activată în setări.</string>
-    <string name="cmd_delete_response_pwd_missing">Nu se poate șterge: lipsește parola. Utilizare: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Nu se poate șterge: parolă greșită.</string>
-    <string name="cmd_delete_response_dry_run">Testul de execuție a reușit, ștergerea efectivă a dispozitivului a fost sărită.</string>
-    <string name="cmd_delete_response_failed">Ștergerea dispozitivului a eșuat din cauza unei excepții.</string>
-    <string name="cmd_delete_response_success">Dispozitivul ar trebui să fie acum șters. La revedere!</string>
     <string name="cmd_gps_description_short">Activează/dezactivează GPS-ul</string>
     <string name="cmd_gps_response_on">GPS activat.</string>
     <string name="cmd_gps_response_off">GPS dezactivat.</string>

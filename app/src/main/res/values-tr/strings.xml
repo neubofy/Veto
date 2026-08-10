@@ -92,8 +92,6 @@
     <string name="OpenCellId_open_website">OpenCelliD Websitesini Aç</string>
     <string name="OpenCellId_test_no_connection">Hücre bağlantısı yok</string>
     <string name="cmd_camera_response_no_veto_server">Resim çekilemez: Veto Sunucusu hesabı yok.</string>
-    <string name="cmd_delete_response_failed">Bir istisna yüzünden cihazı silmek başarısız oldu.</string>
-    <string name="cmd_delete_response_success">Cihaz şimdi silinmiş olmalı. Güle güle!</string>
     <string name="cmd_gps_response_on">GPS açıldı.</string>
     <string name="cmd_locate_description_long">Bir ya da daha fazla konum sağlayıcısı kullanarak cihazın konumunu bul. İşletim sistemi sağlayıcısı, bazen diğer kaynakların birleşimiyle, genellikle GPStir. İkincil bir sağlayıcı ise baz istasyonu konumlarının bir veri tabanını kullanan OpenCelliD.</string>
     <string name="cmd_locate_response_location_off">Konum bulunamadı: konum kapalı.</string>
@@ -101,9 +99,7 @@
     <string name="OpenCellId_privacy">Gizlilik: her API sorgusu ile OpenCelliD\'nin mevcut baz istasyonunuzu ve dolayısıyla konumunuzu öğrendiğini akılda bulundurun.</string>
     <string name="OpenCellId_tower_collector_download">Tower Collector İndir</string>
     <string name="cmd_camera_description_long">Ön/arka kamerayla bir fotoğraf çeker ve Veto Sunucusuna yükler. An itibariyle yalnızca Veto sunucusuna yüklemek destekli. Bu komutu öbür ulaşım kanalları ile de gönderebilirsiniz ve resim Veto Sunucusuna yüklenecektir (eğer bir hesap varsa).</string>
-    <string name="cmd_delete_description_long">Bu bütün verileri siler. Bundan sonra cihazla artık iletişim kuramazsınız. Kötü niyetli ve yanlışlıkla kullanımı önlemek için, bu komut şifre gerektirmektedir ve ayarlarda etkinleştirilmesi gerekmektedir.</string>
     <string name="cmd_gps_description_short">GPS\'i aç ve kapat</string>
-    <string name="cmd_delete_response_pwd_wrong">Silinemedi: yanlış şifre.</string>
     <string name="cmd_gps_response_off">GPS kapatıldı.</string>
     <string name="cmd_locate_description_short">Cihazın konumunu bul</string>
     <string name="cmd_locate_last_known_location_text">Son bilinen konum</string>
@@ -111,11 +107,7 @@
     <string name="OpenCellId_tower_collector_info">OpenCelliD\'ye baz istasyonu bilgisi toplayarak ve yükleyerek katkıda bulunabilirsiniz. Bunun için ayrı bir uygulama gerekmektedir. Bu uygulamalardan birisi Tower Collector.</string>
     <string name="OpenCellId_test_opencellid">OpenCelliD Bağlantısını Sına</string>
     <string name="perm_device_admin_name">Cihaz Yöneticisi</string>
-    <string name="cmd_delete_response_disabled">Silinemedi: ayarlarda sil komutu etkin değil.</string>
-    <string name="cmd_delete_response_pwd_missing">Silinemedi: şifre eksik. Kullanım: %s.</string>
     <string name="cmd_camera_response_success">Cihaz fotoğraf çekiyor ve Veto sunucusuna gönderecek. Yakında burada görüntüleyebilirsiniz: %s</string>
-    <string name="cmd_delete_description_short">Cihazı fabrika-sıfırla</string>
-    <string name="cmd_delete_response_dry_run">Prova başarılı, asıl cihaz silimi geçiliyor.</string>
     <string name="cmd_locate_response_gps_will_follow">GPS koordinatları yakında gönderilecektir.</string>
     <string name="cmd_locate_response_gps_fail">Taze bir GPS konumu elde etmek başarısız. Zaman aşımı dolayı olabilir.</string>
     <string name="cmd_locate_last_known_location_not_available">Son bilinen konum yok. Konum güncellemesi zorlamak için en son konumu talep edin.</string>

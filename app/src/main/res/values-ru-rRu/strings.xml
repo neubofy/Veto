@@ -73,8 +73,6 @@
     <string name="Settings_Import_Failed">Импортирование не удалось</string>
     <string name="cmd_camera_description_short">Сделать фотографию</string>
     <string name="cmd_camera_description_long">Делает фотографию с помощью передней/задней камеры и загружает её на сервер Veto. В данный момент поддерживается загрузка лишь на сервер Veto. Вы можете отправить эту команду также и через другие транспортные каналы, после чего фотография будет загружена на сервер Veto (если у вас есть профиль).</string>
-    <string name="cmd_delete_description_short">Сброс устройства до заводских настроек (dry run - пробный прогон)</string>
-    <string name="cmd_delete_description_long">Это удалит все данные. После этого вы больше не сможете взаимодействовать с устройством. Чтобы предотвратить случайное, или злонамеренное использование, эта команда требует использования пароля который должен быть явно включён в настройках.</string>
     <string name="cmd_locate_description_short">Определить местоположение устройства</string>
     <string name="cmd_locate_description_long">Определяет местоположение устройства с помощью одного или более провайдеров местоположения. GPS имеет самую высокую точность, но может не всегда работать. \"Комбинированный\" провайдер задаётся Android, и использует комбинацию источников (часто Wi-Fi или сотовые вышки). \"Сотовый\" провайдер запрашивает публичные сервисы OpenCelliD и BeaconDB для получения местоположения окружающих сотовых вышек.</string>
     <string name="perm_battery_optimizations_name">Игнорировать оптимизации аккумулятора</string>
@@ -113,10 +111,6 @@
     <string name="allowlist_phone_number">Мобильный номер</string>
     <string name="cmd_camera_response_no_veto_server">Невозможно сделать фотографию: аккаунт сервера Veto отсутствует.</string>
     <string name="cmd_camera_response_success">Устройство делает фотографию и отправит её на сервер Veto. Вы скоро сможете просмотреть её здесь: %s</string>
-    <string name="cmd_delete_response_disabled">Невозможно удалить: команда delete не включена в настройках.</string>
-    <string name="cmd_delete_response_pwd_missing">Невозможно удалить: отсутствует пароль. Использование: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Невозможно удалить: неверный пароль.</string>
-    <string name="cmd_delete_response_success">Теперь устройство должно быть очищено. Прощайте!</string>
     <string name="cmd_gps_response_on">Сервисы Определения Местоположения включены.</string>
     <string name="cmd_gps_response_off">Сервисы Определения Местоположения выключены.</string>
     <string name="cmd_help_description_short">Показать справку</string>
@@ -187,7 +181,6 @@
     <string name="Settings_Appearance">Внешний вид</string>
     <string name="appearance_language_choose">Выберите язык</string>
     <string name="appearance_language_system_default">Как в системе</string>
-    <string name="cmd_delete_response_failed">Не удалось удалить устройство из-за ошибки.</string>
     <string name="appearance_language">Язык</string>
     <string name="appearance_theme_light">Светлая</string>
     <string name="appearance_dynamic_colors">Динамические цвета</string>
@@ -196,7 +189,6 @@
     <string name="appearance_theme_follow_system">Как в системе</string>
     <string name="appearance_theme_dark">Тёмная</string>
     <string name="crashed_title">Отчёт об ошибке</string>
-    <string name="cmd_delete_response_dry_run">Пробный запуск прошёл успешно, без фактического удаления устройства.</string>
     <string name="pin_match_command_keyword">ПИН-код не должен быть таким же, как и одна из команд!</string>
     <string name="log_view_clear">Очистить логи</string>
     <string name="log_view_clear_confirm">Вы действительно хотите удалить все записи лога?</string>
@@ -222,11 +214,7 @@
     <string name="Notification_ExecutionService_Description">Уведомления для выполняемых в данный момент команд</string>
     <string name="executing_title">Выполнение команды</string>
     <string name="executing_text">Команда \"%1$s\" сейчас выполняется \"%2$s\".</string>
-    <string name="missing_push_title">Отсутствует UnifiedPush</string>
-    <string name="missing_push_description">Без приложения распространителя UnifiedPush вы не можете получать команды от Veto Сервера.</string>
     <string name="dont_show_again">Не показывать снова</string>
-    <string name="delete_pw_warning_no_backup">Внимание: Пароль не включён в резервную копию приложения.</string>
-    <string name="delete_pw_warning_empty">Внимание: Удаление не сработает, потому что пароль удаления пустой. Вы должны включить функцию и установить пароль.</string>
     <string name="veto_edge_info_message">Это Edge вариант Veto. Здесь стандартное ключевое слово команды это \"vetoe\" (вместо \"veto\"). Например, чтобы отправить команду locate, используйте \"vetoe locate\". Это позволяет одновременно иметь и основную и Edge версию на одном устройстве, направляя команды в одну из них.</string>
     <string name="Fused">Комбинированный</string>
     <string name="tip_first_contact_added">Поздравляем, вы добавили ваш первый контакт! Теперь вы можете взаимодействовать с Veto путём отправки SMS c разрешённого мобильного номера, которые начинаются с \"%1$s\". Например, отправьте \"%2$s help\" или \"%3$s flash\". Когда всё сработает, приложение отправит ответ.</string>

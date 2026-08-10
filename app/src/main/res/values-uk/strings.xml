@@ -58,7 +58,6 @@
     <string name="notify_crypto_update_title">Потрібна дія</string>
     <string name="server_unregister_dont_continue">Не продовжувати</string>
     <string name="cmd_camera_description_short">Зробити фото</string>
-    <string name="cmd_delete_response_disabled">Неможливо видалити: команда видалення не ввімкнена в налаштуваннях.</string>
     <string name="cmd_gps_description_short">Увімкнення та вимкнення Сервісів Визначення Місцезнаходження</string>
     <string name="cmd_help_message_start">Команди Veto:</string>
     <string name="cmd_locate_description_short">Знайти пристрій</string>
@@ -82,17 +81,12 @@
 \n
 \nВи можете продовжити в будь-якому випадку, але ваш обліковий запис не було видалено з сервера. Якщо ви продовжите, ваш обліковий запис буде видалено локально на цьому пристрої.</string>
     <string name="cmd_missing_permissions">Неможливо виконати команду %1$s: Не вистачає дозволу(ів) %2$s.</string>
-    <string name="cmd_delete_response_success">Тепер пристрій слід видалити. До побачення!</string>
     <string name="cmd_gps_response_on">Сервіси Визначення Місцезнаходження увімкнені.</string>
     <string name="cmd_gps_response_off">Сервіси Визначення Місцезнаходження вимкнені.</string>
     <string name="cmd_help_description_short">Показати допомогу</string>
     <string name="cmd_camera_response_no_veto_server">Неможливо зробити знімок: не існує облікового запису на Veto сервері.</string>
     <string name="cmd_camera_description_long">Робить знімок за допомогою передньої/задньої камери та завантажує його на Veto сервер. Наразі підтримується лише завантаження на сервер Veto. Ви також можете надіслати цю команду через інші канали звʼязку, і зображення буде завантажено на сервер Veto (якщо обліковий запис існує).</string>
     <string name="cmd_camera_response_success">Пристрій робить знімок і надсилає його на сервер Veto. Незабаром ви зможете переглянути його тут: %s</string>
-    <string name="cmd_delete_description_short">Скидання до заводських налаштувань</string>
-    <string name="cmd_delete_description_long">Це призведе до видалення всіх даних. Після цього ви більше не зможете спілкуватися з пристроєм. Щоб запобігти випадковому або зловмисному використанню, ця команда вимагає пароля, і її потрібно явно ввімкнути в налаштуваннях.</string>
-    <string name="cmd_delete_response_pwd_wrong">Неможливо видалити: неправильний пароль.</string>
-    <string name="cmd_delete_response_pwd_missing">Неможливо видалити: відсутній пароль. Використання: %s.</string>
     <string name="cmd_locate_response_location_off">Неможливо знайти: місцеперебування вимкнено.</string>
     <string name="cmd_locate_description_long">Визначте місцезнаходження пристрою за допомогою одного або кількох постачальників геолокації. GPS має найвищу точність, але може працювати не завжди. «Об’єднаний» постачальник визначається Android і використовує комбінацію джерел (часто Wi-Fi або вежі стільникового зв’язку). «Стільниковий» постачальник запитує у публічних сервісів OpenCelliD та BeaconDB розташування навколишніх веж стільникового зв’язку.</string>
     <string name="cmd_locate_response_gps_will_follow">GPS координати будуть надіслані найближчим часом.</string>
@@ -165,7 +159,6 @@
     <string name="temporary_allowlist_expired">Термін дії вашого тимчасового доступу до Veto закінчився. Щоб продовжити користуватися Veto, надішліть PIN-код ще раз.</string>
     <string name="Settings_no_ringtone_picker">Не знайдено жодного вибирача мелодій!</string>
     <string name="cmd_bluetooth_response_off">Bluetooth вимкнено.</string>
-    <string name="cmd_delete_response_dry_run">Пробний запуск успішно завершено, фактичне видалення пристрою пропущено.</string>
     <string name="Settings_Pin_Not_Backed_Up">Попередження: PIN не входить до резервної копії програми.</string>
     <string name="allowlist_reset_text">Через збій дозволені контакти було скинуто. Будь ласка, налаштуйте їх ще раз.</string>
     <string name="allowlist_reset_title">Скидання дозволених контактів</string>
@@ -177,7 +170,6 @@
     <string name="appearance_theme_dark">Темна</string>
     <string name="appearance_theme_follow_system">Слідкуйте за системою</string>
     <string name="appearance_theme_light">Світла</string>
-    <string name="cmd_delete_response_failed">Не вдалося видалити пристрій через виняток.</string>
     <string name="cmd_bluetooth_response_no_bluetooth">Схоже цей пристрій не має Bluetooth.</string>
     <string name="appearance_dynamic_colors">Динамічні кольори</string>
     <string name="log_view_export">Експорт журналів</string>
@@ -212,8 +204,6 @@
     <string name="setup_recommendations_title">Рекомендації</string>
     <string name="allowlist_invalid_number">Цей номер телефону недійсний!</string>
     <string name="pin_min_length">PIN-код має містити щонайменше 8 символів. Рекомендовано 16 або більше.</string>
-    <string name="missing_push_title">Відсутній UnifiedPush</string>
-    <string name="missing_push_description">Без дистриб\'юторського застосунку UnifiedPush ви не можете отримувати команди від Veto Server.</string>
     <string name="cmd_flash_description_short">Спалах камери</string>
     <string name="cmd_locate_provider_disabled">Запитаний постачальник геолокації \"%s\" вимкнено.</string>
     <string name="Notification_ExecutionService">Виконання команди</string>
@@ -222,8 +212,6 @@
     <string name="executing_text">Команду \"%1$s\" виконує \"%2$s\".</string>
     <string name="Fused">Комбінований</string>
     <string name="dont_show_again">Не показувати знову</string>
-    <string name="delete_pw_warning_no_backup">Увага: Пароль не включений в резервну копію застосунку.</string>
-    <string name="delete_pw_warning_empty">Увага: Видалення не спрацює, тому що пароль видалення порожній. Ви повинні увімкнути функцію і встановити пароль.</string>
     <string name="tip_first_contact_added">Вітаємо, ви додали свій перший контакт! Тепер ви можете взаємодіяти з Veto шляхом надсилання SMS з дозволеного мобільного номера, які починаються з \"%1$s\". Наприклад, надішліть \"%2$s help\" або \"%3$s flash\". Коли все спрацює, застосунок надішле відповідь.</string>
     <string name="veto_edge_info_message">Це Edge варіант Veto. Тут стандартне ключове слово команди це \"vetoe\" (замість \"veto\"). Наприклад, щоб надіслати команду locate, використовуйте \"vetoe locate\". Це дозволяє одночасно мати і основну і Edge версію на одному пристрої, направляючи команди в одну з них.</string>
     <string name="cmd_bluetooth_response_is_on">Bluetooth увімкнено.</string>

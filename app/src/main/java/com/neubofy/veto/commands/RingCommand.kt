@@ -10,7 +10,7 @@ import com.neubofy.veto.utils.log
 
 
 const val RING_DURATION_DEFAULT_SECS = 30
-const val RING_DURATION_MAX_SECS = 2 * 60 * 60 // 2 hours cap
+const val RING_DURATION_MAX_SECS = 30 * 60 // 30 minutes cap
 
 class RingCommand(context: Context) : Command(context) {
 
@@ -40,12 +40,14 @@ class RingCommand(context: Context) : Command(context) {
             }
         }
 
-        // 1. Lock screen using LockCommand (which handles system lock & custom lockscreen message overlay)
-        val lockCommand = LockCommand(context)
+        // 1. Lock screen using DevicePolicyManager directly (avoids full LockScreenMessage overlay)
         try {
-            lockCommand.execute(emptyList(), transport)
+            val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as android.app.admin.DevicePolicyManager
+            if (dpm.isAdminActive(android.content.ComponentName(context, com.neubofy.veto.receiver.DeviceAdminReceiver::class.java))) {
+                dpm.lockNow()
+            }
         } catch (e: Exception) {
-            context.log().w("RingCommand", "LockCommand execution failed: ${e.message}")
+            context.log().w("RingCommand", "Failed to lock device: ${e.message}")
         }
 
         // 2. Start persistent RingerService (single, sole source of alarm ringing & 100% volume loop)

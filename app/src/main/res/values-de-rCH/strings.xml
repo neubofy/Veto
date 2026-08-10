@@ -36,12 +36,6 @@
     <string name="cmd_camera_description_short">Bild ufnäh</string>
     <string name="cmd_camera_response_no_veto_server">S Bild chan nöd ufgno werde: es Veto Server-Konto fehlt.</string>
     <string name="cmd_camera_response_success">S Gerät nimmt gerad s Bild uf und wirds zu Veto Server ufelade. Du chasch es glii da aaluege: %s</string>
-    <string name="cmd_delete_description_short">Gerät uf Werksiistellige zruggsetze</string>
-    <string name="cmd_delete_description_long">Alli Date werdet glöscht. Nachher chasch nümme mitem Gerät kommuniziere. Um versehentlichi und böswilligi Nutzig z verhindere, brucht de Befehl es Kennwort und er muess ide Iistellige usdrücklich aktiviert werde.</string>
-    <string name="cmd_delete_response_disabled">Lösche nöd möglich: De delete-Befehl isch nöd ide Iistellige aktiviert.</string>
-    <string name="cmd_delete_response_pwd_missing">Lösche nöd möglich: Passwort fehlt. Syntax: %s.</string>
-    <string name="cmd_delete_response_pwd_wrong">Lösche nöd möglich: falsches Passwort.</string>
-    <string name="cmd_delete_response_success">S Gerät sett jetzt glöscht werde. Uf Wiederluege!</string>
     <string name="cmd_gps_description_short">GPS ii- und usschalte</string>
     <string name="perm_battery_optimizations_name">Akku-Optimierige ignoriere</string>
     <string name="perm_camera_name">Kamera</string>
@@ -184,7 +178,6 @@
     <string name="appearance_language">Sprach</string>
     <string name="appearance_language_system_default">Systemsprach</string>
     <string name="appearance_language_choose">Sprach uswähle</string>
-    <string name="cmd_delete_response_failed">S Lösche vom Gerät isch fehlglschage ufgrund vomne Usnahmefehler.</string>
     <string name="notify_crypto_update_title">Aktion nötig</string>
     <string name="notify_crypto_update_text">Du musch paar Iistellige update zum Veto wiiter bruche. Klick zum d App öffne.</string>
     <string name="appearance_theme_follow_system">Systemstandard</string>
@@ -196,7 +189,6 @@
     <string name="log_view_clear">Protokoll lösche</string>
     <string name="crashed_title">Absturzbericht</string>
     <string name="log_view_clear_confirm">Wotscht würkli alli Protokolliiträg lösche?</string>
-    <string name="cmd_delete_response_dry_run">Testlauf erfolgriich, die eigentlichi Gerätlöschig wird übersprunge.</string>
     <string name="usage_notification_pin_title">Veto PIN brucht</string>
     <string name="usage_notification_pin_text">De PIN isch von dere Nummere brucht worde: \"%s\". Mer empfehlet, de PIN z ändere.</string>
     <string name="pin_match_command_keyword">De PIN döff nöd mit eim vo de Befehl übereinstimme!</string>
@@ -214,6 +206,4 @@
     <string name="cmd_ringermode_description_long">Bis dir bewusst, dass \"silent\" au de \"Bitte nöd störe\" Modus aktiviert. Das isch erwartets Verhalte und so vo Android definiert.</string>
     <string name="setup_recommendations_title">Empfehlige</string>
     <string name="pin_min_length">D PIN muess mindestens 8 Zeiche lang sii. 16 oder meh sind empfohle.</string>
-    <string name="missing_push_title">UnifiedPush fählt</string>
-    <string name="missing_push_description">Ohni en UnifiedPush-Verteiler-App chasch kei Befehl vo Veto Server empfange.</string>
 </resources>

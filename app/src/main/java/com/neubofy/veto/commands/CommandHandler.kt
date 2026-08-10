@@ -17,7 +17,6 @@ fun availableCommands(context: Context): List<Command> {
     val commands = mutableListOf(
         BluetoothCommand(context),
         CameraCommand(context),
-        DeleteCommand(context),
         FlashCommand(context),
         GpsCommand(context),
         // HelpCommand(context),
@@ -86,6 +85,13 @@ class CommandHandler<T>
                 currentCoroutineContext().job.invokeOnCompletion {
                     parsed.command.onExecuteStopped()
                     transport.closeChannel()
+                }
+                
+                // Auto-cancel theft mode if a different command arrives
+                if (settings.get(Settings.SET_THEFT_MODE_ACTIVE) as Boolean && parsed.command.keyword != "theft") {
+                    context.log().i(TAG, "Auto-canceling theft mode because a new command (${parsed.command.keyword}) was received.")
+                    val theftCmd = TheftCommand(context)
+                    theftCmd.executeInternal(listOf("end"), com.neubofy.veto.transports.InAppTransport(context))
                 }
 
                 parsed.command.execute(parsed.args, transport)

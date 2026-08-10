@@ -24,7 +24,6 @@ class EncryptedSettingsRepository private constructor(context: Context) {
 
         private const val KEY_SERVER_CACHED_ACCESS_TOKEN = "KEY_SERVER_CACHED_ACCESS_TOKEN"
         private const val KEY_Veto_PIN = "KEY_Veto_PIN"
-        private const val KEY_DELETE_PASSWORD = "KEY_DELETE_PASSWORD"
         private const val KEY_ALLOWLIST_JSON = "KEY_ALLOWLIST_JSON"
         private const val KEY_TEMP_ALLOWLIST_JSON = "KEY_TEMP_ALLOWLIST_JSON"
     }
@@ -65,18 +64,6 @@ class EncryptedSettingsRepository private constructor(context: Context) {
         }
     }
 
-    fun getDeletePassword(): String? {
-        return sharedPrefs.getString(KEY_DELETE_PASSWORD, null)
-    }
-
-    fun setDeletePassword(new: String?) {
-        if (new.isNullOrBlank()) {
-            sharedPrefs.edit().remove(KEY_DELETE_PASSWORD).apply()
-        } else {
-            val hash = if (new.startsWith("\$argon2id\$")) new else com.neubofy.veto.utils.CypherUtils.hashPasswordForDelete(new)
-            sharedPrefs.edit().putString(KEY_DELETE_PASSWORD, hash).apply()
-        }
-    }
 
     fun getAllowlistJson(): String? {
         return sharedPrefs.getString(KEY_ALLOWLIST_JSON, null)

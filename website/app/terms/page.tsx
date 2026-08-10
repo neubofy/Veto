@@ -26,7 +26,7 @@ export default function TermsPage() {
         <p>Veto is a security tool intended for personal device management. You agree to only install this application on devices you own or have explicit legal authorization to manage. You may not use Veto for stalking, harassment, or unauthorized surveillance.</p>
 
         <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>4. Limitation of Liability</h2>
-        <p>Veto is provided &quot;as is&quot;. We are not responsible for any data loss, including data lost due to the use of the Remote Wipe feature. You are solely responsible for managing your device backups and ensuring you do not accidentally trigger destructive commands.</p>
+        <p>Veto is provided &quot;as is&quot;. We are not responsible for any data loss. You are solely responsible for managing your device backups and ensuring you do not accidentally trigger destructive commands.</p>
         
         <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
           <Link href="/" className="btn" style={{ padding: '0.8rem 2rem' }}>&larr; Back to Home</Link>

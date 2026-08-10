@@ -55,69 +55,6 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp" />
 
-                    <!-- Wipe Password -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="16dp">
-                        
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-                            <com.google.android.material.materialswitch.MaterialSwitch
-                                android:id="@+id/switchDeviceWipe"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="wrap_content"
-                                android:text="Enable Remote Wipe"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-                            <ImageButton
-                                android:id="@+id/btnInfoWipe"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:src="@drawable/ic_info"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                app:tint="?attr/colorOnSurfaceVariant" />
-                        </LinearLayout>
-                        
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginStart="8dp">
-                            <TextView
-                                android:id="@+id/textStatusWipe"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="🔴 Password Not Set"
-                                android:textColor="?attr/colorError"
-                                android:textStyle="bold" />
-                            <Button
-                                android:id="@+id/btnEditWipe"
-                                style="@style/Widget.Material3.Button.TonalButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Set"
-                                android:layout_marginEnd="8dp" />
-                            <Button
-                                android:id="@+id/btnRemoveWipe"
-                                style="@style/Widget.Material3.Button.OutlinedButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Remove"
-                                android:textColor="?attr/colorError"
-                                app:strokeColor="?attr/colorError" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider" android:layout_marginBottom="16dp"/>
 
                     <!-- PIN Access -->
                     <LinearLayout
@@ -498,6 +435,55 @@
                             android:valueTo="10.0"
                             android:stepSize="1.0"
                             android:value="2.0" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider" android:layout_marginVertical="16dp"/>
+
+                    <!-- Theft Suspected Duration -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="Theft Suspected Duration"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/textTheftSuspectedDurationValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3m"
+                                android:textSize="14sp"
+                                android:textColor="?attr/colorPrimary"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="How long theft mode stays in suspected state before confirming"
+                            android:textSize="12sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/sliderTheftSuspectedDuration"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:valueFrom="1.0"
+                            android:valueTo="10.0"
+                            android:stepSize="1.0"
+                            android:value="3.0" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
