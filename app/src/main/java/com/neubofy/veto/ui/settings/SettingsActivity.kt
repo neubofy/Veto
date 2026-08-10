@@ -29,12 +29,10 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
     private lateinit var settings: SettingsRepository
     private lateinit var encSettings: EncryptedSettingsRepository
 
-    private lateinit var switchDeviceWipe: MaterialSwitch
     private lateinit var switchVetoviaPin: MaterialSwitch
     private lateinit var switchTheftAutoDetect: MaterialSwitch
     private lateinit var switchTheftWrongPass: MaterialSwitch
 
-    private lateinit var textStatusWipe: TextView
     private lateinit var textStatusPin: TextView
     private lateinit var textStatusLockMsg: TextView
     private lateinit var textStatusTheftContact: TextView
@@ -42,8 +40,6 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
     private lateinit var textSelectedRingtone: TextView
     private lateinit var textStatusWrongPass: TextView
 
-    private lateinit var btnEditWipe: Button
-    private lateinit var btnRemoveWipe: Button
     private lateinit var btnEditPin: Button
     private lateinit var btnRemovePin: Button
     private lateinit var btnEditLockMsg: Button
@@ -71,10 +67,6 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         settings = SettingsRepository.getInstance(this)
         encSettings = EncryptedSettingsRepository.getInstance(this)
 
-        switchDeviceWipe = findViewById(R.id.switchDeviceWipe)
-        switchDeviceWipe.isChecked = settings.get(Settings.SET_WIPE_ENABLED) as Boolean
-        switchDeviceWipe.setOnCheckedChangeListener(this)
-
         switchVetoviaPin = findViewById(R.id.switchVetoviaPin)
         switchVetoviaPin.isChecked = settings.get(Settings.SET_ACCESS_VIA_PIN) as Boolean
         switchVetoviaPin.setOnCheckedChangeListener(this)
@@ -87,7 +79,6 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         switchTheftWrongPass.isChecked = settings.get(Settings.SET_THEFT_WRONG_PASS_ENABLED) as Boolean
         switchTheftWrongPass.setOnCheckedChangeListener(this)
 
-        textStatusWipe = findViewById(R.id.textStatusWipe)
         textStatusPin = findViewById(R.id.textStatusPin)
         textStatusLockMsg = findViewById(R.id.textStatusLockMsg)
         textStatusTheftContact = findViewById(R.id.textStatusTheftContact)
@@ -95,8 +86,6 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         textSelectedRingtone = findViewById(R.id.textSelectedRingtone)
         textStatusWrongPass = findViewById(R.id.textStatusWrongPass)
 
-        btnEditWipe = findViewById(R.id.btnEditWipe)
-        btnRemoveWipe = findViewById(R.id.btnRemoveWipe)
         btnEditPin = findViewById(R.id.btnEditPin)
         btnRemovePin = findViewById(R.id.btnRemovePin)
         btnEditLockMsg = findViewById(R.id.btnEditLockMsg)
@@ -106,19 +95,12 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         btnEditCommand = findViewById(R.id.btnEditCommand)
         btnEditWrongPass = findViewById(R.id.btnEditWrongPass)
 
-        setupInfoButton(R.id.btnInfoWipe, "Remote Wipe", getString(R.string.delete_pw_warning_no_backup) + "\n\n" + getString(R.string.Settings_VetoCommand_Description))
         setupInfoButton(R.id.btnInfoPin, "Veto PIN", getString(R.string.Settings_Veto_via_Pin_Description))
         setupInfoButton(R.id.btnInfoLockMsg, "Lock Screen Message", getString(R.string.Settings_Lockscreenmessage_Description))
         setupInfoButton(R.id.btnInfoTheftContact, "Theft Contact Info", "Enter an alternate phone number or email address to display on the screen when theft mode is active, so the device can be returned to you.")
         setupInfoButton(R.id.btnInfoTheftAutoDetect, "Auto Theft Detection", "If enabled, theft mode will automatically activate if someone removes your SIM card.")
         setupInfoButton(R.id.btnInfoCommand, "Trigger Command", getString(R.string.Settings_VetoCommand_Description))
         setupInfoButton(R.id.btnInfoWrongPass, "Wrong Password Detection", "If enabled, entering the wrong lock screen password multiple times will trigger theft mode.")
-
-        btnEditWipe.setOnClickListener { onEnterDeletePasswordClicked() }
-        btnRemoveWipe.setOnClickListener {
-            encSettings.setDeletePassword(null)
-            updateUI()
-        }
 
         btnEditPin.setOnClickListener { onEnterPinClicked() }
         btnRemovePin.setOnClickListener {
@@ -166,6 +148,21 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
                 textVolumeIntervalValue.text = "${interval}s"
             }
         }
+
+        val sliderTheftSuspectedDuration = findViewById<com.google.android.material.slider.Slider>(R.id.sliderTheftSuspectedDuration)
+        val textTheftSuspectedDurationValue = findViewById<TextView>(R.id.textTheftSuspectedDurationValue)
+        
+        val currentDuration = settings.get(Settings.SET_THEFT_SUSPECTED_DURATION) as Int
+        sliderTheftSuspectedDuration.value = currentDuration.toFloat()
+        textTheftSuspectedDurationValue.text = "${currentDuration}m"
+        
+        sliderTheftSuspectedDuration.addOnChangeListener { slider, value, fromUser ->
+            if (fromUser) {
+                val duration = value.toInt()
+                settings.set(Settings.SET_THEFT_SUSPECTED_DURATION, duration)
+                textTheftSuspectedDurationValue.text = "${duration}m"
+            }
+        }
     }
 
     private fun setupInfoButton(id: Int, title: String, message: String) {
@@ -180,17 +177,6 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
     }
 
     private fun updateUI() {
-        val wipePw = encSettings.getDeletePassword()
-        if (!wipePw.isNullOrBlank()) {
-            textStatusWipe.text = "Password set"
-            btnEditWipe.text = "Change"
-            btnRemoveWipe.visibility = View.VISIBLE
-        } else {
-            textStatusWipe.text = "Not set"
-            btnEditWipe.text = "Set Password"
-            btnRemoveWipe.visibility = View.GONE
-        }
-
         val pin = encSettings.getVetoPin()
         if (!pin.isNullOrBlank()) {
             textStatusPin.text = "PIN set"
@@ -241,26 +227,12 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         when (buttonView.id) {
-            R.id.switchDeviceWipe -> settings.set(Settings.SET_WIPE_ENABLED, isChecked)
             R.id.switchVetoviaPin -> settings.set(Settings.SET_ACCESS_VIA_PIN, isChecked)
             R.id.switchTheftAutoDetect -> settings.set(Settings.SET_THEFT_AUTO_DETECT_ENABLED, isChecked)
             R.id.switchTheftWrongPass -> settings.set(Settings.SET_THEFT_WRONG_PASS_ENABLED, isChecked)
         }
     }
 
-    private fun onEnterDeletePasswordClicked() {
-        PasswordSetDialog.showPasswordSetDialog(
-            context = this,
-            title = "Set Remote Delete Password",
-            positiveButtonText = "Set Password",
-            message = "Warning: Please remember this password. It is required to execute the remote wipe command.",
-            minLength = CypherUtils.MIN_PASSWORD_LENGTH,
-            onSuccess = { password ->
-                encSettings.setDeletePassword(password)
-                updateUI()
-            }
-        )
-    }
 
     private fun onEnterPinClicked() {
         PasswordSetDialog.showPasswordSetDialog(

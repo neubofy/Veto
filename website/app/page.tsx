@@ -259,7 +259,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Alarm</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Dropped it under the couch? Force your device to ring at maximum volume, totally bypassing Do Not Disturb and silent mode. You can specify duration in seconds.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [seconds]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
+                Dropped it under the couch? Force your device to ring at maximum volume, totally bypassing Do Not Disturb and silent mode. You can specify duration in seconds (max 30 minutes).<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [seconds]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
               </p>
             </div>
 
@@ -322,16 +322,6 @@ export default function LandingPage() {
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
                 Get the full scoop. Pulls vital details like battery percentage, SIM carrier info, IP addresses, and surrounding Wi-Fi networks in a flash.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto stats</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
-              </p>
-            </div>
-
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#f85149' }}>💥 veto delete</span>
-                <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(248, 81, 73, 0.15)', color: '#f85149', padding: '2px 8px', borderRadius: '4px' }}>Danger</span>
-              </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                The point of no return. Remotely wipes your entire phone to protect your data. It securely verifies your password first. Use &quot;dryrun&quot; to test it safely.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto delete &lt;password&gt; [dryrun]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DeviceAdminPermission</code>
               </p>
             </div>
 

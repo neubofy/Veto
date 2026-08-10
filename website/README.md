@@ -19,7 +19,7 @@ Veto supports a full matrix of commands, accessible via the Web Dashboard, SMS, 
 *   `veto video [front|back]`: Records 30 seconds of background video from the front or back camera and backs it up to Google Drive. *(BETA)*
 *   `veto flash [on|off]`: Toggles the camera flashlight hardware ON/OFF or blinks the torch 10 times for visual location signaling.
 *   `veto stats`: Returns device model, Android release, battery %, SIM carrier, SIM phone number, IP addresses, and Wi-Fi SSID scan results.
-*   `veto delete <password> [dryrun]`: Constant-time password-verified emergency factory reset with a 3-second transmission buffer to deliver confirmation. **(DANGER)**
+
 
 ## Transports
 

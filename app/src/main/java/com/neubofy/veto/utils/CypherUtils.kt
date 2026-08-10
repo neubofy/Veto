@@ -49,7 +49,7 @@ object CypherUtils {
     private const val CONTEXT_STRING_ASYM_KEY_WRAP = "context:asymmetricKeyWrap"
     private const val CONTEXT_STRING_Veto_PIN = "context:vetoPin"
     private const val CONTEXT_STRING_LOGIN = "context:loginAuthentication"
-    private const val CONTEXT_STRING_DELETE_PASSWORD = "context:deletePassword"
+
     private const val CONTEXT_PREFIX = "context:"
 
     class Argon2Result(val hash: ByteArray, val params: Argon2Parameters)
@@ -62,13 +62,6 @@ object CypherUtils {
         return Argon2EncodingUtils.encode(result.hash, result.params)
     }
 
-    @JvmStatic
-    fun hashPasswordForDelete(password: String): String {
-        val saltedPassword = CONTEXT_STRING_DELETE_PASSWORD + password
-        val salt = generateSecureRandom(ARGON2_SALT_LENGTH)
-        val result = hashPasswordArgon2(saltedPassword, salt)
-        return Argon2EncodingUtils.encode(result.hash, result.params)
-    }
 
     @JvmStatic
     fun hashPasswordForLogin(password: String): String {
@@ -128,10 +121,6 @@ object CypherUtils {
         return checkPassword(expectedHash, CONTEXT_STRING_Veto_PIN + password)
     }
 
-    @JvmStatic
-    fun checkPasswordForDelete(expectedHash: String, password: String): Boolean {
-        return checkPassword(expectedHash, CONTEXT_STRING_DELETE_PASSWORD + password)
-    }
 
     @JvmStatic
     fun checkPasswordForLogin(expectedHash: String, password: String): Boolean {

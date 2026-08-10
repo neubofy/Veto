@@ -10,7 +10,7 @@ interface CommandConsoleProps {
 const PRESETS = [
   { label: '📍 Locate Device', cmd: 'locate' },
   { label: '🔊 Ring 2 min', cmd: 'ring 120' },
-  { label: '🔊 Ring 1 hour', cmd: 'ring 3600' },
+  { label: '🔊 Ring 30 min', cmd: 'ring 1800' },
   { label: '🎙️ Record 45s Audio', cmd: 'audio 45' },
   { label: '📷 Front Flash Photo', cmd: 'photo front flash' },
   { label: '🎥 Back Video', cmd: 'video back' },
@@ -60,7 +60,7 @@ export default function CommandConsole({ onSendCommand, isPending }: CommandCons
             type="text"
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
-            placeholder="Type any command: audio 60, ring 1800, lock SOS Message, stats..."
+            placeholder="Type any command: audio 60, ring 1800 (max 30m), lock SOS, stats..."
             style={{
               width: '100%',
               padding: '12px 14px 12px 30px',

@@ -105,7 +105,8 @@ class TheftCommand(context: Context) : Command(context) {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             
-            val triggerTime = System.currentTimeMillis() + (3 * 60 * 1000) // 3 minutes
+            val durationMins = settings.get(Settings.SET_THEFT_SUSPECTED_DURATION) as Int
+            val triggerTime = System.currentTimeMillis() + (durationMins * 60 * 1000L)
             
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
@@ -125,7 +126,8 @@ class TheftCommand(context: Context) : Command(context) {
             context.log().e("TheftCommand", "Failed to trigger locate command: ${e.message}")
         }
         
-        transport.send(context, "Theft mode activated. Device locked, 3-minute suspected phase started. Location requested.", keyword)
+        val durationMins = settings.get(Settings.SET_THEFT_SUSPECTED_DURATION) as Int
+        transport.send(context, "Theft mode activated. Device locked, ${durationMins}-minute suspected phase started. Location requested.", keyword)
     }
     
     // Made public so it can be called from SimStateReceiver without needing Transport

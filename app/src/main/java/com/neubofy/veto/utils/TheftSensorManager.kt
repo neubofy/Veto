@@ -23,8 +23,6 @@ class TheftSensorManager(private val context: Context, private val listener: The
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val sigMotionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION)
-    private val accelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-    private val proxSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -34,13 +32,6 @@ class TheftSensorManager(private val context: Context, private val listener: The
     private var lastBadEventTime = 0L
     private val DEBOUNCE_MS = 3000L
 
-    // Accelerometer tracking
-    private var isRelaxing = false
-    private val relaxRunnable = Runnable {
-        if (isRegistered && isRelaxing) {
-            listener.onGoodEvent("relax")
-        }
-    }
 
     private val powerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -50,6 +41,9 @@ class TheftSensorManager(private val context: Context, private val listener: The
                 }
                 Intent.ACTION_POWER_DISCONNECTED -> {
                     triggerBadEvent("charger_disconnect")
+                }
+                "android.hardware.usb.action.USB_DEVICE_ATTACHED" -> {
+                    triggerBadEvent("usb_attached")
                 }
             }
         }
@@ -65,55 +59,6 @@ class TheftSensorManager(private val context: Context, private val listener: The
         }
     }
 
-    private val accelListener = object : SensorEventListener {
-        override fun onSensorChanged(event: SensorEvent?) {
-            if (event == null || !isRegistered) return
-
-            val x = event.values[0]
-            val y = event.values[1]
-            val z = event.values[2]
-
-            val gForce = sqrt((x * x + y * y + z * z).toDouble())
-
-            if (gForce > 12.0) { // Significant spike (gravity is 9.8)
-                isRelaxing = false
-                handler.removeCallbacks(relaxRunnable)
-                triggerBadEvent("pickup")
-            } else if (gForce in 9.0..10.5) {
-                if (!isRelaxing) {
-                    isRelaxing = true
-                    handler.postDelayed(relaxRunnable, 10_000)
-                }
-            } else {
-                isRelaxing = false
-                handler.removeCallbacks(relaxRunnable)
-            }
-        }
-
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-    }
-
-    private var wasNear = false
-    private val proxListener = object : SensorEventListener {
-        override fun onSensorChanged(event: SensorEvent?) {
-            if (event == null || !isRegistered) return
-            
-            val distance = event.values[0]
-            val maxRange = proxSensor?.maximumRange ?: 5.0f
-            
-            // Typical proximity: near is usually 0.0 or < maxRange/2
-            val isNear = distance < (maxRange / 2.0f)
-            
-            if (wasNear && !isNear) {
-                // Device was near (in pocket/covered), and now is far (taken out/uncovered)
-                triggerBadEvent("proximity")
-            }
-            
-            wasNear = isNear
-        }
-        
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-    }
 
     fun register() {
         if (isRegistered) return
@@ -123,17 +68,11 @@ class TheftSensorManager(private val context: Context, private val listener: The
             sensorManager.requestTriggerSensor(sigMotionListener, it)
         }
         
-        accelSensor?.let {
-            sensorManager.registerListener(accelListener, it, SensorManager.SENSOR_DELAY_NORMAL)
-        }
-        
-        proxSensor?.let {
-            sensorManager.registerListener(proxListener, it, SensorManager.SENSOR_DELAY_NORMAL)
-        }
 
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_POWER_CONNECTED)
             addAction(Intent.ACTION_POWER_DISCONNECTED)
+            addAction("android.hardware.usb.action.USB_DEVICE_ATTACHED")
         }
         context.registerReceiver(powerReceiver, filter)
     }
@@ -143,10 +82,6 @@ class TheftSensorManager(private val context: Context, private val listener: The
         isRegistered = false
 
         sensorManager.cancelTriggerSensor(sigMotionListener, sigMotionSensor)
-        sensorManager.unregisterListener(accelListener)
-        sensorManager.unregisterListener(proxListener)
-        
-        handler.removeCallbacks(relaxRunnable)
         
         try {
             context.unregisterReceiver(powerReceiver)

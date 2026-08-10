@@ -59,6 +59,11 @@ class TheftSuspectedActivity : VetoActivity() {
         if (msg.isNotEmpty()) {
             textViewMsg.text = msg
         }
+        
+        // Show initial connection status (Suspected phase)
+        val statusBox = findViewById<TextView>(R.id.textViewConnectionStatus)
+        statusBox.visibility = View.VISIBLE
+        statusBox.text = "Searching for nearby devices... Connecting..."
 
         val textViewContact = findViewById<TextView>(R.id.textViewTheftContact)
         val contact = settings.get(Settings.SET_THEFT_CONTACT_INFO) as String
@@ -69,7 +74,8 @@ class TheftSuspectedActivity : VetoActivity() {
             textViewContact.visibility = View.GONE
         }
 
-        countDownTimer = object : android.os.CountDownTimer(3 * 60 * 1000, 1000) {
+        val durationMins = settings.get(Settings.SET_THEFT_SUSPECTED_DURATION) as Int
+        countDownTimer = object : android.os.CountDownTimer(durationMins * 60 * 1000L, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 // UI shows radar animation, no explicit text update needed
             }
@@ -201,80 +207,14 @@ class TheftSuspectedActivity : VetoActivity() {
             val foundPhoneLayout = findViewById<View>(R.id.layoutFoundPhoneInstructions)
             foundPhoneLayout?.visibility = View.VISIBLE
             
-            // Show terminal
-            val terminalScrollView = findViewById<ScrollView>(R.id.terminalScrollView)
-            terminalScrollView.visibility = View.VISIBLE
-            
-            val terminalLogText = findViewById<TextView>(R.id.terminalLogText)
-            startFakeTerminalLogs(terminalLogText, terminalScrollView)
+            // Show static connection status
+            val statusBox = findViewById<TextView>(R.id.textViewConnectionStatus)
+            statusBox.visibility = View.VISIBLE
+            statusBox.text = "Connected via Veto mesh network. Communicating..."
         }
     }
 
-    private fun startFakeTerminalLogs(textView: TextView, scrollView: ScrollView) {
-        lifecycleScope.launch {
-            val logs = mutableListOf<String>()
 
-            fun appendLog(msg: String) {
-                logs.add("[${java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US).format(java.util.Date())}] $msg")
-                if (logs.size > 15) {
-                    logs.removeAt(0)
-                }
-                textView.text = logs.joinToString("\n")
-                scrollView.post { scrollView.fullScroll(View.FOCUS_DOWN) }
-            }
-
-            appendLog("Initializing Veto Anti-Theft Protocol...")
-            delay(1000)
-            appendLog("Bypassing local restrictions...")
-            delay(1000)
-            appendLog("Establishing secure connection to Veto Mesh Network [SUCCESS]")
-            delay(1000)
-            
-            var noDataAttempts = 0
-            val maxAttempts = 3
-            
-            while (true) {
-                if (isDisturbActive) {
-                    // Disturb macro is running, rapidly log GPS
-                    appendLog("Attempting emergency data upload...")
-                    delay((500..1500).random().toLong())
-                    
-                    while (isDisturbActive) {
-                        val lat = "%.4f".format(40.7128 + (-0.05 + Math.random() * 0.1))
-                        val lng = "%.4f".format(-74.0060 + (-0.05 + Math.random() * 0.1))
-                        appendLog("Coordinates locked: LAT $lat, LNG $lng (precision: ${(2..10).random()}m)")
-                        
-                        val dataTypes = listOf("current location", "photo", "audio recording", "video recording")
-                        appendLog("Trying to send ${dataTypes.random()} through this device...")
-                        delay((1000..2000).random().toLong())
-                        
-                        appendLog("Sending ${dataTypes.random()} via mesh network to nearest police station via radio frequency...")
-                        delay((2000..4000).random().toLong())
-                    }
-                    
-                    appendLog("normal stopped")
-                    delay(2000)
-                    noDataAttempts = 0 // Reset attempts after an active event
-                } else {
-                    if (noDataAttempts < maxAttempts) {
-                        // Scan phase
-                        val fakeIp = "192.168.${(1..254).random()}.${(1..254).random()}"
-                        appendLog("Scanning for open nodes... Found node.")
-                        delay(1000)
-                        appendLog("Connecting to phone at IP address $fakeIp...")
-                        delay(2000)
-                        appendLog("Connection refused. No data transmitted.")
-                        delay(2000)
-                        noDataAttempts++
-                    } else {
-                        // Paused phase
-                        appendLog("System paused to conserve energy. Awaiting external trigger...")
-                        delay(5000)
-                    }
-                }
-            }
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()

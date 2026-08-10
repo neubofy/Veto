@@ -23,7 +23,7 @@ export default function PrivacyPage() {
         <p>We do not passively track your location or device data. Data such as GPS coordinates or device battery stats are only fetched securely upon your explicit request. All data transmitted between your device and the dashboard is 100% encrypted in transit. We cannot see, read, or access your device data.</p>
 
         <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>3. Device Administration</h2>
-        <p>Veto requires Device Administrator privileges to execute core security features like Remote Lock and Remote Wipe. This data is entirely controlled by you.</p>
+        <p>Veto requires Device Administrator privileges to execute core security features like Remote Lock. This data is entirely controlled by you.</p>
 
         <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>4. Data Storage & Deletion</h2>
         <p>Your authentication tokens are stored securely using Firebase Authentication. Command execution results and photos are stored securely in Vercel Blob with strict private access rules. You have the absolute right to delete all your data and your account instantly from the dashboard settings.</p>

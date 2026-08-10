@@ -14,7 +14,7 @@ export default function CommandRunnerModal({ commandName, onClose, onConfirm }: 
   const [lockMsg, setLockMsg] = useState('Device Locked by Owner');
   const [cameraType, setCameraType] = useState('front');
   const [withFlash, setWithFlash] = useState(false);
-  const [deletePassword, setDeletePassword] = useState('');
+
   const [ringerMode, setRingerMode] = useState('normal');
 
   const handleExecute = () => {
@@ -39,13 +39,7 @@ export default function CommandRunnerModal({ commandName, onClose, onConfirm }: 
       case 'video':
         cmdString = `video ${cameraType}${withFlash ? ' flash' : ''}`;
         break;
-      case 'delete':
-        if (!deletePassword) {
-          alert('Password is required to initiate wipe');
-          return;
-        }
-        cmdString = `delete ${deletePassword}`;
-        break;
+
     }
 
     onConfirm(cmdString);
@@ -165,24 +159,10 @@ export default function CommandRunnerModal({ commandName, onClose, onConfirm }: 
           </div>
         )}
 
-        {commandName === 'delete' && (
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--danger-color)' }}>
-              Enter Veto App Password to Confirm Wipe:
-            </label>
-            <input
-              type="password"
-              value={deletePassword}
-              onChange={e => setDeletePassword(e.target.value)}
-              placeholder="Veto Delete Password"
-              style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid rgba(248, 81, 73, 0.4)', backgroundColor: '#0d1117', color: '#fff' }}
-            />
-          </div>
-        )}
 
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
           <button onClick={onClose} className="btn" style={{ padding: '8px 16px' }}>Cancel</button>
-          <button onClick={handleExecute} className="btn btn-primary" style={{ padding: '8px 16px', backgroundColor: commandName === 'delete' ? 'var(--danger-color)' : '#238636' }}>
+          <button onClick={handleExecute} className="btn btn-primary" style={{ padding: '8px 16px', backgroundColor: '#238636' }}>
             Execute Command
           </button>
         </div>
