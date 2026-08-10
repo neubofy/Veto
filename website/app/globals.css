@@ -17,6 +17,8 @@
   --text-muted: #6b7280;
   --code-bg: rgba(0, 0, 0, 0.05);
   --hero-gradient: linear-gradient(90deg, #1f2937, #6b7280);
+  --btn-bg: rgba(0, 0, 0, 0.05);
+  --btn-hover: rgba(0, 0, 0, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,6 +39,8 @@
     --text-muted: #888;
     --code-bg: rgba(0, 0, 0, 0.5);
     --hero-gradient: linear-gradient(90deg, #fff, #888);
+    --btn-bg: rgba(255, 255, 255, 0.1);
+    --btn-hover: rgba(255, 255, 255, 0.15);
   }
 }
 
@@ -82,7 +86,7 @@ body {
 }
 
 .btn {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--btn-bg);
   color: var(--text-primary);
   border: 1px solid var(--glass-border);
   padding: 10px 20px;
@@ -95,8 +99,8 @@ body {
 }
 
 .btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--btn-hover);
+  border-color: rgba(128, 128, 128, 0.2);
 }
 
 .btn-primary {
