@@ -29,6 +29,9 @@ class TheftSuspectedActivity : VetoActivity() {
 
     private lateinit var settings: SettingsRepository
     private var countDownTimer: android.os.CountDownTimer? = null
+    
+    @Volatile
+    private var isDisturbActive = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,6 +115,25 @@ class TheftSuspectedActivity : VetoActivity() {
             registerReceiver(receiver, filter)
         }
         
+        // Listen for DisturbThief events
+        val disturbFilter = IntentFilter().apply {
+            addAction("com.neubofy.veto.ACTION_DISTURB_START")
+            addAction("com.neubofy.veto.ACTION_DISTURB_STOP")
+        }
+        val disturbReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    "com.neubofy.veto.ACTION_DISTURB_START" -> isDisturbActive = true
+                    "com.neubofy.veto.ACTION_DISTURB_STOP" -> isDisturbActive = false
+                }
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(disturbReceiver, disturbFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(disturbReceiver, disturbFilter)
+        }
+        
         // Also listen for USER_PRESENT (device unlocked)
         val unlockFilter = IntentFilter(Intent.ACTION_USER_PRESENT)
         val unlockReceiver = object : BroadcastReceiver() {
@@ -178,6 +200,9 @@ class TheftSuspectedActivity : VetoActivity() {
             val contactInfo = findViewById<TextView>(R.id.textViewTheftContact)
             contactInfo.setTextColor(android.graphics.Color.WHITE)
             
+            val foundPhoneLayout = findViewById<View>(R.id.layoutFoundPhoneInstructions)
+            foundPhoneLayout?.visibility = View.VISIBLE
+            
             // Swap radar for network diagram
             val radarScanView = findViewById<View>(R.id.radarScanView)
             radarScanView.visibility = View.GONE
@@ -196,50 +221,66 @@ class TheftSuspectedActivity : VetoActivity() {
 
     private fun startFakeTerminalLogs(textView: TextView, scrollView: ScrollView) {
         lifecycleScope.launch {
-            val logs = listOf(
-                "Initializing Veto Anti-Theft Protocol...",
-                "Bypassing local restrictions...",
-                "Establishing secure connection to Veto Mesh Network [SUCCESS]",
-                "Acquiring GPS coordinates...",
-                "Coordinates locked: LAT 40.7128, LNG -74.0060 (precision: 2m)",
-                "Uploading coordinates to secure cloud...",
-                "Activating stealth camera...",
-                "Capturing front camera image...",
-                "Image captured and encrypted. Uploading...",
-                "Uploading audio snippet (10s)...",
-                "Locking hardware identifiers (IMEI/MAC)...",
-                "Broadcasting device state to network nodes...",
-                "Waiting for owner's remote command...",
-                "Analyzing network traffic for anomalies...",
-                "Device lockdown active. Recovery impossible without master key."
-            )
             val sb = java.lang.StringBuilder()
-            for (log in logs) {
-                sb.append("[${java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US).format(java.util.Date())}] ")
-                
-                // Typewriter effect
-                for (char in log) {
-                    sb.append(char)
-                    textView.text = sb.toString()
-                    scrollView.post { scrollView.fullScroll(View.FOCUS_DOWN) }
-                    delay((10..50).random().toLong())
+
+            fun appendLog(msg: String) {
+                sb.append("[${java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US).format(java.util.Date())}] $msg\n")
+                if (sb.length > 2500) {
+                    sb.delete(0, sb.length - 2000)
                 }
-                sb.append("\n")
                 textView.text = sb.toString()
                 scrollView.post { scrollView.fullScroll(View.FOCUS_DOWN) }
-                delay((500..2000).random().toLong())
             }
+
+            appendLog("Initializing Veto Anti-Theft Protocol...")
+            delay(1000)
+            appendLog("Bypassing local restrictions...")
+            delay(1000)
+            appendLog("Establishing secure connection to Veto Mesh Network [SUCCESS]")
+            delay(1000)
             
-            // Continuous loop
+            var noDataAttempts = 0
+            val maxAttempts = 3
+            
             while (true) {
-                val ping = "[${java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US).format(java.util.Date())}] Heartbeat ping... 32 bytes from 192.168.x.x time=14ms\n"
-                sb.append(ping)
-                if (sb.length > 2000) {
-                    sb.delete(0, sb.length - 1500)
+                if (isDisturbActive) {
+                    // Disturb macro is running, rapidly log GPS
+                    appendLog("Attempting emergency data upload...")
+                    delay((500..1500).random().toLong())
+                    
+                    while (isDisturbActive) {
+                        val lat = "%.4f".format(40.7128 + (-0.05 + Math.random() * 0.1))
+                        val lng = "%.4f".format(-74.0060 + (-0.05 + Math.random() * 0.1))
+                        appendLog("Coordinates locked: LAT $lat, LNG $lng (precision: ${(2..10).random()}m)")
+                        
+                        val dataTypes = listOf("current location", "photo", "audio recording", "video recording")
+                        appendLog("Trying to send ${dataTypes.random()} through this device...")
+                        delay((1000..2000).random().toLong())
+                        
+                        appendLog("Sending ${dataTypes.random()} via mesh network to nearest police station via radio frequency...")
+                        delay((2000..4000).random().toLong())
+                    }
+                    
+                    appendLog("normal stopped")
+                    delay(2000)
+                    noDataAttempts = 0 // Reset attempts after an active event
+                } else {
+                    if (noDataAttempts < maxAttempts) {
+                        // Scan phase
+                        val fakeIp = "192.168.${(1..254).random()}.${(1..254).random()}"
+                        appendLog("Scanning for open nodes... Found node.")
+                        delay(1000)
+                        appendLog("Connecting to phone at IP address $fakeIp...")
+                        delay(2000)
+                        appendLog("Connection refused. No data transmitted.")
+                        delay(2000)
+                        noDataAttempts++
+                    } else {
+                        // Paused phase
+                        appendLog("System paused to conserve energy. Awaiting external trigger...")
+                        delay(5000)
+                    }
                 }
-                textView.text = sb.toString()
-                scrollView.post { scrollView.fullScroll(View.FOCUS_DOWN) }
-                delay(3000)
             }
         }
     }

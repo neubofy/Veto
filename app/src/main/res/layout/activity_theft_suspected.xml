@@ -85,6 +85,40 @@
             android:textColor="?attr/colorPrimary"
             android:textAlignment="center"/>
 
+        <!-- Found Phone Instructions -->
+        <LinearLayout
+            android:id="@+id/layoutFoundPhoneInstructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp">
+            
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="IF YOU FOUND THIS PHONE:"
+                android:textColor="?attr/colorPrimary"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"/>
+                
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Put the phone to charging.\n2. Do NOT try to unlock the phone.\n3. Do NOT come near the phone, do NOT move the phone.\n4. Contact the given contact info above, or call 112 and submit it to the police."
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"/>
+                
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We will not put allegations on you that you are a thief. We will take responsibility. If you give us our device back, we will praise you and you may get a reward."
+                android:textSize="14sp"
+                android:textStyle="italic"/>
+        </LinearLayout>
+
         <!-- Terminal Logs (Shown in Confirmed Mode) -->
         <ScrollView
             android:id="@+id/terminalScrollView"

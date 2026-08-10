@@ -3,6 +3,7 @@ package com.neubofy.veto.utils
 import android.app.NotificationManager
 import android.app.NotificationManager.INTERRUPTION_FILTER_ALL
 import android.content.Context
+import android.content.Intent
 import android.hardware.camera2.CameraManager
 import android.media.AudioManager
 import android.media.Ringtone
@@ -63,6 +64,22 @@ class DisturbThief(private val context: Context) {
         } catch (e: Exception) {
             Log.e("DisturbThief", "Failed to play sound", e)
         }
+
+        // Adjust Brightness
+        if (android.provider.Settings.System.canWrite(context)) {
+            try {
+                android.provider.Settings.System.putInt(
+                    context.contentResolver,
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS,
+                    76 // ~30% of 255
+                )
+            } catch (e: Exception) {
+                Log.e("DisturbThief", "Failed to set brightness", e)
+            }
+        }
+
+        // Notify UI
+        context.sendBroadcast(Intent("com.neubofy.veto.ACTION_DISTURB_START"))
 
         val settings = com.neubofy.veto.data.SettingsRepository.getInstance(context)
         val intervalSecs = settings.get(com.neubofy.veto.data.Settings.SET_VOLUME_ENFORCE_INTERVAL) as Int
@@ -134,6 +151,22 @@ class DisturbThief(private val context: Context) {
         } catch (e: Exception) {
             Log.e("DisturbThief", "Failed to stop media player", e)
         }
+
+        // Revert Brightness
+        if (android.provider.Settings.System.canWrite(context)) {
+            try {
+                android.provider.Settings.System.putInt(
+                    context.contentResolver,
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS,
+                    25 // ~10% of 255
+                )
+            } catch (e: Exception) {
+                Log.e("DisturbThief", "Failed to revert brightness", e)
+            }
+        }
+
+        // Notify UI
+        context.sendBroadcast(Intent("com.neubofy.veto.ACTION_DISTURB_STOP"))
 
         try {
             vibrator?.cancel()
