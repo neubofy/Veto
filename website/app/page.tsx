@@ -239,7 +239,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Location</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Powers on location hardware automatically and fetches accurate coordinates with Google Maps links. <strong>Works even if the GPS toggle is turned off!</strong><br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto locate</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
+                Lost your device? This strictly fetches high-accuracy GPS coordinates and generates a quick Google Maps link. <strong>It forces the GPS on even if disabled!</strong><br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto locate</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 
@@ -249,7 +249,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(235, 163, 54, 0.15)', color: '#eba336', padding: '2px 8px', borderRadius: '4px' }}>Macro</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth (increasing visibility to Google Find My Device when offline), turns off DND, and blares a siren. Use the &quot;end&quot; argument to stop.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto theft [end]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
+                The ultimate panic button. Enables Bluetooth (enhancing FMD network visibility), fetches GPS, turns off DND, loops a deafening alarm, and locks the screen, all at once. Pass &quot;end&quot; to cancel.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto theft [end]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 
@@ -259,7 +259,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Alarm</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Bypasses DND &amp; silent mode, maxes out alarm stream volume (overriding the volume down button), and loops a high-decibel alert. We suggest using a siren ringtone.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [seconds]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
+                Dropped it under the couch? Force your device to ring at maximum volume, totally bypassing Do Not Disturb and silent mode. You can specify duration in seconds.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ring [seconds]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
               </p>
             </div>
 
@@ -269,7 +269,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Security</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Instantly locks screen using Device Admin API and optionally renders full-screen owner contact overlay message.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto lock [msg]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DeviceAdminPermission</code>
+                Instantly secure your device. It completely disables biometric unlocks, requiring a hard password to get back in. You can also display an optional message on the lock screen.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto lock [msg]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DeviceAdminPermission</code>
               </p>
             </div>
 
@@ -279,7 +279,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Silently captures photo using front or rear camera over lock screens and backs up file to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto photo [front | back] [flash]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>
+                Secretly snaps a photo from the front or rear camera, right over the lock screen, and beams it straight to your linked Google Drive. Add &quot;flash&quot; if it&apos;s dark.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto photo [front | back] [flash]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>
               </p>
             </div>
 
@@ -289,7 +289,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Records high-quality AAC ambient audio from microphone in background and uploads to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto audio [duration_secs]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
+                Want to know what&apos;s going on around your lost phone? Quietly records high-quality AAC audio for the specified duration and uploads it to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto audio [duration_secs]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
               </p>
             </div>
 
@@ -301,7 +301,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Records background video from front or back camera and backs up to Google Drive.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto video [front | back] [flash]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>, <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
+                Similar to photo, but captures a quick video clip from either camera in the background. It&apos;s backed up to Google Drive automatically.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto video [front | back] [flash]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>CameraPermission</code>, <code style={{ color: 'var(--text-primary)' }}>RecordAudioPermission</code>
               </p>
             </div>
 
@@ -311,7 +311,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Toggles camera flashlight hardware ON/OFF or blinks torch for visual location signaling.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto flash [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>None</code>
+                Need a visual beacon? Toggles your device&apos;s flashlight on or off so you can spot it in the dark.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto flash [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>None</code>
               </p>
             </div>
 
@@ -321,7 +321,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Telemetry</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Returns device model, Android release, battery %, SIM carrier, SIM phone number, IP addresses, and Wi-Fi SSID scan results.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto stats</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
+                Get the full scoop. Pulls vital details like battery percentage, SIM carrier info, IP addresses, and surrounding Wi-Fi networks in a flash.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto stats</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>LocationPermission</code>
               </p>
             </div>
 
@@ -331,7 +331,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(248, 81, 73, 0.15)', color: '#f85149', padding: '2px 8px', borderRadius: '4px' }}>Danger</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Constant-time password-verified emergency factory reset with a transmission buffer to deliver confirmation.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto delete &lt;password&gt; [dryrun]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DeviceAdminPermission</code>
+                The point of no return. Remotely wipes your entire phone to protect your data. It securely verifies your password first. Use &quot;dryrun&quot; to test it safely.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto delete &lt;password&gt; [dryrun]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DeviceAdminPermission</code>
               </p>
             </div>
 
@@ -341,7 +341,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Toggles bluetooth hardware ON/OFF.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto bluetooth [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>BluetoothConnectPermission</code>
+                Remotely toggle Bluetooth connectivity. Perfect for getting your device onto Google&apos;s Find My Device network if it&apos;s disconnected.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto bluetooth [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>BluetoothConnectPermission</code>
               </p>
             </div>
 
@@ -351,7 +351,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>System</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Toggles Do Not Disturb mode ON/OFF.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto nodisturb [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
+                Flip Do Not Disturb mode on or off. Useful if you need your phone to start accepting calls again.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto nodisturb [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
               </p>
             </div>
 
@@ -361,7 +361,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>System</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Changes the device ringer profile.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ringermode [normal | vibrate | silent]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
+                Switch between normal, vibrate, and silent modes. Note: Android bundles silent mode with Do Not Disturb.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto ringermode [normal | vibrate | silent]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>DoNotDisturbAccessPermission</code>
               </p>
             </div>
 
@@ -371,7 +371,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Toggles Location / GPS ON/OFF.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto gps [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>WriteSecureSettingsPermission</code>
+                Forcefully flip Location Services (GPS) on or off using deep Android secure settings.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto gps [on | off]</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>WriteSecureSettingsPermission</code>
               </p>
             </div>
 
@@ -381,7 +381,7 @@ export default function LandingPage() {
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Utility</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.5, margin: 0 }}>
-                Displays list of available commands.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto help</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>None</code>
+                Need a quick refresher? Prints out the list of commands available to your device.<br/><br/>Usage: <code style={{ color: 'var(--text-primary)' }}>veto help</code><br/>Requires: <code style={{ color: 'var(--text-primary)' }}>None</code>
               </p>
             </div>
 
@@ -406,6 +406,27 @@ export default function LandingPage() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+            <div id="faq-fmd" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why isn&apos;t this just an alternative to Google Find My Device?</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                A: Veto isn&apos;t here to replace Google Find My Device; it&apos;s designed to complement it. For example, our `theft` command intentionally turns on Bluetooth to make your device highly visible to the billions of devices on the FMD network, even if it&apos;s completely offline. We fill in the gaps with hardcore features like siren alarms, biometric lockouts, and offline SMS control.
+              </p>
+            </div>
+
+            <div id="faq-nosim" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: What if my phone doesn&apos;t have a SIM card?</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                A: No problem! While SMS is a great fallback, Veto fully supports commanding your device through our Web Dashboard or via Notification Auto-Replies (like WhatsApp or Telegram) over standard Wi-Fi.
+              </p>
+            </div>
+
+            <div id="faq-tracking" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Can I track my phone&apos;s location constantly?</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                A: No. Veto uses a completely dormant architecture to save your battery. It only wakes up when you explicitly send a command (like `locate`). We do not continuously poll your location in the background.
+              </p>
+            </div>
 
             <div id="faq-sms" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: Why didn&apos;t my SMS command work?</h3>

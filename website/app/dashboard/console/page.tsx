@@ -205,7 +205,7 @@ export default function ConsolePage() {
       <CommandConsole onSendCommand={sendCommand} isPending={isCommandPending} />
 
       {/* Live Command Execution Logs */}
-      <div className="glass-panel" style={{ padding: '1.5rem', border: '1px solid #30363d', backgroundColor: '#161b22' }}>
+      <div id="logs" className="glass-panel" style={{ padding: '1.5rem', border: '1px solid #30363d', backgroundColor: '#161b22' }}>
         <h2 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '1rem', color: '#f0f6fc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>Recent Execution Logs</span>
         </h2>

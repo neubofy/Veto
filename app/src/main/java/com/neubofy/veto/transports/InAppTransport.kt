@@ -64,7 +64,7 @@ class InAppTransport(
                 "Command executed. View response on Dashboard.", 
                 Notifications.CHANNEL_IN_APP
             ) { builder ->
-                val url = "https://veto.neubofy.in/dashboard"
+                val url = "https://veto.neubofy.in/dashboard/console#logs"
                 val customTabsIntent = androidx.browser.customtabs.CustomTabsIntent.Builder().build()
                 customTabsIntent.intent.data = android.net.Uri.parse(url)
                 
