@@ -20,7 +20,7 @@ import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.permissions.PostNotificationsPermission
 import com.neubofy.veto.receiver.CopyInAppTextReceiver
 import com.neubofy.veto.receiver.EXTRA_TEXT_TO_COPY
-import com.neubofy.veto.ui.DashboardWebViewActivity
+
 import com.neubofy.veto.utils.Notifications
 import com.neubofy.veto.workers.CommandExecutionWorker
 
@@ -64,11 +64,14 @@ class InAppTransport(
                 "Command executed. View response on Dashboard.", 
                 Notifications.CHANNEL_IN_APP
             ) { builder ->
-                val intent = Intent(context, DashboardWebViewActivity::class.java)
+                val url = "https://veto.neubofy.in/dashboard"
+                val customTabsIntent = androidx.browser.customtabs.CustomTabsIntent.Builder().build()
+                customTabsIntent.intent.data = android.net.Uri.parse(url)
+                
                 val pi = android.app.PendingIntent.getActivity(
                     context, 
                     0, 
-                    intent, 
+                    customTabsIntent.intent, 
                     android.app.PendingIntent.FLAG_IMMUTABLE or android.app.PendingIntent.FLAG_UPDATE_CURRENT
                 )
                 builder.setContentIntent(pi)

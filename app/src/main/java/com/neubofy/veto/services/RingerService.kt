@@ -83,7 +83,7 @@ class RingerService : Service() {
         )
             .setContentTitle(title)
             .setContentText(text)
-            .setSmallIcon(com.neubofy.veto.R.drawable.veto_logo)
+            .setSmallIcon(com.neubofy.veto.R.drawable.ic_notifications)
             .setOngoing(true)
             .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
             .build()

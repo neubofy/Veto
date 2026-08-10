@@ -127,7 +127,7 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation "androidx.work:work-runtime-ktx:2.11.1"
     implementation 'androidx.security:security-crypto-ktx:1.1.0'
-
+    implementation 'androidx.browser:browser:1.8.0'
     // CameraX
     def camerax_version = "1.5.3"
     implementation "androidx.camera:camera-core:${camerax_version}"
