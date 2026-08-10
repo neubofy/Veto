@@ -23,6 +23,8 @@ class TheftSensorManager(private val context: Context, private val listener: The
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val sigMotionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION)
+    private val proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+    private val stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -68,6 +70,28 @@ class TheftSensorManager(private val context: Context, private val listener: The
         }
     }
 
+    private val hardwareSensorListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent?) {
+            if (!isRegistered || event == null) return
+            
+            when (event.sensor.type) {
+                Sensor.TYPE_PROXIMITY -> {
+                    // Proximity sensors usually report maximum range when "far"
+                    val distance = event.values[0]
+                    if (distance > 0) { // Usually 0 is "near", >0 is "far" (taken out of pocket)
+                        triggerBadEvent("proximity_far")
+                    }
+                }
+                Sensor.TYPE_STEP_DETECTOR -> {
+                    // Triggers when a step is detected (thief is walking away)
+                    triggerBadEvent("step_detected")
+                }
+            }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
+
 
     fun register() {
         if (isRegistered) return
@@ -75,6 +99,14 @@ class TheftSensorManager(private val context: Context, private val listener: The
 
         sigMotionSensor?.let {
             sensorManager.requestTriggerSensor(sigMotionListener, it)
+        }
+        
+        proximitySensor?.let {
+            sensorManager.registerListener(hardwareSensorListener, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+        
+        stepDetectorSensor?.let {
+            sensorManager.registerListener(hardwareSensorListener, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
         
 
@@ -93,6 +125,7 @@ class TheftSensorManager(private val context: Context, private val listener: The
         isRegistered = false
 
         sensorManager.cancelTriggerSensor(sigMotionListener, sigMotionSensor)
+        sensorManager.unregisterListener(hardwareSensorListener)
         
         try {
             context.unregisterReceiver(powerReceiver)

@@ -61,6 +61,28 @@ class TheftCommand(context: Context) : Command(context) {
             
             // Confirm theft and trigger bad event if re-triggered
             settings.set(Settings.SET_THEFT_MODE_CONFIRMED, true)
+            
+            enforceDeviceState()
+            
+            try {
+                val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+                if (dpm.isAdminActive(android.content.ComponentName(context, com.neubofy.veto.receiver.DeviceAdminReceiver::class.java))) {
+                    dpm.lockNow()
+                }
+            } catch (e: Exception) {
+                context.log().e("TheftCommand", "Failed to lock device: ${e.message}")
+            }
+
+            try {
+                val activityIntent = Intent(context, TheftSuspectedActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    putExtra("isConfirmed", true)
+                }
+                context.startActivity(activityIntent)
+            } catch (e: Exception) {
+                context.log().e("TheftCommand", "Failed to launch overlay: ${e.message}")
+            }
+
             val badEventIntent = Intent(context, TheftModeService::class.java).apply {
                 action = "ACTION_BAD_EVENT_RE_TRIGGER"
             }
