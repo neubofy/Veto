@@ -65,6 +65,19 @@ class DisturbThief(private val context: Context) {
             Log.e("DisturbThief", "Failed to play sound", e)
         }
 
+        // Re-launch UI if it was swiped away
+        try {
+            val settings = com.neubofy.veto.data.SettingsRepository.getInstance(context)
+            val activityIntent = Intent(context, com.neubofy.veto.ui.TheftSuspectedActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                val isConfirmed = settings.get(com.neubofy.veto.data.Settings.SET_THEFT_MODE_CONFIRMED) as Boolean
+                putExtra("isConfirmed", isConfirmed)
+            }
+            context.startActivity(activityIntent)
+        } catch (e: Exception) {
+            Log.e("DisturbThief", "Failed to launch overlay on disturb start: ${e.message}")
+        }
+
 
 
         // Notify UI
