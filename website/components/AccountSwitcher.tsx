@@ -47,6 +47,16 @@ export default function AccountSwitcher({ currentAccount, onAccountSwitch, onLog
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
       const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      
+      if (credential) {
+        const { getAccountFirebase } = await import('@/lib/firebaseMultiAuth');
+        const targetAuth = getAccountFirebase(result.user.uid).auth;
+        const { signInWithCredential } = await import('firebase/auth');
+        await signInWithCredential(targetAuth, credential);
+      }
+      
+      await auth.signOut();
       
       const newAccount: Omit<StoredAccount, 'isDefault'> = {
         uid: result.user.uid,

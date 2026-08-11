@@ -15,21 +15,28 @@ export default function LoginPage() {
 
   useEffect(() => {
     setAccounts(accountManager.getStoredAccounts());
-    
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push('/dashboard');
-      }
-    });
-    return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   const handleGoogleSignIn = async () => {
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
+      // 1. Sign in to the temporary [DEFAULT] instance to get the credential
       const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
       
+      if (credential) {
+        // 2. Transfer the session securely to the named app instance
+        const { getAccountFirebase } = await import('@/lib/firebaseMultiAuth');
+        const targetAuth = getAccountFirebase(result.user.uid).auth;
+        
+        const { signInWithCredential } = await import('firebase/auth');
+        await signInWithCredential(targetAuth, credential);
+      }
+      
+      // 3. Clear the temporary session
+      await auth.signOut();
+
       accountManager.addAccount({
         uid: result.user.uid,
         email: result.user.email || '',
@@ -37,6 +44,7 @@ export default function LoginPage() {
         photoURL: result.user.photoURL || '',
       });
       
+      accountManager.setActiveAccountUid(result.user.uid);
       router.push('/dashboard');
     } catch (err: any) {
       console.error(err);
@@ -44,22 +52,11 @@ export default function LoginPage() {
     }
   };
 
-  const handleAccountClick = async (account: StoredAccount) => {
-    try {
-      const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ login_hint: account.email, prompt: 'none' });
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (silentErr) {
-        const fallbackProvider = new GoogleAuthProvider();
-        fallbackProvider.setCustomParameters({ login_hint: account.email });
-        await signInWithPopup(auth, fallbackProvider);
-      }
-      router.push('/dashboard');
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message);
-    }
+  const handleAccountClick = (account: StoredAccount) => {
+    // The session is already securely persisted in the named instance.
+    // Just set it as active and navigate to the dashboard.
+    accountManager.setActiveAccountUid(account.uid);
+    router.push('/dashboard');
   };
 
   const handleRemoveAccount = (e: React.MouseEvent, uid: string) => {

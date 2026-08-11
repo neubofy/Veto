@@ -109,13 +109,8 @@ export default function DashboardPage() {
         });
 
       } else {
-        // Fallback to stored account metadata if session is restoring
         const storedAccounts = accountManager.getStoredAccounts();
-        const stored = activeUid ? storedAccounts.find(a => a.uid === activeUid) : null;
-        if (stored) {
-          setUser({ uid: stored.uid, email: stored.email, displayName: stored.displayName, photoURL: stored.photoURL, getIdToken: async () => '' } as any);
-          setCurrentAccount(stored);
-        } else if (storedAccounts.length > 0) {
+        if (!activeUid && storedAccounts.length > 0) {
           const defaultAcc = storedAccounts.find(a => a.isDefault) || storedAccounts[0];
           setActiveUid(defaultAcc.uid);
           accountManager.setActiveAccountUid(defaultAcc.uid);
