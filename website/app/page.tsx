@@ -481,13 +481,6 @@ export default function LandingPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             
             <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>🔑 Argon2id Password &amp; PIN Hashing</h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                Veto never stores plaintext PINs or passwords. It uses <strong>Argon2id</strong> (iterations = 1, memory = 128MB, parallelism = 4) with context separation to hash security PINs and prevent GPU dictionary attacks.
-              </p>
-            </div>
-
-            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>🚫 Zero Tracking &amp; Zero Ads</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 Veto contains zero proprietary analytics SDKs, zero crash-reporting telemetry services, and zero advertisement networks. All log entries remain stored strictly on your local device storage.
