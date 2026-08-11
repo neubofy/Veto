@@ -93,22 +93,19 @@ export default function AccountSwitcher({ currentAccount, onAccountSwitch, onLog
 
   if (!currentAccount) return null;
 
+  const otherAccounts = accounts.filter(a => a.uid !== currentAccount.uid);
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 rounded-full bg-gray-800/50 py-1.5 pl-1.5 pr-4 ring-1 ring-white/10 transition-all hover:bg-gray-800 hover:ring-white/20"
+        className="flex items-center justify-center rounded-full p-1 transition-all hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <img
           src={currentAccount.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentAccount.displayName)}`}
-          alt=""
-          className="h-8 w-8 rounded-full object-cover"
+          alt="Profile"
+          className="h-9 w-9 rounded-full object-cover ring-2 ring-gray-700 hover:ring-gray-500 transition-all"
         />
-        <div className="flex flex-col items-start">
-          <span className="text-sm font-medium text-white">{currentAccount.displayName}</span>
-          <span className="text-[10px] text-green-400 font-medium">● Connected</span>
-        </div>
-        <ChevronDown className={`ml-2 h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       <AnimatePresence>
@@ -118,87 +115,96 @@ export default function AccountSwitcher({ currentAccount, onAccountSwitch, onLog
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 mt-2 w-80 origin-top-right overflow-hidden rounded-2xl bg-gray-900 border border-gray-800 shadow-2xl shadow-black/50 z-50"
+            className="absolute right-0 mt-3 w-[360px] origin-top-right overflow-hidden rounded-3xl bg-[#1e1f22] border border-gray-800/60 shadow-2xl z-50 sm:w-[400px]"
           >
-            <div className="py-2">
-              {accounts.map((account) => {
-                const isCurrent = account.uid === currentAccount.uid;
-                
-                return (
-                  <div
-                    key={account.uid}
-                    onClick={() => handleSwitch(account)}
-                    className={`group relative flex cursor-pointer flex-col gap-2 px-4 py-3 hover:bg-gray-800/50 transition-colors ${
-                      isCurrent ? 'bg-blue-500/10' : ''
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="relative">
-                          <img
-                            src={account.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(account.displayName)}`}
-                            alt=""
-                            className="h-10 w-10 rounded-full object-cover"
-                          />
-                          {isCurrent && (
-                            <div className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 ring-2 ring-gray-900">
-                              <Check className="h-2.5 w-2.5 text-white" />
-                            </div>
-                          )}
-                        </div>
+            {/* Current Account Header */}
+            <div className="flex flex-col items-center justify-center p-6 bg-[#1e1f22]">
+              <div className="relative mb-3">
+                <img
+                  src={currentAccount.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentAccount.displayName)}`}
+                  alt=""
+                  className="h-20 w-20 rounded-full object-cover ring-4 ring-gray-800"
+                />
+              </div>
+              <span className="text-xl font-medium text-gray-100">{currentAccount.displayName}</span>
+              <span className="text-sm text-gray-400 mb-5">{currentAccount.email}</span>
+              
+              <button 
+                onClick={() => {}} 
+                className="rounded-full border border-gray-600 px-6 py-2 text-sm font-medium text-gray-200 transition-colors hover:bg-gray-800"
+              >
+                Manage your Veto Account
+              </button>
+            </div>
+
+            {/* Other Accounts List */}
+            {otherAccounts.length > 0 && (
+              <div className="border-t border-gray-800 py-2">
+                <div className="max-h-60 overflow-y-auto">
+                  {otherAccounts.map((account) => (
+                    <div
+                      key={account.uid}
+                      onClick={() => handleSwitch(account)}
+                      className="group flex cursor-pointer items-center justify-between px-6 py-3 transition-colors hover:bg-gray-800/60"
+                    >
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={account.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(account.displayName)}`}
+                          alt=""
+                          className="h-9 w-9 rounded-full object-cover"
+                        />
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium text-white flex items-center gap-2">
+                          <span className="text-sm font-medium text-gray-200 group-hover:text-white">
                             {account.displayName}
-                            {account.isDefault && <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />}
                           </span>
-                          <span className="text-xs text-gray-400">{account.email}</span>
+                          <span className="text-xs text-gray-500 group-hover:text-gray-400">
+                            {account.email}
+                          </span>
                         </div>
                       </div>
-                      
-                      {!isCurrent && (
-                        <span className="text-xs font-medium text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                          Switch →
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="ml-13 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                      {!account.isDefault && (
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
-                          onClick={(e) => handleSetDefault(e, account.uid)}
-                          className="text-xs font-medium text-gray-400 hover:text-white"
+                          onClick={(e) => handleRemove(e, account.uid)}
+                          className="rounded p-2 text-gray-500 hover:bg-gray-700 hover:text-red-400"
+                          title="Remove account"
                         >
-                          Set Default
+                          <Trash2 className="h-4 w-4" />
                         </button>
-                      )}
-                      <button
-                        onClick={(e) => handleRemove(e, account.uid)}
-                        className="text-xs font-medium text-red-400 hover:text-red-300 flex items-center gap-1"
-                      >
-                        <Trash2 className="h-3 w-3" /> Remove
-                      </button>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-            
-            <div className="border-t border-gray-800 p-2">
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="border-t border-gray-800 py-2">
               <button
                 onClick={handleAddAccount}
-                className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                className="flex w-full items-center gap-4 px-6 py-3 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-800/60"
               >
-                <Plus className="h-4 w-4 text-gray-400" />
-                Add New Account
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-800">
+                  <Plus className="h-4 w-4 text-gray-300" />
+                </div>
+                Add another account
               </button>
               
               <button
                 onClick={onLogoutCurrent}
-                className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors mt-1"
+                className="flex w-full items-center gap-4 px-6 py-3 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-800/60"
               >
-                <LogOut className="h-4 w-4 text-gray-400" />
-                Logout Current
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-800">
+                  <LogOut className="h-4 w-4 text-gray-300" />
+                </div>
+                Sign out
               </button>
+            </div>
+            
+            {/* Footer */}
+            <div className="border-t border-gray-800 py-3 flex justify-center gap-4 text-xs text-gray-500">
+              <a href="/privacy" className="hover:text-gray-300">Privacy Policy</a>
+              <span>•</span>
+              <a href="/terms" className="hover:text-gray-300">Terms of Service</a>
             </div>
           </motion.div>
         )}

@@ -68,13 +68,15 @@ export default function LoginPage() {
       alignItems: 'center', 
       justifyContent: 'center', 
       minHeight: '100vh',
-      width: '100%'
+      width: '100%',
+      padding: '1rem'
     }}>
       <div className="glass-panel" style={{ 
-        padding: '3rem', 
+        padding: '2.5rem', 
         width: '100%', 
         maxWidth: '440px',
-        textAlign: 'center'
+        textAlign: 'center',
+        borderRadius: '24px'
       }}>
         <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛡️</div>
         <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem' }}>Veto</h1>
