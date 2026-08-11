@@ -4,7 +4,10 @@ Veto provides the ultimate toolkit to track, lock, record, and recover your lost
 
 ## Features
 
-Veto offers a robust set of remote commands to control and locate your device in emergency situations. It utilizes zero-trust cryptography to guarantee absolute privacy and control over your personal data.
+Veto offers a robust set of remote commands to control and locate your device in emergency situations. It guarantees absolute privacy and control over your personal data.
+
+**Note on Device Compatibility & Security:**
+This app is designed for modern Android devices. Newer devices natively protect the quick settings panel and power-off menu on the lock screen by requiring the device to be unlocked before these actions can be performed. Veto leverages this by not using a separate custom password to prove ownership; instead, it relies entirely on your device's existing lock screen security. Ensure you have a strong, secure PIN or password set on your device.
 
 ### Commands
 
@@ -32,10 +35,9 @@ Whether your phone has a high-speed 5G connection or no cellular data at all, Ve
 
 ## Privacy & Security
 
-Veto is built on zero-trust cryptography and strict data sovereignty principles, ensuring you never lose control of your device or your data.
+Veto is built on strict data sovereignty principles, ensuring you never lose control of your device or your data.
 
 *   **Argon2id Password & PIN Hashing**: Veto never stores plaintext PINs or passwords. It uses Argon2id (iterations = 1, memory = 128MB, parallelism = 4) with context separation to hash security PINs and prevent GPU dictionary attacks.
-*   **AES-256-GCM & RSA-3072 Encryption**: All media payloads and telemetry data are symmetrically encrypted using AES-256-GCM (96-bit random IV, 128-bit auth tag) and asymmetric key wrapping with RSA-3072 OAEP (SHA-256 MGF1).
 *   **Zero Tracking & Zero Ads**: Veto contains zero proprietary analytics SDKs, zero crash-reporting telemetry services, and zero advertisement networks. All log entries remain stored strictly on your local device storage.
 *   **100% Data Sovereignty**: Retain complete control over your private data. Deploy your own Vercel Web Dashboard and Firebase instance with zero third-party telemetry harvesting.
 

@@ -98,6 +98,10 @@ export default function LandingPage() {
             Veto provides a completely free, highly reliable toolkit to manage and secure your Android device. Designed to work <i>with</i> Google&apos;s Find My Device, it fills in the missing gaps without the battery drain—remaining entirely dormant until a command is received. With multi-transport fallbacks like offline SMS and mesh networks, you stay connected and protected even without internet. Made simple for the average user, yet endlessly capable for power users.
           </p>
 
+          <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', maxWidth: '750px', margin: '0 auto 3rem auto', lineHeight: 1.5, opacity: 0.8, backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '1rem', borderRadius: '8px' }}>
+            <strong>Note on Device Compatibility & Security:</strong> This app is designed for modern Android devices. Newer devices natively protect the quick settings panel and power-off menu on the lock screen by requiring the device to be unlocked. Veto leverages this by not using a separate custom password to prove ownership; instead, it relies on your device&apos;s existing lock screen security. <strong>Make sure you have a strong, secure PIN or password set on your device.</strong>
+          </p>
+
           <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             {loadingAuth ? (
               <div className="btn btn-primary" style={{ padding: '1rem 2.2rem', fontSize: '1.05rem', borderRadius: '40px', visibility: 'hidden' }}>Loading...</div>
@@ -138,7 +142,7 @@ export default function LandingPage() {
               <div style={{ marginBottom: '1.25rem', color: '#58a6ff' }}><ShieldCheck size={48} /></div>
               <h3 style={{ fontSize: '1.35rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Total Control & Sovereignty</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                You have full control to disable any command or transport method from your app. Veto offers end-to-end encryption for server and Firestore data. Use the app without cloud sync via SMS and messaging apps. Media files are stored securely in your Google Drive. Veto handles restricted access links that require your account login to view, ensuring total privacy.
+                You have full control to disable any command or transport method from your app. Use the app without cloud sync via SMS and messaging apps. Media files are stored securely in your Google Drive. Veto handles restricted access links that require your account login to view, ensuring total privacy.
               </p>
             </div>
 
@@ -470,8 +474,8 @@ export default function LandingPage() {
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <div style={{ color: '#a482d8', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Security Specifications</div>
-            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: '800', marginBottom: '1rem' }}>Zero-Trust Privacy &amp; Cryptography</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6 }}>How Veto protects your encryption keys and guarantees data privacy.</p>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: '800', marginBottom: '1rem' }}>Zero-Trust Privacy</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6 }}>How Veto guarantees data privacy.</p>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -480,13 +484,6 @@ export default function LandingPage() {
               <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>🔑 Argon2id Password &amp; PIN Hashing</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 Veto never stores plaintext PINs or passwords. It uses <strong>Argon2id</strong> (iterations = 1, memory = 128MB, parallelism = 4) with context separation to hash security PINs and prevent GPU dictionary attacks.
-              </p>
-            </div>
-
-            <div className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>🔒 AES-256-GCM &amp; RSA-3072 Encryption</h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                All media payloads and telemetry data are symmetrically encrypted using <strong>AES-256-GCM</strong> (96-bit random IV, 128-bit auth tag) and asymmetric key wrapping with <strong>RSA-3072 OAEP</strong> (SHA-256 MGF1).
               </p>
             </div>
 

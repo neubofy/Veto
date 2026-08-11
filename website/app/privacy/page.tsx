@@ -19,8 +19,8 @@ export default function PrivacyPage() {
         <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>1. Zero Analytics & Tracking</h2>
         <p>Veto is built on a foundation of absolute privacy. We do not use any analytics, trackers, or advertising SDKs. Your activity within the app and on the dashboard is your own.</p>
 
-        <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>2. Data Collection & Encryption</h2>
-        <p>We do not passively track your location or device data. Data such as GPS coordinates or device battery stats are only fetched securely upon your explicit request. All data transmitted between your device and the dashboard is 100% encrypted in transit. We cannot see, read, or access your device data.</p>
+        <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>2. Data Collection</h2>
+        <p>We do not passively track your location or device data. Data such as GPS coordinates or device battery stats are only fetched securely upon your explicit request. All data transmitted between your device and the dashboard is securely transmitted. We cannot see, read, or access your device data.</p>
 
         <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>3. Device Administration</h2>
         <p>Veto requires Device Administrator privileges to execute core security features like Remote Lock. This data is entirely controlled by you.</p>
