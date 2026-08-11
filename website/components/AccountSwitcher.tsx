@@ -146,12 +146,6 @@ export default function AccountSwitcher({ currentAccount, onAccountSwitch, onLog
                 <h3>{currentAccount.displayName}</h3>
                 <p>{currentAccount.email}</p>
                 
-                <button 
-                  onClick={() => {}} 
-                  className="manage-btn"
-                >
-                  Manage your Veto Account
-                </button>
               </div>
 
               {/* Other Accounts List */}

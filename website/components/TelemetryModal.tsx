@@ -39,8 +39,8 @@ export default function TelemetryModal({ selectedOutput, history, pin, onClose, 
         }
         
         try {
-          const firebaseClient = await import('@/lib/firebaseClient');
-          const uid = firebaseClient.auth.currentUser?.uid;
+          const { accountManager } = await import('@/lib/accountManager');
+          const uid = accountManager.getActiveAccountUid();
           if (!uid) throw new Error('Not logged in');
           
           const { decryptClient } = await import('@/lib/clientCrypto');
