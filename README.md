@@ -20,7 +20,7 @@ Veto supports a full matrix of commands, accessible via the Web Dashboard, SMS, 
 *   `veto theft [end]`: Master security macro. Activates Theft Mode, fetches GPS coordinates, enables Bluetooth (which increases the chance to be located by Google Find My Device when completely offline), turns off DND, and blares a 3-minute siren alarm.
 *   `veto ring [seconds]`: Bypasses DND & silent mode, maxes out alarm stream volume (overriding the volume down button), wakes the screen, and loops a high-decibel alert. We suggest using a siren ringtone in the app for maximum effect.
 *   `veto lock [custom message]`: Instantly locks the screen using Device Admin API and optionally renders a full-screen owner contact overlay message.
-*   `veto camera [front|back] [flash]`: Silently captures a photo using the front or rear camera over lock screens and backs up the file to Google Drive.
+*   `veto photo [front|back] [flash]`: Silently captures a photo using the front or rear camera over lock screens and backs up the file to Google Drive.
 *   `veto audio [duration_secs]`: Records 30 seconds of high-quality AAC ambient audio from the microphone in the background and uploads it to Google Drive.
 *   `veto video [front|back] [flash]`: Records 30 seconds of background video from the front or back camera and backs it up to Google Drive. *(BETA)*
 *   `veto flash [on|off]`: Toggles the camera flashlight hardware ON/OFF or blinks the torch 10 times for visual location signaling.
@@ -40,8 +40,6 @@ Whether your phone has a high-speed 5G connection or no cellular data at all, Ve
 
 Veto is built on zero-trust cryptography and strict data sovereignty principles, ensuring you never lose control of your device or your data.
 
-*   **Argon2id Password & PIN Hashing**: Veto never stores plaintext PINs or passwords. It uses Argon2id (iterations = 1, memory = 128MB, parallelism = 4) with context separation to hash security PINs and prevent GPU dictionary attacks.
-*   **AES-256-GCM & RSA-3072 Encryption**: All media payloads and telemetry data are symmetrically encrypted using AES-256-GCM (96-bit random IV, 128-bit auth tag) and asymmetric key wrapping with RSA-3072 OAEP (SHA-256 MGF1).
 *   **Zero Tracking & Zero Ads**: Veto contains zero proprietary analytics SDKs, zero crash-reporting telemetry services, and zero advertisement networks. All log entries remain stored strictly on your local device storage.
 *   **100% Data Sovereignty**: Retain complete control over your private data. Deploy your own Vercel Web Dashboard and Firebase instance with zero third-party telemetry harvesting.
 
@@ -49,13 +47,12 @@ Veto is built on zero-trust cryptography and strict data sovereignty principles,
 
 The `veto theft` command is the ultimate, unique security macro designed for critical situations. What makes it completely unique compared to standard device managers is its aggressive, multi-layered approach to deterrence and recovery:
 1. **Unstoppable Siren**: Instantly overrides all system audio settings, bypasses Do Not Disturb and silent modes, maxes out the alarm volume, and blares a persistent high-decibel siren.
-2. **Visual Deterrence & Fake UI**: Forces the device screen on and locks it into a "RadarScanView" that simulates connecting to a mesh network, while showing fake and real terminal logs to intimidate the thief and obscure system access.
-3. **Hardware Activation**: Silently enables Bluetooth (for proximity tracking), turns on the flashlight to draw visual attention, and powers on location hardware.
+2. **Hardware Activation**: Silently enables Bluetooth, GPS and disable DND and volume rest to 100% , Detect shock, movement using accelerometer and distance of person from mobile using proxy meter.
 4. **Data Capture**: Gathers and transmits precise GPS location data, while silently capturing background photos and ambient audio, immediately syncing them to your secure cloud storage.
 5. **Offline Capability**: The entire sequence can be triggered offline via SMS from a trusted emergency contact, ensuring your device reacts even if the thief disables cellular data or Wi-Fi.
 
 
-This requires the app to be granted a series of high-level permissions during initial setup, including Device Admin, Location, Notification Access, and Audio modification rights, to ensure these actions can be reliably executed regardless of the device's current state.
+This requires the app to be granted a series of high-level permissions during initial setup, including Device Admin, WRITE_SECURE_SETTING, Location, Notification Access, and Audio listining rights, to ensure these actions can be reliably executed regardless of the device's current state.
 
 ## Credits
 This project was heavily inspired by the exceptional open-source work of [fmd-android](https://gitlab.com/fmd-foss/fmd-android). We would like to explicitly credit the `fmd-foss` team for their foundational ideas and approaches to Android remote management and anti-theft security.
