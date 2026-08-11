@@ -53,34 +53,49 @@ export default function PinGateModal({ onUnlock, testPayload }: PinGateModalProp
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md">
+      <div className="modal-overlay">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          style={{ position: 'absolute', inset: 0 }}
+        />
+        
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
-          className="w-full max-w-md overflow-hidden rounded-2xl bg-gray-900 border border-gray-800 shadow-2xl shadow-blue-900/20"
+          transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
+          className="modal-content-glass"
+          style={{ padding: '40px', textAlign: 'center' }}
         >
-          <div className="p-8 text-center">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blue-500/10 text-blue-500 ring-1 ring-blue-500/20">
-              <Shield className="h-10 w-10" />
+          <div style={{ position: 'relative' }}>
+            {/* Glowing Shield Icon */}
+            <div className="pingate-shield-container">
+              <div className="pingate-shield-glow"></div>
+              <div className="pingate-shield-inner">
+                <Shield style={{ width: '40px', height: '40px', color: '#60a5fa' }} />
+              </div>
             </div>
             
-            <h2 className="mb-2 text-2xl font-bold text-white">Dashboard Locked</h2>
-            <p className="mb-8 text-sm text-gray-400">
-              Enter your Veto PIN to decrypt your end-to-end encrypted data.
+            <h2 style={{ fontSize: '1.875rem', fontWeight: 800, marginBottom: '12px', background: 'linear-gradient(to right, #fff, #9ca3af)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Unlock Dashboard
+            </h2>
+            <p style={{ fontSize: '0.875rem', fontWeight: 500, color: '#9ca3af', marginBottom: '40px', lineHeight: 1.6 }}>
+              Your data is end-to-end encrypted. Enter your Veto PIN to decrypt telemetry.
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <KeyRound className="h-5 w-5 text-gray-500" />
+            <form onSubmit={handleSubmit}>
+              <div className="pingate-input-container">
+                <div className="pingate-input-icon">
+                  <KeyRound style={{ width: '20px', height: '20px' }} />
                 </div>
                 <input
                   type="password"
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
-                  placeholder="Enter Veto PIN"
-                  className="block w-full rounded-xl border-0 bg-gray-800 py-3.5 pl-10 pr-4 text-white ring-1 ring-inset ring-gray-700 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
+                  placeholder="Enter your PIN"
+                  className="pingate-input"
                   autoFocus
                   disabled={loading}
                 />
@@ -88,27 +103,33 @@ export default function PinGateModal({ onUnlock, testPayload }: PinGateModalProp
 
               {error && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 rounded-lg bg-red-500/10 p-3 text-sm text-red-500"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '16px', padding: '16px', fontSize: '0.875rem', fontWeight: 500, color: '#f87171', marginBottom: '24px' }}
                 >
-                  <ShieldAlert className="h-4 w-4 shrink-0" />
-                  <p>{error}</p>
+                  <ShieldAlert style={{ width: '20px', height: '20px', flexShrink: 0 }} />
+                  <p style={{ textAlign: 'left', margin: 0 }}>{error}</p>
                 </motion.div>
               )}
 
               <button
                 type="submit"
                 disabled={!pin || loading}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50 transition-colors"
+                className="pingate-btn"
+                style={{ marginTop: error ? '0' : '24px' }}
               >
                 {loading ? (
                   <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    Decrypting...
+                    <Loader2 style={{ width: '24px', height: '24px', animation: 'spin 1s linear infinite' }} />
+                    <span>Decrypting...</span>
                   </>
                 ) : (
-                  'Unlock Dashboard'
+                  <>
+                    <span>Decrypt</span>
+                    <svg style={{ width: '20px', height: '20px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </>
                 )}
               </button>
             </form>

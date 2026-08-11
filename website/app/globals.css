@@ -245,3 +245,333 @@ a {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
   }
 }
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: #1a1b1e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+}
+
+.modal-content-glass {
+  background: rgba(17, 18, 20, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  position: relative;
+  color: #fff;
+}
+
+/* Account Switcher specific */
+.account-switcher-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.account-switcher-trigger:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.account-switcher-trigger img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+}
+
+.modal-header img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #1a1b1e;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.modal-header p {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin-bottom: 24px;
+}
+
+.manage-btn {
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 9999px;
+  padding: 8px 24px;
+  background: transparent;
+  color: #e5e7eb;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.manage-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.account-list {
+  max-height: 250px;
+  overflow-y: auto;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.account-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.account-item-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.account-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.account-item-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.account-item-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #e5e7eb;
+}
+
+.account-item-email {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.account-item:hover .account-item-name {
+  color: #fff;
+}
+.account-item:hover .account-item-email {
+  color: #9ca3af;
+}
+
+.modal-actions {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 8px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: #d1d5db;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+}
+
+.action-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  background: rgba(0,0,0,0.2);
+}
+
+.modal-footer a {
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.modal-footer a:hover {
+  color: #d1d5db;
+}
+
+/* PinGate Modal Specific */
+.pingate-shield-container {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 32px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pingate-shield-glow {
+  position: absolute;
+  inset: 0;
+  background: rgba(59, 130, 246, 0.3);
+  filter: blur(24px);
+  border-radius: 50%;
+  animation: pingatePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pingatePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(1.1); }
+}
+
+.pingate-shield-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.pingate-input-container {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.pingate-input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+}
+
+.pingate-input {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 16px 16px 16px 48px;
+  color: #fff;
+  font-size: 1.125rem;
+  letter-spacing: 0.2em;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.pingate-input:focus {
+  background: rgba(0,0,0,0.5);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.pingate-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 40px rgba(255,255,255,0.1);
+}
+
+.pingate-btn:hover:not(:disabled) {
+  box-shadow: 0 0 60px rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+.pingate-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.pingate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
