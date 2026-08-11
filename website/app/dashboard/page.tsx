@@ -147,13 +147,24 @@ export default function DashboardPage() {
 
     try {
       const token = await user.getIdToken();
+      let payloadCommand = command;
+
+      // Encrypt command client-side if PIN is available
+      if (pin) {
+        const { encryptClient } = await import('@/lib/clientCrypto');
+        payloadCommand = await encryptClient(command, pin, user.uid);
+      }
+
       const res = await fetch('/api/command', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ command })
+        body: JSON.stringify({ 
+          command: payloadCommand,
+          encrypted: !!pin
+        })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);

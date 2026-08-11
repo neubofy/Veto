@@ -27,19 +27,36 @@ class VetoFirebaseMessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             log().i(TAG, "Message data payload: ${remoteMessage.data}")
             
-            val commandStr = remoteMessage.data["command"]
+            val rawCommandStr = remoteMessage.data["command"]
+            val encryptedCommandStr = remoteMessage.data["encryptedCommand"]
             val incomingUid = remoteMessage.data["uid"]
+            
+            val localUid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+            if (incomingUid == null || localUid == null || incomingUid != localUid) {
+                log().e(TAG, "Unverified FCM command received. Mismatched UID. Ignored.")
+                return
+            }
+
+            var commandStr: String? = null
+            if (encryptedCommandStr != null) {
+                val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(this)
+                val pin = encRepo.getRawVetoPin()
+                if (pin != null) {
+                    try {
+                        commandStr = com.neubofy.veto.utils.VetoCrypto.decrypt(encryptedCommandStr, pin, localUid)
+                    } catch (e: Exception) {
+                        log().e(TAG, "Failed to decrypt FCM command: ${e.message}")
+                    }
+                } else {
+                    log().e(TAG, "Received encrypted FCM command but device PIN is not set.")
+                }
+            } else {
+                commandStr = rawCommandStr
+            }
             
             if (commandStr != null) {
                 val settings = com.neubofy.veto.data.SettingsRepository.getInstance(this)
-                val localUid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
                 
-                // Security Verification Layer
-                if (incomingUid == null || localUid == null || incomingUid != localUid) {
-                    log().e(TAG, "Unverified FCM command received. Mismatched UID. Ignored.")
-                    return
-                }
-
                 // Prepend trigger word so the parser accepts it
                 var triggerWord = settings.get(com.neubofy.veto.data.Settings.SET_Veto_COMMAND) as String
                 if (triggerWord.isBlank()) {
@@ -60,7 +77,7 @@ class VetoFirebaseMessagingService : FirebaseMessagingService() {
                     .build()
                 androidx.work.WorkManager.getInstance(this).enqueue(workRequest)
             } else {
-                log().w(TAG, "FCM data payload did not contain a 'command' key")
+                log().w(TAG, "FCM data payload did not yield a valid executable command")
             }
         }
     }

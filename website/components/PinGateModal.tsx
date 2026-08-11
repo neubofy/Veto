@@ -23,29 +23,26 @@ export default function PinGateModal({ onUnlock, testPayload }: PinGateModalProp
 
     if (testPayload) {
       try {
-        const idToken = await (await import('@/lib/firebaseClient')).auth.currentUser?.getIdToken();
-        const response = await fetch('/api/crypto/decrypt', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`,
-          },
-          body: JSON.stringify({ data: testPayload, pin }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Incorrect PIN or decryption failed');
+        const firebaseClient = await import('@/lib/firebaseClient');
+        const uid = firebaseClient.auth.currentUser?.uid;
+        
+        if (!uid) {
+          throw new Error('Not logged in');
         }
+
+        const { decryptClient } = await import('@/lib/clientCrypto');
+        await decryptClient(testPayload, pin, uid);
         
         onUnlock(pin);
       } catch (err: any) {
+        console.error(err);
         setError('Incorrect PIN. Please try again.');
         setPin('');
       } finally {
         setLoading(false);
       }
     } else {
-      // If no test payload, just accept it (or we could wait until an actual decryption fails to prompt again)
+      // If no test payload, just accept it
       onUnlock(pin);
       setLoading(false);
     }

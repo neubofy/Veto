@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
     const userId = decodedToken.uid;
     const body = await req.json();
-    const { command } = body;
+    const { command, encrypted } = body;
 
     if (!command) {
       return NextResponse.json({ error: 'Missing command' }, { status: 400 });
@@ -41,11 +41,18 @@ export async function POST(req: Request) {
     }
 
     // Construct the data payload matching Android's VetoFirebaseMessagingService
+    const dataPayload: Record<string, string> = {
+      uid: userId
+    };
+
+    if (encrypted) {
+      dataPayload['encryptedCommand'] = command;
+    } else {
+      dataPayload['command'] = command;
+    }
+
     const message = {
-      data: {
-        command: command,
-        uid: userId
-      },
+      data: dataPayload,
       token: fcmToken
     };
 

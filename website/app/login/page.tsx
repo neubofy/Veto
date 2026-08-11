@@ -99,55 +99,94 @@ export default function LoginPage() {
         )}
 
         {accounts.length > 0 && (
-          <div className="mb-6 space-y-3 text-left">
-            <h3 className="text-sm font-medium text-gray-400 mb-2">Saved Accounts</h3>
-            {accounts.map(account => (
-              <motion.div
-                key={account.uid}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleAccountClick(account)}
-                className="group relative flex cursor-pointer items-center justify-between rounded-xl border border-gray-800 bg-gray-900/50 p-3 hover:border-gray-700 hover:bg-gray-800 transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <img
-                    src={account.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(account.displayName)}`}
-                    alt=""
-                    className="h-10 w-10 rounded-full object-cover ring-2 ring-gray-800"
-                  />
-                  <div>
-                    <div className="text-sm font-medium text-white">{account.displayName}</div>
-                    <div className="text-xs text-gray-400">{account.email}</div>
+          <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 500, color: '#9ca3af', marginBottom: '0.5rem' }}>Saved Accounts</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {accounts.map(account => (
+                <motion.div
+                  key={account.uid}
+                  whileHover={{ scale: 1.02, backgroundColor: 'rgba(31, 41, 55, 1)', borderColor: 'rgba(55, 65, 81, 1)' }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleAccountClick(account)}
+                  style={{
+                    position: 'relative',
+                    display: 'flex',
+                    cursor: 'pointer',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(31, 41, 55, 1)',
+                    backgroundColor: 'rgba(17, 24, 39, 0.5)',
+                    padding: '12px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <img
+                      src={account.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(account.displayName)}`}
+                      alt=""
+                      style={{ height: '40px', width: '40px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(31, 41, 55, 1)' }}
+                    />
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#fff' }}>{account.displayName}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{account.email}</div>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={(e) => handleRemoveAccount(e, account.uid)}
-                    className="p-1.5 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg hover:bg-gray-700"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                  <ChevronRight className="h-5 w-5 text-gray-600 group-hover:text-gray-400" />
-                </div>
-              </motion.div>
-            ))}
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button
+                      onClick={(e) => handleRemoveAccount(e, account.uid)}
+                      style={{
+                        padding: '6px',
+                        color: '#6b7280',
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        borderRadius: '8px',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.color = '#f87171'; e.currentTarget.style.backgroundColor = 'rgba(55, 65, 81, 1)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.color = '#6b7280'; e.currentTarget.style.backgroundColor = 'transparent'; }}
+                      title="Remove account"
+                    >
+                      <Trash2 style={{ height: '16px', width: '16px' }} />
+                    </button>
+                    <ChevronRight style={{ height: '20px', width: '20px', color: '#4b5563' }} />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         )}
 
-        <div className="relative flex items-center py-4">
-          <div className="flex-grow border-t border-gray-800"></div>
-          <span className="flex-shrink-0 px-4 text-xs font-medium text-gray-500">
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', padding: '16px 0' }}>
+          <div style={{ flexGrow: 1, borderTop: '1px solid rgba(31, 41, 55, 1)' }}></div>
+          <span style={{ flexShrink: 0, padding: '0 16px', fontSize: '0.75rem', fontWeight: 500, color: '#6b7280' }}>
             {accounts.length > 0 ? 'Or use another account' : 'Sign in to continue'}
           </span>
-          <div className="flex-grow border-t border-gray-800"></div>
+          <div style={{ flexGrow: 1, borderTop: '1px solid rgba(31, 41, 55, 1)' }}></div>
         </div>
 
         <button 
           onClick={handleGoogleSignIn}
-          className="btn flex w-full items-center justify-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-bold text-black transition-transform hover:scale-[1.02] active:scale-[0.98]" 
+          className="btn hover-lift"
+          style={{ 
+            display: 'flex', 
+            width: '100%', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '12px', 
+            borderRadius: '12px', 
+            backgroundColor: '#ffffff', 
+            padding: '12px 16px', 
+            fontSize: '0.875rem', 
+            fontWeight: 700, 
+            color: '#000000',
+            border: 'none',
+            marginTop: '8px'
+          }}
         >
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="h-5 w-5" />
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ height: '20px', width: '20px' }} />
           {accounts.length > 0 ? 'Add New Account' : 'Sign in with Google'}
         </button>
       </div>

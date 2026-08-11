@@ -38,26 +38,19 @@ export default function TelemetryModal({ selectedOutput, history, pin, onClose, 
           return;
         }
         
-        setIsDecrypting(true);
         try {
-          const idToken = await (await import('@/lib/firebaseClient')).auth.currentUser?.getIdToken();
-          const res = await fetch('/api/crypto/decrypt', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${idToken}`
-            },
-            body: JSON.stringify({ data: payload.content, pin })
-          });
+          const firebaseClient = await import('@/lib/firebaseClient');
+          const uid = firebaseClient.auth.currentUser?.uid;
+          if (!uid) throw new Error('Not logged in');
           
-          if (!res.ok) throw new Error('Decryption failed');
-          const data = await res.json();
+          const { decryptClient } = await import('@/lib/clientCrypto');
+          const decryptedText = await decryptClient(payload.content, pin, uid);
           
           let parsed;
           try {
-            parsed = JSON.parse(data.result);
+            parsed = JSON.parse(decryptedText);
           } catch (e) {
-            parsed = { type: 'text', content: data.result };
+            parsed = { type: 'text', content: decryptedText };
           }
           if (active) setDecryptedPayload(parsed);
         } catch (e) {
