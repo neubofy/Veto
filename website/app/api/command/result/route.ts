@@ -28,19 +28,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing result data' }, { status: 400 });
     }
 
+    if (!encrypted) {
+      return NextResponse.json({ error: 'Unencrypted telemetry data rejected. All stored telemetry must be encrypted.' }, { status: 400 });
+    }
+
     const fullCommandName = command || 'unknown';
     const baseCommandName = fullCommandName.split(' ')[0].toLowerCase();
 
-    let payload = result;
-    if (encrypted) {
-      payload = { type: 'encrypted', content: result };
-    } else if (typeof result === 'string') {
-      try {
-        payload = JSON.parse(result);
-      } catch (e) {
-        payload = { type: 'text', content: result };
-      }
-    }
+    const payload = { type: 'encrypted', content: result };
 
     const timestamp = new Date().toISOString();
     const commandDocRef = adminDb.collection('users').doc(userId).collection('command_history').doc(baseCommandName);

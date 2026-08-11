@@ -314,6 +314,7 @@ export default function DashboardPage() {
           onUnlock={(unlockedPin) => setPin(unlockedPin)} 
           testPayload={testEncryptedPayload}
           account={currentAccount}
+          onAccountSwitch={handleAccountSwitch}
         />
       )}
       

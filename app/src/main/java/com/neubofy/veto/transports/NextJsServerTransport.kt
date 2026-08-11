@@ -82,19 +82,20 @@ class NextJsServerTransport(
                 val rawPin = encRepo.getRawVetoPin()
                 val uid = currentUser.uid
                 
-                val encryptedMsg = if (rawPin != null) {
-                    try {
-                        com.neubofy.veto.utils.VetoCrypto.encrypt(msg, rawPin, uid)
-                    } catch (e: Exception) {
-                        context.log().e("NextJsServerTransport", "Encryption failed: ${e.message}")
-                        msg // fallback to plaintext if encryption fails
-                    }
-                } else {
-                    msg
+                if (rawPin.isNullOrBlank()) {
+                    context.log().e("NextJsServerTransport", "Encryption aborted: Veto PIN is not configured on device.")
+                    throw IllegalStateException("Veto PIN required for zero-knowledge encrypted telemetry storage.")
+                }
+
+                val encryptedMsg = try {
+                    com.neubofy.veto.utils.VetoCrypto.encrypt(msg, rawPin, uid)
+                } catch (e: Exception) {
+                    context.log().e("NextJsServerTransport", "Encryption failed: ${e.message}")
+                    throw IllegalStateException("Failed to encrypt telemetry output: ${e.message}")
                 }
 
                 jsonParam.put("result", encryptedMsg)
-                jsonParam.put("encrypted", rawPin != null)
+                jsonParam.put("encrypted", true)
 
                 if (commandName != null) {
                     jsonParam.put("command", commandName)

@@ -8,12 +8,17 @@ interface PinGateModalProps {
   onUnlock: (pin: string) => void;
   testPayload?: string;
   account?: { displayName?: string; email?: string; photoURL?: string; uid?: string } | null;
+  onAccountSwitch?: (account: any) => void;
 }
 
-export default function PinGateModal({ onUnlock, testPayload, account }: PinGateModalProps) {
+export default function PinGateModal({ onUnlock, testPayload, account, onAccountSwitch }: PinGateModalProps) {
   const [pin, setPin] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+  
+  const storedAccounts = typeof window !== 'undefined' ? (require('@/lib/accountManager').accountManager.getStoredAccounts()) : [];
+  const otherAccounts = storedAccounts.filter((a: any) => a.uid !== account?.uid);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +81,79 @@ export default function PinGateModal({ onUnlock, testPayload, account }: PinGate
                 />
                 <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#fff' }}>{account.displayName}</span>
                 <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{account.email}</span>
+
+                {otherAccounts.length > 0 && onAccountSwitch && (
+                  <div style={{ marginTop: '12px', position: 'relative' }}>
+                    <button
+                      type="button"
+                      onClick={() => setShowAccountDropdown(!showAccountDropdown)}
+                      style={{
+                        background: 'rgba(255,255,255,0.08)',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '9999px',
+                        padding: '4px 12px',
+                        fontSize: '0.75rem',
+                        color: '#60a5fa',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      <span>Switch Account ({otherAccounts.length})</span>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+
+                    {showAccountDropdown && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        marginTop: '8px',
+                        backgroundColor: '#1f2937',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '16px',
+                        width: '240px',
+                        maxHeight: '160px',
+                        overflowY: 'auto',
+                        zIndex: 100,
+                        boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                        padding: '6px'
+                      }}>
+                        {otherAccounts.map((acc: any) => (
+                          <div
+                            key={acc.uid}
+                            onClick={() => {
+                              setShowAccountDropdown(false);
+                              onAccountSwitch(acc);
+                            }}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                              padding: '8px 12px',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              textAlign: 'left',
+                              transition: 'background 0.2s ease'
+                            }}
+                            className="hover-bg-white-5"
+                          >
+                            <img
+                              src={acc.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(acc.displayName || 'U')}`}
+                              style={{ width: '28px', height: '28px', borderRadius: '50%' }}
+                            />
+                            <div style={{ overflow: 'hidden' }}>
+                              <div style={{ fontSize: '0.8rem', color: '#fff', fontWeight: 500, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{acc.displayName}</div>
+                              <div style={{ fontSize: '0.7rem', color: '#9ca3af', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{acc.email}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
