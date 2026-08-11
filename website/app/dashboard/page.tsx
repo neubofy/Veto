@@ -65,12 +65,21 @@ export default function DashboardPage() {
     }
   }, [history, activeCmd, isCommandPending, commandStartTime]);
 
-  // Real-time Firebase listeners
+  const [activeUid, setActiveUid] = useState<string | null>(null);
+
+  useEffect(() => {
+    setActiveUid(accountManager.getActiveAccountUid());
+  }, []);
+
+  // Real-time Firebase listeners for active account
   useEffect(() => {
     let unsubUser = () => {};
     let unsubHistory = () => {};
 
-    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser: User | null) => {
+    const { getAccountFirebase } = require('@/lib/firebaseMultiAuth');
+    const { auth: activeAuth, db: activeDb } = getAccountFirebase(activeUid);
+
+    const unsubscribeAuth = onAuthStateChanged(activeAuth, (currentUser: User | null) => {
       if (currentUser) {
         setUser(currentUser);
         
@@ -86,13 +95,13 @@ export default function DashboardPage() {
         }
         setCurrentAccount(accountManager.getStoredAccounts().find(a => a.uid === currentUser.uid) || null);
 
-        unsubUser = onSnapshot(doc(db, 'users', currentUser.uid), (docSnap: any) => {
+        unsubUser = onSnapshot(doc(activeDb, 'users', currentUser.uid), (docSnap: any) => {
           if (docSnap.exists()) {
             setDeviceLinked(!!docSnap.data().fcmToken);
           }
         });
 
-        const historyRef = collection(db, 'users', currentUser.uid, 'command_history');
+        const historyRef = collection(activeDb, 'users', currentUser.uid, 'command_history');
         unsubHistory = onSnapshot(historyRef, (snapshot: any) => {
           const newHistory: any[] = [];
           snapshot.forEach((d: any) => { newHistory.push({ id: d.id, ...d.data() }); });
@@ -100,13 +109,25 @@ export default function DashboardPage() {
         });
 
       } else {
-        setUser(null);
-        setCurrentAccount(null);
-        setPin(null);
-        unsubUser();
-        unsubHistory();
-        setHistory([]);
-        router.push('/login');
+        // Fallback to stored account metadata if session is restoring
+        const storedAccounts = accountManager.getStoredAccounts();
+        const stored = activeUid ? storedAccounts.find(a => a.uid === activeUid) : null;
+        if (stored) {
+          setUser({ uid: stored.uid, email: stored.email, displayName: stored.displayName, photoURL: stored.photoURL, getIdToken: async () => '' } as any);
+          setCurrentAccount(stored);
+        } else if (storedAccounts.length > 0) {
+          const defaultAcc = storedAccounts.find(a => a.isDefault) || storedAccounts[0];
+          setActiveUid(defaultAcc.uid);
+          accountManager.setActiveAccountUid(defaultAcc.uid);
+        } else {
+          setUser(null);
+          setCurrentAccount(null);
+          setPin(null);
+          unsubUser();
+          unsubHistory();
+          setHistory([]);
+          router.push('/login');
+        }
       }
       setLoading(false);
     });
@@ -116,19 +137,29 @@ export default function DashboardPage() {
       unsubUser();
       unsubHistory();
     };
-  }, [router]);
+  }, [activeUid, router]);
 
   const handleLogout = async () => {
+    if (currentAccount) {
+      accountManager.removeAccount(currentAccount.uid);
+    }
     setHistory([]);
     setPin(null);
-    await signOut(auth);
-    router.push('/login');
+    const nextAcc = accountManager.getStoredAccounts()[0];
+    if (nextAcc) {
+      accountManager.setActiveAccountUid(nextAcc.uid);
+      setActiveUid(nextAcc.uid);
+    } else {
+      await signOut(auth);
+      router.push('/login');
+    }
   };
 
   const handleAccountSwitch = (account: StoredAccount) => {
-    // Auth state observer will handle the rest
     setPin(null);
     setHistory([]);
+    accountManager.setActiveAccountUid(account.uid);
+    setActiveUid(account.uid);
   };
 
   const sendCommand = async (command: string) => {
@@ -282,6 +313,7 @@ export default function DashboardPage() {
         <PinGateModal 
           onUnlock={(unlockedPin) => setPin(unlockedPin)} 
           testPayload={testEncryptedPayload}
+          account={currentAccount}
         />
       )}
       

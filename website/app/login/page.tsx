@@ -47,8 +47,14 @@ export default function LoginPage() {
   const handleAccountClick = async (account: StoredAccount) => {
     try {
       const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account', login_hint: account.email });
-      await signInWithPopup(auth, provider);
+      provider.setCustomParameters({ login_hint: account.email, prompt: 'none' });
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (silentErr) {
+        const fallbackProvider = new GoogleAuthProvider();
+        fallbackProvider.setCustomParameters({ login_hint: account.email });
+        await signInWithPopup(auth, fallbackProvider);
+      }
       router.push('/dashboard');
     } catch (err: any) {
       console.error(err);

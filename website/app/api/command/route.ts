@@ -41,9 +41,7 @@ export async function POST(req: Request) {
     }
 
     // Construct the data payload matching Android's VetoFirebaseMessagingService
-    const dataPayload: Record<string, string> = {
-      uid: userId
-    };
+    const dataPayload: Record<string, string> = {};
 
     if (encrypted) {
       dataPayload['encryptedCommand'] = command;

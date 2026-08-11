@@ -66,5 +66,15 @@ export const accountManager = {
       a.isDefault = a.uid === uid;
     });
     localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  },
+
+  getActiveAccountUid(): string | null {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('veto_active_account_uid') || this.getDefaultAccountUid();
+  },
+
+  setActiveAccountUid(uid: string): void {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem('veto_active_account_uid', uid);
   }
 };

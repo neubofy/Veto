@@ -29,11 +29,10 @@ class VetoFirebaseMessagingService : FirebaseMessagingService() {
             
             val rawCommandStr = remoteMessage.data["command"]
             val encryptedCommandStr = remoteMessage.data["encryptedCommand"]
-            val incomingUid = remoteMessage.data["uid"]
             
             val localUid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
-            if (incomingUid == null || localUid == null || incomingUid != localUid) {
-                log().e(TAG, "Unverified FCM command received. Mismatched UID. Ignored.")
+            if (localUid == null) {
+                log().e(TAG, "Device not logged in to Firebase Auth. FCM Command Ignored.")
                 return
             }
 

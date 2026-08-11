@@ -31,21 +31,15 @@ export default function AccountSwitcher({ currentAccount, onAccountSwitch, onLog
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
-  const handleSwitch = async (account: StoredAccount) => {
+  const handleSwitch = (account: StoredAccount) => {
     if (currentAccount?.uid === account.uid) {
       setIsOpen(false);
       return;
     }
     
-    try {
-      const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
-      await signInWithPopup(auth, provider);
-      onAccountSwitch(account);
-      setIsOpen(false);
-    } catch (e) {
-      console.error('Failed to switch account:', e);
-    }
+    accountManager.setActiveAccountUid(account.uid);
+    onAccountSwitch(account);
+    setIsOpen(false);
   };
 
   const handleAddAccount = async () => {

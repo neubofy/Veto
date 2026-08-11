@@ -7,9 +7,10 @@ import { Shield, ShieldAlert, KeyRound, Loader2 } from 'lucide-react';
 interface PinGateModalProps {
   onUnlock: (pin: string) => void;
   testPayload?: string;
+  account?: { displayName?: string; email?: string; photoURL?: string; uid?: string } | null;
 }
 
-export default function PinGateModal({ onUnlock, testPayload }: PinGateModalProps) {
+export default function PinGateModal({ onUnlock, testPayload, account }: PinGateModalProps) {
   const [pin, setPin] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -23,8 +24,7 @@ export default function PinGateModal({ onUnlock, testPayload }: PinGateModalProp
 
     if (testPayload) {
       try {
-        const firebaseClient = await import('@/lib/firebaseClient');
-        const uid = firebaseClient.auth.currentUser?.uid;
+        const uid = account?.uid || (await import('@/lib/firebaseClient')).auth.currentUser?.uid;
         
         if (!uid) {
           throw new Error('Not logged in');
@@ -67,19 +67,33 @@ export default function PinGateModal({ onUnlock, testPayload }: PinGateModalProp
           style={{ padding: '40px', textAlign: 'center' }}
         >
           <div style={{ position: 'relative' }}>
-            {/* Glowing Shield Icon */}
-            <div className="pingate-shield-container">
-              <div className="pingate-shield-glow"></div>
-              <div className="pingate-shield-inner">
-                <Shield style={{ width: '40px', height: '40px', color: '#60a5fa' }} />
+            {account && (
+              <div style={{ marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <img
+                  src={account.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(account.displayName || 'User')}`}
+                  alt=""
+                  style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.2)', marginBottom: '8px' }}
+                />
+                <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#fff' }}>{account.displayName}</span>
+                <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{account.email}</span>
               </div>
-            </div>
+            )}
+
+            {/* Glowing Shield Icon */}
+            {!account && (
+              <div className="pingate-shield-container">
+                <div className="pingate-shield-glow"></div>
+                <div className="pingate-shield-inner">
+                  <Shield style={{ width: '40px', height: '40px', color: '#60a5fa' }} />
+                </div>
+              </div>
+            )}
             
-            <h2 style={{ fontSize: '1.875rem', fontWeight: 800, marginBottom: '12px', background: 'linear-gradient(to right, #fff, #9ca3af)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '8px', background: 'linear-gradient(to right, #fff, #9ca3af)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               Unlock Dashboard
             </h2>
-            <p style={{ fontSize: '0.875rem', fontWeight: 500, color: '#9ca3af', marginBottom: '40px', lineHeight: 1.6 }}>
-              Your data is end-to-end encrypted. Enter your Veto PIN to decrypt telemetry.
+            <p style={{ fontSize: '0.85rem', fontWeight: 500, color: '#9ca3af', marginBottom: '28px', lineHeight: 1.5 }}>
+              Enter your Veto PIN to decrypt telemetry.
             </p>
 
             <form onSubmit={handleSubmit}>
