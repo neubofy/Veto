@@ -32,7 +32,19 @@ export default function DashboardPage() {
   const [selectedOutput, setSelectedOutput] = useState<string | null>(null);
   const [modalCmd, setModalCmd] = useState<string | null>(null);
 
-  const [pin, setPin] = useState<string | null>(null);
+  const [pinState, setPinState] = useState<string | null>(null);
+  const pin = pinState;
+
+  useEffect(() => {
+    const { pinStore } = require('@/lib/pinStore');
+    setPinState(pinStore.get());
+  }, []);
+
+  const setPin = (newPin: string | null) => {
+    const { pinStore } = require('@/lib/pinStore');
+    pinStore.set(newPin);
+    setPinState(newPin);
+  };
   const [currentAccount, setCurrentAccount] = useState<StoredAccount | null>(null);
   const [needsPin, setNeedsPin] = useState<boolean>(false);
 

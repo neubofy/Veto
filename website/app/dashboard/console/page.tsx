@@ -28,7 +28,19 @@ export default function ConsolePage() {
   const [history, setHistory] = useState<any[]>([]);
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
 
-  const [pin, setPin] = useState<string | null>(null);
+  const [pinState, setPinState] = useState<string | null>(null);
+  const pin = pinState;
+
+  useEffect(() => {
+    const { pinStore } = require('@/lib/pinStore');
+    setPinState(pinStore.get());
+  }, []);
+
+  const setPin = (newPin: string | null) => {
+    const { pinStore } = require('@/lib/pinStore');
+    pinStore.set(newPin);
+    setPinState(newPin);
+  };
   const [currentAccount, setCurrentAccount] = useState<StoredAccount | null>(null);
   const [needsPin, setNeedsPin] = useState<boolean>(false);
 
@@ -88,16 +100,26 @@ export default function ConsolePage() {
     }
   }, [history, activeCmd, isCommandPending, commandStartTime]);
 
-  // Real-time Firebase listeners
+  const [activeUid, setActiveUid] = useState<string | null>(null);
+
+  useEffect(() => {
+    setActiveUid(accountManager.getActiveAccountUid());
+  }, []);
+
+  // Real-time Firebase listeners for active account
   useEffect(() => {
     // Request notification permissions
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
 
+    let unsubUser = () => {};
     let unsubHistory = () => {};
 
-    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser: User | null) => {
+    const { getAccountFirebase } = require('@/lib/firebaseMultiAuth');
+    const { auth: activeAuth, db: activeDb } = getAccountFirebase(activeUid);
+
+    const unsubscribeAuth = onAuthStateChanged(activeAuth, (currentUser: User | null) => {
       if (currentUser) {
         setUser(currentUser);
 
@@ -113,7 +135,7 @@ export default function ConsolePage() {
         }
         setCurrentAccount(accountManager.getStoredAccounts().find(a => a.uid === currentUser.uid) || null);
 
-        const historyRef = collection(db, 'users', currentUser.uid, 'command_history');
+        const historyRef = collection(activeDb, 'users', currentUser.uid, 'command_history');
         unsubHistory = onSnapshot(historyRef, (snapshot: any) => {
           const newHistory: any[] = [];
           snapshot.forEach((d: any) => { newHistory.push({ id: d.id, ...d.data() }); });
@@ -126,21 +148,30 @@ export default function ConsolePage() {
         });
 
       } else {
-        setUser(null);
-        setCurrentAccount(null);
-        setPin(null);
-        unsubHistory();
-        setHistory([]);
-        router.push('/login');
+        const storedAccounts = accountManager.getStoredAccounts();
+        if (!activeUid && storedAccounts.length > 0) {
+          const defaultAcc = storedAccounts.find(a => a.isDefault) || storedAccounts[0];
+          setActiveUid(defaultAcc.uid);
+          accountManager.setActiveAccountUid(defaultAcc.uid);
+        } else {
+          setUser(null);
+          setCurrentAccount(null);
+          setPin(null);
+          unsubUser();
+          unsubHistory();
+          setHistory([]);
+          router.push('/login');
+        }
       }
       setLoading(false);
     });
 
     return () => {
       unsubscribeAuth();
+      unsubUser();
       unsubHistory();
     };
-  }, [router]);
+  }, [activeUid, router]);
 
   const handleLogout = async () => {
     setHistory([]);
@@ -152,6 +183,8 @@ export default function ConsolePage() {
   const handleAccountSwitch = (account: StoredAccount) => {
     setPin(null);
     setHistory([]);
+    accountManager.setActiveAccountUid(account.uid);
+    setActiveUid(account.uid);
   };
 
   const sendCommand = async (command: string) => {
