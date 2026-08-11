@@ -289,6 +289,7 @@ export default function ConsolePage() {
         <PinGateModal 
           onUnlock={(unlockedPin) => setPin(unlockedPin)} 
           testPayload={testEncryptedPayload}
+          account={currentAccount}
         />
       )}
 

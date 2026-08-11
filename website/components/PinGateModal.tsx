@@ -29,7 +29,11 @@ export default function PinGateModal({ onUnlock, testPayload, account, onAccount
 
     if (testPayload) {
       try {
-        const uid = account?.uid || (await import('@/lib/firebaseClient')).auth.currentUser?.uid;
+        let uid: string | null | undefined = account?.uid;
+        if (!uid) {
+          const { accountManager } = await import('@/lib/accountManager');
+          uid = accountManager.getActiveAccountUid();
+        }
         
         if (!uid) {
           throw new Error('Not logged in');
