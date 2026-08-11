@@ -23,6 +23,19 @@ export default function ConsolePage() {
 
   const [history, setHistory] = useState<any[]>([]);
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
+
+  useEffect(() => {
+    // Next.js App Router sometimes fails to scroll to hash links on initial load of dynamic pages
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const id = window.location.hash.substring(1); // remove the '#'
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500); // Wait for page to render
+    }
+  }, []);
   const [selectedOutput, setSelectedOutput] = useState<string | null>(null);
 
   // Auto-resolve pending state when a new result arrives
