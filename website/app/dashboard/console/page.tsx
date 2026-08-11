@@ -13,6 +13,10 @@ import TelemetryModal from '@/components/TelemetryModal';
 type FeedbackType = 'info' | 'success' | 'error';
 interface Feedback { type: FeedbackType; text: string; }
 
+import PinGateModal from '@/components/PinGateModal';
+import AccountSwitcher from '@/components/AccountSwitcher';
+import { accountManager, StoredAccount } from '@/lib/accountManager';
+
 export default function ConsolePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -23,6 +27,25 @@ export default function ConsolePage() {
 
   const [history, setHistory] = useState<any[]>([]);
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
+
+  const [pin, setPin] = useState<string | null>(null);
+  const [currentAccount, setCurrentAccount] = useState<StoredAccount | null>(null);
+  const [needsPin, setNeedsPin] = useState<boolean>(false);
+
+  // Check if we need a PIN
+  useEffect(() => {
+    if (pin) {
+      setNeedsPin(false);
+      return;
+    }
+    const hasEncryptedData = history.some(item => 
+      item.payload?.type === 'encrypted' || 
+      (item.history && item.history.some((h: any) => h.payload?.type === 'encrypted'))
+    );
+    if (hasEncryptedData) {
+      setNeedsPin(true);
+    }
+  }, [history, pin]);
 
   useEffect(() => {
     // Next.js App Router sometimes fails to scroll to hash links on initial load of dynamic pages
@@ -78,6 +101,18 @@ export default function ConsolePage() {
       if (currentUser) {
         setUser(currentUser);
 
+        // Ensure account is in manager
+        const stored = accountManager.getStoredAccounts().find(a => a.uid === currentUser.uid);
+        if (!stored) {
+          accountManager.addAccount({
+            uid: currentUser.uid,
+            email: currentUser.email || '',
+            displayName: currentUser.displayName || 'Unknown User',
+            photoURL: currentUser.photoURL || '',
+          });
+        }
+        setCurrentAccount(accountManager.getStoredAccounts().find(a => a.uid === currentUser.uid) || null);
+
         const historyRef = collection(db, 'users', currentUser.uid, 'command_history');
         unsubHistory = onSnapshot(historyRef, (snapshot: any) => {
           const newHistory: any[] = [];
@@ -92,6 +127,8 @@ export default function ConsolePage() {
 
       } else {
         setUser(null);
+        setCurrentAccount(null);
+        setPin(null);
         unsubHistory();
         setHistory([]);
         router.push('/login');
@@ -104,6 +141,18 @@ export default function ConsolePage() {
       unsubHistory();
     };
   }, [router]);
+
+  const handleLogout = async () => {
+    setHistory([]);
+    setPin(null);
+    await signOut(auth);
+    router.push('/login');
+  };
+
+  const handleAccountSwitch = (account: StoredAccount) => {
+    setPin(null);
+    setHistory([]);
+  };
 
   const sendCommand = async (command: string) => {
     if (!user) return;
@@ -188,8 +237,28 @@ export default function ConsolePage() {
 
   if (!user) return null;
 
+  let testEncryptedPayload: string | undefined;
+  if (needsPin) {
+    const encryptedItem = history.find(item => item.payload?.type === 'encrypted');
+    if (encryptedItem) {
+      testEncryptedPayload = encryptedItem.payload.content;
+    } else {
+      const parentWithEncrypted = history.find(item => item.history && item.history.some((h: any) => h.payload?.type === 'encrypted'));
+      if (parentWithEncrypted) {
+        testEncryptedPayload = parentWithEncrypted.history.find((h: any) => h.payload?.type === 'encrypted')?.payload.content;
+      }
+    }
+  }
+
   return (
     <main style={{ padding: '1.5rem 1rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+      {needsPin && (
+        <PinGateModal 
+          onUnlock={(unlockedPin) => setPin(unlockedPin)} 
+          testPayload={testEncryptedPayload}
+        />
+      )}
+
       {feedback && (
         <div className={`notification-banner notification-${feedback.type}`}>
           {feedback.text}
@@ -208,9 +277,11 @@ export default function ConsolePage() {
           <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '4px' }}>Raw CLI command execution & live output stream</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '0.85rem', color: '#8b949e', backgroundColor: '#161b22', padding: '6px 12px', borderRadius: '8px', border: '1px solid #30363d' }}>
-            User: {user.email}
-          </span>
+          <AccountSwitcher 
+            currentAccount={currentAccount}
+            onAccountSwitch={handleAccountSwitch}
+            onLogoutCurrent={handleLogout}
+          />
         </div>
       </header>
 
@@ -265,6 +336,7 @@ export default function ConsolePage() {
         <TelemetryModal
           selectedOutput={selectedOutput}
           history={history}
+          pin={pin}
           onClose={() => setSelectedOutput(null)}
           onDeleteData={deleteData}
         />

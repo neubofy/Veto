@@ -11,6 +11,9 @@ import CommandCard from '@/components/CommandCard';
 import CommandRunnerModal from '@/components/CommandRunnerModal';
 import TelemetryModal from '@/components/TelemetryModal';
 import DangerZone from '@/components/DangerZone';
+import PinGateModal from '@/components/PinGateModal';
+import AccountSwitcher from '@/components/AccountSwitcher';
+import { accountManager, StoredAccount } from '@/lib/accountManager';
 
 type FeedbackType = 'info' | 'success' | 'error';
 interface Feedback { type: FeedbackType; text: string; }
@@ -28,6 +31,25 @@ export default function DashboardPage() {
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
   const [selectedOutput, setSelectedOutput] = useState<string | null>(null);
   const [modalCmd, setModalCmd] = useState<string | null>(null);
+
+  const [pin, setPin] = useState<string | null>(null);
+  const [currentAccount, setCurrentAccount] = useState<StoredAccount | null>(null);
+  const [needsPin, setNeedsPin] = useState<boolean>(false);
+
+  // Check if we need a PIN
+  useEffect(() => {
+    if (pin) {
+      setNeedsPin(false);
+      return;
+    }
+    const hasEncryptedData = history.some(item => 
+      item.payload?.type === 'encrypted' || 
+      (item.history && item.history.some((h: any) => h.payload?.type === 'encrypted'))
+    );
+    if (hasEncryptedData) {
+      setNeedsPin(true);
+    }
+  }, [history, pin]);
 
   // Auto-resolve pending state when a new result arrives
   useEffect(() => {
@@ -51,6 +73,18 @@ export default function DashboardPage() {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser: User | null) => {
       if (currentUser) {
         setUser(currentUser);
+        
+        // Ensure account is in manager
+        const stored = accountManager.getStoredAccounts().find(a => a.uid === currentUser.uid);
+        if (!stored) {
+          accountManager.addAccount({
+            uid: currentUser.uid,
+            email: currentUser.email || '',
+            displayName: currentUser.displayName || 'Unknown User',
+            photoURL: currentUser.photoURL || '',
+          });
+        }
+        setCurrentAccount(accountManager.getStoredAccounts().find(a => a.uid === currentUser.uid) || null);
 
         unsubUser = onSnapshot(doc(db, 'users', currentUser.uid), (docSnap: any) => {
           if (docSnap.exists()) {
@@ -67,6 +101,8 @@ export default function DashboardPage() {
 
       } else {
         setUser(null);
+        setCurrentAccount(null);
+        setPin(null);
         unsubUser();
         unsubHistory();
         setHistory([]);
@@ -84,8 +120,15 @@ export default function DashboardPage() {
 
   const handleLogout = async () => {
     setHistory([]);
+    setPin(null);
     await signOut(auth);
     router.push('/login');
+  };
+
+  const handleAccountSwitch = (account: StoredAccount) => {
+    // Auth state observer will handle the rest
+    setPin(null);
+    setHistory([]);
   };
 
   const sendCommand = async (command: string) => {
@@ -207,9 +250,30 @@ export default function DashboardPage() {
   );
 
   if (!user) return null;
+  
+  // Find a test payload for the PinGateModal
+  let testEncryptedPayload: string | undefined;
+  if (needsPin) {
+    const encryptedItem = history.find(item => item.payload?.type === 'encrypted');
+    if (encryptedItem) {
+      testEncryptedPayload = encryptedItem.payload.content;
+    } else {
+      const parentWithEncrypted = history.find(item => item.history && item.history.some((h: any) => h.payload?.type === 'encrypted'));
+      if (parentWithEncrypted) {
+        testEncryptedPayload = parentWithEncrypted.history.find((h: any) => h.payload?.type === 'encrypted')?.payload.content;
+      }
+    }
+  }
 
   return (
     <main style={{ padding: '1.5rem 1rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+      {needsPin && (
+        <PinGateModal 
+          onUnlock={(unlockedPin) => setPin(unlockedPin)} 
+          testPayload={testEncryptedPayload}
+        />
+      )}
+      
       {feedback && (
         <div className={`notification-banner notification-${feedback.type}`}>
           {feedback.text}
@@ -232,25 +296,14 @@ export default function DashboardPage() {
             <span>💻</span> Terminal Console ↗
           </Link>
 
-          <div className="glass-panel" style={{ padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: '2px', borderRadius: '12px' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)', wordBreak: 'break-all' }}>
-              {user.email}
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
-              <div style={{
-                width: '8px', height: '8px', borderRadius: '50%',
-                backgroundColor: deviceLinked ? '#2ea043' : '#f85149',
-                boxShadow: deviceLinked ? '0 0 8px #2ea043' : '0 0 8px #f85149'
-              }}></div>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                {deviceLinked ? 'App Connected' : 'App Not Connected'}
-              </span>
-            </div>
-          </div>
+          <AccountSwitcher 
+            currentAccount={currentAccount}
+            onAccountSwitch={handleAccountSwitch}
+            onLogoutCurrent={handleLogout}
+          />
           <Link href="/dashboard/console#logs" className="btn" style={{ padding: '8px 14px', fontSize: '0.85rem', textDecoration: 'none', backgroundColor: 'rgba(88, 166, 255, 0.1)', color: '#58a6ff', border: '1px solid rgba(88, 166, 255, 0.3)' }}>
             Recent Execution Logs
           </Link>
-          <button onClick={handleLogout} className="btn btn-danger" style={{ padding: '8px 14px', fontSize: '0.85rem' }}>Logout</button>
         </div>
       </header>
 
@@ -396,6 +449,7 @@ export default function DashboardPage() {
         <TelemetryModal
           selectedOutput={selectedOutput}
           history={history}
+          pin={pin}
           onClose={() => setSelectedOutput(null)}
           onDeleteData={deleteData}
         />

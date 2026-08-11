@@ -58,11 +58,6 @@ class NextJsServerTransport(
             return
         }
 
-        if (currentUser == null) {
-            context.log().e("NextJsServerTransport", "User not authenticated. Cannot sync result.")
-            return
-        }
-
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // Using Tasks.await prevents thread deadlocks compared to the old CountDownLatch
@@ -82,8 +77,25 @@ class NextJsServerTransport(
                 connection.doOutput = true
 
                 val jsonParam = JSONObject()
-                // Send the raw string. The Next.js server will parse it if it is JSON.
-                jsonParam.put("result", msg)
+                
+                val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
+                val rawPin = encRepo.getRawVetoPin()
+                val uid = currentUser.uid
+                
+                val encryptedMsg = if (rawPin != null) {
+                    try {
+                        com.neubofy.veto.utils.VetoCrypto.encrypt(msg, rawPin, uid)
+                    } catch (e: Exception) {
+                        context.log().e("NextJsServerTransport", "Encryption failed: ${e.message}")
+                        msg // fallback to plaintext if encryption fails
+                    }
+                } else {
+                    msg
+                }
+
+                jsonParam.put("result", encryptedMsg)
+                jsonParam.put("encrypted", rawPin != null)
+
                 if (commandName != null) {
                     jsonParam.put("command", commandName)
                 }
@@ -97,64 +109,21 @@ class NextJsServerTransport(
                     context.log().i("NextJsServerTransport", "Successfully synced command result to Dashboard")
                 } else {
                     context.log().e("NextJsServerTransport", "Failed to sync result. Server returned $responseCode")
-                    triggerFallbackSms(msg, commandName)
+                    fallbackToSms(context, msg, commandName)
                 }
             } catch (e: ExecutionException) {
                 context.log().e("NextJsServerTransport", "ExecutionException: ${e.message}")
-                triggerFallbackSms(msg, commandName)
+                fallbackToSms(context, msg, commandName)
             } catch (e: InterruptedException) {
                 context.log().e("NextJsServerTransport", "InterruptedException: ${e.message}")
-                triggerFallbackSms(msg, commandName)
+                fallbackToSms(context, msg, commandName)
             } catch (e: TimeoutException) {
                 context.log().e("NextJsServerTransport", "TimeoutException: ${e.message}")
-                triggerFallbackSms(msg, commandName)
+                fallbackToSms(context, msg, commandName)
             } catch (e: Exception) {
                 context.log().e("NextJsServerTransport", "Error syncing result: ${e.message}")
-                triggerFallbackSms(msg, commandName)
+                fallbackToSms(context, msg, commandName)
             }
-        }
-    }
-
-    private fun triggerFallbackSms(msg: String, commandName: String?) {
-        val allowlistRepo = com.neubofy.veto.data.AllowlistRepository.getInstance(context)
-        val starredContact = allowlistRepo.list.find { it.isStarred }
-        if (starredContact == null) {
-            context.log().w("NextJsServerTransport", "Fallback SMS aborted: No starred contact found.")
-            return
-        }
-
-        context.log().i("NextJsServerTransport", "Triggering fallback SMS to starred contact: ${starredContact.name}")
-
-        val sm = context.getSystemService(android.telephony.SubscriptionManager::class.java)
-        
-        if (androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_STATE) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            val activeSubscriptionInfoList = sm?.activeSubscriptionInfoList
-            if (!activeSubscriptionInfoList.isNullOrEmpty()) {
-                // To guarantee delivery, we iterate through all active SIMs and attempt to send.
-                // In a perfect system we would use a broadcast receiver to wait for RESULT_OK or failure,
-                // but for fallback, sending from all available SIMs provides the highest chance of success.
-                for (subInfo in activeSubscriptionInfoList) {
-                    try {
-                        val smsTransport = SmsTransport(context, starredContact.number, subInfo.subscriptionId)
-                        val fallbackMsg = "[Fallback from Server] " + msg
-                        smsTransport.send(context, fallbackMsg, commandName)
-                        context.log().i("NextJsServerTransport", "Fallback SMS sent via SIM: ${subInfo.subscriptionId}")
-                    } catch (e: Exception) {
-                        context.log().e("NextJsServerTransport", "Fallback SMS failed for SIM ${subInfo.subscriptionId}: ${e.message}")
-                    }
-                }
-                return
-            }
-        }
-        
-        // If no READ_PHONE_STATE permission or no active subs found, try default SmsManager
-        try {
-            val smsTransport = SmsTransport(context, starredContact.number, -1)
-            val fallbackMsg = "[Fallback from Server] " + msg
-            smsTransport.send(context, fallbackMsg, commandName)
-            context.log().i("NextJsServerTransport", "Fallback SMS sent via default SIM.")
-        } catch (e: Exception) {
-            context.log().e("NextJsServerTransport", "Fallback SMS via default SIM failed: ${e.message}")
         }
     }
 
@@ -171,7 +140,10 @@ class NextJsServerTransport(
         if (location.altitude != null) json.put("altitude", "${location.altitude.toInt()}m")
         json.put("timestamp", java.util.Date(location.timeMillis).toString())
 
-        // Send structured JSON
+        // The actual encryption happens inside send(), so we just pass the JSON string here.
+        // Wait, send() takes the msg and wraps it into {"result": msg}.
+        // If msg is already JSON string of location, Next.js server will receive it as a string inside "result".
+        // That's what it did before.
         send(context, json.toString(), commandName)
     }
 }

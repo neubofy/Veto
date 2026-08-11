@@ -23,18 +23,6 @@ object DashboardSync {
             callback?.invoke("Dashboard not paired or user not authenticated.", false)
             return
         }
-        if (currentUser == null) {
-            context.log().e(TAG, "User not authenticated. Cannot sync token.")
-            if (retryCount < 3) {
-                context.log().i(TAG, "Retrying token sync in 10 seconds (attempt ${retryCount + 1})...")
-                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                    uploadTokenIfPaired(context, retryCount + 1, callback)
-                }, 10000)
-            } else {
-                callback?.invoke("User not authenticated.", false)
-            }
-            return
-        }
 
         callback?.invoke("Fetching Firebase Auth token...", true)
         currentUser.getIdToken(true).addOnCompleteListener { task ->

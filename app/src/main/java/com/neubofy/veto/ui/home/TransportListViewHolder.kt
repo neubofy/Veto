@@ -74,12 +74,24 @@ class TransportListViewHolder(
                         return@setOnCheckedChangeListener
                     }
                 } else if (transportKey == "notification_reply") {
+                    val rawPin = encRepo.getRawVetoPin()
+                    if (rawPin.isNullOrBlank()) {
+                        compoundButton.isChecked = false
+                        android.widget.Toast.makeText(context, "You must set a Veto PIN in Settings before enabling Notification Reply", android.widget.Toast.LENGTH_LONG).show()
+                        return@setOnCheckedChangeListener
+                    }
                     if (encRepo.getAllowedNotificationPackages().isEmpty()) {
                         compoundButton.isChecked = false
                         android.widget.Toast.makeText(context, "Must add a messaging app in settings first", android.widget.Toast.LENGTH_LONG).show()
                         return@setOnCheckedChangeListener
                     }
                 } else if (transportKey == "cloud") {
+                    val rawPin = encRepo.getRawVetoPin()
+                    if (rawPin.isNullOrBlank()) {
+                        compoundButton.isChecked = false
+                        android.widget.Toast.makeText(context, "You must set a Veto PIN in Settings before enabling Web Dashboard", android.widget.Toast.LENGTH_LONG).show()
+                        return@setOnCheckedChangeListener
+                    }
                     if (!com.neubofy.veto.transports.NextJsServerTransport.isConnected(context)) {
                         compoundButton.isChecked = false
                         android.widget.Toast.makeText(context, "Must connect to server in Account Settings first", android.widget.Toast.LENGTH_LONG).show()

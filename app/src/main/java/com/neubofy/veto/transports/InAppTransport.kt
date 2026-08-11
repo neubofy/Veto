@@ -51,8 +51,9 @@ class InAppTransport(
         super.send(context, msg, commandName)
 
         val title = context.getString(R.string.transport_inapp_title)
+        val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(context)
 
-        if (NextJsServerTransport.isConnected(context)) {
+        if (encRepo.isTransportEnabled("cloud") && NextJsServerTransport.isConnected(context)) {
             // Forward to server
             val serverTransport = NextJsServerTransport(context)
             serverTransport.send(context, msg, commandName)
@@ -65,14 +66,12 @@ class InAppTransport(
                 Notifications.CHANNEL_IN_APP
             ) { builder ->
                 val url = "https://veto.neubofy.in/dashboard/console#logs"
-                val customTabsIntent = androidx.browser.customtabs.CustomTabsIntent.Builder().build()
-                customTabsIntent.intent.data = android.net.Uri.parse(url)
-                
-                val pi = android.app.PendingIntent.getActivity(
+                val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                val pi = PendingIntent.getActivity(
                     context, 
                     0, 
-                    customTabsIntent.intent, 
-                    android.app.PendingIntent.FLAG_IMMUTABLE or android.app.PendingIntent.FLAG_UPDATE_CURRENT
+                    intent, 
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
                 builder.setContentIntent(pi)
             }

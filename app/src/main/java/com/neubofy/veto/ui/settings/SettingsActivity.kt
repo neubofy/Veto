@@ -242,7 +242,9 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
             message = "Set a PIN to authorize commands sent via notification reply or unlisted contacts.",
             minLength = 1,
             onSuccess = { pin ->
-                encSettings.setVetoPin(pin)
+                val hashedPin = CypherUtils.hashPasswordForVetoPin(pin)
+                encSettings.setVetoPin(hashedPin)
+                encSettings.setRawVetoPin(pin)
                 updateUI()
             }
         )

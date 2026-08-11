@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
     const userId = decodedToken.uid;
     const body = await req.json();
-    const { result, command } = body;
+    const { result, command, encrypted } = body;
 
     if (!result) {
       return NextResponse.json({ error: 'Missing result data' }, { status: 400 });
@@ -32,7 +32,9 @@ export async function POST(req: Request) {
     const baseCommandName = fullCommandName.split(' ')[0].toLowerCase();
 
     let payload = result;
-    if (typeof result === 'string') {
+    if (encrypted) {
+      payload = { type: 'encrypted', content: result };
+    } else if (typeof result === 'string') {
       try {
         payload = JSON.parse(result);
       } catch (e) {

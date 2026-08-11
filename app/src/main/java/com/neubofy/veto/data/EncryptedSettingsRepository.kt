@@ -24,6 +24,7 @@ class EncryptedSettingsRepository private constructor(context: Context) {
 
         private const val KEY_SERVER_CACHED_ACCESS_TOKEN = "KEY_SERVER_CACHED_ACCESS_TOKEN"
         private const val KEY_Veto_PIN = "KEY_Veto_PIN"
+        private const val KEY_RAW_VETO_PIN = "KEY_RAW_VETO_PIN"
         private const val KEY_ALLOWLIST_JSON = "KEY_ALLOWLIST_JSON"
         private const val KEY_TEMP_ALLOWLIST_JSON = "KEY_TEMP_ALLOWLIST_JSON"
     }
@@ -58,9 +59,21 @@ class EncryptedSettingsRepository private constructor(context: Context) {
 
     fun setVetoPin(new: String?) {
         if (new.isNullOrBlank()) {
-            sharedPrefs.edit().remove(KEY_Veto_PIN).apply()
+            sharedPrefs.edit().remove(KEY_Veto_PIN).remove(KEY_RAW_VETO_PIN).apply()
         } else {
             sharedPrefs.edit().putString(KEY_Veto_PIN, new).apply()
+        }
+    }
+
+    fun getRawVetoPin(): String? {
+        return sharedPrefs.getString(KEY_RAW_VETO_PIN, null)
+    }
+
+    fun setRawVetoPin(new: String?) {
+        if (new.isNullOrBlank()) {
+            sharedPrefs.edit().remove(KEY_RAW_VETO_PIN).apply()
+        } else {
+            sharedPrefs.edit().putString(KEY_RAW_VETO_PIN, new).apply()
         }
     }
 

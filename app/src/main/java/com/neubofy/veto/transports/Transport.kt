@@ -67,6 +67,47 @@ abstract class Transport<DestinationType>(
         }
     }
 
+    protected fun fallbackToSms(context: Context, msg: String, commandName: String?) {
+        val allowlistRepo = com.neubofy.veto.data.AllowlistRepository.getInstance(context)
+        val starredContact = allowlistRepo.list.find { it.isStarred }
+        if (starredContact == null) {
+            context.log().w(TAG, "Fallback SMS aborted: No starred contact found.")
+            return
+        }
+
+        context.log().i(TAG, "Triggering fallback SMS to starred contact: ${starredContact.name}")
+
+        val sm = context.getSystemService(android.telephony.SubscriptionManager::class.java)
+        
+        if (androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_STATE) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            val activeSubscriptionInfoList = sm?.activeSubscriptionInfoList
+            if (!activeSubscriptionInfoList.isNullOrEmpty()) {
+                // To guarantee delivery, we iterate through all active SIMs and attempt to send.
+                for (subInfo in activeSubscriptionInfoList) {
+                    try {
+                        val smsTransport = SmsTransport(context, starredContact.number, subInfo.subscriptionId)
+                        val fallbackMsg = "[Fallback] " + msg
+                        smsTransport.send(context, fallbackMsg, commandName)
+                        context.log().i(TAG, "Fallback SMS sent via SIM: ${subInfo.subscriptionId}")
+                    } catch (e: Exception) {
+                        context.log().e(TAG, "Fallback SMS failed for SIM ${subInfo.subscriptionId}: ${e.message}")
+                    }
+                }
+                return
+            }
+        }
+        
+        // If no READ_PHONE_STATE permission or no active subs found, try default SmsManager
+        try {
+            val smsTransport = SmsTransport(context, starredContact.number, -1)
+            val fallbackMsg = "[Fallback] " + msg
+            smsTransport.send(context, fallbackMsg, commandName)
+            context.log().i(TAG, "Fallback SMS sent via default SIM.")
+        } catch (e: Exception) {
+            context.log().e(TAG, "Fallback SMS via default SIM failed: ${e.message}")
+        }
+    }
+
     open fun sendNewLocation(context: Context, location: VetoLocation, commandName: String? = null) {
         send(context, location.toString(), commandName)
     }

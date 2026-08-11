@@ -11,6 +11,7 @@ class AllowlistViewHolder(
     itemView: View,
     private val onDeleteClicked: (String) -> Unit,
     private val onStarClicked: (String) -> Unit,
+    private val onEditClicked: (String) -> Unit,
 ) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: AllowlistItem) {
@@ -41,5 +42,8 @@ class AllowlistViewHolder(
 
         itemView.findViewById<ImageView>(R.id.button_delete)
             .setOnClickListener { onDeleteClicked(item.number) }
+
+        itemView.findViewById<ImageView>(R.id.button_edit)
+            .setOnClickListener { onEditClicked(item.number) }
     }
 }

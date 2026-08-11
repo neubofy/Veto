@@ -237,7 +237,7 @@ export default function LandingPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
             
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-locate" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📍 veto locate</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Location</span>
@@ -247,7 +247,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-theft" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#eba336' }}>🚨 veto theft</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(235, 163, 54, 0.15)', color: '#eba336', padding: '2px 8px', borderRadius: '4px' }}>Macro</span>
@@ -257,7 +257,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-ring" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🔊 veto ring</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Alarm</span>
@@ -267,7 +267,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-lock" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🔒 veto lock</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Security</span>
@@ -277,7 +277,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-photo" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📸 veto photo</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
@@ -287,7 +287,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-audio" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🎙️ veto audio</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Media</span>
@@ -297,7 +297,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-video" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🎥 veto video</span>
@@ -309,7 +309,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-flash" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>💡 veto flash</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
@@ -319,7 +319,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-stats" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📊 veto stats</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Telemetry</span>
@@ -329,7 +329,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-bluetooth" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📡 veto bluetooth</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
@@ -339,7 +339,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-nodisturb" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🔇 veto nodisturb</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>System</span>
@@ -349,7 +349,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-ringermode" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>📳 veto ringermode</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>System</span>
@@ -359,7 +359,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-gps" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>🛰️ veto gps</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Hardware</span>
@@ -369,7 +369,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
+            <div id="cmd-help" className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#58a6ff' }}>❓ veto help</span>
                 <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(47, 129, 247, 0.15)', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>Utility</span>
@@ -444,7 +444,7 @@ export default function LandingPage() {
             </div>
 
 
-            <div id="faq-write-secure-settings" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
+            <div id="secure-settings" className="glass-panel" style={{ borderRadius: '14px', padding: '2rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Q: How do I grant Write Secure Settings permission?</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
                 A: The <code>WriteSecureSettingsPermission</code> is required for powerful hardware toggles like GPS and Bluetooth. Because Android restricts this for normal apps, you must grant it manually using a computer via ADB (Android Debug Bridge) with the command: <br/><code style={{ display: 'block', marginTop: '8px', padding: '8px', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>adb shell pm grant com.neubofy.veto android.permission.WRITE_SECURE_SETTINGS</code>

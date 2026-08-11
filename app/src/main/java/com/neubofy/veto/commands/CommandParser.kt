@@ -69,7 +69,7 @@ class CommandParser(
         }
         var pin: String? = null
         if (!matchesKnownCommand) {
-            if (!expectedPin.isNullOrBlank() && expectedPin == secondToken) {
+            if (!expectedPin.isNullOrBlank() && com.neubofy.veto.utils.CypherUtils.checkPasswordForVetoPin(expectedPin, secondToken)) {
                 pin = secondToken
             }
         }

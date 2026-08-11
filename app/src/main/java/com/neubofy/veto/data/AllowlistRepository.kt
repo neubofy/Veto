@@ -118,17 +118,37 @@ class AllowlistRepository private constructor(private val context: Context) {
 
     fun starContact(phoneNumber: String) {
         var modified = false
+        // Find if the target contact is already starred
+        val isCurrentlyStarred = list.find { PhoneNumberUtils.compare(it.number, phoneNumber) }?.isStarred == true
+        
         for (ele in list) {
             if (PhoneNumberUtils.compare(ele.number, phoneNumber)) {
-                if (!ele.isStarred) {
-                    ele.isStarred = true
+                // Toggle the star status of the target contact
+                if (ele.isStarred == isCurrentlyStarred) {
+                    ele.isStarred = !isCurrentlyStarred
                     modified = true
                 }
             } else {
+                // Ensure all other contacts are unstarred
                 if (ele.isStarred) {
                     ele.isStarred = false
                     modified = true
                 }
+            }
+        }
+        if (modified) {
+            saveList()
+        }
+    }
+
+    fun editContact(oldNumber: String, newName: String, newNumber: String) {
+        var modified = false
+        for (ele in list) {
+            if (PhoneNumberUtils.compare(ele.number, oldNumber)) {
+                ele.name = newName
+                ele.number = newNumber
+                modified = true
+                break
             }
         }
         if (modified) {

@@ -87,24 +87,20 @@ class NotificationReplyTransport(
         super.send(context, msg, commandName)
 
         if (destination == null) {
-            context.log().w(TAG, "Cannot reply, destination is null!")
+            context.log().w(TAG, "Cannot reply, destination is null! Triggering fallback.")
+            fallbackToSms(context, msg, commandName)
             return
         }
 
         try {
-            if (NextJsServerTransport.isConnected(context)) {
-                // Forward to server
-                val serverTransport = NextJsServerTransport(context)
-                serverTransport.send(context, msg, commandName)
-                
-                // Reply with short message
-                sendQuickReply(context, destination.notification, "Command executed. View response on Dashboard: https://veto.neubofy.in/dashboard/console#logs")
-            } else {
-                sendQuickReply(context, destination.notification, msg)
+            val success = sendQuickReply(context, destination.notification, msg)
+            if (!success) {
+                fallbackToSms(context, msg, commandName)
             }
         } catch (e: CanceledException) {
             context.log().e(TAG, "Failed to send message via notification reply")
             e.printStackTrace()
+            fallbackToSms(context, msg, commandName)
         }
     }
 
@@ -133,7 +129,7 @@ class NotificationReplyTransport(
         NotificationListenService.instance?.cancelNotification(destination.key)
     }
 
-    private fun sendQuickReply(context: Context, notification: Notification, message: String) {
+    private fun sendQuickReply(context: Context, notification: Notification, message: String): Boolean {
         val actions = notification.actions ?: emptyArray()
         for (action in actions) {
             // context.log().d(TAG, "Checking action ${action.title}")
@@ -172,10 +168,11 @@ class NotificationReplyTransport(
                 tryDismissNotification()
 
                 action.actionIntent.send(context, 0, intent)
-                return
+                return true
             }
         }
 
         context.log().w(TAG, "Could not sent reply, no suitable Action or RemoteInput found.")
+        return false
     }
 }

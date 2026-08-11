@@ -5,12 +5,15 @@ import React, { useState } from 'react';
 interface TelemetryModalProps {
   selectedOutput: string;
   history: any[];
+  pin?: string | null;
   onClose: () => void;
   onDeleteData: (commandName?: string) => void;
 }
 
-export default function TelemetryModal({ selectedOutput, history, onClose, onDeleteData }: TelemetryModalProps) {
+export default function TelemetryModal({ selectedOutput, history, pin, onClose, onDeleteData }: TelemetryModalProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [decryptedPayload, setDecryptedPayload] = useState<any>(null);
+  const [isDecrypting, setIsDecrypting] = useState(false);
 
   const matchingEntries = history.filter(h => h.command === selectedOutput || h.command.startsWith(selectedOutput) || h.id === selectedOutput);
   if (matchingEntries.length === 0) return null;
@@ -21,6 +24,55 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
     : [mainDoc];
 
   const currentItem = historyList[currentIndex] || historyList[0];
+
+  React.useEffect(() => {
+    let active = true;
+    const decrypt = async () => {
+      const payload = currentItem?.payload;
+      if (payload?.type === 'encrypted') {
+        if (!pin) {
+          if (active) {
+            setDecryptedPayload({ type: 'text', content: 'Locked: PIN required for decryption' });
+            setIsDecrypting(false);
+          }
+          return;
+        }
+        
+        setIsDecrypting(true);
+        try {
+          const idToken = await (await import('@/lib/firebaseClient')).auth.currentUser?.getIdToken();
+          const res = await fetch('/api/crypto/decrypt', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${idToken}`
+            },
+            body: JSON.stringify({ data: payload.content, pin })
+          });
+          
+          if (!res.ok) throw new Error('Decryption failed');
+          const data = await res.json();
+          
+          let parsed;
+          try {
+            parsed = JSON.parse(data.result);
+          } catch (e) {
+            parsed = { type: 'text', content: data.result };
+          }
+          if (active) setDecryptedPayload(parsed);
+        } catch (e) {
+          if (active) setDecryptedPayload({ type: 'text', content: 'Decryption error or wrong PIN' });
+        } finally {
+          if (active) setIsDecrypting(false);
+        }
+      } else {
+        if (active) setDecryptedPayload(payload);
+      }
+    };
+    
+    decrypt();
+    return () => { active = false; };
+  }, [currentItem, pin]);
 
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -321,7 +373,13 @@ export default function TelemetryModal({ selectedOutput, history, onClose, onDel
           backgroundColor: '#0d1117', padding: '1.25rem 1rem', borderRadius: '12px',
           border: '1px solid #30363d', color: '#f0f6fc', width: '100%', overflowX: 'hidden'
         }}>
-          {renderTelemetryContent(currentItem.payload)}
+          {isDecrypting ? (
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#8b949e' }}>
+              Decrypting payload...
+            </div>
+          ) : (
+            renderTelemetryContent(decryptedPayload)
+          )}
         </div>
       </div>
     </div>

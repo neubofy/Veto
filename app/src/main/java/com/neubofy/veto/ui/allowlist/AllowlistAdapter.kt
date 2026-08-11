@@ -10,12 +10,13 @@ import com.neubofy.veto.data.Contact
 class AllowlistAdapter(
     private val onDeleteClicked: (String) -> Unit,
     private val onStarClicked: (String) -> Unit,
+    private val onEditClicked: (String) -> Unit,
 ) : ListAdapter<AllowlistItem, AllowlistViewHolder>(AllowlistDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllowlistViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val itemView = inflater.inflate(R.layout.item_allowlist, parent, false)
-        return AllowlistViewHolder(itemView, onDeleteClicked, onStarClicked)
+        return AllowlistViewHolder(itemView, onDeleteClicked, onStarClicked, onEditClicked)
     }
 
     override fun onBindViewHolder(holder: AllowlistViewHolder, position: Int) {

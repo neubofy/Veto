@@ -111,6 +111,21 @@ class TemporaryAllowlistRepository private constructor(private val context: Cont
         saveList()
     }
 
+    fun getList(): List<TempAllowedNumber> {
+        return list
+    }
+
+    fun remove(phoneNumber: String) {
+        val toRemove = mutableListOf<TempAllowedNumber>()
+        for (ele in list) {
+            if (PhoneNumberUtils.compare(ele.number, phoneNumber)) {
+                toRemove.add(ele)
+            }
+        }
+        list.removeAll(toRemove)
+        saveList()
+    }
+
     /**
      * Removes all entries that have expired from the temporary allowlist.
      */

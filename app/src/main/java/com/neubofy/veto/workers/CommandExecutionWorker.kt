@@ -72,21 +72,32 @@ class CommandExecutionWorker(
         try {
             commandHandler.execute(applicationContext, command)
         } catch (e: Exception) {
+            val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(applicationContext)
+            val isCloudEnabled = encRepo.isTransportEnabled("cloud")
+            
             if (e is kotlinx.coroutines.CancellationException) {
                 applicationContext.log().w(TAG, "Worker $id was cancelled/interrupted")
-                val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
-                transport.send(applicationContext, "Command execution interrupted or cancelled by user.", command)
+                if (isCloudEnabled) {
+                    val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
+                    transport.send(applicationContext, "Command execution interrupted or cancelled by user.", command)
+                }
                 throw e
             } else {
                 applicationContext.log().e(TAG, "Worker $id failed with exception: ${e.message}")
-                val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
-                transport.send(applicationContext, "Command execution failed: ${e.message}", command)
+                if (isCloudEnabled) {
+                    val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
+                    transport.send(applicationContext, "Command execution failed: ${e.message}", command)
+                }
             }
         } finally {
             if (isStopped) {
+                val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(applicationContext)
+                val isCloudEnabled = encRepo.isTransportEnabled("cloud")
                 applicationContext.log().w(TAG, "Worker $id isStopped for command=$command")
-                val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
-                transport.send(applicationContext, "Command execution interrupted or cancelled by user.", command)
+                if (isCloudEnabled) {
+                    val transport = com.neubofy.veto.transports.NextJsServerTransport(applicationContext)
+                    transport.send(applicationContext, "Command execution interrupted or cancelled by user.", command)
+                }
             }
         }
 
