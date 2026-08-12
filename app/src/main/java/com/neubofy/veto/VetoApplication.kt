@@ -29,12 +29,5 @@ class VetoApplication : Application() {
 
         Notifications.init(this)
         initUncaughtExceptionHandler(this)
-
-        doUpdateMigrations(this)
-    }
-
-    private fun doUpdateMigrations(context: Context) {
-        val settings = SettingsRepository.getInstance(context)
-        settings.migrateSettings()
     }
 }

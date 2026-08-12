@@ -1,7 +1,6 @@
 package com.neubofy.veto.data
 
 import android.content.Context
-import androidx.core.net.toUri
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonIOException
 import com.google.gson.JsonParseException
@@ -9,11 +8,7 @@ import com.google.gson.JsonSyntaxException
 import com.google.gson.ToNumberStrategy
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.MalformedJsonException
-import com.neubofy.veto.BuildConfig
-import com.neubofy.veto.R
-import com.neubofy.veto.utils.CypherUtils
 import com.neubofy.veto.utils.SingletonHolder
-import com.neubofy.veto.utils.Utils
 import com.neubofy.veto.utils.log
 import java.io.File
 import java.io.FileReader
@@ -22,12 +17,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
-import java.security.KeyFactory
-import java.security.NoSuchAlgorithmException
-import java.security.PublicKey
-import java.security.spec.EncodedKeySpec
-import java.security.spec.InvalidKeySpecException
-import java.security.spec.X509EncodedKeySpec
 
 
 const val SETTINGS_FILENAME = "settings.json"
@@ -157,10 +146,6 @@ class SettingsRepository private constructor(private val context: Context) {
         saveSettings()
     }
 
-    fun migrateSettings() {
-        val currentVersion = get(Settings.SET_SET_VERSION) as Int
-        set(Settings.SET_SET_VERSION, Settings.SETTINGS_VERSION)
-    }// ---------- Convenience helpers ----------
 
 
 

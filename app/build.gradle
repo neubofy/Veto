@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.mikepenz.aboutlibraries.plugin.android'
-    id "org.sonarqube" version "6.2.0.5505"
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
 }
@@ -174,16 +173,4 @@ dependencies {
     implementation("io.coil-kt:coil:2.6.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-}
-
-sonar {
-    androidVariant "devDebug"
-    properties {
-        property "sonar.projectName", "Veto Android"
-        property "sonar.projectKey", "neubofy_veto-android"
-        property "sonar.organization", "neubofy"
-
-
-        property "sonar.scanner.skipJreProvisioning", true
-    }
 }

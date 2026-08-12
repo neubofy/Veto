@@ -9,9 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1094.0",
     "@vercel/analytics": "^2.0.1",
-    "@vercel/blob": "^2.6.1",
     "firebase": "^12.16.0",
     "firebase-admin": "11.11.1",
     "framer-motion": "^12.42.2",
@@ -25,7 +23,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/rimraf": "^3.0.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.11",
     "typescript": "^5"

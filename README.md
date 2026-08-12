@@ -40,14 +40,14 @@ Whether your phone has a high-speed 5G connection or no cellular data at all, Ve
 
 Veto is built on zero-trust cryptography and strict data sovereignty principles, ensuring you never lose control of your device or your data.
 
-*   **Zero Tracking & Zero Ads**: Veto contains zero proprietary analytics SDKs, zero crash-reporting telemetry services, and zero advertisement networks. All log entries remain stored strictly on your local device storage.
+*   **Zero Tracking & Zero Ads**: Veto contains zero proprietary analytics SDKs, and zero advertisement networks. We do use Firebase Crashlytics to monitor stability, but it strictly only reports which part of the code crashed. It does not expose any of your personal information, it cannot touch your decrypted files, and all your sensitive data remains in encrypted shared preferences.
 *   **100% Data Sovereignty**: Retain complete control over your private data. Deploy your own Vercel Web Dashboard and Firebase instance with zero third-party telemetry harvesting.
 
 ## Theft Mode Details
 
 The `veto theft` command is the ultimate, unique security macro designed for critical situations. What makes it completely unique compared to standard device managers is its aggressive, multi-layered approach to deterrence and recovery:
 1. **Unstoppable Siren**: Instantly overrides all system audio settings, bypasses Do Not Disturb and silent modes, maxes out the alarm volume, and blares a persistent high-decibel siren.
-2. **Hardware Activation**: Silently enables Bluetooth, GPS and disable DND and volume rest to 100% , Detect shock, movement using accelerometer and distance of person from mobile using proxy meter.
+2. **Hardware Activation**: Silently enables Bluetooth and GPS, disables DND, resets volume to 100%, detects shock and movement using the accelerometer, and distance of person from mobile using the proximity sensor.
 4. **Data Capture**: Gathers and transmits precise GPS location data, while silently capturing background photos and ambient audio, immediately syncing them to your secure cloud storage.
 5. **Offline Capability**: The entire sequence can be triggered offline via SMS from a trusted emergency contact, ensuring your device reacts even if the thief disables cellular data or Wi-Fi.
 

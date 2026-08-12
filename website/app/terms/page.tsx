@@ -14,18 +14,19 @@ export default function TermsPage() {
       </nav>
 
       <section style={{ maxWidth: '800px', margin: '4rem auto', padding: '2rem', lineHeight: 1.8, color: 'var(--text-secondary)' }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: '800', color: '#fff', marginBottom: '2rem', letterSpacing: '-1px' }}>Terms of Service</h1>
+        <h1 style={{ fontSize: '3rem', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '0.5rem', letterSpacing: '-1px' }}>Terms of Service</h1>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '2rem' }}>Effective Date: May 19, 2030</p>
         
-        <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>1. Acceptance of Terms</h2>
+        <h2 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginTop: '2rem', marginBottom: '1rem' }}>1. Acceptance of Terms</h2>
         <p>By downloading, installing, or using the Veto application, you agree to be bound by these terms. If you do not agree, do not use the application.</p>
 
-        <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>2. Open Source License</h2>
+        <h2 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginTop: '2rem', marginBottom: '1rem' }}>2. Open Source License</h2>
         <p>Veto is licensed under the GNU General Public License v3.0 (GPLv3). You are free to modify, distribute, and publish your own versions as long as you comply with the terms of the GPLv3 license.</p>
 
-        <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>3. Use of Service</h2>
+        <h2 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginTop: '2rem', marginBottom: '1rem' }}>3. Use of Service</h2>
         <p>Veto is a security tool intended for personal device management. You agree to only install this application on devices you own or have explicit legal authorization to manage. You may not use Veto for stalking, harassment, or unauthorized surveillance.</p>
 
-        <h2 style={{ fontSize: '1.5rem', color: '#fff', marginTop: '2rem', marginBottom: '1rem' }}>4. Limitation of Liability</h2>
+        <h2 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginTop: '2rem', marginBottom: '1rem' }}>4. Limitation of Liability</h2>
         <p>Veto is provided &quot;as is&quot;. We are not responsible for any data loss. You are solely responsible for managing your device backups and ensuring you do not accidentally trigger destructive commands.</p>
         
         <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>

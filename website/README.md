@@ -37,8 +37,8 @@ Whether your phone has a high-speed 5G connection or no cellular data at all, Ve
 
 Veto is built on strict data sovereignty principles, ensuring you never lose control of your device or your data.
 
-*   **Argon2id Password & PIN Hashing**: Veto never stores plaintext PINs or passwords. It uses Argon2id (iterations = 1, memory = 128MB, parallelism = 4) with context separation to hash security PINs and prevent GPU dictionary attacks.
-*   **Zero Tracking & Zero Ads**: Veto contains zero proprietary analytics SDKs, zero crash-reporting telemetry services, and zero advertisement networks. All log entries remain stored strictly on your local device storage.
+*   **PBKDF2 & SHA-256 Hashing**: Veto never stores plaintext PINs or passwords. It uses SHA-256 with salt for PIN hashing and PBKDF2-HMAC-SHA256 (100,000 iterations) with context separation to derive E2E encryption keys, preventing GPU dictionary attacks.
+*   **Zero Tracking & Zero Ads**: Veto contains zero proprietary analytics SDKs and zero advertisement networks. We do use Firebase Crashlytics to monitor stability, but it strictly only reports which part of the code crashed. It does not expose any of your personal information, it cannot touch your decrypted files, and all your sensitive data remains in encrypted shared preferences.
 *   **100% Data Sovereignty**: Retain complete control over your private data. Deploy your own Vercel Web Dashboard and Firebase instance with zero third-party telemetry harvesting.
 
 ## Theft Mode Details
