@@ -74,7 +74,7 @@ Unlike traditional third-party tracking apps, Veto does **not** rely on continuo
                       │                      │              │
         ┌─────────────▼──┐      ┌───────────▼─┐   ┌────────▼──────┐
         │  Android App   │      │ SMS Gateway │   │  Notification │
-        │  (Kotlin)      │      │  (Twilio)   │   │  Auto-Reply    │
+        │  (Kotlin)      │      │  (Google massage)   │   │  Auto-Reply    │
         │                │      │             │   │  (WhatsApp,    │
         │ • Device Admin │      │ • Offline   │   │   Telegram,    │
         │ • Location API │      │   Control   │   │   Signal)      │
