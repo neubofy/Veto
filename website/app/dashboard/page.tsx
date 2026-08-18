@@ -356,7 +356,18 @@ export default function DashboardPage() {
       {/* Header */}
       <header style={{ marginBottom: '2rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 style={{ fontSize: '2.2rem', fontWeight: '700', marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Veto Dashboard</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '0.25rem' }}>
+            <h1 style={{ fontSize: '2.2rem', fontWeight: '700', margin: 0, letterSpacing: '-0.02em' }}>Veto Dashboard</h1>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '4px 10px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600',
+              backgroundColor: deviceLinked ? 'rgba(35, 134, 54, 0.15)' : 'rgba(248, 81, 73, 0.15)',
+              color: deviceLinked ? '#3fb950' : '#f85149',
+              border: `1px solid ${deviceLinked ? 'rgba(63, 185, 80, 0.3)' : 'rgba(248, 81, 73, 0.3)'}`
+            }}>
+              {deviceLinked ? '🟢 App Paired' : '🔴 App Not Paired'}
+            </div>
+          </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Device control & telemetry</p>
         </div>
 

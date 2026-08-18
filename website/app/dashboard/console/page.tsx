@@ -25,6 +25,7 @@ export default function ConsolePage() {
   const [activeCmd, setActiveCmd] = useState<string | null>(null);
   const [isCommandPending, setIsCommandPending] = useState<boolean>(false);
   const [fcmTokenEncrypted, setFcmTokenEncrypted] = useState<string | null>(null);
+  const [deviceLinked, setDeviceLinked] = useState<boolean>(false);
 
   const [history, setHistory] = useState<any[]>([]);
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
@@ -139,6 +140,7 @@ export default function ConsolePage() {
         unsubUser = onSnapshot(doc(activeDb, 'users', currentUser.uid), (docSnap: any) => {
           if (docSnap.exists()) {
             const token = docSnap.data().fcmToken;
+            setDeviceLinked(!!token);
             if (token) setFcmTokenEncrypted(token);
           }
         });
@@ -344,6 +346,15 @@ export default function ConsolePage() {
             <Link href="/dashboard" className="btn" style={{ padding: '6px 12px', fontSize: '0.85rem', textDecoration: 'none' }}>
               ← Dashboard
             </Link>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '4px 10px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600',
+              backgroundColor: deviceLinked ? 'rgba(35, 134, 54, 0.15)' : 'rgba(248, 81, 73, 0.15)',
+              color: deviceLinked ? '#3fb950' : '#f85149',
+              border: `1px solid ${deviceLinked ? 'rgba(63, 185, 80, 0.3)' : 'rgba(248, 81, 73, 0.3)'}`
+            }}>
+              {deviceLinked ? '🟢 App Paired' : '🔴 App Not Paired'}
+            </div>
           </div>
           <h1 style={{ fontSize: '2.2rem', fontWeight: '700', margin: 0, letterSpacing: '-0.02em' }}>Terminal Console</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '4px' }}>Raw CLI command execution & live output stream</p>

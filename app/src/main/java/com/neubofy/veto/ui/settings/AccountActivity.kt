@@ -138,11 +138,15 @@ class AccountActivity : VetoActivity() {
         }
 
         btnSignOut.setOnClickListener {
-            auth.signOut()
-            googleSignInClient.signOut()
-            settings.set(Settings.SET_SYNCED_FCM_TOKEN, "")
-            updateUI()
-            Snackbar.make(btnSignOut, "Signed Out Successfully", Snackbar.LENGTH_SHORT).show()
+            performServerAction("/api/device/link", mapOf("fcmToken" to "")) {
+                runOnUiThread {
+                    auth.signOut()
+                    googleSignInClient.signOut()
+                    SettingsRepository.getInstance(this).set(Settings.SET_SYNCED_FCM_TOKEN, "")
+                    updateUI()
+                    Snackbar.make(btnSignOut, "Signed Out Successfully", Snackbar.LENGTH_SHORT).show()
+                }
+            }
         }
 
         btnClearCache.setOnClickListener {
@@ -171,7 +175,7 @@ class AccountActivity : VetoActivity() {
                 .setTitle("Clear All Cloud Data")
                 .setMessage("Are you sure you want to delete all cloud data associated with this device? This cannot be undone.")
                 .setPositiveButton("Delete Data") { _, _ ->
-                    performServerAction("/api/data/delete") {
+                    performServerAction("/api/data/delete", mapOf("all" to true)) {
                         runOnUiThread {
                             Snackbar.make(btnDeleteData, "Cloud Data Deleted successfully", Snackbar.LENGTH_SHORT).show()
                         }
@@ -186,7 +190,7 @@ class AccountActivity : VetoActivity() {
                 .setTitle("Delete Account")
                 .setMessage("Are you sure you want to delete your entire account and all associated cloud data? This cannot be undone.")
                 .setPositiveButton("Delete Account") { _, _ ->
-                    performServerAction("/api/user/delete") {
+                    performServerAction("/api/user/delete", null) {
                         runOnUiThread {
                             auth.signOut()
                             googleSignInClient.signOut()
@@ -344,7 +348,7 @@ class AccountActivity : VetoActivity() {
         )
     }
 
-    private fun performServerAction(endpoint: String, onSuccess: () -> Unit) {
+    private fun performServerAction(endpoint: String, payload: Map<String, Any>? = null, onSuccess: () -> Unit) {
         val user = auth.currentUser ?: return
         tvStatus.text = "Processing request..."
         pbSpinner.visibility = View.VISIBLE
@@ -366,6 +370,11 @@ class AccountActivity : VetoActivity() {
 
                         val jsonParam = JSONObject()
                         jsonParam.put("token", token)
+                        if (payload != null) {
+                            for ((key, value) in payload) {
+                                jsonParam.put(key, value)
+                            }
+                        }
 
                         val out = java.io.OutputStreamWriter(connection.outputStream)
                         out.write(jsonParam.toString())

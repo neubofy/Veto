@@ -22,18 +22,29 @@ export async function POST(req: Request) {
 
     const userId = decodedToken.uid;
     const body = await req.json();
-    const { fcmToken } = body;
 
-    if (!fcmToken) {
+    // Allow an explicitly falsy fcmToken to signify unlinking
+    const hasFcmTokenField = 'fcmToken' in body;
+    const fcmToken = body.fcmToken;
+
+    if (!hasFcmTokenField) {
       return NextResponse.json({ error: 'Missing fcmToken' }, { status: 400 });
     }
 
-    // Save the device's FCM token directly to the user's Firestore document
-    // We use the authenticated userId from the token to ensure users can only update their own device
-    await adminDb.collection('users').doc(userId).set({
-      fcmToken: fcmToken,
-      lastUpdated: new Date().toISOString()
-    }, { merge: true });
+    if (fcmToken) {
+      // Save the device's FCM token directly to the user's Firestore document
+      await adminDb.collection('users').doc(userId).set({
+        fcmToken: fcmToken,
+        lastUpdated: new Date().toISOString()
+      }, { merge: true });
+    } else {
+      // Remove the fcmToken field if it's empty/null (sign out)
+      const FieldValue = (await import('firebase-admin/firestore')).FieldValue;
+      await adminDb.collection('users').doc(userId).set({
+        fcmToken: FieldValue.delete(),
+        lastUpdated: new Date().toISOString()
+      }, { merge: true });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
