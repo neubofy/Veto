@@ -50,13 +50,7 @@ export default function ConsolePage() {
       setNeedsPin(false);
       return;
     }
-    const hasEncryptedData = history.some(item => 
-      item.payload?.type === 'encrypted' || 
-      (item.history && item.history.some((h: any) => h.payload?.type === 'encrypted'))
-    );
-    if (hasEncryptedData) {
-      setNeedsPin(true);
-    }
+    setNeedsPin(true);
   }, [history, pin]);
 
   useEffect(() => {
@@ -203,13 +197,24 @@ export default function ConsolePage() {
 
     try {
       const token = await user.getIdToken();
+      let payloadCommand = command;
+
+      // Encrypt command client-side if PIN is available
+      if (pin) {
+        const { encryptClient } = await import('@/lib/clientCrypto');
+        payloadCommand = await encryptClient(command, pin, user.uid);
+      }
+
       const res = await fetch('/api/command', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ command })
+        body: JSON.stringify({
+          command: payloadCommand,
+          encrypted: !!pin
+        })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);

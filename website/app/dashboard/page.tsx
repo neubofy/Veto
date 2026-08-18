@@ -54,13 +54,7 @@ export default function DashboardPage() {
       setNeedsPin(false);
       return;
     }
-    const hasEncryptedData = history.some(item => 
-      item.payload?.type === 'encrypted' || 
-      (item.history && item.history.some((h: any) => h.payload?.type === 'encrypted'))
-    );
-    if (hasEncryptedData) {
-      setNeedsPin(true);
-    }
+    setNeedsPin(true);
   }, [history, pin]);
 
   // Auto-resolve pending state when a new result arrives
