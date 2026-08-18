@@ -53,7 +53,7 @@ Unlike traditional third-party tracking apps, Veto does **not** rely on continuo
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      🌐 WEB DASHBOARD (NextJs)                   │
+│                      🌐 WEB DASHBOARD (Next.js)                  │
 │              Hosted on Vercel with Firebase FCM Integration      │
 ├─────────────────────────────────────────────────────────────────┤
 │  • Real-time command dispatch                                    │
@@ -74,7 +74,7 @@ Unlike traditional third-party tracking apps, Veto does **not** rely on continuo
                       │                      │              │
         ┌─────────────▼──┐      ┌───────────▼─┐   ┌────────▼──────┐
         │  Android App   │      │ SMS Gateway │   │  Notification │
-        │  (Kotlin)      │      │  (Google massage)   │   │  Auto-Reply    │
+        │  (Kotlin)      │      │  (Native)   │   │  Auto-Reply    │
         │                │      │             │   │  (WhatsApp,    │
         │ • Device Admin │      │ • Offline   │   │   Telegram,    │
         │ • Location API │      │   Control   │   │   Signal)      │
@@ -101,23 +101,23 @@ Veto remains accessible through **four independent communication channels**, ens
 - Live telemetry & media gallery
 - Premium user experience with full feature set
 
-📂 **Implementation**: [`NextJsServerTransport`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/domain/transports)
+📂 **Implementation**: [`NextJsServerTransport.kt`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/transports)
 
 ### 2. 📱 Offline SMS Control (`SmsTransport`)
 - Execute commands **without internet connection**
-- Send SMS commands: `VETO LOCATE <PIN>`
+- Send SMS commands: `veto <PIN> locate`
 - Immediate SMS replies with results
 - Ultimate fallback mechanism
 
-📂 **Implementation**: [`SmsTransport.kt`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/domain/transports)
+📂 **Implementation**: [`SmsTransport.kt`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/transports)
 
 ### 3. 💬 Notification Auto-Reply (`NotificationReplyTransport`)
 - Intercepts auto-reply intents from ANY messaging app
 - Supported: WhatsApp, Telegram, Signal, Matrix, etc.
-- Commands via messenger replies: `@bot veto locate`
+- Commands via messenger replies: `veto locate`
 - Zero additional app requirements
 
-📂 **Implementation**: [`NotificationReplyTransport`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/domain/transports)
+📂 **Implementation**: [`NotificationReplyTransport.kt`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/transports)
 
 ### 4. 🧪 In-App Test Sandbox (`InAppTransport`)
 - Integrated test environment inside the app
@@ -125,26 +125,27 @@ Veto remains accessible through **four independent communication channels**, ens
 - Verify system permissions
 - Development & debugging tool
 
-📂 **Implementation**: [`InAppTransport.kt`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/domain/transports)
+📂 **Implementation**: [`InAppTransport.kt`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/transports)
 
 ---
 
 ## 🔒 Security & Privacy
 
 ### Zero-Trust Architecture
+- **AES-GCM Encryption**: All FCM commands are encrypted with your PIN and user ID before being sent.
 - **PBKDF2 & SHA-256 Hashing**: Never stores plaintext PINs
   - SHA-256 with salt for PIN hashing
-  - PBKDF2-HMAC-SHA256 (100,000 iterations) with context separation
+  - PBKDF2-HMAC-SHA256 (100,000 iterations) with context separation for key derivation
 - **Zero Tracking & Zero Ads**: No proprietary analytics SDKs
 - **100% Data Sovereignty**: Deploy your own Vercel + Firebase instance
 
-📂 **Security Implementation**: [`CryptoModule`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/domain/crypto)
+📂 **Security Implementation**: [`VetoCrypto.kt`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/utils)
 
 ### Privacy Principles
-✅ No Firebase Analytics  
+✅ No Third-Party Analytics
 ✅ No Advertisement Networks  
-✅ Firebase Crashlytics (stability monitoring only)  
 ✅ Complete control over personal data  
+✅ Media is only sent to your linked Google Drive
 
 ---
 
@@ -165,8 +166,7 @@ The `veto theft` command is designed for **critical emergency situations**:
 │ 2. 🔌 HARDWARE ACTIVATION                         │
 │    • Enables GPS & Bluetooth silently             │
 │    • Disables DND, resets volume to 100%          │
-│    • Accelerometer shock & movement detection     │
-│    • Proximity tracking via Bluetooth             │
+│    • Ensures max connectivity for tracking        │
 │                                                   │
 │ 3. 📡 DATA CAPTURE                                │
 │    • Gathers precise GPS location                 │
@@ -210,7 +210,7 @@ The `veto theft` command is designed for **critical emergency situations**:
 
 | Component | Technology | Percentage |
 |-----------|-----------|------------|
-| 📱 Android App | **Kotlin** | 68.8% |
+| 📱 Android App | **Kotlin / Jetpack Compose** | 68.8% |
 | 🌐 Web Dashboard | **TypeScript + Next.js** | 28.8% |
 | 🎨 Styling | **CSS** | 2.3% |
 | 📦 Utilities | **JavaScript** | 0.1% |
@@ -219,16 +219,15 @@ The `veto theft` command is designed for **critical emergency situations**:
 
 ### Technology Details
 
-- **Backend**: Vercel (Next.js), Firebase (FCM, Authentication)
-- **Mobile**: Kotlin with Android Framework, Room Database
+- **Backend**: Vercel (Next.js), Firebase (FCM, Authentication, Firestore)
+- **Mobile**: Kotlin 2.2.x, Jetpack Compose, Material 3, Room Database, WorkManager
 - **API Communication**: REST + Firebase Cloud Messaging
 - **Security**: End-to-end encryption, zero-trust architecture
-- **Storage**: Google Drive (user-controlled backups)
+- **Storage**: Google Drive (user-controlled media backups)
 
 📂 **Project Structure**:
-- [`app/`](https://github.com/neubofy/Veto/tree/main/app) - Android Kotlin application
-- [`website/`](https://github.com/neubofy/Veto/tree/main/website) - Next.js web dashboard
-- [`docs/`](https://github.com/neubofy/Veto/tree/main) - Documentation & guides
+- [`app/`](https://github.com/neubofy/Veto/tree/main/app) - Android Kotlin application (`com.neubofy.veto`)
+- [`website/`](https://github.com/neubofy/Veto/tree/main/website) - Next.js web dashboard (`/app` directory)
 
 ---
 
@@ -242,8 +241,8 @@ USER COMMAND (Web/SMS/App)
          ▼
     ┌─────────────────────┐
     │  COMMAND VALIDATION │
-    │  & Cryptographic    │
-    │  Signature Check    │
+    │  & AES Decryption   │
+    │  (If from Web)      │
     └──────────┬──────────┘
                │
          ┌─────▼──────┐
@@ -255,8 +254,8 @@ USER COMMAND (Web/SMS/App)
       │        │            │
       ▼        ▼            ▼
   ┌─────┐  ┌────────┐  ┌───────────┐
-  │ FCM │  │  SMS   │  │ Notification
-  │ Push│  │ Reply  │  │   Reply    │
+  │ FCM │  │ Native │  │ Notification
+  │ Push│  │  SMS   │  │   Reply    │
   └──┬──┘  └────┬───┘  └──────┬────┘
      │          │             │
      └──────────┼─────────────┘
@@ -285,48 +284,44 @@ USER COMMAND (Web/SMS/App)
 ### Command Processing Pipeline
 
 1. **Reception & Validation**
-   - Command received via Web/SMS/App
-   - Cryptographic signature verification
-   - PIN/Token authentication
+   - Command received via Web (FCM), SMS, or Notification Reply.
+   - For Web Dashboard, the command is end-to-end encrypted with AES-GCM and must be decrypted using the user's PIN.
+   - For SMS, the sender's number is verified against the Allowlist or requires the PIN.
 
 2. **Transport Routing**
-   - Route to appropriate handler based on source
-   - Queue management for offline scenarios
+   - Commands are handled by `CommandExecutionWorker` using Android's `WorkManager`.
 
 3. **Execution**
-   - Permission verification
-   - Hardware activation (GPS, Camera, Mic, etc.)
-   - Data collection & processing
+   - Permissions are checked.
+   - Command logic runs (e.g., getting GPS, taking a photo).
 
 4. **Backup & Response**
-   - Media upload to Google Drive (if applicable)
-   - Response sent back via same transport
-   - Local database update
+   - Media (photos, audio) is uploaded directly to the user's Google Drive.
+   - Response text is sent back via the originating transport (Firestore for Web, SMS reply for SMS).
 
 ---
 
 ## 📂 Key Source Files & Architecture
 
-### Android Application (Kotlin)
+### Android Application (`com.neubofy.veto`)
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| **Main Activity** | [`MainActivity.kt`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto) | App entry point & UI coordination |
-| **Transports** | [`domain/transports/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/domain/transports) | Communication channel implementations |
-| **Commands** | [`domain/commands/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/domain/commands) | Command execution logic |
-| **Crypto** | [`domain/crypto/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/domain/crypto) | Encryption & authentication |
-| **Database** | [`data/database/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/data/database) | Room database entities |
-| **Services** | [`data/services/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/in/neubofy/veto/data/services) | Android services (FCM, SMS, etc.) |
+| Component | Directory / File | Purpose |
+|-----------|------------------|---------|
+| **UI** | [`app/src/main/java/com/neubofy/veto/ui/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/ui) | Jetpack Compose screens and Activities |
+| **Transports** | [`app/src/main/java/com/neubofy/veto/transports/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/transports) | Communication channel implementations (FCM, SMS) |
+| **Commands** | [`app/src/main/java/com/neubofy/veto/commands/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/commands) | Implementations of Locate, Lock, Ring, etc. |
+| **Data/Crypto** | [`app/src/main/java/com/neubofy/veto/utils/VetoCrypto.kt`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/utils) | AES-GCM encryption & PBKDF2 key derivation |
+| **Workers** | [`app/src/main/java/com/neubofy/veto/workers/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/workers) | WorkManager tasks (CommandExecutionWorker) |
+| **Services** | [`app/src/main/java/com/neubofy/veto/services/`](https://github.com/neubofy/Veto/tree/main/app/src/main/java/com/neubofy/veto/services) | FirebaseMessagingService for push notifications |
 
-### Web Dashboard (Next.js + TypeScript)
+### Web Dashboard (Next.js App Router)
 
-| Component | Directory | Purpose |
-|-----------|-----------|---------|
-| **Pages** | [`website/pages/`](https://github.com/neubofy/Veto/tree/main/website/pages) | Next.js page routes |
-| **Components** | [`website/components/`](https://github.com/neubofy/Veto/tree/main/website/components) | React UI components |
-| **API Routes** | [`website/pages/api/`](https://github.com/neubofy/Veto/tree/main/website/pages/api) | Backend API endpoints |
-| **Styles** | [`website/styles/`](https://github.com/neubofy/Veto/tree/main/website/styles) | CSS styling |
-| **Utils** | [`website/utils/`](https://github.com/neubofy/Veto/tree/main/website/utils) | Helper functions |
+| Component | Directory / File | Purpose |
+|-----------|------------------|---------|
+| **Pages** | [`website/app/`](https://github.com/neubofy/Veto/tree/main/website/app) | Next.js App Router pages (Dashboard, Console, Login) |
+| **Components** | [`website/components/`](https://github.com/neubofy/Veto/tree/main/website/components) | React UI components (e.g., CommandConsole, PinGateModal) |
+| **API Routes** | [`website/app/api/`](https://github.com/neubofy/Veto/tree/main/website/app/api) | Backend endpoints (Firebase Admin commands) |
+| **Crypto** | [`website/lib/clientCrypto.ts`](https://github.com/neubofy/Veto/tree/main/website/lib) | Web-side AES-GCM encryption/decryption |
 
 ---
 
@@ -351,15 +346,15 @@ USER COMMAND (Web/SMS/App)
    ```bash
    cd website
    npm install
-   npm run dev
+   # Start the development server (in the background, e.g., using 'npm start &')
    ```
 
 ### Configuration
 
-- Set up Firebase project credentials
-- Configure FCM push messaging
-- Deploy Web Dashboard to Vercel (recommended)
-- Configure SMS gateway (Twilio recommended)
+- Create a Firebase project and add Android and Web apps.
+- Add `google-services.json` to the Android `app/` directory.
+- Configure Firebase Authentication (Google Sign-In) and Firestore.
+- Deploy the Web Dashboard to Vercel (recommended) and set the Firebase Admin environment variables.
 
 ---
 
@@ -375,7 +370,7 @@ This project is licensed under the **GNU General Public License v3.0** (GPLv3).
 
 ## 🙏 Credits & Attribution
 
-This project was heavily inspired by the exceptional open-source work of **[fmd-android](https://gitlab.com/fmd-foss/fmd-android)**. We explicitly credit the `fmd-foss` team for their foundational contributions to open-source Android device recovery solutions.
+This project draws inspiration from the exceptional open-source work of **[fmd-android](https://gitlab.com/fmd-foss/fmd-android)**. We explicitly credit the `fmd-foss` team for their foundational contributions to open-source Android device recovery solutions.
 
 ---
 
@@ -397,7 +392,7 @@ This project was heavily inspired by the exceptional open-source work of **[fmd-
 Found a bug? Open an issue at [GitHub Issues](https://github.com/neubofy/Veto/issues)
 
 ### Contribute
-Contributions are welcome! Please follow the [Contributing Guidelines](CONTRIBUTING.md) and submit pull requests.
+Contributions are welcome! Please submit pull requests or open issues to discuss proposed changes.
 
 ---
 
