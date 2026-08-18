@@ -134,7 +134,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="You can communicate with Veto from any device via the Dashboard (https://veto.neubofy.in/dashboard) by logging in with this same Google account."
+                            android:text="You can communicate with Veto from any device via the Dashboard (https://veto.neubofy.in/dashboard) by logging in with this same Google account.\n\nYour data is end-to-end encrypted via your PIN. Even we can't see your original data."
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:textSize="12sp"
                             android:layout_marginTop="12dp" />
@@ -227,6 +227,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sign Out Account"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="8dp"
+                android:textColor="?attr/colorError"
+                app:strokeColor="?attr/colorError" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeleteData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Clear All Cloud Data"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="8dp"
+                android:textColor="?attr/colorError"
+                app:strokeColor="?attr/colorError" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeleteAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delete Account"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:textColor="?attr/colorError"
                 app:strokeColor="?attr/colorError" />

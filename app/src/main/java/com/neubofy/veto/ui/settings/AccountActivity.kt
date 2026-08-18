@@ -21,13 +21,20 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.neubofy.veto.R
+import com.neubofy.veto.data.EncryptedSettingsRepository
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.ui.VetoActivity
+import com.neubofy.veto.ui.common.PasswordSetDialog
+import com.neubofy.veto.utils.CypherUtils
 import com.neubofy.veto.utils.DashboardSync
 import com.neubofy.veto.utils.GoogleDriveUploader
 import com.neubofy.veto.utils.MediaStorageManager
 import com.neubofy.veto.utils.log
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.net.URL
+import java.net.HttpURLConnection
+import org.json.JSONObject
 
 class AccountActivity : VetoActivity() {
 
@@ -42,6 +49,8 @@ class AccountActivity : VetoActivity() {
     private lateinit var btnOpenWebsite: MaterialButton
     private lateinit var btnClearCache: MaterialButton
     private lateinit var btnSignOut: MaterialButton
+    private lateinit var btnDeleteData: MaterialButton
+    private lateinit var btnDeleteAccount: MaterialButton
 
     private lateinit var tvUserName: TextView
     private lateinit var tvUserEmail: TextView
@@ -72,6 +81,8 @@ class AccountActivity : VetoActivity() {
         btnOpenWebsite = findViewById(R.id.btnOpenWebsite)
         btnClearCache = findViewById(R.id.btnClearCache)
         btnSignOut = findViewById(R.id.btnSignOut)
+        btnDeleteData = findViewById(R.id.btnDeleteData)
+        btnDeleteAccount = findViewById(R.id.btnDeleteAccount)
 
         tvUserName = findViewById(R.id.tvUserName)
         tvUserEmail = findViewById(R.id.tvUserEmail)
@@ -153,6 +164,40 @@ class AccountActivity : VetoActivity() {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(intent)
             }
+        }
+
+        btnDeleteData.setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Clear All Cloud Data")
+                .setMessage("Are you sure you want to delete all cloud data associated with this device? This cannot be undone.")
+                .setPositiveButton("Delete Data") { _, _ ->
+                    performServerAction("/api/data/delete") {
+                        runOnUiThread {
+                            Snackbar.make(btnDeleteData, "Cloud Data Deleted successfully", Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
+        btnDeleteAccount.setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Delete Account")
+                .setMessage("Are you sure you want to delete your entire account and all associated cloud data? This cannot be undone.")
+                .setPositiveButton("Delete Account") { _, _ ->
+                    performServerAction("/api/user/delete") {
+                        runOnUiThread {
+                            auth.signOut()
+                            googleSignInClient.signOut()
+                            SettingsRepository.getInstance(this).set(Settings.SET_SYNCED_FCM_TOKEN, "")
+                            updateUI()
+                            Snackbar.make(btnSignOut, "Account Deleted Successfully", Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
         }
 
         btnFixFcm.setOnClickListener {
@@ -247,32 +292,110 @@ class AccountActivity : VetoActivity() {
     private fun onAuthSuccess() {
         val user = auth.currentUser
         if (user != null) {
-            val settings = SettingsRepository.getInstance(this)
+            val encSettings = EncryptedSettingsRepository.getInstance(this)
+            val currentPin = encSettings.getVetoPin()
 
+            if (currentPin.isNullOrBlank()) {
+                tvStatus.text = "Awaiting PIN Setup..."
+                pbSpinner.visibility = View.GONE
 
-            tvStatus.text = "Setting up Google Drive folders..."
-            pbSpinner.visibility = View.VISIBLE
-            GoogleDriveUploader.setupDrive(this, 
-                onSuccess = {
-                    runOnUiThread {
-                        tvStatus.text = "Drive Setup Complete. Syncing FCM Token..."
-                        DashboardSync.uploadTokenIfPaired(this) { statusMsg, _ ->
-                            runOnUiThread {
-                                Snackbar.make(findViewById(android.R.id.content), statusMsg, Snackbar.LENGTH_LONG).show()
+                PasswordSetDialog.showPasswordSetDialog(
+                    context = this,
+                    title = "Set Required Veto PIN",
+                    positiveButtonText = "Set PIN & Complete Setup",
+                    message = "A PIN is required to securely encrypt your end-to-end data before pairing.",
+                    minLength = 1,
+                    onSuccess = { pin ->
+                        val hashedPin = CypherUtils.hashPasswordForVetoPin(pin)
+                        encSettings.setVetoPin(hashedPin)
+                        encSettings.setRawVetoPin(pin)
+                        continueAuthSetup()
+                    }
+                )
+            } else {
+                continueAuthSetup()
+            }
+        }
+    }
+
+    private fun continueAuthSetup() {
+        tvStatus.text = "Setting up Google Drive folders..."
+        pbSpinner.visibility = View.VISIBLE
+        GoogleDriveUploader.setupDrive(this,
+            onSuccess = {
+                runOnUiThread {
+                    tvStatus.text = "Drive Setup Complete. Syncing FCM Token..."
+                    DashboardSync.uploadTokenIfPaired(this) { statusMsg, _ ->
+                        runOnUiThread {
+                            Snackbar.make(findViewById(android.R.id.content), statusMsg, Snackbar.LENGTH_LONG).show()
+                            updateUI()
+                        }
+                    }
+                    Snackbar.make(btnGoogleSignIn, "Paired & Drive Configured!", Snackbar.LENGTH_LONG).show()
+                }
+            },
+            onError = { error ->
+                runOnUiThread {
+                    tvStatus.text = "Drive Setup Failed: $error"
+                    Snackbar.make(btnGoogleSignIn, "Drive Setup Failed: $error", Snackbar.LENGTH_LONG).show()
+                    updateUI()
+                }
+            }
+        )
+    }
+
+    private fun performServerAction(endpoint: String, onSuccess: () -> Unit) {
+        val user = auth.currentUser ?: return
+        tvStatus.text = "Processing request..."
+        pbSpinner.visibility = View.VISIBLE
+
+        user.getIdToken(true).addOnCompleteListener { task ->
+            if (task.isSuccessful && task.result?.token != null) {
+                val token = task.result?.token!!
+                val dashboardUrl = SettingsRepository.getInstance(this).get(Settings.SET_VetoSERVER_URL) as String
+
+                Thread {
+                    try {
+                        val apiUrl = if (dashboardUrl.endsWith("/")) "${dashboardUrl}${endpoint.removePrefix("/")}" else "$dashboardUrl$endpoint"
+                        val url = URL(apiUrl)
+                        val connection = url.openConnection() as HttpURLConnection
+                        connection.requestMethod = "POST"
+                        connection.setRequestProperty("Content-Type", "application/json")
+                        connection.setRequestProperty("Authorization", "Bearer $token")
+                        connection.doOutput = true
+
+                        val jsonParam = JSONObject()
+                        jsonParam.put("token", token)
+
+                        val out = java.io.OutputStreamWriter(connection.outputStream)
+                        out.write(jsonParam.toString())
+                        out.close()
+
+                        val responseCode = connection.responseCode
+                        runOnUiThread {
+                            pbSpinner.visibility = View.GONE
+                            if (responseCode in 200..299) {
+                                onSuccess()
+                            } else {
+                                Snackbar.make(findViewById(android.R.id.content), "Server Error: $responseCode", Snackbar.LENGTH_LONG).show()
                                 updateUI()
                             }
                         }
-                        Snackbar.make(btnGoogleSignIn, "Paired & Drive Configured!", Snackbar.LENGTH_LONG).show()
+                    } catch (e: Exception) {
+                        runOnUiThread {
+                            pbSpinner.visibility = View.GONE
+                            Snackbar.make(findViewById(android.R.id.content), "Network Error: ${e.message}", Snackbar.LENGTH_LONG).show()
+                            updateUI()
+                        }
                     }
-                },
-                onError = { error ->
-                    runOnUiThread {
-                        tvStatus.text = "Drive Setup Failed: $error"
-                        Snackbar.make(btnGoogleSignIn, "Drive Setup Failed: $error", Snackbar.LENGTH_LONG).show()
-                        updateUI()
-                    }
+                }.start()
+            } else {
+                runOnUiThread {
+                    pbSpinner.visibility = View.GONE
+                    Snackbar.make(findViewById(android.R.id.content), "Failed to authenticate.", Snackbar.LENGTH_SHORT).show()
+                    updateUI()
                 }
-            )
+            }
         }
     }
 

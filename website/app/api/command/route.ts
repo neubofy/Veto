@@ -22,32 +22,24 @@ export async function POST(req: Request) {
 
     const userId = decodedToken.uid;
     const body = await req.json();
-    const { command, encrypted } = body;
+    const { command, encrypted, fcmToken } = body;
 
     if (!command) {
       return NextResponse.json({ error: 'Missing command' }, { status: 400 });
     }
 
-    // Read the user's FCM token from Firestore (ensuring they can only command THEIR device)
-    const userDoc = await adminDb.collection('users').doc(userId).get();
-    
-    if (!userDoc.exists) {
-      return NextResponse.json({ error: 'User device not found in database' }, { status: 404 });
+    if (!fcmToken) {
+      return NextResponse.json({ error: 'Missing fcmToken. Token must be decrypted client-side and provided.' }, { status: 400 });
     }
 
-    const fcmToken = userDoc.data()?.fcmToken;
-    if (!fcmToken) {
-      return NextResponse.json({ error: 'User does not have an FCM token registered' }, { status: 400 });
+    if (!encrypted) {
+      return NextResponse.json({ error: 'Only encrypted commands are accepted.' }, { status: 400 });
     }
 
     // Construct the data payload matching Android's VetoFirebaseMessagingService
     const dataPayload: Record<string, string> = {};
 
-    if (encrypted) {
-      dataPayload['encryptedCommand'] = command;
-    } else {
-      dataPayload['command'] = command;
-    }
+    dataPayload['encryptedCommand'] = command;
 
     const message = {
       data: dataPayload,

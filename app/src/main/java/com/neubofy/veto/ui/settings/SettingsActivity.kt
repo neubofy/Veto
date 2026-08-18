@@ -20,9 +20,13 @@ import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import com.neubofy.veto.ui.UiUtil
 import com.neubofy.veto.ui.VetoActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.neubofy.veto.ui.common.PasswordSetDialog
 import com.neubofy.veto.utils.CypherUtils
 import java.util.Locale
+import java.net.URL
+import java.net.HttpURLConnection
+import org.json.JSONObject
 
 class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener {
 
@@ -102,10 +106,12 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         setupInfoButton(R.id.btnInfoCommand, "Trigger Command", getString(R.string.Settings_VetoCommand_Description))
         setupInfoButton(R.id.btnInfoWrongPass, "Wrong Password Detection", "If enabled, entering the wrong lock screen password multiple times will trigger theft mode.")
 
-        btnEditPin.setOnClickListener { onEnterPinClicked() }
+        btnEditPin.setOnClickListener { handlePinChangeRequest { onEnterPinClicked() } }
         btnRemovePin.setOnClickListener {
-            encSettings.setVetoPin(null)
-            updateUI()
+            handlePinChangeRequest {
+                encSettings.setVetoPin(null)
+                updateUI()
+            }
         }
 
         btnEditLockMsg.setOnClickListener { onEditLockMsgClicked() }
@@ -233,6 +239,71 @@ class SettingsActivity : VetoActivity(), CompoundButton.OnCheckedChangeListener 
         }
     }
 
+
+    private fun handlePinChangeRequest(onProceed: () -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Warning: Cloud Data Deletion")
+                .setMessage("Since you are logged into the Web Dashboard, changing or removing your PIN will permanently delete all your end-to-end encrypted cloud data (as it would become unreadable) and sign you out. Do you wish to proceed?")
+                .setPositiveButton("Delete Data & Proceed") { _, _ ->
+                    deleteCloudDataAndLogout(onProceed)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        } else {
+            onProceed()
+        }
+    }
+
+    private fun deleteCloudDataAndLogout(onProceed: () -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser ?: return
+
+        Toast.makeText(this, "Deleting Cloud Data...", Toast.LENGTH_SHORT).show()
+        user.getIdToken(true).addOnCompleteListener { task ->
+            if (task.isSuccessful && task.result?.token != null) {
+                val token = task.result?.token!!
+                val dashboardUrl = settings.get(Settings.SET_VetoSERVER_URL) as String
+
+                Thread {
+                    try {
+                        val apiUrl = if (dashboardUrl.endsWith("/")) "${dashboardUrl}api/data/delete" else "$dashboardUrl/api/data/delete"
+                        val url = URL(apiUrl)
+                        val connection = url.openConnection() as HttpURLConnection
+                        connection.requestMethod = "POST"
+                        connection.setRequestProperty("Content-Type", "application/json")
+                        connection.setRequestProperty("Authorization", "Bearer $token")
+                        connection.doOutput = true
+
+                        val jsonParam = JSONObject()
+                        jsonParam.put("token", token)
+
+                        val out = java.io.OutputStreamWriter(connection.outputStream)
+                        out.write(jsonParam.toString())
+                        out.close()
+
+                        val responseCode = connection.responseCode
+                        runOnUiThread {
+                            if (responseCode in 200..299) {
+                                FirebaseAuth.getInstance().signOut()
+                                settings.set(Settings.SET_SYNCED_FCM_TOKEN, "")
+                                Toast.makeText(this@SettingsActivity, "Cloud Data Deleted and Signed Out", Toast.LENGTH_SHORT).show()
+                                onProceed()
+                            } else {
+                                Toast.makeText(this@SettingsActivity, "Failed to delete cloud data. Server Error: $responseCode", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        runOnUiThread {
+                            Toast.makeText(this@SettingsActivity, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }.start()
+            } else {
+                Toast.makeText(this, "Failed to authenticate for deletion.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private fun onEnterPinClicked() {
         PasswordSetDialog.showPasswordSetDialog(

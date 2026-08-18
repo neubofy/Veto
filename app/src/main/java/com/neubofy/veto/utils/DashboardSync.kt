@@ -3,6 +3,7 @@ package com.neubofy.veto.utils
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
+import com.neubofy.veto.data.EncryptedSettingsRepository
 import com.neubofy.veto.data.Settings
 import com.neubofy.veto.data.SettingsRepository
 import org.json.JSONObject
@@ -47,6 +48,15 @@ object DashboardSync {
                 Thread {
                     try {
                         callback?.invoke("Syncing to server...", true)
+
+                        val encSettings = EncryptedSettingsRepository.getInstance(context)
+                        val rawPin = encSettings.getRawVetoPin()
+                        val finalFcmToken = if (rawPin != null) {
+                            VetoCrypto.encrypt(fcmToken, rawPin, currentUser.uid)
+                        } else {
+                            fcmToken
+                        }
+
                         val apiUrl = if (dashboardUrl.endsWith("/")) "${dashboardUrl}api/device/link" else "$dashboardUrl/api/device/link"
                         val url = URL(apiUrl)
                         val connection = url.openConnection() as HttpURLConnection
@@ -56,7 +66,7 @@ object DashboardSync {
                         connection.doOutput = true
 
                         val jsonParam = JSONObject()
-                        jsonParam.put("fcmToken", fcmToken)
+                        jsonParam.put("fcmToken", finalFcmToken)
 
                         val out = OutputStreamWriter(connection.outputStream)
                         out.write(jsonParam.toString())

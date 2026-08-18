@@ -24,6 +24,7 @@ export default function ConsolePage() {
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [activeCmd, setActiveCmd] = useState<string | null>(null);
   const [isCommandPending, setIsCommandPending] = useState<boolean>(false);
+  const [fcmTokenEncrypted, setFcmTokenEncrypted] = useState<string | null>(null);
 
   const [history, setHistory] = useState<any[]>([]);
   const [commandStartTime, setCommandStartTime] = useState<number>(0);
@@ -135,6 +136,13 @@ export default function ConsolePage() {
         }
         setCurrentAccount(accountManager.getStoredAccounts().find(a => a.uid === currentUser.uid) || null);
 
+        unsubUser = onSnapshot(doc(activeDb, 'users', currentUser.uid), (docSnap: any) => {
+          if (docSnap.exists()) {
+            const token = docSnap.data().fcmToken;
+            if (token) setFcmTokenEncrypted(token);
+          }
+        });
+
         const historyRef = collection(activeDb, 'users', currentUser.uid, 'command_history');
         unsubHistory = onSnapshot(historyRef, (snapshot: any) => {
           const newHistory: any[] = [];
@@ -203,13 +211,43 @@ export default function ConsolePage() {
 
     try {
       const token = await user.getIdToken();
+      let payloadCommand = command;
+      let finalFcmToken = fcmTokenEncrypted;
+
+      // Encrypt command client-side if PIN is available
+      if (pin) {
+        const { encryptClient, decryptClient } = await import('@/lib/clientCrypto');
+        payloadCommand = await encryptClient(command, pin, user.uid);
+
+        if (finalFcmToken && finalFcmToken.includes(':')) {
+           try {
+               finalFcmToken = await decryptClient(finalFcmToken, pin, user.uid);
+           } catch (e) {
+               console.error("Failed to decrypt FCM token", e);
+               setFeedback({ type: 'error', text: 'Failed to decrypt FCM Token. Ensure PIN is correct.' });
+               setIsCommandPending(false);
+               setActiveCmd(null);
+               return;
+           }
+        }
+      } else {
+        setFeedback({ type: 'error', text: 'PIN is required to send encrypted commands.' });
+        setIsCommandPending(false);
+        setActiveCmd(null);
+        return;
+      }
+
       const res = await fetch('/api/command', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ command })
+        body: JSON.stringify({
+          command: payloadCommand,
+          encrypted: !!pin,
+          fcmToken: finalFcmToken
+        })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);

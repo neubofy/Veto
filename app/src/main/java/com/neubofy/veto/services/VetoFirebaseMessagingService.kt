@@ -27,7 +27,6 @@ class VetoFirebaseMessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             log().i(TAG, "Message data payload: ${remoteMessage.data}")
             
-            val rawCommandStr = remoteMessage.data["command"]
             val encryptedCommandStr = remoteMessage.data["encryptedCommand"]
             
             val localUid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
@@ -36,21 +35,22 @@ class VetoFirebaseMessagingService : FirebaseMessagingService() {
                 return
             }
 
+            if (encryptedCommandStr == null) {
+                log().e(TAG, "Received unencrypted or missing FCM command. Rejecting as insecure.")
+                return
+            }
+
             var commandStr: String? = null
-            if (encryptedCommandStr != null) {
-                val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(this)
-                val pin = encRepo.getRawVetoPin()
-                if (pin != null) {
-                    try {
-                        commandStr = com.neubofy.veto.utils.VetoCrypto.decrypt(encryptedCommandStr, pin, localUid)
-                    } catch (e: Exception) {
-                        log().e(TAG, "Failed to decrypt FCM command: ${e.message}")
-                    }
-                } else {
-                    log().e(TAG, "Received encrypted FCM command but device PIN is not set.")
+            val encRepo = com.neubofy.veto.data.EncryptedSettingsRepository.getInstance(this)
+            val pin = encRepo.getRawVetoPin()
+            if (pin != null) {
+                try {
+                    commandStr = com.neubofy.veto.utils.VetoCrypto.decrypt(encryptedCommandStr, pin, localUid)
+                } catch (e: Exception) {
+                    log().e(TAG, "Failed to decrypt FCM command: ${e.message}")
                 }
             } else {
-                commandStr = rawCommandStr
+                log().e(TAG, "Received encrypted FCM command but device PIN is not set.")
             }
             
             if (commandStr != null) {

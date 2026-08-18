@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_web_client_id" translatable="false">123456789012-dummyclientid.apps.googleusercontent.com</string>
+    <string name="default_web_client_id" translatable="false">dummy-web-client-id.apps.googleusercontent.com</string>
 </resources>
