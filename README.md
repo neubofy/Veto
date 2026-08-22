@@ -185,25 +185,6 @@ The `veto theft` command is designed for **critical emergency situations**:
 ```
 
 ---
-
-## 📊 Project Statistics
-
-<div align="center">
-
-| Metric | Value |
-|--------|-------|
-| 🌟 **GitHub Stars** | ⭐⭐ |
-| 👀 **Watchers** | 2 |
-| 🍴 **Forks** | 0 |
-| 📦 **Repository Size** | 4.4 MB |
-| 📝 **Open Issues** | 1 |
-| 🔐 **License** | GNU GPLv3 |
-| 🏢 **Organization** | [neubofy](https://github.com/neubofy) |
-
-</div>
-
----
-
 ## 🛠️ Technology Stack
 
 <div align="center">
