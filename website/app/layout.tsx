@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
-import Script from 'next/script';
 import './globals.css';
 import SmoothScroll from './SmoothScroll';
 
@@ -24,15 +23,6 @@ export default function RootLayout({
           {children}
           <Analytics />
         </SmoothScroll>
-        <Script id="zoho-salesiq-init" strategy="afterInteractive">
-          {`window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}`}
-        </Script>
-        <Script
-          id="zsiqscript"
-          src="https://salesiq.zoho.in/widget?wc=siq9312488e4d8e0df500748f7a2fc1e8769385757ecd612b79f3d0afb943c616a1"
-          strategy="afterInteractive"
-          defer
-        />
       </body>
     </html>
   );
