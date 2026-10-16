@@ -2,9 +2,13 @@ package com.neubofy.veto.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.neubofy.veto.utils.SingletonHolder
+import java.io.File
+import java.security.KeyStore
 
 
 /**
@@ -32,17 +36,60 @@ class EncryptedSettingsRepository private constructor(context: Context) {
     val sharedPrefs: SharedPreferences
 
     init {
+        sharedPrefs = createEncryptedSharedPreferences(context)
+    }
+
+    private fun createEncryptedSharedPreferences(context: Context): SharedPreferences {
+        return try {
+            createEncryptedPrefsInternal(context)
+        } catch (e: Throwable) {
+            Log.e(TAG, "Failed to initialize EncryptedSharedPreferences, attempting recovery...", e)
+            resetEncryptedPreferencesAndKeys(context)
+            try {
+                createEncryptedPrefsInternal(context)
+            } catch (e2: Throwable) {
+                Log.e(TAG, "Failed to recover EncryptedSharedPreferences, falling back to standard SharedPreferences", e2)
+                context.getSharedPreferences("${FILENAME}_fallback", Context.MODE_PRIVATE)
+            }
+        }
+    }
+
+    private fun createEncryptedPrefsInternal(context: Context): SharedPreferences {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
 
-        sharedPrefs = EncryptedSharedPreferences.create(
+        return EncryptedSharedPreferences.create(
             context,
             FILENAME,
             masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
+    }
+
+    private fun resetEncryptedPreferencesAndKeys(context: Context) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                context.deleteSharedPreferences(FILENAME)
+            } else {
+                context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE).edit().clear().apply()
+                val file = File(context.filesDir.parent, "shared_prefs/$FILENAME.xml")
+                if (file.exists()) {
+                    file.delete()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error clearing encrypted preferences file: ${e.message}")
+        }
+
+        try {
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+            keyStore.deleteEntry(MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error deleting MasterKey from KeyStore: ${e.message}")
+        }
     }
 
     fun getCachedAccessToken(): String {
