@@ -19,4 +19,7 @@
     <exclude
         domain="sharedpref"
         path="veto_encrypted_settings.xml" />
+    <exclude
+        domain="sharedpref"
+        path="veto_encrypted_settings_fallback.xml" />
 </full-backup-content>
